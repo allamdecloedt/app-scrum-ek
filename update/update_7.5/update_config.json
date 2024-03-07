@@ -1,0 +1,151 @@
+{
+  "directory":
+  [
+    {
+        "name" : "assets/backend/images"
+    }
+  ],
+  "sql_file": "",
+  "files": [
+    {
+        "root_directory" : "update/update_7.5/application/controllers/Admin.php",
+        "update_director" : "application/controllers/Admin.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/controllers/Superadmin.php",
+        "update_directory" : "application/controllers/Superadmin.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/accountant/invoice/index.php",
+        "update_directory" : "application/views/backend/accountant/invoice/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/attendance/index.php",
+        "update_directory" : "application/views/backend/admin/attendance/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/invoice/index.php",
+        "update_directory" : "application/views/backend/admin/invoice/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/mark/index.php",
+        "update_directory" : "application/views/backend/admin/mark/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/permission/index.php",
+        "update_directory" : "application/views/backend/admin/permission/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/promotion/index.php",
+        "update_directory" : "application/views/backend/admin/promotion/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/routine/index.php",
+        "update_directory" : "application/views/backend/admin/routine/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/student/index.php",
+        "update_directory" : "application/views/backend/admin/student/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/student/single_student_admission.php",
+        "update_directory" : "application/views/backend/admin/student/single_student_admission.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/subject/index.php",
+        "update_directory" : "application/views/backend/admin/subject/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/admin/syllabus/index.php",
+        "update_directory" : "application/views/backend/admin/syllabus/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/student/attendance/index.php",
+        "update_directory" : "application/views/backend/student/attendance/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/student/mark/index.php",
+        "update_directory" : "application/views/backend/student/mark/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/student/routine/index.php",
+        "update_directory" : "application/views/backend/student/routine/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/student/subject/index.php",
+        "update_directory" : "application/views/backend/student/subject/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/student/syllabus/index.php",
+        "update_directory" : "application/views/backend/student/syllabus/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/attendance/index.php",
+        "update_directory" : "application/views/backend/superadmin/attendance/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/invoice/index.php",
+        "update_directory" : "application/views/backend/superadmin/invoice/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/mark/index.php",
+        "update_directory" : "application/views/backend/superadmin/mark/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/permission/index.php",
+        "update_directory" : "application/views/backend/superadmin/permission/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/promotion/index.php",
+        "update_directory" : "application/views/backend/superadmin/promotion/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/routine/index.php",
+        "update_directory" : "application/views/backend/superadmin/routine/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/student/index.php",
+        "update_directory" : "application/views/backend/superadmin/student/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/student/single_student_admission.php",
+        "update_directory" : "application/views/backend/superadmin/student/single_student_admission.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/subject/index.php",
+        "update_directory" : "application/views/backend/superadmin/subject/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/superadmin/syllabus/index.php",
+        "update_directory" : "application/views/backend/superadmin/syllabus/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/teacher/attendance/index.php",
+        "update_directory" : "application/views/backend/teacher/attendance/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/teacher/mark/index.php",
+        "update_directory" : "application/views/backend/teacher/mark/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/teacher/routine/index.php",
+        "update_directory" : "application/views/backend/teacher/routine/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/teacher/student/index.php",
+        "update_directory" : "application/views/backend/teacher/student/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/teacher/subject/index.php",
+        "update_directory" : "application/views/backend/teacher/subject/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/application/views/backend/teacher/syllabus/index.php",
+        "update_directory" : "application/views/backend/teacher/syllabus/index.php"
+    },
+    {
+        "root_directory" : "update/update_7.5/assets/backend/images/bg-auth.jpg",
+        "update_directory" : "assets/backend/images/bg-auth.jpg"
+    }
+  ]
+}

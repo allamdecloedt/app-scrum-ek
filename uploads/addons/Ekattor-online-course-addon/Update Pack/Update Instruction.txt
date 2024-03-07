@@ -1,0 +1,11 @@
+N.B : BEFORE UPDATING TO THE LATEST VERSION, WE WOULD HIGHLY APPRECIATE IF YOU KEEP A BACKUP OF THE EXISTING VERSION.
+
+Please follow the update instruction carefully.
+
+1. First of all, login as Superadmin
+2. Go to "Back office" > "Addon manager".
+3. CLick on the "+ Add new addon" button.
+4. Choose the addon file. Which is located inside the "Update Pack" folder of the downloaded file from Codecanyon.
+5. Hit the "Install" button.
+
+You should see the latest version number in the "Addon Manager" list.

@@ -1,0 +1,240 @@
+{
+    "name" : "Ekattor Online Course",
+    "unique_identifier" : "online_courses",
+    "version" : "1.1",
+    "directories" :
+    [
+        {
+            "name" : "assets/global/plyr"
+        },
+        {
+            "name" : "assets/lessons/css"
+        },
+        {
+            "name" : "assets/lessons/js"
+        },
+        {
+            "name" : "assets/backend/lesson_icon"
+        },
+        {
+            "name" : "uploads/course_thumbnail"
+        },
+        {
+            "name" : "uploads/lesson_files"
+        },
+        {
+            "name" : "application/views/backend/academy"
+        },
+        {
+            "name" : "application/views/lessons"
+        }
+    ],
+    "sql_file"  : "updater.php",
+    "files"     :
+    [
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/assets/backend/images/straight-loader.gif",
+            "update_directory"  : "assets/backend/images/straight-loader.gif"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/lesson_icon/doc.png",
+            "update_directory"  : "assets/backend/lesson_icon/doc.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/lesson_icon/img.png",
+            "update_directory"  : "assets/backend/lesson_icon/img.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/lesson_icon/pdf.png",
+            "update_directory"  : "assets/backend/lesson_icon/pdf.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/lesson_icon/quiz.png",
+            "update_directory"  : "assets/backend/lesson_icon/quiz.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/lesson_icon/text.png",
+            "update_directory"  : "assets/backend/lesson_icon/text.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/lesson_icon/txt.png",
+            "update_directory"  : "assets/backend/lesson_icon/txt.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/lesson_icon/video.png",
+            "update_directory"  : "assets/backend/lesson_icon/video.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/assets/global/plyr/plyr.css",
+            "update_directory"  : "assets/global/plyr/plyr.css"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/assets/global/plyr/plyr.js",
+            "update_directory"  : "assets/global/plyr/plyr.js"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/assets/lessons/css/custom.css",
+            "update_directory"  : "assets/lessons/css/custom.css"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/assets/frontend/default/img/green-circle-tick.png",
+            "update_directory"  : "assets/frontend/default/img/green-circle-tick.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/assets/frontend/default/img/green-tick.png",
+            "update_directory"  : "assets/frontend/default/img/green-tick.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/assets/frontend/default/img/red-cross.png",
+            "update_directory"  : "assets/frontend/default/img/red-cross.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/controllers/addons/Courses.php",
+            "update_directory"  : "application/controllers/addons/Courses.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/controllers/addons/Lessons.php",
+            "update_directory"  : "application/controllers/addons/Lessons.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/helpers/lms_helper.php",
+            "update_directory"  : "application/helpers/lms_helper.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/models/addons/Lms_model.php",
+            "update_directory"  : "application/models/addons/Lms_model.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/models/addons/Video_model.php",
+            "update_directory"  : "application/models/addons/Video_model.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/uploads/course_thumbnail/placeholder.png",
+            "update_directory"  : "uploads/course_thumbnail/placeholder.png"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/ajax_get_section.php",
+            "update_directory"  : "application/views/backend/academy/ajax_get_section.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/create.php",
+            "update_directory"  : "application/views/backend/academy/create.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/curriculum.php",
+            "update_directory"  : "application/views/backend/academy/curriculum.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/edit.php",
+            "update_directory"  : "application/views/backend/academy/edit.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/grid_view_for_student.php",
+            "update_directory"  : "application/views/backend/academy/grid_view_for_student.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/index.php",
+            "update_directory"  : "application/views/backend/academy/index.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/common_scripts.php",
+            "update_directory"  : "application/views/backend/academy/common_scripts.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/lesson_add.php",
+            "update_directory"  : "application/views/backend/academy/lesson_add.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/lesson_edit.php",
+            "update_directory"  : "application/views/backend/academy/lesson_edit.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/list.php",
+            "update_directory"  : "application/views/backend/academy/list.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/manage_multiple_choices_options.php",
+            "update_directory"  : "application/views/backend/academy/manage_multiple_choices_options.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/question_add.php",
+            "update_directory"  : "application/views/backend/academy/question_add.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/question_edit.php",
+            "update_directory"  : "application/views/backend/academy/question_edit.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/quiz_add.php",
+            "update_directory"  : "application/views/backend/academy/quiz_add.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/quiz_edit.php",
+            "update_directory"  : "application/views/backend/academy/quiz_edit.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/quiz_questions.php",
+            "update_directory"  : "application/views/backend/academy/quiz_questions.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/section_add.php",
+            "update_directory"  : "application/views/backend/academy/section_add.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/section_edit.php",
+            "update_directory"  : "application/views/backend/academy/section_edit.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/sort_lesson.php",
+            "update_directory"  : "application/views/backend/academy/sort_lesson.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/sort_section.php",
+            "update_directory"  : "application/views/backend/academy/sort_section.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/course_information.php",
+            "update_directory"  : "application/views/backend/academy/course_information.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/backend/academy/course_preview.php",
+            "update_directory"  : "application/views/backend/academy/course_preview.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/lessons/common_scripts.php",
+            "update_directory"  : "application/views/lessons/common_scripts.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/lessons/course_content_body.php",
+            "update_directory"  : "application/views/lessons/course_content_body.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/lessons/course_content_sidebar.php",
+            "update_directory"  : "application/views/lessons/course_content_sidebar.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/lessons/includes_bottom.php",
+            "update_directory"  : "application/views/lessons/includes_bottom.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/lessons/includes_top.php",
+            "update_directory"  : "application/views/lessons/includes_top.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/lessons/index.php",
+            "update_directory"  : "application/views/lessons/index.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/lessons/lessons.php",
+            "update_directory"  : "application/views/lessons/lessons.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/lessons/quiz_result.php",
+            "update_directory"  : "application/views/lessons/quiz_result.php"
+        },
+        {
+            "root_directory"    : "uploads/addons/ekattor-online-course/views/lessons/quiz_view.php",
+            "update_directory"  : "application/views/lessons/quiz_view.php"
+        }
+    ]
+}

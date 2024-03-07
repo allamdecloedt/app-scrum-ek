@@ -1,0 +1,11 @@
+Please follow the update instruction carefully.
+
+Update instructions from version 7.5 to 7.6 -
+
+If your application has been customized, Then keep your file backup and follow the step-by-step instructions below-
+1. Login to the Superadmin panel and go to System Settings. You will get a field of product update. Upload the update_7.6.zip file here.
+2. Wait for the update to complete. If you see a white screen, don't be panicked. Clear your browser cache to see correctly.
+Window: Ctrl + Shift + R
+Mac: Command + Shift + R
+If you face any kind of difficulties, let us know through tickets.
+That's it.
