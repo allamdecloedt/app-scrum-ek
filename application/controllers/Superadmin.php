@@ -47,7 +47,12 @@ class Superadmin extends CI_Controller {
   public function index(){
     redirect(route('dashboard'), 'refresh');
   }
-
+  //school
+  public function school(){
+    $page_data['page_title'] = 'School';
+    $page_data['folder_name'] = 'school';
+    $this->load->view('backend/index', $page_data);
+  }
   public function dashboard(){
 
     // $this->msg91_model->clickatell();
@@ -261,6 +266,39 @@ class Superadmin extends CI_Controller {
   }
   // END ADMIN SECTION
 
+
+
+   // START ADMIN SECTION
+   public function school_crud($param1 = "", $param2 = "", $param3 = "") {
+    //  print_r($param1);
+    if($param1 == 'create'){
+      $response = $this->user_model->create_school();
+      echo $response;
+    }
+
+    if($param1 == 'update'){
+      // die($param1);
+      $response = $this->user_model->update_school($param2);
+      echo $response;
+    }
+
+    if($param1 == 'delete'){
+      $response = $this->user_model->delete_school($param2);
+      echo $response;
+    }
+
+    if ($param1 == 'list') {
+      // die('hhh');
+      $this->load->view('backend/superadmin/school/list');
+    }
+
+    if(empty($param1)){
+      $page_data['folder_name'] = 'school';
+      $page_data['page_title'] = 'schools';
+      $this->load->view('backend/index', $page_data);
+    }
+  }
+  // END ADMIN SECTION
 
   //START TEACHER section
   public function teacher($param1 = '', $param2 = '', $param3 = ''){
