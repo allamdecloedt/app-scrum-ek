@@ -711,8 +711,6 @@ CREATE TABLE `routines` (
 CREATE TABLE `schools` (
   `id` int(11) UNSIGNED NOT NULL,
   `name` varchar(255) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `password` varchar(255) NOT NULL,
   `address` longtext DEFAULT NULL,
   `phone` longtext DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
