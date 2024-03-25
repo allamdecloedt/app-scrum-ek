@@ -110,6 +110,73 @@ class User_model extends CI_Model {
 	}
 	// ADMIN CRUD SECTION ENDS
 
+	// SCHOOL CRUD SECTION STARTS
+	public function create_school() {
+		// $data['school_id'] = html_escape($this->input->post('school_id'));
+		$data['name'] = html_escape($this->input->post('name'));
+		$data['phone'] = html_escape($this->input->post('phone'));
+		$data['address'] = html_escape($this->input->post('address'));
+		// $data['role'] = 'admin';
+		// $data['watch_history'] = '[]';
+
+		// check email duplication
+		// $duplication_status = $this->check_duplication('on_create', $data['email']);
+		// if($duplication_status){
+			$this->db->insert('schools', $data);
+
+			$response = array(
+				'status' => true,
+				'notification' => get_phrase('school_added_successfully')
+			);
+		// }else{
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'notification' => get_phrase('sorry_this_email_has_been_taken')
+		// 	);
+		// }
+
+		return json_encode($response);
+	}
+
+	public function update_school($param1 = '')
+	{
+		$data['name'] = html_escape($this->input->post('name'));
+		$data['phone'] = html_escape($this->input->post('phone'));
+		$data['address'] = html_escape($this->input->post('address'));
+		// check email duplication
+		// $duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
+		// if($duplication_status){
+			$this->db->where('id', $param1);
+			$this->db->update('schools', $data);
+
+			$response = array(
+				'status' => true,
+				'notification' => get_phrase('school_has_been_updated_successfully')
+			);
+
+		// }else{
+		// 	$response = array(
+		// 		'status' => false,
+		// 		'notification' => get_phrase('sorry_this_email_has_been_taken')
+		// 	);
+		// }
+
+		return json_encode($response);
+	}
+
+	public function delete_school($param1 = '')
+	{
+		$this->db->where('id', $param1);
+		$this->db->delete('schools');
+
+		$response = array(
+			'status' => true,
+			'notification' => get_phrase('school_has_been_deleted_successfully')
+		);
+		return json_encode($response);
+	}
+	// school CRUD SECTION ENDS
+
 	//START TEACHER section
 	public function create_teacher()
 	{

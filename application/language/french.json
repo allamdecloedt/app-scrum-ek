@@ -1262,6 +1262,8 @@
     "provide_driver_gender": "Provide driver gender",
     "provide_driver_blood_group": "Provide driver blood group",
     "provide_driver_address": "Provide driver address",
-    "marksggg": "Marksggg",
-    "home9999": "Home9999"
+
+    "school": "School",
+    "school_has_been_updated_successfully": "School has been updated successfully",
+    "school_has_been_deleted_successfully": "School has been deleted successfully"
 }

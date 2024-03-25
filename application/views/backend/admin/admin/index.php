@@ -15,7 +15,7 @@
 <div class="row">
   <div class="col-12">
     <div class="card">
-      <div class="card-body admin_content">
+      <div class="card-body school_content">
         <?php include 'list.php'; ?>
       </div>
     </div>
@@ -30,7 +30,7 @@ var showAllAdmins = function () {
     type : 'GET',
     url: url,
     success : function(response) {
-      $('.admin_content').html(response);
+      $('.school_content').html(response);
       initDataTable('basic-datatable');
     }
   });

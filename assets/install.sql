@@ -628,6 +628,7 @@ INSERT INTO `menus` (`id`, `displayed_name`, `route_name`, `parent`, `icon`, `st
 (122, 'trip', 'trip', 0, 'uil-bus', 1, 0, 0, 0, 0, 0, 0, 0, 9, 0, 'trip', 1),
 (123, 'assigned_student', 'assigned_student', 0, 'uil-user-check', 1, 0, 0, 0, 0, 0, 0, 0, 9, 0, 'assigned_student', 1),
 (124, 'trips', 'trips', 0, 'uil-bus', 1, 0, 0, 0, 1, 0, 0, 0, 9, 0, 'trips', 0);
+(125, 'school', 'school', 1, NULL, 1, 1, 0, 0, 0, 0, 0, 0, 9, 0, 'school', NULL),
 
 -- --------------------------------------------------------
 

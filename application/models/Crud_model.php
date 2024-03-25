@@ -1265,9 +1265,9 @@ class Crud_model extends CI_Model {
 
 	//SCHOOL DETAILS
 	public function get_schools() {
-		if (!addon_status('multi-school')) {
-			$this->db->where('id', school_id());
-		}
+		// if (!addon_status('multi-school')) {
+		// 	$this->db->where('id', school_id());
+		// }
 		$schools = $this->db->get('schools');
 		return $schools;
 	}
