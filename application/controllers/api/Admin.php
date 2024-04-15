@@ -43,13 +43,10 @@ class Admin extends REST_Controller {
     $languages = $this->admin_model->languages_get();
     $this->set_response($languages, REST_Controller::HTTP_OK);
   }
-
-  // Login API CALL
-  public function login_post() {
-    $userdata = $this->admin_model->login();
-    if ($userdata['validity'] == 1) {
-      $userdata['token'] = $this->tokenHandler->GenerateToken($userdata);
-    }
+  // menu
+  public function menu_get() {
+    // echo 'fettah';
+    $userdata = $this->admin_model->menu();
     return $this->set_response($userdata, REST_Controller::HTTP_OK);
   }
 

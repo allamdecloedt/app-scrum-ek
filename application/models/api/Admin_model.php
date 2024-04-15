@@ -15,7 +15,22 @@ class Admin_model extends CI_Model {
   {
     parent::__construct();
   }
-
+  public function menu() {
+    $response = array();
+    $i = 0 ;
+    $query = $this->db->get('menus');
+    foreach ($query->result() as $row)
+    {
+      $response[$i]['id'] =  $row->id;
+      $response[$i]['displayed_name'] = $row->displayed_name;
+      $i++;
+    }
+    //  $row = $query->row_array();
+    // $response['id'] = $row['id'];
+    // $response['displayed_name'] = $row['displayed_name'];
+    $response['status'] = 200;
+    return $response;
+  }
   // Login mechanism
   public function login() {
     $response = array();
