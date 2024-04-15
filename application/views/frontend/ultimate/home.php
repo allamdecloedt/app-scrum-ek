@@ -114,7 +114,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
       </div>
     </div>
     <!-- End Intro Section -->
-    <svg id="visual" class="spacer-top" viewBox="0 0 900 100"  xmlns="http://www.w3.org/2000/svg"
+    <svg id="visual" class="spacer-top" viewBox="0 0 900 100" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <path
         d="M0 47L75 39L150 16L225 22L300 49L375 43L450 29L525 11L600 17L675 39L750 16L825 41L900 14L900 101L825 101L750 101L675 101L600 101L525 101L450 101L375 101L300 101L225 101L150 101L75 101L0 101Z"
@@ -142,6 +142,140 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
     <!-- Title -->
     <h2 class="social-media-main-text">Our Professional Teachers</h2>
     <!-- End Title -->
+
+
+    <!-- Teacher Cards Carousel Start-->
+
+    <!-- This is a place holder carousel -->
+
+
+    <div class="container teacher-carousel-container">
+      <div class="owl-carousel owl-theme  justify-content-center">
+
+        <div class="teacher-card ">
+          <div class="teacher-card-img">
+            <img src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=800">
+          </div>
+          <div class="teacher-card-desc">
+            <h6 class="teacher-card-primary-text">Fattah</h6>
+            <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
+          </div>
+          <button class="teacher-card-primary-text">View Profile</button>
+          <div class="teacher-card-details">
+            <div class="">
+              <a class="teacher-card-social-button" href="">
+                <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
+                  fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                  <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
+                </svg>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="teacher-card ">
+          <div class="teacher-card-img">
+            <img
+              src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=800">
+          </div>
+          <div class="teacher-card-desc">
+            <h6 class="teacher-card-primary-text">Mehdi</h6>
+            <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
+          </div>
+          <button class="teacher-card-primary-text">View Profile</button>
+          <div class="teacher-card-details">
+            <div class="">
+              <a class="teacher-card-social-button" href="">
+                <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
+                  fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                  <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
+                </svg>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="teacher-card">
+          <div class="teacher-card-img">
+            <img
+              src="https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=800">
+          </div>
+          <div class="teacher-card-desc">
+            <h6 class="teacher-card-primary-text">Mohamed</h6>
+            <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
+          </div>
+          <button class="teacher-card-primary-text">View Profile</button>
+          <div class="teacher-card-details">
+            <div class="">
+              <a class="teacher-card-social-button" href="">
+                <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
+                  fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                  <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
+                </svg>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="teacher-card ">
+          <div class="teacher-card-img">
+            <img src="https://dl.dropbox.com/s/u3j25jx9tkaruap/Webp.net-resizeimage.jpg?raw=1">
+          </div>
+          <div class="teacher-card-desc">
+            <h6 class="teacher-card-primary-text">Olivia</h6>
+            <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
+          </div>
+          <button class="teacher-card-primary-text">View Profile</button>
+          <div class="teacher-card-details">
+            <div>
+              <a class="teacher-card-social-button" href="">
+                <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
+                  fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                  <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
+                </svg>
+              </a>
+
+            </div>
+          </div>
+        </div>
+
+        <div class="teacher-card ">
+          <div class="teacher-card-img">
+            <img
+              src="https://images.pexels.com/photos/1759530/pexels-photo-1759530.jpeg?auto=compress&cs=tinysrgb&w=800">
+          </div>
+          <div class="teacher-card-desc">
+            <h6 class="teacher-card-primary-text">Arran</h6>
+            <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
+          </div>
+          <button class="teacher-card-primary-text">View Profile</button>
+          <div class="teacher-card-details">
+            <div class="">
+              <a class="teacher-card-social-button" href="">
+                <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
+                  fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
+                  <path
+                    d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854zm4.943 12.248V6.169H2.542v7.225zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248S2.4 3.226 2.4 3.934c0 .694.521 1.248 1.327 1.248zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016l.016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225z" />
+                </svg>
+              </a>
+
+
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Teacher Cards Carousel End-->
+
 
 
 
@@ -191,8 +325,16 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
       <h2 class="event-title-section-text">
         <?php echo get_phrase('Upcomig Events'); ?>
       </h2>
+      <div class="content">
+       
+        <svg id="more-arrows">
+          <polygon class="arrow-top" points="37.6,27.9 1.8,1.3 3.3,0 37.6,25.3 71.9,0 73.7,1.3 " />
+          <polygon class="arrow-middle" points="37.6,45.8 0.8,18.7 4.4,16.4 37.6,41.2 71.2,16.4 74.5,18.7 " />
+          <polygon class="arrow-bottom" points="37.6,64 0,36.1 5.1,32.8 37.6,56.8 70.4,32.8 75.5,36.1 " />
+        </svg>
+      </div>
     </div>
-    <svg id="visual" class="spacer-top2" viewBox="0 0 900 150" xmlns="http://www.w3.org/2000/svg"
+    <svg id="visual" class="spacer-bottom-event-section " viewBox="0 0 900 150" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <path
         d="M0 51L60 49L120 56L180 64L240 70L300 55L360 67L420 57L480 66L540 51L600 55L660 46L720 67L780 53L840 50L900 46L900 0L840 0L780 0L720 0L660 0L600 0L540 0L480 0L420 0L360 0L300 0L240 0L180 0L120 0L60 0L0 0Z"

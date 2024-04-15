@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   left.addEventListener("mouseenter", function () {
     left.style.width = "60%";
+    left.style.fontSize = "3.5em";
   });
 
   right.addEventListener("mouseenter", function () {
@@ -221,3 +222,30 @@ document.addEventListener("DOMContentLoaded", function () {
   var canvas = container.querySelector("canvas");
   canvas.classList.add("intro-canvas");
 }).call(this);
+
+
+
+
+$(document).ready(function(){
+  $(".owl-carousel").owlCarousel({
+    center: true,
+    loop:true,
+    margin: 50,
+    autoplay:true,
+    nav:true,
+    autoWidth:true,
+    responsive:{
+        0:{
+            items:1
+        },
+        600:{
+            items:1
+        },
+        1000:{
+            items:3
+        }
+    }
+});
+});
+
+
