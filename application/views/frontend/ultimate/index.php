@@ -6,8 +6,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
+    <?php include 'metas.php'; ?>
     <?php include 'stylesheets.php';?>
+        <?php include 'javascripts.php'; ?>
+
   </head>
   <body>
 

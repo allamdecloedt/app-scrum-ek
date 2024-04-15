@@ -25,10 +25,20 @@
   <script src="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/js/components/hs.cubeportfolio.js"></script>
   <script src="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/js/components/hs.svg-injector.js"></script>
   <script src="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/js/components/hs.go-to.js"></script>
-  <script src="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/js/custom.js"></script>
   <script src="<?php echo base_url();?>assets/jquery-form/jquery.form.min.js"></script>
   <script src="<?php echo base_url();?>assets/toastr/toastr.min.js"></script>
 
+  <!-- JS Bootstrap 5 -->
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+
+  <!-- Custom JS. -->
+
+  
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+
+  
 
 <script type="text/javascript">
   'use strict';
