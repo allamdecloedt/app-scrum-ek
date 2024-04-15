@@ -50,6 +50,15 @@ class Admin extends REST_Controller {
     return $this->set_response($userdata, REST_Controller::HTTP_OK);
   }
 
+    // Login API CALL
+    public function login_post() {
+
+      $userdata = $this->admin_model->login();
+      if ($userdata['validity'] == 1) {
+        $userdata['token'] = $this->tokenHandler->GenerateToken($userdata);
+      }
+      return $this->set_response($userdata, REST_Controller::HTTP_OK);
+    }
   // FORGOT PASSWORD API CALL
   public function forgot_password_post() {
     $response = $this->admin_model->forgot_password();
