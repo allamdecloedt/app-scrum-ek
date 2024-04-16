@@ -1,1 +1,0 @@
-<img src="<?php echo base_url('assets/backend/images/preview/csv_file.png'); ?>" width="100%" >

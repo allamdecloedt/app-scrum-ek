@@ -57,25 +57,7 @@
               </div> <!-- end row -->
 
               <div class="row">
-                  <div class="col-lg-6">
-                      <div class="card widget-flat" id = "parent">
-                          <div class="card-body">
-                              <div class="float-end">
-                                  <i class="mdi mdi-account-multiple widget-icon"></i>
-                              </div>
-                              <h5 class="text-muted font-weight-normal mt-0" title="Number of Parents"> <i class="mdi mdi-account-group title_icon"></i> <?php echo get_phrase('parents'); ?> <a href="<?php echo route('parent'); ?>" style="color: #6c757d; display: none;" id = "parent_list"><i class = "mdi mdi-export"></i></a></h5>
-                              <h3 class="mt-3 mb-3">
-                                  <?php
-                                      $parents = $this->user_model->get_parents();
-                                      echo $parents->num_rows();
-                                   ?>
-                              </h3>
-                              <p class="mb-0 text-muted">
-                                  <span class="text-nowrap"><?php echo get_phrase('total_number_of_parent'); ?></span>
-                              </p>
-                          </div> <!-- end card-body-->
-                      </div> <!-- end card-->
-                  </div> <!-- end col-->
+                
 
                   <div class="col-lg-6">
                       <div class="card widget-flat">

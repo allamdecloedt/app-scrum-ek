@@ -321,36 +321,6 @@ class Superadmin extends CI_Controller {
   //END TEACHER PERMISSION section
 
 
-  //START PARENT section
-  public function parent($param1 = '', $param2 = ''){
-
-    if($param1 == 'create'){
-      $response = $this->user_model->parent_create();
-      echo $response;
-    }
-
-    if($param1 == 'update'){
-      $response = $this->user_model->parent_update($param2);
-      echo $response;
-    }
-
-    if($param1 == 'delete'){
-      $response = $this->user_model->parent_delete($param2);
-      echo $response;
-    }
-
-    // show data from database
-    if ($param1 == 'list') {
-      $this->load->view('backend/superadmin/parent/list');
-    }
-
-    if(empty($param1)){
-      $page_data['folder_name'] = 'parent';
-      $page_data['page_title'] = 'parent';
-      $this->load->view('backend/index', $page_data);
-    }
-  }
-  //END PARENT section
 
 
   //START ACCOUNTANT section
