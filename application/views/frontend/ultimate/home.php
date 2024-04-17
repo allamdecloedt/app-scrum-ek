@@ -305,10 +305,6 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
           alt="image of teacher teaching scrum">
       </div>
     </div>
-
-
-
-
     <svg id="visual" class="spacer-4" viewBox="0 0 1920 60" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <path
@@ -320,13 +316,12 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
   <!-- Events Section -->
   <!-- Title -->
-  <div class="event-title-section container-fluid gx-0 py-11 ">
+  <div class="event-title-section">
     <div class=" text-center event-title-section-text">
-      <h2 class="event-title-section-text">
+      <h2 class="">
         <?php echo get_phrase('Upcomig Events'); ?>
       </h2>
       <div class="content">
-       
         <svg id="more-arrows">
           <polygon class="arrow-top" points="37.6,27.9 1.8,1.3 3.3,0 37.6,25.3 71.9,0 73.7,1.3 " />
           <polygon class="arrow-middle" points="37.6,45.8 0.8,18.7 4.4,16.4 37.6,41.2 71.2,16.4 74.5,18.7 " />
@@ -334,22 +329,24 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
         </svg>
       </div>
     </div>
-    <svg id="visual" class="spacer-bottom-event-section " viewBox="0 0 900 150" xmlns="http://www.w3.org/2000/svg"
+    <svg id="visual" class="spacer-bottom-event-section" viewBox="0 0 1920 100" xmlns="http://www.w3.org/2000/svg"
       xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
       <path
-        d="M0 51L60 49L120 56L180 64L240 70L300 55L360 67L420 57L480 66L540 51L600 55L660 46L720 67L780 53L840 50L900 46L900 0L840 0L780 0L720 0L660 0L600 0L540 0L480 0L420 0L360 0L300 0L240 0L180 0L120 0L60 0L0 0Z"
+        d="M0 50L137 63L274 53L411 63L549 44L686 73L823 55L960 66L1097 68L1234 75L1371 71L1509 61L1646 69L1783 41L1920 43L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
         fill="#3a3c43"></path>
       <path
-        d="M0 60L60 45L120 40L180 37L240 61L300 57L360 42L420 42L480 35L540 52L600 49L660 44L720 61L780 47L840 41L900 55L900 0L840 0L780 0L720 0L660 0L600 0L540 0L480 0L420 0L360 0L300 0L240 0L180 0L120 0L60 0L0 0Z"
-        fill="#313338"></path>
+        d="M0 41L137 39L274 36L411 56L549 52L686 61L823 40L960 32L1097 32L1234 36L1371 50L1509 52L1646 48L1783 59L1920 51L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
+        fill="#33353a"></path>
       <path
-        d="M0 30L60 28L120 18L180 28L240 46L300 40L360 18L420 28L480 19L540 26L600 41L660 35L720 43L780 32L840 28L900 34L900 0L840 0L780 0L720 0L660 0L600 0L540 0L480 0L420 0L360 0L300 0L240 0L180 0L120 0L60 0L0 0Z"
-        fill="#292a2c"></path>
+        d="M0 39L137 24L274 48L411 29L549 45L686 34L823 38L960 38L1097 45L1234 37L1371 47L1509 31L1646 25L1783 51L1920 51L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
+        fill="#2d2e32"></path>
       <path
-        d="M0 21L60 15L120 10L180 20L240 19L300 21L360 22L420 6L480 8L540 10L600 5L660 11L720 9L780 29L840 21L900 18L900 0L840 0L780 0L720 0L660 0L600 0L540 0L480 0L420 0L360 0L300 0L240 0L180 0L120 0L60 0L0 0Z"
+        d="M0 32L137 35L274 36L411 34L549 26L686 23L823 20L960 27L1097 34L1234 36L1371 33L1509 32L1646 34L1783 29L1920 22L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
+        fill="#272729"></path>
+      <path
+        d="M0 18L137 13L274 12L411 18L549 21L686 17L823 16L960 19L1097 11L1234 23L1371 12L1509 10L1646 17L1783 19L1920 12L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
         fill="#212121"></path>
     </svg>
-
   </div>
 
   <!-- End Title -->
@@ -369,7 +366,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
           <div class="event-overlay">
             <img src="uploads/images/decloedt/placeholders/worksm.jpg">
           </div>
-          <div class="carousel-caption  d-none d-md-block">
+          <div class="carousel-caption d-md-block">
             <div>
               <h5 class="event-content-title">Work Smarter, Not Harder Online Conference</h5>
               <p class="event-content-desc">Some representative placeholder content for the first slide.</p>
@@ -382,7 +379,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <img src="uploads/images/decloedt/placeholders/akw.jpg">
           </div>
 
-          <div class="carousel-caption d-none d-md-block">
+          <div class="carousel-caption d-md-block">
             <h5 class="event-content-title">From Awkward To Awesome: Secrets To Succes</h5>
             <p class="event-content-desc">Some representative placeholder content for the second slide.</p>
           </div>
@@ -392,7 +389,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <img src="uploads/images/decloedt/placeholders/elearning.jpg">
           </div>
 
-          <div class="carousel-caption d-none d-md-block">
+          <div class="carousel-caption d-md-block">
             <h5 class="event-content-title">Virtual Learning In Modern Scrum Enviroments</h5>
             <p class="event-content-desc">Some representative placeholder content for the third slide.</p>
           </div>
