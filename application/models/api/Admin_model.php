@@ -15,22 +15,66 @@ class Admin_model extends CI_Model {
   {
     parent::__construct();
   }
-  public function menu() {
-    $response = array();
-    $i = 0 ;
-    $query = $this->db->get('menus');
-    foreach ($query->result() as $row)
-    {
-      $response[$i]['id'] =  $row->id;
-      $response[$i]['displayed_name'] = $row->displayed_name;
-      $i++;
-    }
-    //  $row = $query->row_array();
-    // $response['id'] = $row['id'];
-    // $response['displayed_name'] = $row['displayed_name'];
-    $response['status'] = 200;
-    return $response;
+public function menu() {
+  $response = array();
+  $items = array(); 
+  // Définir la langue active comme le français ('fr')
+  $active_language = 'fr';
+
+  $query = $this->db->get('menus');
+  foreach ($query->result() as $row) {
+      if ($row->id == $row->parent) {
+          $displayed_name = $row->id . ' - ' . $row->displayed_name;
+      } else {
+          $displayed_name = $row->displayed_name;
+      }
+
+      // Traduire le nom de menu en français en utilisant la fonction get_phrase
+      $translated_name = get_phrase($displayed_name, $active_language);
+
+      // Vérifier s'il y a des sous-menus pour cet élément
+      $submenu = $this->get_submenu($row->id, $active_language);
+      
+      // Ajouter l'élément de menu seulement s'il a des sous-menus
+      if (!empty($submenu)) {
+          $item = array(
+              'id' => $row->id,
+              'parent' => $row->parent,
+              'displayed_name' => $translated_name,
+              'icon' => $row->icon,
+              'submenu' => $submenu
+          );
+          $items[] = $item;
+      }
   }
+
+  $response['status'] = 200;
+  $response['items'] = $items;
+
+  return $response;
+}
+
+// Fonction pour obtenir les sous-menus d'un élément de menu spécifique
+private function get_submenu($parent_id, $active_language) {
+  $submenu = array();
+  
+  // Récupérer les sous-menus pour le parent_id spécifié
+  $query = $this->db->get_where('menus', array('parent' => $parent_id));
+  foreach ($query->result() as $row) {
+      // Traduire le nom de sous-menu en français en utilisant la fonction get_phrase
+      $translated_name = get_phrase($row->displayed_name, $active_language);
+      
+      $subitem = array(
+          'id' => $row->id,
+          'parent' => $row->parent,
+          'displayed_name' => $translated_name,
+          'icon' => $row->icon
+      );
+      $submenu[] = $subitem;
+  }
+  
+  return $submenu;
+}
   // Login mechanism
   public function login() {
     $response = array();
