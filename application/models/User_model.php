@@ -549,7 +549,7 @@ class User_model extends CI_Model {
 
 			$student_data['code'] = student_code();
 			$student_data['user_id'] = $user_id;
-			$student_data['parent_id'] = html_escape($this->input->post('parent_id'));
+		
 			$student_data['session'] = $this->active_session;
 			$student_data['school_id'] = $this->school_id;
 			$this->db->insert('students', $student_data);
@@ -606,7 +606,7 @@ class User_model extends CI_Model {
 
 				$student_data['code'] = student_code();
 				$student_data['user_id'] = $user_id;
-				$student_data['parent_id'] = $students_parent[$key];
+				
 				$student_data['session'] = $this->active_session;
 				$student_data['school_id'] = $this->school_id;
 				$this->db->insert('students', $student_data);
@@ -708,7 +708,6 @@ class User_model extends CI_Model {
 	}
 
 	public function student_update($student_id = '', $user_id = ''){
-		$student_data['parent_id'] = html_escape($this->input->post('parent_id'));
 
 		$enroll_data['class_id'] = html_escape($this->input->post('class_id'));
 		$enroll_data['section_id'] = html_escape($this->input->post('section_id'));
@@ -724,7 +723,7 @@ class User_model extends CI_Model {
 		$duplication_status = $this->check_duplication('on_update', $user_data['email'], $user_id);
 		if ($duplication_status) {
 			$this->db->where('id', $student_id);
-			$this->db->update('students', $student_data);
+			// $this->db->update('students', $student_data);
 
 			$this->db->where('student_id', $student_id);
 			$this->db->update('enrols', $enroll_data);
@@ -791,7 +790,7 @@ class User_model extends CI_Model {
 				$student_details = $this->db->get_where('students', array('id' => $enrol['student_id']))->row_array();
 				$enrol_data[$key]['code'] = $student_details['code'];
 				$enrol_data[$key]['user_id'] = $student_details['user_id'];
-				$enrol_data[$key]['parent_id'] = $student_details['parent_id'];
+				
 				$user_details = $this->db->get_where('users', array('id' => $student_details['user_id']))->row_array();
 				$enrol_data[$key]['name'] = $user_details['name'];
 				$enrol_data[$key]['email'] = $user_details['email'];
@@ -820,7 +819,7 @@ class User_model extends CI_Model {
 				$student_details = $this->db->get_where('students', array('id' => $enrol['student_id']))->row_array();
 				$enrol_data[$key]['code'] = $student_details['code'];
 				$enrol_data[$key]['user_id'] = $student_details['user_id'];
-				$enrol_data[$key]['parent_id'] = $student_details['parent_id'];
+				
 				$user_details = $this->db->get_where('users', array('id' => $student_details['user_id']))->row_array();
 				$enrol_data[$key]['name'] = $user_details['name'];
 				$enrol_data[$key]['email'] = $user_details['email'];
@@ -848,7 +847,7 @@ class User_model extends CI_Model {
 			$student_details = $this->db->get_where('students', array('id' => $enrol_data['student_id']))->row_array();
 			$enrol_data['code'] = $student_details['code'];
 			$enrol_data['user_id'] = $student_details['user_id'];
-			$enrol_data['parent_id'] = $student_details['parent_id'];
+			
 			$user_details = $this->db->get_where('users', array('id' => $student_details['user_id']))->row_array();
 			$enrol_data['name'] = $user_details['name'];
 			$enrol_data['email'] = $user_details['email'];

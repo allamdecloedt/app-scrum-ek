@@ -39,15 +39,7 @@
                         </select>
                     </div>
 
-                    <div class="form-group col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-1 mb-lg-0">
-                        <select name="parent_id[]" class="form-control" required>
-                            <option value=""><?php echo get_phrase('select_a_parent'); ?></option>
-                            <?php $parents = $this->db->get_where('parents', array('school_id' => $school_id))->result_array(); ?>
-                            <?php foreach($parents as $parent): ?>
-                                <option value="<?php echo $parent['id']; ?>"><?php echo $this->user_model->get_user_details($parent['user_id'], 'name'); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                
                 </div>
             </div>
             <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12 mb-3 mb-lg-0">
@@ -88,15 +80,7 @@
                     </select>
                 </div>
 
-                <div class="form-group col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-1 mb-lg-0">
-                    <select name="parent_id[]" class="form-control">
-                        <option value=""><?php echo get_phrase('select_a_parent'); ?></option>
-                        <?php $parents = $this->db->get_where('parents', array('school_id' => $school_id))->result_array(); ?>
-                        <?php foreach($parents as $parent): ?>
-                            <option value="<?php echo $parent['id']; ?>"><?php echo $this->user_model->get_user_details($parent['user_id'], 'name'); ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
+            
             </div>
         </div>
         <div class="col-xl-1 col-lg-1 col-md-12 col-sm-12 mb-3 mb-lg-0">

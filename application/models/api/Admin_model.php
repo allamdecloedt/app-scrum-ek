@@ -184,7 +184,7 @@ class Admin_model extends CI_Model {
         $response[$key]['student_id'] = $student_details['id'];
         $response[$key]['student_code'] = $student_details['code'];
         $response[$key]['user_id'] = $student_details['user_id'];
-        $response[$key]['parent_id'] = $student_details['parent_id'];
+  
         $user_details = $this->db->get_where('users', array('id' => $student_details['user_id']))->row_array();
         $response[$key]['name'] = $user_details['name'];
         $response[$key]['email'] = $user_details['email'];
@@ -213,7 +213,7 @@ class Admin_model extends CI_Model {
       $response['student_id'] = $student_details['id'];
       $response['student_code'] = $student_details['code'];
       $response['user_id'] = $student_details['user_id'];
-      $response['parent_id'] = $student_details['parent_id'];
+      
       $user_details = $this->db->get_where('users', array('id' => $student_details['user_id']))->row_array();
       $response['name'] = $user_details['name'];
       $response['email'] = $user_details['email'];
