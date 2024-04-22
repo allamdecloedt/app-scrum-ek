@@ -31,6 +31,84 @@ class Admin_model extends CI_Model {
     $response['status'] = 200;
     return $response;
   }
+
+  public function editProfile() {
+    $response = array();
+  
+   
+    $user_id = $_POST['user_id'] ?? null;
+  
+  
+    if (empty($user_id)) {
+      $response['status'] = 400;
+      $response['message'] = 'User ID is missing or invalid.';
+      return $response;
+    }
+  
+  
+    $data = array(
+      'name' => $_POST['name'] ?? null,
+      'email' => $_POST['email'] ?? null,
+      'address' => $_POST['address'] ?? null,
+      'phone' => $_POST['phone'] ?? null,
+      'birthday' => isset($_POST['birthday']) ? strtotime($_POST['birthday']) : null,
+      'gender' => $_POST['gender'] ?? null,
+      'blood_group' => $_POST['blood_group'] ?? null
+    );
+  
+  
+    $data = array_filter($data, function ($value) {
+      return $value !== null;
+    });
+  
+  
+    $this->db->where('id', $user_id);
+    $update = $this->db->update('users', $data);
+  
+  
+    if ($update) {
+      $response['status'] = 200;
+      $response['message'] = 'Profile updated successfully';
+    } else {
+      $response['status'] = 500;
+      $response['message'] = 'Failed to update profile';
+    }
+  
+    return $response;
+  }
+  public function updatePassword() {
+    $response = array();
+  
+    $user_id = $_POST['user_id'] ?? null;
+    $new_password = $_POST['new_password'] ?? null;
+  
+  
+    if (empty($user_id) || empty($new_password)) {
+        $response['status'] = 400;
+        $response['message'] = 'User ID or new password is missing or invalid.';
+        return $response;
+    }
+  
+  
+    $encrypted_password = sha1($new_password);
+  
+  
+    $update_data = array('password' => $encrypted_password);
+    $this->db->where('id', $user_id);
+    $update = $this->db->update('users', $update_data);
+  
+  
+    if ($update) {
+        $response['status'] = 200;
+        $response['message'] = 'Password updated successfully';
+    } else {
+        $response['status'] = 500;
+        $response['message'] = 'Failed to update password';
+    }
+  
+    return $response;
+  }
+  
   // Login mechanism
   public function login() {
     $response = array();

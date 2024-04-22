@@ -56,3 +56,7 @@ $route['translate_uri_dashes'] = TRUE;
 
 $route['api/menu'] = 'api/Admin/menu';
 
+
+$route['api/edit'] = 'api/Admin/editProfile';
+
+$route['api/editPassword'] = 'api/Admin/updatePassword';
