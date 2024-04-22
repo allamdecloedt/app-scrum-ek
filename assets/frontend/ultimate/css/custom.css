@@ -121,12 +121,12 @@ label div:last-child {
 }
 
 .nav-link:hover {
-  color: #a8a8a8 !important;
+  color: #ffffff !important;
   transition: all 0.3s;
 }
 
 .active {
-  color: #ababab !important;
+  color: #a8a8a8 !important;
 }
 /*----------------------------------------------------------------------------------------------------------------
 Home Page Styling
