@@ -86,6 +86,24 @@ public function getUserRole($user_id) {
 }
 
 
+//Edit API CALL
+public function editProfile_post() {
+  
+  $response = $this->admin_model->editProfile();
+
+  return $this->set_response($response, REST_Controller::HTTP_OK);
+}
+
+//Update Current Password
+public function updatePassword_post() {
+  
+  $response = $this->admin_model->updatePassword();
+
+  return $this->set_response($response, REST_Controller::HTTP_OK);
+}
+
+
+
     // Login API CALL
     public function login_post() {
 
