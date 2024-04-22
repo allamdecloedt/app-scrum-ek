@@ -15,22 +15,92 @@ class Admin_model extends CI_Model {
   {
     parent::__construct();
   }
-  public function menu() {
-    $response = array();
-    $i = 0 ;
-    $query = $this->db->get('menus');
-    foreach ($query->result() as $row)
-    {
-      $response[$i]['id'] =  $row->id;
-      $response[$i]['displayed_name'] = $row->displayed_name;
-      $i++;
-    }
-    //  $row = $query->row_array();
-    // $response['id'] = $row['id'];
-    // $response['displayed_name'] = $row['displayed_name'];
-    $response['status'] = 200;
-    return $response;
+
+public function menu($user_type) {
+  $response = array();
+  $items = array();
+  $active_language = 'fr';
+
+  $query = $this->db->get_where('users', $user_type);
+  $row = $query->row();
+
+  $userRole = strtolower($row->role);
+
+  $query_menus = $this->db->get('menus');
+  foreach ($query_menus->result() as $row_menu) {
+      if ($row_menu->parent == 0) { 
+          if ($row_menu->id == $row_menu->parent) {
+              $displayed_name = $row_menu->id . ' - ' . $row_menu->displayed_name;
+          } else {
+              $displayed_name = $row_menu->displayed_name;
+          }
+
+          $translated_name = get_phrase($displayed_name, $active_language);
+
+          $submenu = $this->get_submenu($row_menu->id, $active_language);
+          $containsSameName = false;
+          foreach ($submenu as $subitem) {
+              if ($subitem['displayed_name'] == $row_menu->displayed_name) {
+                  $containsSameName = true;
+                  break;
+              }
+          }
+
+          if (!$containsSameName) {
+              $access = $row_menu->{$userRole . '_access'};
+              if ($access == 1) {
+                  $item = array(
+                      'id' => $row_menu->id,
+                      'parent' => $row_menu->parent,
+                      'displayed_name' => $translated_name,
+                      'icon' => $row_menu->icon,
+                      'submenu' => $submenu,
+                      'access' => array(
+                          'superadmin' => $row_menu->superadmin_access,
+                          'admin' => $row_menu->admin_access, 
+                          'teacher' => $row_menu->teacher_access,
+                          'student' => $row_menu->student_access,
+                          'parent' => $row_menu->parent_access,
+                          'accountant' => $row_menu->accountant_access,
+                          'librarian' => $row_menu->librarian_access,
+                          'driver' => $row_menu->driver_access
+                      )
+                  );
+                  $items[] = $item;
+              }
+          }
+      }
   }
+
+  foreach ($items as $key => $item) {
+      if ($item['displayed_name'] == 'Online admission') {
+          unset($items[$key]);
+          array_unshift($items, $item);
+          break;
+      }
+  }
+
+  $ordered_items = array();
+  $online_courses = array();
+  $settings_item = null;
+  foreach ($items as $item) {
+      if ($item['displayed_name'] == 'Online courses') {
+          $online_courses[] = $item;
+      } elseif ($item['displayed_name'] == 'Settings') {
+          $settings_item = $item;
+      } else {
+          $ordered_items[] = $item;
+      }
+  }
+  $ordered_items = array_merge($ordered_items, $online_courses);
+  if ($settings_item) {
+      $ordered_items[] = $settings_item;
+  }
+  $response['status'] = 200;
+  $response['items'] = $ordered_items;
+
+  return $response;
+}
 
   public function editProfile() {
     $response = array();
@@ -109,6 +179,52 @@ class Admin_model extends CI_Model {
     return $response;
   }
   
+
+
+
+private function get_submenu($parent_id, $active_language) {
+  $submenu = array();
+
+  $query = $this->db->get_where('menus', array('parent' => $parent_id));
+  foreach ($query->result() as $row) {
+  
+      if ($row->id != $parent_id) {
+          $translated_name = get_phrase($row->displayed_name, $active_language);
+
+          $subitem = array(
+              'id' => $row->id,
+              'parent' => $row->parent,
+              'displayed_name' => $translated_name,
+              'access' => array(
+                  'superadmin' => $row->superadmin_access,
+                  'admin' => $row->admin_access,
+                  'teacher' => $row->teacher_access,
+                  'student' => $row->student_access,
+                  'parent' => $row->parent_access,
+                  'accountant' => $row->accountant_access,
+                  'librarian' => $row->librarian_access,
+                  'driver' => $row->driver_access
+              ),
+              'icon' => $row->icon
+          );
+
+          $sub_submenu = $this->
+            
+            
+            
+            
+            ($row->id, $active_language);
+          if (!empty($sub_submenu)) {
+              $subitem['submenu'] = $sub_submenu;
+          }
+
+          $submenu[] = $subitem;
+      }
+  }
+
+  return $submenu;
+}
+
   // Login mechanism
   public function login() {
     $response = array();

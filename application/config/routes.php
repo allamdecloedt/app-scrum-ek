@@ -53,7 +53,7 @@ $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = TRUE;
 
-
+$route['api/login'] = 'api/Admin/login';
 $route['api/menu'] = 'api/Admin/menu';
 
 

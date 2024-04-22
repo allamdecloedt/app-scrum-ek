@@ -45,10 +45,46 @@ class Admin extends REST_Controller {
   }
   // menu
   public function menu_get() {
-    // echo 'fettah';
-    $userdata = $this->admin_model->menu();
-    return $this->set_response($userdata, REST_Controller::HTTP_OK);
+   
+    $user_id = $this->get('user_id');
+    if ($user_id) {
+        $user_role = $this->getUserRole($user_id); 
+
+        $user_type = array(
+            'user_id' => $user_id,
+            'role' => $user_role,
+           
+        );
+    } else {
+       
+        $user_type = array();
+    }
+
+
+    $userdata = $this->admin_model->menu($user_type);
+
+    $this->response($userdata, REST_Controller::HTTP_OK);
+}
+
+
+
+public function getUserRole($user_id) {
+
+  $this->db->select('role');
+  $this->db->from('users');
+  $this->db->where('user_id', $user_id);
+  $query = $this->db->get();
+
+  if ($query && $query->num_rows() > 0) {
+   
+      $row = $query->row();
+      return $row->role;
+  } else {
+     
+      return null;
   }
+}
+
 
 //Edit API CALL
 public function editProfile_post() {
