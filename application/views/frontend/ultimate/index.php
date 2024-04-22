@@ -6,8 +6,9 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-
+    <?php include 'metas.php'; ?>
     <?php include 'stylesheets.php';?>
+    <?php include 'nav.js';?>
   </head>
   <body>
 
