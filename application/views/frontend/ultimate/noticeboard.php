@@ -12,7 +12,9 @@
 <!-- ========== MAIN ========== -->
 <main id="content" role="main">
   <!-- Hero Section -->
+  
   <div class="gradient-half-primary-v1">
+  
     <div class="container text-center space-top-4 space-top-md-4 space-top-lg-3 space-bottom-1">
       <!-- Title -->
       <div class="w-md-80 w-lg-50 mx-auto mb-5">

@@ -5,7 +5,6 @@
 <!-- CSS Implementing Plugins -->
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/font-awesome/css/fontawesome-all.min.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/animate.css/animate.min.css">
-<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/hs-megamenu/src/hs.megamenu.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/fancybox/jquery.fancybox.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/slick-carousel/slick/slick.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/cubeportfolio/css/cubeportfolio.min.css">
@@ -15,7 +14,6 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/toastr/toastr.min.css">
 
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/custom.css">
-<script src="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/jquery/dist/jquery.min.js"></script>
 
 <!--<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/theme.css">-->
 
@@ -30,3 +28,13 @@
 
 
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/about-page.css">
+
+<!-- JS Script in need of first loading -->
+
+<script src="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/jquery/dist/jquery.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"
+  integrity="sha512-f5HTYZYTDZelxS7LEQYv8ppMHTZ6JJWglzeQmr0CVTS70vJgaJiIO15ALqI7bhsracojbXkezUIL+35UXwwGrQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script src="<?php echo base_url()?>assets/frontend/ultimate/js/nav.js" > </script>

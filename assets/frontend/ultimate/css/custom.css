@@ -13,7 +13,7 @@ body,
 main {
   position: relative;
   z-index: -3 !important;
-  background: #212121;
+  background: #212121 !important;
 }
 /*------------------------------------
 Navigation Styling
@@ -23,49 +23,176 @@ Navigation Styling
   margin: auto;
 }
 
-.logo img {
-  transform: scale(1.3);
-  margin: 15px;
+.sticky-nav {
+  background: #606060c4;
+  transition: 0.5s;
+  position: fixed !important;
+  top: 0;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  border-bottom-left-radius: 10px; /* 25px rounded bottom left corner */
+  border-bottom-right-radius: 10px;
+  transition: all 0.5s;
 }
 
-/*-------------------------------------------
+.nav-home {
+  background: #212121a6 !important;
+}
+
+.nav-link {
+  color: #ffffff !important;
+  text-transform: uppercase;
+  margin: 0 10px;
+  transition: all 0.5s ease-in-out;
+}
+
+.show {
+  background: #212121d2 !important;
+  border-radius: 10px;
+}
+
+.collapsing {
+  background: #212121d2 !important;
+  border-radius: 10px;
+}
+
+#menu_checkbox {
+  display: none;
+}
+
+.hidden {
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+
+
+label {
+  position: absolute;
+  right: 20px;
+  margin: 0 auto;
+  display: block;
+  width: 30px;
+  height: 30px;
+  transform: translateY(-50%);
+  transition: 0.3s ease transform;
+  cursor: pointer;
+}
+
+label div {
+  width: 3px;
+  height: 3px;
+  background-color: #ffffff;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  transition: 0.3s ease width, 0.3s ease margin-left, 0.3s ease margin-bottom,
+    0.3s ease background-color;
+}
+
+label div:first-child {
+  width: 17px;
+}
+
+label div:nth-child(2) {
+  width: 13px;
+}
+
+label div:last-child {
+  width: 25px;
+}
+
+#menu_checkbox:checked + label {
+  transform: translateY(-50%) rotateZ(-90deg);
+}
+
+#menu_checkbox:checked + label div {
+  width: 5px;
+  height: 5px;
+  margin-left: 12px;
+  margin-bottom: 5px;
+
+  background-color: #ffffff;
+}
+
+.nav-link:hover {
+  color: #a8a8a8 !important;
+  transition: all 0.3s;
+}
+
+.active {
+  color: #ababab !important;
+}
+/*----------------------------------------------------------------------------------------------------------------
 Home Page Styling
----------------------------------------------*/
+-----------------------------------------------------------------------------------------------------------------*/
 
 /*------------------------------------
 Spacer Styling
 ------------------------------------*/
 
-.spacer-top {
-  aspect-ratio: 900/100;
+.spacer-top,
+.spacer-3,
+.spacer-4,
+.spacer-bottom-event-section {
+  z-index: 2;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
   position: absolute;
   pointer-events: none;
-  bottom: 0;
-  z-index: 0;
-  filter: drop-shadow(0 3px 7px #ffffff);
 }
 
-/*------------------------------------
-First Section Styling
-------------------------------------*/
+.spacer-top {
+  aspect-ratio: 900/100;
+  bottom: 0;
+  filter: drop-shadow(0 3px 7px #ffffff);
+  z-index: 0;
+}
 
+.spacer-3 {
+  aspect-ratio: 1920/60;
+  top: 0;
+  filter: drop-shadow(0 2px 1px #00000084);
+}
+
+.spacer-4 {
+  aspect-ratio: 1920/60;
+  bottom: 0px;
+  filter: drop-shadow(0 -2px 1px #00000084);
+}
+
+.spacer-bottom-event-section {
+  aspect-ratio: 1920/100;
+  filter: drop-shadow(0 8px 5px #00000084);
+  width: 100%;
+  bottom: -15px;
+}
+
+/*----------------------------------------------------------------------------------------------------------------
+First Section Styling
+-----------------------------------------------------------------------------------------------------------------*/
 .intro-section {
   z-index: -2;
   background: linear-gradient(to bottom, #212121, #27272d 30%, #41434c 50%);
+  height: 120vh;
+  padding-top: 80px;
+  top: 0;
   position: relative;
-  height: 110vh;
 }
 
 .intro-container {
-  position: relative;
 }
 
 .intro-canvas {
   position: absolute;
   z-index: 0;
+  top: 0;
   width: 100% !important;
   height: 100% !important;
   pointer-events: visiblePainted;
@@ -86,13 +213,9 @@ First Section Styling
 
 .intro-img img {
   aspect-ratio: 1/ 1;
-  /* Set aspect ratio to 1:1 */
   width: 100%;
-  /* Or any other size, height will adjust automatically */
   border-radius: 50%;
-  /* Make it circular */
   object-fit: cover;
-  /* Cover the area without stretching */
   overflow: hidden;
   z-index: -2;
 }
@@ -117,203 +240,27 @@ First Section Styling
   height: 75vh !important;
 }
 
-/*------------------------------------
-Teacher Section Styling 
+/*-----------------------------------
+Intro Section Button Styling
 ------------------------------------*/
 
-.teacher-section {
+.intro-button {
+  font-size: 1rem;
+  letter-spacing: 0.15rem;
+  transition: all 0.2s;
   position: relative;
-  background: #212121;
-  z-index: 0;
-  min-height: 700px;
-}
-
-/*-------------------
-Teacher Card Styling
----------------------*/
-
-/*------------------------------------
-Text Section Styling
-------------------------------------*/
-
-.spacer-3 {
-  aspect-ratio: 1920/60;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  position: absolute;
-  pointer-events: none;
-  z-index: 2;
-  top: 0;
-  filter: drop-shadow(0 2px 1px #00000084);
-}
-
-.spacer-4 {
-  aspect-ratio: 1920/60;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  position: absolute;
-  pointer-events: none;
-  z-index: 2;
-  bottom: 0px;
-  filter: drop-shadow(0 -2px 1px #00000084);
-}
-
-.text-section {
-  height: auto;
-  width: 100%;
-  position: relative;
-  background-color: #4e515b;
-  min-height: 400px;
-}
-
-/* Split the screen in half */
-.split {
-  height: 100%;
-  width: 50%;
-  position: relative;
-  overflow-x: hidden;
-  position: absolute;
-  transition: all 0.6s;
-}
-
-/* Control the left side */
-.left {
-  left: 0;
-  background-color: #4e515b;
+  overflow: hidden;
   z-index: 1;
-}
-
-/* Control the right side */
-.right {
-  right: 0;
-  z-index: 0;
-  
-
-}
-
-/* If you want the content centered horizontally and vertically */
-.centered {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.centered p {
-  position: relative;
-  width: 45vh;
-
-  font-size: clamp(1.2rem, 1vw, 1rem);
-  font-weight: 400;
-  text-align: center;
-  color: #ffffff;
-}
-
-/* Style the image inside the centered container, if needed */
-.split-img img {
-  object-fit: cover;
-  width: 100%;
-  height: 100%;
+  font-family: "Montserrat", sans-serif !important;
 }
 
 /*------------------------------------
-Event Section Styling 
+End Intro Section Button Styling
 ------------------------------------*/
-.event-title-section {
-  height: 350px !important;
-  background-color: #212121;
-  position: relative;
-  min-height: 350px;
-}
 
-.event-title-section-text {
-  color: #ffffff;
-  font-size: 1.5em;
-  font-weight: 400;
-  text-align: center;
-  font-family: "Montserrat", sans-serif;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.spacer-bottom-event-section {
-  aspect-ratio: 1920/100;
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: absolute;
-  pointer-events: none;
-  filter: drop-shadow(0 8px 5px #00000084);
-  width: 100%;
-  bottom: -15px;
-}
-
-.event-section {
-  position: relative;
-  z-index: -2;
-}
-
-.event-carousel {
-  position: absolute;
-  width: 100%;
-  height: 500px !important;
-  z-index: -1;
-}
-
-.event-carousel img {
-  width: 100%;
-  height: 500px;
-  object-fit: cover;
-  position: relative;
-  z-index: -2;
-}
-
-.btn-background {
-  background-color: #adadadab !important;
-  width: 5vw !important;
-  height: 100%;
-  opacity: 0.5;
-}
-
-.event-content-title {
-  color: #ffffff !important;
-  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
-}
-
-.event-content-desc {
-  color: #ffffff !important;
-  text-shadow: -1px 0 rgb(86, 86, 86), 0 1px rgb(86, 86, 86),
-    1px 0 rgb(86, 86, 86), 0 -1px rgb(86, 86, 86);
-}
-
-.event-overlay {
-  position: relative;
-  width: 100%;
-  z-index: -1;
-}
-
-.event-overlay::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0); /* Transparent overlay by default */
-  transition: background-color 0.5s ease; /* Smooth transition */
-}
-
-.event-overlay:hover::after {
-  background: rgba(0, 0, 0, 0.5); /* Change to your desired color on hover */
-}
-
-/*------------------------------------ 
+/*----------------------------------------------------------------------------------------------------------------
 Social Media Buttons CSS
---------------------------------------*/
-
+-----------------------------------------------------------------------------------------------------------------*/
 .social-media-main-text {
   color: #ffffff;
   font-size: 1.5em;
@@ -467,401 +414,19 @@ Social Media Buttons CSS
 End Social Media Buttons CSS
 --------------------------------------*/
 
-/*------------------------------------
-Intro Section Button Styling
-------------------------------------*/
-
-body {
-  font: 400 1.4rem "Lato", Verdana, Helvetica, sans-serif;
-}
-
-.intro-button {
-  font-size: 1rem;
-  letter-spacing: 0.15rem;
-  transition: all 0.2s;
+/*----------------------------------------------------------------------------------------------------------------
+Teacher Section Styling 
+-----------------------------------------------------------------------------------------------------------------*/
+.teacher-section {
   position: relative;
-  overflow: hidden;
-  z-index: 1;
-  font-family: "Montserrat", sans-serif !important;
+  background: #212121;
+  z-index: 0;
+  min-height: 700px;
 }
 
-/*------------------------------------
-End Intro Section Button Styling
-------------------------------------*/
-
-/*------------------------------------
-Footer Styling
-------------------------------------*/
-
-.footer {
-  background: #27272d;
-  color: #ffffff;
-  padding: 50px 0;
-}
-
-.footer-email {
-  text-decoration: none !important;
-  color: #ffffff;
-}
-
-.custom-list-group-item {
-  background-color: #27272d !important; /* Custom background color */
-  color: white !important; /* Custom text color */
-}
-
-.list-group h4 {
-  font-family: "Montserrat", sans-serif !important;
-}
-
-.list-group-item:hover {
-  background-color: #27272d !important;
-  color: white !important;
-}
-
-.custom-list-group-item:hover {
-  background-color: #ededed; /* Darker shade for hover effect */
-  color: white;
-}
-
-.light-border-top {
-  border-top: 1px solid #ffffff; /* Custom border color */
-}
-
-.light-border-bottom {
-  border-bottom: 1px solid #ffffff; /* Custom border color */
-}
-
-/*------------------------------------
-Responsive Styling
-------------------------------------*/
-
-@media (max-width: 576px) {
-  /* Your CSS */
-  .intro-section {
-    background: linear-gradient(
-      to top,
-      #41434c,
-      #27272d 30%,
-      #212121 50%
-    ) !important;
-
-    min-height: 800px;
-  }
-
-  .intro-img img {
-    display: none;
-  }
-
-  .right {
-    display: none;
-  }
-
-  .split {
-    width: 100%;
-  }
-  .left {
-    width: 100%;
-  }
-
-  .event-section {
-    position: relative;
-    z-index: -2;
-    padding-top: 0px;
-    height: auto;
-  }
-
-  .spacer-bottom-event-section {
-    bottom: -70px;
-  }
-
-  .spacer-3 {
-    top: -2px;
-  }
-
-  .spacer-4 {
-   
-    bottom: -4px;
-   
-  }
-}
-
-@media (min-width: 576px) {
-
-    .spacer-bottom-event-section {
-    bottom: -80px;
-    
-  }
-}
-
-
-@media (min-width: 768px) {
-
-
-  .spacer-bottom-event-section {
-    bottom: -90px;
-  }
-
-  .spacer-3 {
-    top: -2px;
-  }
-
-  .spacer-4 {
-   
-    bottom: 7px;
-   
-  }
-
-  
-}
-
-/* Medium devices (tablets, 768px and up) */
-@media (max-width: 768px) {
-  .event-section {
-    position: relative;
-    z-index: -2;
-    padding-top: 0px;
-  }
-  /* Your CSS */
-  .intro-section {
-    background: linear-gradient(
-      to top,
-      #41434c,
-      #27272d 30%,
-      #212121 50%
-    ) !important;
-  }
-
-  .right {
-    display: none;
-  }
-
-  .left {
-    width: 100% !important;
-  }
-
-  .intro-img img {
-    display: none;
-  }
-
-  .spacer-3 {
-    top: -2px;
-  }
-
-  .spacer-4 {
-   
-    bottom: 6px;
-   
-  }
-}
-
-/* Large devices (desktops, 992px and up) */
-@media (max-width: 992px) {
-  /* Your CSS */
-  .intro-section {
-    background: linear-gradient(to botton, #41434c, #27272d 30%, #212121 50%);
-  }
-
-  .btn-change5 {
-    font-family: "Montserrat", sans-serif !important;
-    letter-spacing: 0.15rem;
-    width: 100% !important;
-    background: #838383 !important;
-    color: #fff;
-  }
-  .btn-change5:hover {
-    background-color: #27272d !important;
-  }
-
-  .event-section {
-    position: relative;
-    z-index: -2;
-    padding-top: 0px;
-  }
-
-  .intro-img img {
-    display: none;
-  }
-}
-
-@media (min-width: 992px) {
-  /* Your CSS */
-
-  /*------------------------------------
-  Intro Section Button Styling
-  ------------------------------------*/
-  .btn-change5 {
-    font-family: "Montserrat", sans-serif !important;
-    letter-spacing: 0.15rem;
-    width: 100% !important;
-    background: radial-gradient(
-      circle,
-      rgb(109, 0, 142) 0%,
-      rgb(126, 17, 221) 50%,
-      rgb(98, 0, 123) 100%
-    ) !important;
-    color: #fff !important;
-    border: 0px;
-    -webkit-transform-origin: 50% 50%;
-    transform-origin: 50% 50%;
-    -webkit-transition-duration: 0.5s;
-    transition-duration: 0.5s;
-    -webkit-transition-timing-function: ease-out;
-    transition-timing-function: ease-out;
-    -webkit-box-shadow: -150px 0px 0 0 #838383 inset,
-      150px 0px 0 0 #838383 inset;
-    box-shadow: -150px 0px 0 0 #838383 inset, 150px 0px 0 0 #838383 inset;
-  }
-  .btn-change5:hover {
-    -webkit-box-shadow: 0px 0px 0 0 #838383 inset, 0px 0px 0 #838383 inset;
-    color: #ffffff !important;
-  }
-
-  .spacer-top2 {
-    aspect-ratio: 900/150;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    position: absolute;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  .spacer-bottom-event-section {
-    bottom: -100px;
-    
-  }
-
-  
-
-}
-
-/* Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) {
-  .left:hover {
-    p {
-      font-size: 1.5rem !important;
-      transition: font-size 0.2s ease-in-out;
-      text-align: center;
-    }
-  }
-
-.spacer-bottom-event-section {
-    bottom: -110px;
-  }
-
-}
-
-@media (max-width: 1200px) {
-  /* Your CSS */
-  .intro-section {
-    background: #27272d;
-  }
-
-  .spacer-top {
-    margin-top: 100px;
-  }
-
-  .event-section {
-    position: relative;
-    z-index: -2;
-    padding-top: 60px;
-  }
-}
-
-
-
-/* Extra extra large devices (larger desktops, 1400px and up) */
-@media (min-width: 1400px) {
-  .spacer-bottom-event-section {
-    aspect-ratio: 1920/100;
-    background-repeat: no-repeat;
-    background-size: cover;
-    position: absolute;
-    pointer-events: none;
-    filter: drop-shadow(0 8px 5px #00000084);
-    width: 100%;
-    bottom: -125px;
-  }
-  /* Your CSS */
-}
-
-/* Extra small devices (portrait phones, less than 576px) */
-/* No media query since this is the default in Bootstrap */
-
-/* Small devices (landscape phones, 576px and up) */
-@media (max-width: 576px) {
-  /* Your CSS */
-  .intro-section {
-    background: linear-gradient(
-      to top,
-      #41434c,
-      #27272d 30%,
-      #212121 50%
-    ) !important;
-  }
-
-  .intro-img img {
-    display: none;
-  }
-
-  .event-title-section {
-    height: 5%;
-    background-color: #212121;
-    position: relative;
-  }
-
-  .spacer-top2 {
-    aspect-ratio: 900/150;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    position: absolute;
-    pointer-events: none;
-    z-index: 1;
-    bottom: 0;
-  }
-}
-
-@media (min-width: 576px) {
-  .spacer-top2 {
-    aspect-ratio: 900/150;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    position: absolute;
-    pointer-events: none;
-    z-index: 1;
-    bottom: 0;
-  }
-
-   .event-section {
-    position: relative;
-    z-index: -2;
-    padding-top: 60px;
-  }
-}
-
-/* Medium devices (tablets, 768px and up) */
-@media (min-width: 768px) {
-}
-
-/* Large devices (desktops, 992px and up) */
-@media (min-width: 992px) {
-}
-
-/* Extra large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) {
- 
-}
-
-/* Extra extra large devices (larger desktops, 1400px and up) */
-@media (min-width: 1400px) {
-  .event-section {
-    position: relative;
-    z-index: -2;
-    padding-top: 60px;
-  }
-}
+/*-------------------
+Teacher Card Styling
+---------------------*/
 
 :root {
   --hover-width: 75%;
@@ -936,8 +501,6 @@ Responsive Styling
 .teacher-card-details > div {
   text-align: center;
 }
-.teacher-card-details > div:first-child {
-}
 
 .teacher-card button {
   width: 80%;
@@ -987,6 +550,14 @@ Responsive Styling
   }
 }
 
+/*-------------------
+End Teacher Card Styling  
+---------------------*/
+
+/*-------------------
+Teacher Section Owl Carousel Styling
+---------------------*/
+
 .owl-next,
 .owl-prev {
   color: #ffffff !important;
@@ -1003,26 +574,149 @@ Responsive Styling
   transition: opacity 0.5s ease;
 }
 
-/* ===== Scrollbar CSS ===== */
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #878787 #212121;
+/*-------------------------------------------
+End Teacher Section Styling
+--------------------------------------------*/
+
+/*----------------------------------------------------------------------------------------------------------------
+Text Section Styling
+-----------------------------------------------------------------------------------------------------------------*/
+
+.text-section {
+  height: auto;
+  width: 100%;
+  position: relative;
+  background-color: #4e515b;
+  min-height: 400px;
 }
 
-/* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-  width: 15px;
+/* Split the screen in half */
+.split {
+  height: 100%;
+  width: 50%;
+  position: relative;
+  overflow-x: hidden;
+  position: absolute;
+  transition: all 0.6s;
 }
 
-*::-webkit-scrollbar-track {
-  background: #212121;
+/* Control the left side */
+.left {
+  left: 0;
+  background-color: #4e515b;
+  z-index: 1;
 }
 
-*::-webkit-scrollbar-thumb {
-  background-color: #878787;
-  border-radius: 0px;
-  border: 0px dashed #1f1f1f;
+/* Control the right side */
+.right {
+  right: 0;
+  z-index: 0;
+}
+
+/* If you want the content centered horizontally and vertically */
+.centered {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.centered p {
+  position: relative;
+  width: 45vh;
+
+  font-size: clamp(1.2rem, 1vw, 1rem);
+  font-weight: 400;
+  text-align: center;
+  color: #ffffff;
+}
+
+/* Style the image inside the centered container, if needed */
+.split-img img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+/*----------------------------------------------------------------------------------------------------------------
+Event Section Styling 
+-----------------------------------------------------------------------------------------------------------------*/
+.event-title-section {
+  height: 350px !important;
+  background-color: #212121;
+  position: relative;
+  min-height: 350px;
+}
+
+.event-title-section-text {
+  color: #ffffff;
+  font-size: 1.5em;
+  font-weight: 400;
+  text-align: center;
+  font-family: "Montserrat", sans-serif;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.event-section {
+  position: relative;
+  z-index: -2;
+}
+
+.event-carousel {
+  position: absolute;
+  width: 100%;
+  height: 500px !important;
+  z-index: -1;
+}
+
+.event-carousel img {
+  width: 100%;
+  height: 500px;
+  object-fit: cover;
+  position: relative;
+  z-index: -2;
+}
+
+.btn-background {
+  background-color: #adadadab !important;
+  width: 5vw !important;
+  height: 100%;
+  opacity: 0.5;
+}
+
+.event-content-title {
+  color: #ffffff !important;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.event-content-desc {
+  color: #ffffff !important;
+  text-shadow: -1px 0 rgb(86, 86, 86), 0 1px rgb(86, 86, 86),
+    1px 0 rgb(86, 86, 86), 0 -1px rgb(86, 86, 86);
+}
+
+.event-overlay {
+  position: relative;
+  width: 100%;
+  z-index: -1;
+}
+
+.event-overlay::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0); /* Transparent overlay by default */
+  transition: background-color 0.5s ease; /* Smooth transition */
+}
+
+.event-overlay:hover::after {
+  background: rgba(0, 0, 0, 0.5); /* Change to your desired color on hover */
 }
 
 .content {
@@ -1064,4 +758,410 @@ polygon {
   &.arrow-top {
     opacity: 0.5;
   }
+}
+
+/*----------------------------------------------------------------------------------------------------------------
+Footer Styling
+------------------------------------*/
+
+.footer {
+  background: #27272d;
+  color: #ffffff;
+  padding: 50px 0;
+}
+
+.footer-email {
+  text-decoration: none !important;
+  color: #ffffff;
+}
+
+.custom-list-group-item {
+  background-color: #27272d !important; /* Custom background color */
+  color: white !important; /* Custom text color */
+}
+
+.list-group h4 {
+  font-family: "Montserrat", sans-serif !important;
+}
+
+.list-group-item:hover {
+  background-color: #27272d !important;
+  color: white !important;
+}
+
+.custom-list-group-item:hover {
+  background-color: #ededed; /* Darker shade for hover effect */
+  color: white;
+}
+
+.light-border-top {
+  border-top: 1px solid #ffffff; /* Custom border color */
+}
+
+.light-border-bottom {
+  border-bottom: 1px solid #ffffff; /* Custom border color */
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------
+Responsive Styling
+------------------------------------*/
+/*-----------------------------------------max-576px-------------------------------------------------------------*/
+@media (max-width: 576px) {
+  /*----------------Intro---------------*/
+
+  .intro-section {
+    background: linear-gradient(
+      to top,
+      #41434c,
+      #27272d 30%,
+      #212121 50%
+    ) !important;
+
+    min-height: 800px;
+  }
+
+  .intro-img img {
+    display: none;
+  }
+
+  /*--------------Split----------------*/
+
+  .split {
+    width: 100%;
+  }
+
+  .left {
+    width: 100%;
+  }
+
+  .right {
+    display: none;
+  }
+  /*--------------Event----------------*/
+
+  .event-section {
+    position: relative;
+    z-index: -2;
+    padding-top: 0px;
+    height: auto;
+  }
+
+  .event-title-section {
+    height: 5%;
+    background-color: #212121;
+    position: relative;
+  }
+  /*--------------Spacers-------------*/
+
+  .spacer-bottom-event-section {
+    bottom: -70px;
+  }
+
+  .spacer-3 {
+    top: -2px;
+  }
+
+  .spacer-4 {
+    bottom: -4px;
+  }
+
+  .spacer-top2 {
+    aspect-ratio: 900/150;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    bottom: 0;
+  }
+}
+
+/*-----------------------------------------min-576px-------------------------------------------------------------*/
+
+@media (min-width: 576px) {
+  /*--------------Spacers-------------*/
+  .spacer-bottom-event-section {
+    bottom: -80px;
+  }
+
+  .spacer-top2 {
+    aspect-ratio: 900/150;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+    bottom: 0;
+  }
+  /*--------------Event----------------*/
+  .event-section {
+    position: relative;
+    z-index: -2;
+    padding-top: 60px;
+  }
+}
+
+/*-----------------------------------------min-768px-------------------------------------------------------------*/
+
+@media (min-width: 768px) {
+  /*--------------Spacers-------------*/
+  .spacer-bottom-event-section {
+    bottom: -90px;
+  }
+
+  .spacer-3 {
+    top: -2px;
+  }
+
+  .spacer-4 {
+    bottom: 7px;
+  }
+}
+
+/*-----------------------------------------max-768px-------------------------------------------------------------*/
+
+@media (max-width: 768px) {
+  /*--------------Intro---------------*/
+  .intro-img img {
+    display: none;
+  }
+
+  .intro-section {
+    background: linear-gradient(
+      to top,
+      #41434c,
+      #27272d 30%,
+      #212121 50%
+    ) !important;
+  }
+
+  /*--------------Event----------------*/
+
+  .event-section {
+    position: relative;
+    z-index: -2;
+    padding-top: 0px;
+  }
+
+  /*--------------Split----------------*/
+
+  .right {
+    display: none;
+  }
+
+  .left {
+    width: 100% !important;
+  }
+
+  /*--------------Spacers-------------*/
+
+  .spacer-3 {
+    top: -2px;
+  }
+
+  .spacer-4 {
+    bottom: 6px;
+  }
+}
+
+/*-----------------------------------------max-992px-------------------------------------------------------------*/
+
+@media (max-width: 992px) {
+  /*--------------Intro---------------*/
+  .intro-section {
+    background: linear-gradient(to botton, #41434c, #27272d 30%, #212121 50%);
+  }
+
+  .btn-change5 {
+    font-family: "Montserrat", sans-serif !important;
+    letter-spacing: 0.15rem;
+    width: 100% !important;
+    background: #838383 !important;
+    color: #fff;
+  }
+  .btn-change5:hover {
+    background-color: #27272d !important;
+  }
+
+  .intro-img img {
+    display: none;
+  }
+
+  /*--------------Event----------------*/
+
+  .event-section {
+    position: relative;
+    z-index: -2;
+    padding-top: 0px;
+  }
+}
+
+/*-----------------------------------------min-992px-------------------------------------------------------------*/
+
+@media (min-width: 992px) {
+  /*--------------Intro---------------*/
+  .btn-change5 {
+    font-family: "Montserrat", sans-serif !important;
+    letter-spacing: 0.15rem;
+    width: 100% !important;
+    background: radial-gradient(
+      circle,
+      rgb(109, 0, 142) 0%,
+      rgb(126, 17, 221) 50%,
+      rgb(98, 0, 123) 100%
+    ) !important;
+    color: #fff !important;
+    border: 0px;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    -webkit-transition-duration: 0.5s;
+    transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+    -webkit-box-shadow: -150px 0px 0 0 #838383 inset,
+      150px 0px 0 0 #838383 inset;
+    box-shadow: -150px 0px 0 0 #838383 inset, 150px 0px 0 0 #838383 inset;
+  }
+  .btn-change5:hover {
+    -webkit-box-shadow: 0px 0px 0 0 #838383 inset, 0px 0px 0 #838383 inset;
+    box-shadow: 0px 0px 0 0 #838383 inset, 0px 0px 0 #838383 inset;
+    color: #ffffff !important;
+  }
+
+  /*--------------Spacers----------------*/
+
+  .spacer-top2 {
+    aspect-ratio: 900/150;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .spacer-bottom-event-section {
+    bottom: -100px;
+  }
+
+
+  /*--------------Navigation----------------*/
+  .navbar-nav a {
+  position: relative;
+}
+
+.navbar-nav a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 3px;
+  background-color: #a8a8a86d;
+  bottom: 0;
+  left: 50%;
+  border-radius: 5px;
+  transition: width 0.3s ease 0s, left 0.3s ease 0s;
+}
+
+.navbar-nav a:hover::after,
+.navbar-nav a:focus::after {
+  width: 100%;
+  left: 0;
+}
+
+.hidden div {
+display: none;
+pointer-events: none;
+}
+
+.hidden {
+
+pointer-events: none;
+}
+}
+
+/*-----------------------------------------min-1200px-------------------------------------------------------------*/
+
+@media (min-width: 1200px) {
+  /*--------------Split---------------*/
+  .left:hover {
+    p {
+      font-size: 1.5rem !important;
+      transition: font-size 0.2s ease-in-out;
+      text-align: center;
+    }
+  }
+  /*--------------Spacers-------------*/
+  .spacer-bottom-event-section {
+    bottom: -110px;
+  }
+}
+
+/*-----------------------------------------max-1200px-------------------------------------------------------------*/
+
+@media (max-width: 1200px) {
+  /*--------------Intro---------------*/
+  .intro-section {
+    background: #27272d;
+  }
+
+  /*--------------Spacers----------------*/
+  .spacer-top {
+    margin-top: 100px;
+  }
+  /*--------------Event----------------*/
+  .event-section {
+    position: relative;
+    z-index: -2;
+    padding-top: 60px;
+  }
+}
+
+/*-----------------------------------------min-1400px-------------------------------------------------------------*/
+
+/* Extra extra large devices (larger desktops, 1400px and up) */
+@media (min-width: 1400px) {
+  /*--------------Spacers-------------*/
+  .spacer-bottom-event-section {
+    aspect-ratio: 1920/100;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: absolute;
+    pointer-events: none;
+    filter: drop-shadow(0 8px 5px #00000084);
+    width: 100%;
+    bottom: -125px;
+  }
+  /*--------------Event----------------*/
+  .event-section {
+    position: relative;
+    z-index: -2;
+    padding-top: 60px;
+  }
+}
+
+/*----------------------
+Scroll Bar Styling
+-----------------------*/
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #878787 #212121;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+  width: 15px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #212121;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: #878787;
+  border-radius: 0px;
+  border: 0px dashed #1f1f1f;
 }

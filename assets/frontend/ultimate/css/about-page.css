@@ -13,15 +13,15 @@ About Us Page Styling
   height: 20vh;
   overflow: hidden;
   backdrop-filter: blur(10px);
+  padding-top: 300px;
 }
-
 
 
 .about-header h1 {
   position: absolute;
   width: 100%;
   text-align: center;
-  top: 8vh;
+  top: 170px;
   color: #ffffff;
   font-family: "Montserrat", sans-serif;
   letter-spacing: 0.8em;
@@ -205,21 +205,26 @@ About Us Page Styling
 }
 
 .about-image-container {
-  background: #212121;
   width: 100%;
   height: 130vh;
   position: relative;
   z-index: -2;
+
+  
+  
 }
 
 .about-image-container img {
   width: 100%;
-  height: 150vh;
+  height: 190vh;
   object-fit: cover;
   object-position: center;
   position: absolute;
-  top: -20vh;
+  top: -300px;
+  left: 0;
   z-index: -1;
+  
+  
 }
 
 .about-section {
@@ -291,6 +296,10 @@ About Us Page Styling
 /*--------------------------------------------576px---------------------------------------------------*/
 /* Extra small devices (phones) */
 @media (max-width: 576px) {
+
+  .about-section {
+  min-height: 600px;
+  }
     
 
 .about-header h1 {
@@ -300,11 +309,11 @@ About Us Page Styling
 }
 
 .about-section-top-svg {
-  top: -1vh;
+  top: -10px;
 }
 
 .about-section-bottom-svg {
-  bottom: 0;
+  bottom: -3px;
 }
 
 .about-section-content h1 {
@@ -326,12 +335,12 @@ About Us Page Styling
 
 
 .about-image-container {
-  height: 170vh;
+  height: 150vh;
 
 }
 
 .about-image-container img {
-  height: 190vh;
+  height: 210vh;
 }
 
 
@@ -358,6 +367,10 @@ About Us Page Styling
   bottom: -1vh;
 }
 
+.about-section {
+  min-height: 900px;
+}
+
 
 }
 /*--------------------------------------------768px---------------------------------------------------*/
@@ -369,7 +382,7 @@ About Us Page Styling
 }
 
 .about-section-bottom-svg {
-  bottom: -2vh;
+  bottom: -10px;
 }
 }
 /*--------------------------------------------992px---------------------------------------------------*/

@@ -7,13 +7,12 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 <main class="" id="content" role="main">
 
   <!-- Intro Section -->
+  <nav class="nav-home"></nav>
 
   <div class=" intro-section">
-    <div id="intro-container">
+    <div id="intro-container" class="intro-container" >
 
-      <script src="assets/frontend/ultimate/js/sketch.min.js"></script>
-      <script src="assets/frontend/ultimate/js/custom.js"></script>
-
+  
       <div class="container pt-5 section-height">
         <div class="row">
           <div class="col-lg-6 mb-7 mb-lg-0 align-content-center intro-container-content-front">
@@ -27,7 +26,6 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
                 <p class="h6 text-center text-break intro-container-content-back">
                   <!--<?php echo htmlspecialchars_decode(get_frontend_settings('homepage_note_description')); ?>-->
-                  des competence pour aujourd'hui (et demain). nous vous accompagnons dans vos premiere pas.
                   <span class="intro-container-content-back">des competence pour aujourd'hui (et demain). nous vous
                     accompagnons dans vos premiere pas.</span>
                 </p>
@@ -414,63 +412,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
     <!------------------------------------------------------------------------------------------------>
 
-    <!-- <div class="js-slick-carousel u-slick u-slick--equal-height u-slick--gutters-2 mb-7" data-slides-show="4"
-            data-slides-scroll="1" data-pagi-classes="" data-responsive='[{
-                   "breakpoint": 1200,
-                   "settings": {
-                     "slidesToShow": 3
-                   }
-                 }, {
-                   "breakpoint": 554,
-                   "settings": {
-                     "slidesToShow": 1
-                   }
-                 }]'>
-           
-            <?php
-            foreach ($upcoming_events as $row) { ?>
-              <div class="js-slide card border-0 mb-3">
-                <div class="card-body p-5">
-                  <small class="d-block text-muted mb-2">
-                    <?php echo date('d M, Y', $row['timestamp']); ?>
-                  </small>
-                  <h2 class="h5">
-                    <a href="javascript:void(0)">
-                      <?php echo $row['title']; ?>
-                    </a>
-                  </h2>
-                </div>
-                <?php $created_by = $this->user_model->get_user_details($row['created_by']); ?>
-                <div class="card-footer pb-5 px-0 mx-5">
-                  <div class="media align-items-center">
-                    <div class="u-sm-avatar mr-3">
-                      <img class="img-fluid rounded-circle"
-                        src="<?php echo $this->user_model->get_user_image($created_by['id']); ?>" alt="Image Description">
-                    </div>
-                    <div class="media-body">
-                      <h4 class="small mb-0"><a href="javascript:void(0)">
-                          <?php echo ucfirst($created_by['name']); ?>
-                        </a></h4>
-                    </div>
-                  </div>
-                </div>
-               
-              </div>
-            <?php } ?>
-
-          </div>  -->
-
-
-
-    <!-- End News Carousel -->
-    <!--<center>
-          <a class="btn btn-sm btn-primary btn-wide transition-3d-hover pull-right"
-            href="<?php echo site_url('home/events'); ?>">
-            Learn More <span class="fas fa-angle-right ml-2"></span></a>
-        </center>
-      </div>
-    </div>-->
-    <!-- End Events Section -->
+    
 
 
 </main>

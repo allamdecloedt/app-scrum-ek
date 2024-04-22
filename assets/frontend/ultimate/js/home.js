@@ -24,9 +24,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
-
-
 (function animation() {
   // General Variables
   var Particle, particleCount, particles, sketch, z;
@@ -68,8 +65,6 @@ document.addEventListener("DOMContentLoaded", function () {
         // Recalculate and update particles based on new size
 
         this.resetGlobalStyles();
-
-        console.log(particleCount);
       },
       draw: function () {
         // Drawing operations go here
@@ -223,29 +218,26 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.classList.add("intro-canvas");
 }).call(this);
 
-
-
-
-$(document).ready(function(){
+$(document).ready(function () {
   $(".owl-carousel").owlCarousel({
     center: true,
-    loop:true,
+    loop: true,
     margin: 50,
-    autoplay:true,
-    nav:true,
-    autoWidth:true,
-    responsive:{
-        0:{
-            items:1
-        },
-        600:{
-            items:1
-        },
-        1000:{
-            items:3
-        }
-    }
-});
+    autoplay: true,
+    nav: true,
+    autoWidth: true,
+    responsive: {
+      0: {
+        items: 1,
+      },
+      600: {
+        items: 1,
+      },
+      1000: {
+        items: 3,
+      },
+    },
+  });
 });
 
 

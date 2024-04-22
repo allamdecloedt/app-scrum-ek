@@ -1,13 +1,13 @@
+
+<?php  $base_url = base_url(); ?>
+
 <!-- JS Global Compulsory -->
 <script
   src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
-<script
-  src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/vendor/popper.js/dist/umd/popper.min.js"></script>
-<script src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/vendor/bootstrap/bootstrap.min.js"></script>
+
 
 <!-- JS Implementing Plugins -->
-<script
-  src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/vendor/hs-megamenu/src/hs.megamenu.js"></script>
+
 <script
   src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/vendor/svg-injector/dist/svg-injector.min.js"></script>
 <script
@@ -25,7 +25,8 @@
 <script src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/js/components/hs.header.js"></script>
 <script src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/js/components/hs.unfold.js"></script>
 <script src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/js/components/hs.fancybox.js"></script>
-<script src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/js/components/hs.slick-carousel.js"></script>
+<script
+  src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/js/components/hs.slick-carousel.js"></script>
 <script src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/js/components/hs.validation.js"></script>
 <script src="<?php echo base_url(); ?>assets/frontend/<?php echo $theme; ?>/js/components/hs.focus-state.js"></script>
 
@@ -38,7 +39,7 @@
 
 <!-- JS Bootstrap 5 -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 
@@ -50,11 +51,37 @@
   integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
+<!-- JS Rellax -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rellax/1.12.1/rellax.min.js"
+  integrity="sha512-f5HTYZYTDZelxS7LEQYv8ppMHTZ6JJWglzeQmr0CVTS70vJgaJiIO15ALqI7bhsracojbXkezUIL+35UXwwGrQ=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <!-- Custom JS. -->
 
 
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+
+
+
+<?php 
+
+
+
+if ($page_name == "home") {
+
+echo '<script src="'.$base_url.'assets/frontend/ultimate/js/sketch.min.js"></script>';
+echo '<script src="'.$base_url.'assets/frontend/ultimate/js/home.js"></script>';
+
+
+} elseif ($page_name == "about") {
+
+echo '<script defer >var rellax = new Rellax(".rellax");</script>';
+
+
+}
+
+?>
+
+
 
 
 
