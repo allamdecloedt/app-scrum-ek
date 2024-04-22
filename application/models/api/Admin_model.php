@@ -208,12 +208,7 @@ private function get_submenu($parent_id, $active_language) {
               'icon' => $row->icon
           );
 
-          $sub_submenu = $this->
-            
-            
-            
-            
-            ($row->id, $active_language);
+          $sub_submenu = $this->get_submenu($row->id, $active_language);
           if (!empty($sub_submenu)) {
               $subitem['submenu'] = $sub_submenu;
           }
