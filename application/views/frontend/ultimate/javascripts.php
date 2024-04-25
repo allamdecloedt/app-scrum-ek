@@ -1,5 +1,4 @@
-
-<?php  $base_url = base_url(); ?>
+<?php $base_url = base_url(); ?>
 
 <!-- JS Global Compulsory -->
 <script
@@ -62,19 +61,27 @@
 
 
 
-<?php 
+<?php
 
 
 
 if ($page_name == "home") {
 
-echo '<script src="'.$base_url.'assets/frontend/ultimate/js/sketch.min.js"></script>';
-echo '<script src="'.$base_url.'assets/frontend/ultimate/js/home.js"></script>';
+  echo '<script src="' . $base_url . 'assets/frontend/ultimate/js/sketch.min.js"></script>';
+  echo '<script src="' . $base_url . 'assets/frontend/ultimate/js/home.js"></script>';
 
 
 } elseif ($page_name == "about") {
 
-echo '<script defer >var rellax = new Rellax(".rellax");</script>';
+  echo '<script defer >var rellax = new Rellax(".rellax");</script>';
+
+
+
+} elseif ($page_name == "contact") {
+
+    echo ' <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFK8O-Fqob7VAuakxtTd66YA44hkdFEk8&callback=console.debug&libraries=maps,marker&v=beta"></script>';
+  echo '<script src="' . $base_url . 'assets/frontend/ultimate/js/contact-map.js"></script>';
+  echo '<script defer >var rellax = new Rellax(".rellax");</script>';
 
 
 }

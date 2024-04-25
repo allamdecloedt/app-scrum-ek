@@ -7,7 +7,7 @@ $system_name = get_frontend_settings('website_title');
   <div>
     <div class="d-flex justify-content-center nav-container">
       <!-- Nav -->
-      <nav class="navbar navbar-expand-lg stroke container sticky-nav nav-home">
+      <nav class="navbar navbar-expand-lg container sticky-nav nav-home">
         <div class="container">
           <!-- Logo -->
           <a class="logo navbar-brand pl-3" href="<?php echo site_url('home'); ?>">

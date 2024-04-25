@@ -13,7 +13,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/css/theme.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/toastr/toastr.min.css">
 
-<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/custom.css">
+
 
 <!--<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/theme.css">-->
 
@@ -26,8 +26,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" integrity="sha512-tS3S5qG0BlhnQROyJXvNjeEM4UpMXHrQfTGmbQ1gKmelCxlSEBUaxhRBj/EFTzpbP4RVSrpEikbmdJobCvhE3g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
+<!-- CSS Leaflet -->
 
-<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/about-page.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+
 
 <!-- JS Script in need of first loading -->
 
@@ -38,3 +41,11 @@
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script src="<?php echo base_url()?>assets/frontend/ultimate/js/nav.js" > </script>
+
+
+<!-- Custom CSS-->
+
+<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/custom.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/about-page.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/general.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/contact-page.css">
