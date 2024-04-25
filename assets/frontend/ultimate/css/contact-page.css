@@ -25,6 +25,9 @@ gmp-map {
   min-height: 400px !important;
 }
 
+
+
+
 .card {
   min-height: 270px !important;
   background-color: #212121 !important;
@@ -123,6 +126,15 @@ gmp-map {
 
 }
 
+.required {
+ position: absolute;
+ right: 10px;
+ top: 5px;
+ }
+
+ textarea {
+  resize: none;
+ }
 input input:focus {
 outline: 0 !important;}
 
