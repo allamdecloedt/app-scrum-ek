@@ -537,7 +537,7 @@ class User_model extends CI_Model {
 	//END ACCOUNTANT section
 
 	//START LIBRARIAN section
-	public function librarian_create()
+	public function content_creator_create()
 	{
 		$data['name'] = html_escape($this->input->post('name'));
 		$data['email'] = html_escape($this->input->post('email'));
@@ -547,7 +547,7 @@ class User_model extends CI_Model {
 		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['school_id'] = $this->school_id;
-		$data['role'] = 'librarian';
+		$data['role'] = 'content_creator';
 		$data['watch_history'] = '[]';
 
 		// check email duplication
@@ -557,7 +557,7 @@ class User_model extends CI_Model {
 
 			$response = array(
 				'status' => true,
-				'notification' => get_phrase('librarian_added_successfully')
+				'notification' => get_phrase('content_creator_added_successfully')
 			);
 		}else{
 			$response = array(
@@ -569,7 +569,7 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function librarian_update($param1 = '')
+	public function content_creator_update($param1 = '')
 	{
 		$data['name'] = html_escape($this->input->post('name'));
 		$data['email'] = html_escape($this->input->post('email'));
@@ -586,7 +586,7 @@ class User_model extends CI_Model {
 
 			$response = array(
 				'status' => true,
-				'notification' => get_phrase('librarian_updated_successfully')
+				'notification' => get_phrase('content_creator_updated_successfully')
 			);
 		}else{
 			$response = array(
@@ -598,7 +598,7 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function librarian_delete($param1 = '')
+	public function content_creator_delete($param1 = '')
 	{
 		$this->db->where('id', $param1);
 		$this->db->delete('users');

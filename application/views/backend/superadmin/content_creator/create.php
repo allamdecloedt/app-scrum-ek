@@ -1,4 +1,4 @@
-<form method="POST" class="d-block ajaxForm" action="<?php echo route('librarian/create'); ?>">
+<form method="POST" class="d-block ajaxForm" action="<?php echo route('content_creator/create'); ?>">
     <div class="form-row">
         <div class="form-group mb-1">
             <label for="name"><?php echo get_phrase('name'); ?></label>
@@ -58,7 +58,7 @@
         </div>
 
         <div class="form-group  col-md-12">
-            <button class="btn btn-block btn-primary" type="submit"><?php echo get_phrase('create_librarian'); ?></button>
+            <button class="btn btn-block btn-primary" type="submit"><?php echo get_phrase('create_content_creator'); ?></button>
         </div>
     </div>
 </form>

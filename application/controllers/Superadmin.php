@@ -423,36 +423,38 @@ class Superadmin extends CI_Controller {
   //END ACCOUNTANT section
 
 
-  //START LIBRARIAN section
-  public function librarian($param1 = '', $param2 = ''){
+  //START content_creator section
+  public function content_creator($param1 = '', $param2 = ''){
 
     if($param1 == 'create'){
-      $response = $this->user_model->librarian_create();
+      $response = $this->user_model->content_creator_create();
       echo $response;
     }
 
     if($param1 == 'update'){
-      $response = $this->user_model->librarian_update($param2);
+      $response = $this->user_model->content_creator_update($param2);
       echo $response;
     }
 
     if($param1 == 'delete'){
-      $response = $this->user_model->librarian_delete($param2);
+      $response = $this->user_model->content_creator_delete($param2);
       echo $response;
     }
-
+ 
     // show data from database
     if ($param1 == 'list') {
-      $this->load->view('backend/superadmin/librarian/list');
+   
+      $this->load->view('backend/superadmin/content_creator/list');
     }
 
     if(empty($param1)){
-      $page_data['folder_name'] = 'librarian';
-      $page_data['page_title'] = 'librarian';
+      die;
+      $page_data['folder_name'] = 'content_creator';
+      $page_data['page_title'] = 'content creator';
       $this->load->view('backend/index', $page_data);
     }
   }
-  //END LIBRARIAN section
+  //END content_creator section
 
   //START CLASS ROUTINE section
   public function routine($param1 = '', $param2 = '', $param3 = '', $param4 = ''){

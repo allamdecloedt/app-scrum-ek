@@ -551,7 +551,7 @@ CREATE TABLE `menus` (
   `parent_access` int(11) NOT NULL DEFAULT 0,
   `student_access` int(11) NOT NULL DEFAULT 0,
   `accountant_access` int(11) NOT NULL DEFAULT 0,
-  `librarian_access` int(11) NOT NULL DEFAULT 0,
+  `content_creator_access` int(11) NOT NULL DEFAULT 0,
   `sort_order` int(11) NOT NULL,
   `is_addon` int(11) NOT NULL DEFAULT 0 COMMENT 'If the value is 1 that means its an addon.',
   `unique_identifier` varchar(255) DEFAULT NULL COMMENT 'It is mandatory for addons',
@@ -562,13 +562,13 @@ CREATE TABLE `menus` (
 -- Dumping data for table `menus`
 --
 
-INSERT INTO `menus` (`id`, `displayed_name`, `route_name`, `parent`, `icon`, `status`, `superadmin_access`, `admin_access`, `teacher_access`, `parent_access`, `student_access`, `accountant_access`, `librarian_access`, `sort_order`, `is_addon`, `unique_identifier`, `driver_access`) VALUES
+INSERT INTO `menus` (`id`, `displayed_name`, `route_name`, `parent`, `icon`, `status`, `superadmin_access`, `admin_access`, `teacher_access`, `parent_access`, `student_access`, `accountant_access`, `content_creator_access`, `sort_order`, `is_addon`, `unique_identifier`, `driver_access`) VALUES
 (1, 'users', NULL, 0, 'dripicons-user', 1, 1, 1, 1, 1, 1, 0, 0, 10, 0, 'users', NULL),
 (2, 'admin', 'admin', 1, NULL, 1, 1, 0, 0, 0, 0, 0, 0, 9, 0, 'admin', NULL),
 (3, 'student', 'student', 1, NULL, 1, 1, 1, 1, 0, 0, 0, 0, 10, 0, 'student', NULL),
 (4, 'teacher', 'teacher', 1, NULL, 1, 1, 1, 1, 1, 1, 0, 0, 30, 0, 'teacher', NULL),
 (5, 'parent', 'parent', 1, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 50, 0, 'parent', NULL),
-(6, 'librarian', 'librarian', 1, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 70, 0, 'librarian', NULL),
+(6, 'content creator', 'content creator', 1, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 70, 0, 'content creator', NULL),
 (7, 'accountant', 'accountant', 1, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 60, 0, 'accountant', NULL),
 (8, 'driver', NULL, 1, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 80, 0, 'driver', NULL),
 (9, 'academic', NULL, 0, 'dripicons-store', 1, 1, 1, 1, 1, 1, 0, 0, 20, 0, 'academic', NULL),

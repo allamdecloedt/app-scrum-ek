@@ -2,7 +2,7 @@
 $users = $this->db->get_where('users', array('id' => $param1))->result_array();
 foreach($users as $user){
     ?>
-    <form method="POST" class="d-block ajaxForm" action="<?php echo route('librarian/update/'.$param1); ?>">
+    <form method="POST" class="d-block ajaxForm" action="<?php echo route('content_creator/update/'.$param1); ?>">
         <div class="form-row">
             <div class="form-group mb-1">
                 <label for="name"><?php echo get_phrase('name'); ?></label>
@@ -56,7 +56,7 @@ foreach($users as $user){
             </div>
 
             <div class="form-group  col-md-12">
-                <button class="btn btn-block btn-primary" type="submit"><?php echo get_phrase('update_librarian'); ?></button>
+                <button class="btn btn-block btn-primary" type="submit"><?php echo get_phrase('update_content_creator'); ?></button>
             </div>
         </div>
     </form>
