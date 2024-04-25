@@ -88,10 +88,10 @@
           nisi est? Repudiandae tenetur quae autem eaque!</p>
       </div>
       <!-- Contacts Form -->
-      <div class="form col-12 col-lg-6 form container g-0 my-3" action="<?php echo site_url('home/contact/send'); ?>"
-        method="post" class="js-validate">
+      <div class="form col-12 col-lg-6 form container g-0 my-3">
         <div class="container">
-          <form class="pt-8">
+          <form class="pt-8" action="<?php echo site_url('home/contact/send'); ?>"
+        method="post" class="js-validate">
             <div class="row">
               <!-- Input -->
               <div class="col-12 col-md-6">
