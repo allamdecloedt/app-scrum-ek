@@ -359,36 +359,7 @@ class Superadmin extends CI_Controller {
   //END TEACHER PERMISSION section
 
 
-  //START PARENT section
-  public function parent($param1 = '', $param2 = ''){
 
-    if($param1 == 'create'){
-      $response = $this->user_model->parent_create();
-      echo $response;
-    }
-
-    if($param1 == 'update'){
-      $response = $this->user_model->parent_update($param2);
-      echo $response;
-    }
-
-    if($param1 == 'delete'){
-      $response = $this->user_model->parent_delete($param2);
-      echo $response;
-    }
-
-    // show data from database
-    if ($param1 == 'list') {
-      $this->load->view('backend/superadmin/parent/list');
-    }
-
-    if(empty($param1)){
-      $page_data['folder_name'] = 'parent';
-      $page_data['page_title'] = 'parent';
-      $this->load->view('backend/index', $page_data);
-    }
-  }
-  //END PARENT section
 
 
   //START ACCOUNTANT section
@@ -1568,28 +1539,10 @@ class Superadmin extends CI_Controller {
       $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
 
 
-      $parent_id = $this->db->get_where('students', array('user_id' => $user_id))->row('parent_id');
-      $parents_user_id = $this->db->get_where('parents', array('id' => $parent_id))->row('user_id');
-      $this->db->where('id', $parents_user_id);
-      $this->db->update('users', array('status' => 1, 'password' => sha1($password)));
-      $this->email_model->approved_online_admission_parent_access($parents_user_id, $password);
-
-
       $this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
       redirect(site_url('superadmin/online_admission'), 'refresh');
     }
     if($param1 == 'delete'){
-      $parent_id = $this->db->get_where('students', array('user_id' => $user_id))->row('parent_id');
-
-      if($this->db->get_where('students', array('parent_id' => $parent_id))->num_rows() <= 1){
-        $parents_user_id = $this->db->get_where('parents', array('id' => $parent_id))->row('user_id');
-
-        $this->db->where('id', $parents_user_id);
-        $this->db->delete('users');
-
-        $this->db->where('user_id', $parents_user_id);
-        $this->db->delete('parents');
-      }
 
       $this->db->where('id', $user_id);
       $this->db->delete('users');

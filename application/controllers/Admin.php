@@ -1172,27 +1172,11 @@ class Admin extends CI_Controller
 			$this->db->update('users', array('status' => 1, 'password' => sha1($password)));
 			$this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
 
-			$parent_id = $this->db->get_where('students', array('user_id' => $user_id))->row('parent_id');
-			$parents_user_id = $this->db->get_where('parents', array('id' => $parent_id))->row('user_id');
-			$this->db->where('id', $parents_user_id);
-			$this->db->update('users', array('status' => 1, 'password' => sha1($password)));
-			$this->email_model->approved_online_admission_parent_access($parents_user_id, $password);
 
 			$this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
 			redirect(site_url('admin/online_admission'), 'refresh');
 		}
 		if ($param1 == 'delete') {
-			$parent_id = $this->db->get_where('students', array('user_id' => $user_id))->row('parent_id');
-
-			if ($this->db->get_where('students', array('parent_id' => $parent_id))->num_rows() <= 1) {
-				$parents_user_id = $this->db->get_where('parents', array('id' => $parent_id))->row('user_id');
-
-				$this->db->where('id', $parents_user_id);
-				$this->db->delete('users');
-
-				$this->db->where('user_id', $parents_user_id);
-				$this->db->delete('parents');
-			}
 
 			$this->db->where('id', $user_id);
 			$this->db->delete('users');

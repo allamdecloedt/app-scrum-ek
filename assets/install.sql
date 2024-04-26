@@ -548,7 +548,6 @@ CREATE TABLE `menus` (
   `superadmin_access` int(11) NOT NULL DEFAULT 0,
   `admin_access` int(11) NOT NULL DEFAULT 0,
   `teacher_access` int(11) NOT NULL DEFAULT 0,
-  `parent_access` int(11) NOT NULL DEFAULT 0,
   `student_access` int(11) NOT NULL DEFAULT 0,
   `accountant_access` int(11) NOT NULL DEFAULT 0,
   `librarian_access` int(11) NOT NULL DEFAULT 0,
@@ -567,7 +566,6 @@ INSERT INTO `menus` (`id`, `displayed_name`, `route_name`, `parent`, `icon`, `st
 (2, 'admin', 'admin', 1, NULL, 1, 1, 0, 0, 0, 0, 0, 0, 9, 0, 'admin', NULL),
 (3, 'student', 'student', 1, NULL, 1, 1, 1, 1, 0, 0, 0, 0, 10, 0, 'student', NULL),
 (4, 'teacher', 'teacher', 1, NULL, 1, 1, 1, 1, 1, 1, 0, 0, 30, 0, 'teacher', NULL),
-(5, 'parent', 'parent', 1, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 50, 0, 'parent', NULL),
 (6, 'librarian', 'librarian', 1, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 70, 0, 'librarian', NULL),
 (7, 'accountant', 'accountant', 1, NULL, 1, 1, 1, 0, 0, 0, 0, 0, 60, 0, 'accountant', NULL),
 (8, 'driver', NULL, 1, NULL, 0, 1, 0, 0, 0, 0, 0, 0, 80, 0, 'driver', NULL),
@@ -650,17 +648,6 @@ CREATE TABLE `noticeboard` (
 
 -- --------------------------------------------------------
 
---
--- Table structure for table `parents`
---
-
-CREATE TABLE `parents` (
-  `id` int(11) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `school_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
--- --------------------------------------------------------
 
 --
 -- Table structure for table `payment_settings`
@@ -814,7 +801,6 @@ CREATE TABLE `students` (
   `id` int(11) UNSIGNED NOT NULL,
   `code` varchar(255) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL,
-  `parent_id` int(11) DEFAULT NULL,
   `session` int(11) DEFAULT NULL,
   `school_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
@@ -1097,11 +1083,6 @@ ALTER TABLE `menus`
 ALTER TABLE `noticeboard`
   ADD PRIMARY KEY (`id`);
 
---
--- Indexes for table `parents`
---
-ALTER TABLE `parents`
-  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `payment_settings`
@@ -1348,11 +1329,6 @@ ALTER TABLE `menus`
 ALTER TABLE `noticeboard`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---
--- AUTO_INCREMENT for table `parents`
---
-ALTER TABLE `parents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payment_settings`

@@ -32,18 +32,6 @@
                             </div>
                         </div>
 
-                        <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="parent_id"><?php echo get_phrase('parent'); ?></label>
-                            <div class="col-md-9">
-                                <select id="parent_id" name="parent_id" class="form-control select2"  data-bs-toggle="select2" required >
-                                    <option value="">Select A Parent</option>
-                                    <?php $parents = $this->db->get_where('parents', array('school_id' => $school_id))->result_array(); ?>
-                                    <?php foreach($parents as $parent): ?>
-                                        <option value="<?php echo $parent['id']; ?>" <?php if($student['parent_id'] == $parent['id']) echo 'selected'; ?>><?php echo $this->user_model->get_user_details($parent['user_id'], 'name'); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-                        </div>
 
                         <div class="form-group row mb-3">
                             <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?></label>

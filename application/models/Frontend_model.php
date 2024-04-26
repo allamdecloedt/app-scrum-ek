@@ -501,27 +501,6 @@ class Frontend_model extends CI_Model {
       return json_encode(array('status' => 0, 'message' => get_phrase('attach_PDF_file_for_educational_qualification')));
     }
 
-    $duplication_status = $this->user_model->check_duplication('on_create', $this->input->post('email_of_parent'));
-    if($duplication_status){
-      $user_data['name'] = htmlspecialchars($this->input->post('name_of_parent'));
-      $user_data['email'] = htmlspecialchars($this->input->post('email_of_parent'));
-      $user_data['password'] = sha1(rand(500, 10000));
-      $user_data['gender'] = htmlspecialchars($this->input->post('parent_gender'));
-      $user_data['phone'] = htmlspecialchars($this->input->post('phone_number_of_parent'));
-      $user_data['role'] = 'parent';
-      $user_data['school_id'] = $this->session->userdata('active_school_id');
-      $user_data['watch_history'] = '[]';
-      $this->db->insert('users', $user_data);
-      $user_id = $this->db->insert_id();
-
-      $parent_info['user_id'] = $user_id;
-      $parent_info['school_id'] = $this->session->userdata('active_school_id');
-      $this->db->insert('parents', $parent_info);
-      $parent_id = $this->db->insert_id();
-    }else{
-      $user_id = $this->db->get_where('users', array('email' => $this->input->post('email_of_parent')))->row('id');
-      $parent_id = $this->db->get_where('parents', array('user_id' => $user_id))->row('id');
-    }
 
 
     $duplication_status = $this->user_model->check_duplication('on_create', $this->input->post('email'));
@@ -542,7 +521,6 @@ class Frontend_model extends CI_Model {
 
       $student_data['code'] = student_code();
       $student_data['user_id'] = $user_id;
-      $student_data['parent_id'] = $parent_id;
       $student_data['session'] = active_session();
       $student_data['school_id'] = $this->session->userdata('active_school_id');
       $this->db->insert('students', $student_data);
