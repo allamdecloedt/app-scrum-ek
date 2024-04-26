@@ -55,6 +55,8 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block;
 }
 
+
+
 body {
   margin: 0;
   font-family: "Poppins", Helvetica, Arial, sans-serif;
@@ -11942,7 +11944,7 @@ button.bg-indigo:focus {
 }
 
 .text-primary {
-  color: #377dff !important;
+  
 }
 
 a.text-primary:hover, a.text-primary:focus {

@@ -53,6 +53,19 @@ $route['default_controller'] = 'home';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = TRUE;
 
-
+$route['api/login'] = 'api/Admin/login';
 $route['api/menu'] = 'api/Admin/menu';
 
+
+$route['api/edit'] = 'api/Admin/editProfile';
+
+$route['api/editPassword'] = 'api/Admin/updatePassword';
+
+
+$route['api/getDashboard'] = 'api/Admin/get_dashboard_data';
+
+
+$route['api/getexpenses/(:num)'] = 'api/Admin/expense/$1';
+
+
+$route['api/getinvoices/(:num)'] = 'api/Admin/invoice/$1';

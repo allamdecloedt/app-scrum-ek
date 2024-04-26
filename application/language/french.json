@@ -1262,8 +1262,22 @@
     "provide_driver_gender": "Provide driver gender",
     "provide_driver_blood_group": "Provide driver blood group",
     "provide_driver_address": "Provide driver address",
-
     "school": "School",
     "school_has_been_updated_successfully": "School has been updated successfully",
-    "school_has_been_deleted_successfully": "School has been deleted successfully"
+    "school_has_been_deleted_successfully": "School has been deleted successfully",
+    "messaging": "Messaging",
+    "role_permission": "Role permission",
+    "tabulation_sheet": "Tabulation sheet",
+    "certificate": "Certificate",
+    "hostel": "Hostel",
+    "school_website": "School website",
+    "room_manager": "Room manager",
+    "student_report": "Student report",
+    "form_builder": "Form builder",
+    "trip": "Trip",
+    "assigned_student": "Assigned student",
+    "trips": "Trips",
+    "total_number_osdzdf_student": "Total number osdzdf student",
+    "no_data_revbtrbfound": "No data revbtrbfound",
+    "amvfbvbbrtount": "Amvfbvbbrtount"
 }

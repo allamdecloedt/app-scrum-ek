@@ -19,3 +19,7 @@ body {
   /* Set the fixed height of the footer here */
   height: 72px;
 }
+
+.light-border {
+  border-top: 1px solid #e5e5e5;
+}

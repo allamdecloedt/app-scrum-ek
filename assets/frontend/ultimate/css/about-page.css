@@ -1,0 +1,164 @@
+/*------------------------------------
+About Us Page Styling
+------------------------------------*/
+
+.about-image-container {
+  width: 100%;
+  height: 130vh;
+  position: relative;
+  z-index: -2;
+}
+
+.about-image-container img {
+  width: 100%;
+  height: 190vh;
+  object-fit: cover;
+  object-position: center;
+  position: absolute;
+  top: -300px;
+  left: 0;
+  z-index: -1;
+}
+
+.about-section {
+  position: relative;
+  background: #212121;
+  z-index: 0;
+  width: 100%;
+  height: 65%;
+  top: 20vh;
+}
+
+.about-section-content h1 {
+  color: #a2a2a2;
+  font-size: 2rem;
+  font-weight: 400;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  padding-top: 50px;
+  padding-bottom: 20px;
+}
+
+.about-section-content h3 {
+  color: #ababab;
+  font-size: 1.5rem;
+  font-weight: 400;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.about-section-content p {
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 400;
+  text-align: center;
+  font-family: "Roboto", sans-serif;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.about-section-top-svg {
+  position: absolute;
+  top: -5vh;
+  filter: drop-shadow(0 -2px 1px #00000084);
+  z-index: -2;
+}
+
+.about-section-bottom-svg {
+  position: absolute;
+  bottom: -2vh;
+  filter: drop-shadow(0 2px 1px #00000084);
+}
+
+/*--------------------------------------Responsive Design---------------------------------------------*/
+
+/*--------------------------------------------576px---------------------------------------------------*/
+/* Extra small devices (phones) */
+@media (max-width: 576px) {
+  .about-section {
+    min-height: 600px;
+  }
+
+  .about-section-top-svg {
+    top: -10px;
+  }
+
+  .about-section-bottom-svg {
+    bottom: -3px;
+  }
+
+  .about-section-content h1 {
+    font-size: 1.5rem;
+    padding-top: 30px;
+    padding-bottom: 10px;
+  }
+
+  .about-section-content h3 {
+    font-size: 20px;
+  }
+
+  .about-section-content p {
+    font-size: 15px;
+    padding-bottom: 10px !important;
+    overflow: hidden;
+  }
+
+  .about-image-container {
+    height: 150vh;
+  }
+
+  .about-image-container img {
+    height: 210vh;
+  }
+}
+/*--------------------------------------------576px---------------------------------------------------*/
+/* Small devices (tablets) */
+@media (min-width: 576px) {
+  .about-section-top-svg {
+    top: -2vh;
+  }
+
+  .about-section-bottom-svg {
+    bottom: -1vh;
+  }
+
+  .about-section {
+    min-height: 900px;
+  }
+}
+/*--------------------------------------------768px---------------------------------------------------*/
+/* Medium devices (desktops) */
+@media (min-width: 768px) {
+  .about-section-top-svg {
+    top: -2.5vh;
+  }
+
+  .about-section-bottom-svg {
+    bottom: -10px;
+  }
+}
+/*--------------------------------------------992px---------------------------------------------------*/
+
+/* Large devices (desktops) */
+@media (min-width: 992px) {
+  .about-section-top-svg {
+    top: -3.5vh;
+  }
+
+  .about-section-bottom-svg {
+    bottom: -2.5vh;
+  }
+}
+/*--------------------------------------------1200px--------------------------------------------------*/
+
+/* Extra large devices (large desktops) */
+@media (min-width: 1200px) {
+  .about-section-top-svg {
+    top: -4vh;
+  }
+
+  .about-section-bottom-svg {
+    bottom: -3vh;
+  }
+}

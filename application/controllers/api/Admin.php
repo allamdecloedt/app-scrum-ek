@@ -45,10 +45,221 @@ class Admin extends REST_Controller {
   }
   // menu
   public function menu_get() {
-    // echo 'fettah';
-    $userdata = $this->admin_model->menu();
-    return $this->set_response($userdata, REST_Controller::HTTP_OK);
+   
+    $user_id = $this->get('user_id');
+    if ($user_id) {
+        $user_role = $this->getUserRole($user_id); 
+
+        $user_type = array(
+            'user_id' => $user_id,
+            'role' => $user_role,
+           
+        );
+    } else {
+       
+        $user_type = array();
+    }
+
+
+    $userdata = $this->admin_model->menu($user_type);
+
+    $this->response($userdata, REST_Controller::HTTP_OK);
+}
+
+
+
+public function getUserRole($user_id) {
+
+  $this->db->select('role');
+  $this->db->from('users');
+  $this->db->where('user_id', $user_id);
+  $query = $this->db->get();
+
+  if ($query && $query->num_rows() > 0) {
+   
+      $row = $query->row();
+      return $row->role;
+  } else {
+     
+      return null;
   }
+}
+
+
+//Edit API CALL
+public function editProfile_post() {
+  
+  $response = $this->admin_model->editProfile();
+
+  return $this->set_response($response, REST_Controller::HTTP_OK);
+}
+
+//Update Current Password
+public function updatePassword_post() {
+  
+  $response = $this->admin_model->updatePassword();
+
+  return $this->set_response($response, REST_Controller::HTTP_OK);
+}
+//dashbord API CALL
+public function get_dashboard_data_get() {
+  $user_id = $this->input->get('user_id');
+
+  $response = $this->admin_model->get_dashboard_data($user_id);
+
+  return $this->set_response($response, REST_Controller::HTTP_OK);
+}
+
+
+//Expense API CALL
+
+public function expense_get($school_id) {
+  $expenses = $this->get_expenses_by_school($school_id);
+
+  if ($expenses === null) {
+      $this->response([
+          'status' => false,
+          'message' => 'No expenses data found for the specified school_id'
+      ], REST_Controller::HTTP_NOT_FOUND);
+  } else {
+      $formatted_expenses = array();
+      foreach ($expenses as $expense) {
+        
+          $category_name = $this->get_category_name($expense['expense_category_id']);
+          
+          $formatted_expenses[] = array(
+              'id' => $expense['id'],
+              'category_id' => $expense['expense_category_id'],
+              'name' => $category_name,
+              'date' => date('Y-m-d', $expense['date']), 
+              'amount' => $expense['amount'],
+              'school_id' => $expense['school_id'],
+              'session' => $expense['session'],
+              'created_at' => date('Y-m-d H:i:s', $expense['created_at']), 
+              'updated_at' => date('Y-m-d H:i:s', $expense['updated_at']), 
+          );
+      }
+      $this->response([
+          'status' => true,
+          'expenses' => $formatted_expenses
+      ], REST_Controller::HTTP_OK);
+  }
+}
+
+public function get_category_name($category_id) {
+  $sql = "SELECT name FROM expense_categories WHERE id = ?";
+  $query = $this->db->query($sql, array($category_id));
+  if ($query->num_rows() > 0) {
+      $row = $query->row();
+      return $row->name;
+  } else {
+      return null;
+  }
+}
+
+public function get_expenses_by_school($school_id) {
+  $sql = "SELECT * FROM expenses WHERE school_id = ?";
+
+  $query = $this->db->query($sql, array($school_id));
+  if ($query->num_rows() > 0) {
+      $expenses = $query->result_array();
+      return $expenses;
+  } else {
+      return null;
+  }
+}
+
+
+
+
+
+//iNVOICES API CALL
+
+
+
+
+
+public function invoice_get($student_id) {
+  $invoices = $this->get_invoices_with_user($student_id);
+
+  if ($invoices === null) {
+      $this->response([
+          'status' => false,
+          'message' => 'No invoices found for the specified student_id'
+      ], REST_Controller::HTTP_NOT_FOUND);
+  } else {
+      $formatted_invoices = array();
+      foreach ($invoices as $invoice) {
+          $formatted_invoices[] = array(
+              'id' => $invoice['id'],
+              'title' => $invoice['title'],
+              'total_amount' => $invoice['total_amount'],
+              'class_id' => $invoice['class_id'],
+              'class_name' => $invoice['class_name'], 
+              'student_id' => $invoice['student_id'],
+              'student_name' => $invoice['student_name'],
+              'payment_method' => $invoice['payment_method'],
+              'paid_amount' => $invoice['paid_amount'],
+              'status' => $invoice['status'],
+              'school_id' => $invoice['school_id'],
+              'session' => $invoice['session'],
+              'created_at' => date('Y-m-d H:i:s', strtotime($invoice['created_at'])),
+              'updated_at' => date('Y-m-d H:i:s', strtotime($invoice['updated_at']))
+          );
+      }
+      $this->response([
+          'status' => true,
+          'invoices' => $formatted_invoices
+      ], REST_Controller::HTTP_OK);
+  }
+}
+
+public function get_invoices_with_user($student_id) {
+  $sql = "SELECT invoices.*, users.name AS student_name, classes.name AS class_name
+          FROM invoices 
+          JOIN students ON invoices.student_id = students.id
+          JOIN users ON students.user_id = users.id 
+          JOIN classes ON invoices.class_id = classes.id
+          WHERE invoices.student_id = ?";
+
+  $query = $this->db->query($sql, array($student_id));
+  if ($query->num_rows() > 0) {
+      $invoices = $query->result_array();
+      return $invoices;
+  } else {
+      return null;
+  }
+}
+
+
+public function get_invoices_by_student($student_id) {
+  $sql = "SELECT * FROM invoices WHERE student_id = ?";
+
+  $query = $this->db->query($sql, array($student_id));
+  if ($query->num_rows() > 0) {
+      $invoices = $query->result_array();
+      return $invoices;
+  } else {
+      return null;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     // Login API CALL
     public function login_post() {
@@ -83,8 +294,6 @@ class Admin extends REST_Controller {
     }
     return $this->set_response($response, REST_Controller::HTTP_OK);
   }
-
-  // GET DATA OF APPLICATION DASHBOARD
   public function dashboard_data_get() {
     $response = array();
     if (isset($_GET['auth_token']) && !empty($_GET['auth_token'])) {
