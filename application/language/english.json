@@ -1263,5 +1263,16 @@
     "provide_driver_blood_group": "Provide driver blood group",
     "provide_driver_address": "Provide driver address",
     "marks": "Marks",
+    "vehicles": "Vehicles",
+    "create_vehicle": "Create vehicle",
+    "assign_student": "Assign student",
+    "first_select_a_category": "First select a category",
+    "assign_by": "Assign by",
+    "by_class": "By class",
+    "individual": "Individual",
+    "select_a_vehicle": "Select a vehicle",
+    "select_vehicle": "Select vehicle",
+    "first_select_class": "First select class",
+    "assign": "Assign",
     "school": "School"
 }
