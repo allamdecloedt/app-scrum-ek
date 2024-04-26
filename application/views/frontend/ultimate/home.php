@@ -7,7 +7,6 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 <main class="" id="content" role="main">
 
   <!-- Intro Section -->
-  <nav class="nav-home"></nav>
 
   <div class=" intro-section">
     <div id="intro-container" class="intro-container" >

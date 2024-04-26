@@ -1,217 +1,12 @@
-
-
 /*------------------------------------
 About Us Page Styling
 ------------------------------------*/
-
-
-
-.about-container {
-  position: relative;
-  background: #212121ba;
-  width: 100%;
-  height: 20vh;
-  overflow: hidden;
-  backdrop-filter: blur(10px);
-  padding-top: 300px;
-}
-
-
-.about-header h1 {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  top: 170px;
-  color: #ffffff;
-  font-family: "Montserrat", sans-serif;
-  letter-spacing: 0.8em;
-  font-size: 2rem;
-  font-weight: normal;
-  opacity: 1;
-  text-transform: uppercase;
-  text-shadow: hsla(0, 45%, 5%, 0.3) 0 0 1px,
-    hsla(360, 55%, 95%, 0.3) 0 -1px 2px, hsla(0, 45%, 5%, 0.3) 0 -1px 2px,
-    hsla(360, 55%, 95%, 0.3) 0 20px 15px;
-}
-
-.about-header .text_fade {
-  -webkit-animation: fade_text 8s infinite ease-in;
-  -moz-animation: fade_text 8s infinite ease-in;
-  -o-animation: fade_text 8s infinite ease-in;
-  animation: fade_text 8s infinite ease-in;
-}
-.about-header div {
-  position: absolute;
-  width: 0.001vmin;
-  height: 0.001vmin;
-  border-radius: 50%;
-  opacity: 0.25;
-}
-
-.about-header div:nth-child(2) {
-  -webkit-box-shadow: 0 0 45vmax 45vmax #212121;
-  box-shadow: 0 0 45vmax 45vmax #212121;
-  -webkit-animation: hue 10s 0s linear infinite, move1 19s 0s linear infinite;
-  animation: hue 10s 0s linear infinite, move1 19s 0s linear infinite;
-}
-
-.about-header div:nth-child(3) {
-  -webkit-box-shadow: 0 0 45vmax 45vmax #474747;
-  box-shadow: 0 0 45vmax 45vmax #474747;
-  -webkit-animation: hue 15s 0s linear infinite, move2 25s 0s linear infinite;
-  animation: hue 15s 0s linear infinite, move2 25s 0s linear infinite;
-}
-
-.about-header div:nth-child(4) {
-  -webkit-box-shadow: 0 0 45vmax 45vmax #e7e7e7;
-  box-shadow: 0 0 45vmax 45vmax #e7e7e7;
-  -webkit-animation: hue 20s 0s linear infinite, move3 15s 0s linear infinite;
-  animation: hue 20s 0s linear infinite, move3 15s 0s linear infinite;
-  opacity: 0.2;
-}
-@-webkit-keyframes hue {
-  0% {
-    -webkit-filter: hue-rotate(0deg);
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    -webkit-filter: hue-rotate(360deg);
-    filter: hue-rotate(360deg);
-  }
-}
-@keyframes hue {
-  0% {
-    -webkit-filter: hue-rotate(0deg);
-    filter: hue-rotate(0deg);
-  }
-  100% {
-    -webkit-filter: hue-rotate(360deg);
-    filter: hue-rotate(360deg);
-  }
-}
-@-webkit-keyframes move1 {
-  0% {
-    top: 0vh;
-    left: 50vw;
-  }
-  25% {
-    left: 0vw;
-  }
-  50% {
-    top: 100vh;
-  }
-  75% {
-    left: 100vw;
-  }
-  100% {
-    top: 0vh;
-    left: 50vw;
-  }
-}
-@keyframes move1 {
-  0% {
-    top: 0vh;
-    left: 50vw;
-  }
-  25% {
-    left: 0vw;
-  }
-  50% {
-    top: 100vh;
-  }
-  75% {
-    left: 100vw;
-  }
-  100% {
-    top: 0vh;
-    left: 50vw;
-  }
-}
-@-webkit-keyframes move2 {
-  0% {
-    top: 50vh;
-    left: 100vw;
-  }
-  25% {
-    top: 100vh;
-  }
-  50% {
-    left: 0vw;
-  }
-  75% {
-    top: 0vh;
-  }
-  100% {
-    top: 50vh;
-    left: 100vw;
-  }
-}
-@keyframes move2 {
-  0% {
-    top: 50vh;
-    left: 100vw;
-  }
-  25% {
-    top: 100vh;
-  }
-  50% {
-    left: 0vw;
-  }
-  75% {
-    top: 0vh;
-  }
-  100% {
-    top: 50vh;
-    left: 100vw;
-  }
-}
-@-webkit-keyframes move3 {
-  0% {
-    top: 100vh;
-    left: 50vw;
-  }
-  25% {
-    left: 100vw;
-  }
-  50% {
-    top: 0vh;
-  }
-  75% {
-    left: 0vw;
-  }
-  100% {
-    top: 100vh;
-    left: 50vw;
-  }
-}
-@keyframes move3 {
-  0% {
-    top: 100vh;
-    left: 50vw;
-  }
-  25% {
-    left: 100vw;
-  }
-  50% {
-    top: 0vh;
-  }
-  75% {
-    left: 0vw;
-  }
-  100% {
-    top: 100vh;
-    left: 50vw;
-  }
-}
 
 .about-image-container {
   width: 100%;
   height: 130vh;
   position: relative;
   z-index: -2;
-
-  
-  
 }
 
 .about-image-container img {
@@ -223,8 +18,6 @@ About Us Page Styling
   top: -300px;
   left: 0;
   z-index: -1;
-  
-  
 }
 
 .about-section {
@@ -241,7 +34,7 @@ About Us Page Styling
   font-size: 2rem;
   font-weight: 400;
   text-align: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Roboto", sans-serif;
   padding-top: 50px;
   padding-bottom: 20px;
 }
@@ -251,7 +44,7 @@ About Us Page Styling
   font-size: 1.5rem;
   font-weight: 400;
   text-align: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Roboto", sans-serif;
   padding-top: 20px;
   padding-bottom: 20px;
 }
@@ -260,7 +53,7 @@ About Us Page Styling
   font-size: 1rem;
   font-weight: 400;
   text-align: center;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Roboto", sans-serif;
   padding-top: 20px;
   padding-bottom: 20px;
 }
@@ -278,138 +71,94 @@ About Us Page Styling
   filter: drop-shadow(0 2px 1px #00000084);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*--------------------------------------Responsive Design---------------------------------------------*/
 
 /*--------------------------------------------576px---------------------------------------------------*/
 /* Extra small devices (phones) */
 @media (max-width: 576px) {
-
   .about-section {
-  min-height: 600px;
+    min-height: 600px;
   }
-    
 
-.about-header h1 {
-  font-size: 2rem;
-  letter-spacing: 0.5em;
-  transition: all 0.3s ease-in;
-}
+  .about-section-top-svg {
+    top: -10px;
+  }
 
-.about-section-top-svg {
-  top: -10px;
-}
+  .about-section-bottom-svg {
+    bottom: -3px;
+  }
 
-.about-section-bottom-svg {
-  bottom: -3px;
-}
-
-.about-section-content h1 {
-  font-size: 1.5rem;
-  padding-top: 30px;
+  .about-section-content h1 {
+    font-size: 1.5rem;
+    padding-top: 30px;
     padding-bottom: 10px;
+  }
 
-}
+  .about-section-content h3 {
+    font-size: 20px;
+  }
 
-.about-section-content h3 {
-  font-size: 20px;
-}
+  .about-section-content p {
+    font-size: 15px;
+    padding-bottom: 10px !important;
+    overflow: hidden;
+  }
 
-.about-section-content p {
-  font-size: 15px;
-  padding-bottom: 10px !important;
-  overflow: hidden;
-}
+  .about-image-container {
+    height: 150vh;
+  }
 
-
-.about-image-container {
-  height: 150vh;
-
-}
-
-.about-image-container img {
-  height: 210vh;
-}
-
-
-
-
-
+  .about-image-container img {
+    height: 210vh;
+  }
 }
 /*--------------------------------------------576px---------------------------------------------------*/
 /* Small devices (tablets) */
 @media (min-width: 576px) {
-    
-    .about-header h1 {
-  font-size: 2rem;
-  letter-spacing: 0.5em;
-  transition: all 0.3s ease-in;
+  .about-section-top-svg {
+    top: -2vh;
+  }
 
-}
+  .about-section-bottom-svg {
+    bottom: -1vh;
+  }
 
-.about-section-top-svg {
-  top: -2vh;
-}
-
-.about-section-bottom-svg {
-  bottom: -1vh;
-}
-
-.about-section {
-  min-height: 900px;
-}
-
-
+  .about-section {
+    min-height: 900px;
+  }
 }
 /*--------------------------------------------768px---------------------------------------------------*/
 /* Medium devices (desktops) */
 @media (min-width: 768px) {
-   
-    .about-section-top-svg {
-  top: -2.5vh;
-}
+  .about-section-top-svg {
+    top: -2.5vh;
+  }
 
-.about-section-bottom-svg {
-  bottom: -10px;
-}
+  .about-section-bottom-svg {
+    bottom: -10px;
+  }
 }
 /*--------------------------------------------992px---------------------------------------------------*/
 
 /* Large devices (desktops) */
 @media (min-width: 992px) {
-    
+  .about-section-top-svg {
+    top: -3.5vh;
+  }
 
-        .about-section-top-svg {
-  top: -3.5vh;
-}
-
-.about-section-bottom-svg {
-  bottom: -2.5vh;
-}
+  .about-section-bottom-svg {
+    bottom: -2.5vh;
+  }
 }
 /*--------------------------------------------1200px--------------------------------------------------*/
 
 /* Extra large devices (large desktops) */
 @media (min-width: 1200px) {
-   
-     .about-section-top-svg {
-  top: -4vh;
-}
+  .about-section-top-svg {
+    top: -4vh;
+  }
 
-.about-section-bottom-svg {
-  bottom: -3vh;
+  .about-section-bottom-svg {
+    bottom: -3vh;
+  }
 }
-}
-

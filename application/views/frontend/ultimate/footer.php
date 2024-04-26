@@ -11,8 +11,8 @@ $links = json_decode($social);
        
 
         <!-- Address -->
-        <address>
-          <ul class="list-group list-group-flush list-group-borderless  ">
+        <div>
+          <ul class="list-group list-group-flush list-group-borderless text-break ">
            <h4 class="h6 font-weight-semi-bold pb-4 pt-4 pt-sm-0 light-border-bottom">Contact</h4>
             <li class="list-group-item text-light custom-list-group-item">
               <?php echo get_settings('phone'); ?>
@@ -26,16 +26,14 @@ $links = json_decode($social);
               <?php echo get_settings('address'); ?>
             </li>
           </ul>
-        </address>
+        </div>
         <!-- End Address -->
 
 
       </div>
       <div class="col-sm-4 d-flex justify-content-center text-center">
-       
-
         <!-- List Group -->
-        <ul class="list-group list-group-flush list-group-borderless mb-0">
+        <ul class="list-group list-group-flush list-group-borderless mb-0 text-break">
          <h4 class="h6 font-weight-semi-bold pb-4 pt-4 pt-sm-0 light-border-bottom">About</h4>
           <li><a class="list-group-item  custom-list-group-item" href="<?php echo site_url('home/about'); ?>">About</a>
           </li>
@@ -51,7 +49,7 @@ $links = json_decode($social);
         
 
         <!-- List Group -->
-        <ul class=" footer-section list-group list-group-flush list-group-borderless mb-0">
+        <ul class=" footer-section list-group list-group-flush list-group-borderless mb-0 text-break">
         <h4 class="h6 font-weight-semi-bold pb-4 pt-4 pt-sm-0 light-border-bottom">Resources</h4>
           <li><a class="list-group-item list-group-item-action custom-list-group-item "
               href="<?php echo site_url('home/terms_conditions'); ?>">Terms & Conditions</a></li>

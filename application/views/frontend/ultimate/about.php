@@ -1,16 +1,15 @@
 <!-- ========== MAIN ========== -->
 <main>
   <!-- Hero Section -->
-  <div class="about-container">
-    <div class="container-fluid g-0 about-header">
-      <h1 class='text_fade text-uppercase '> About us </h1>
+  <div class="general-container container-fluid ">
+    <div class="g-0 general-header">
+      <h1 class='text_fade text-uppercase text-center'> About us </h1>
       <!-- Divs for "About Us" Background fade in-out animation-->
       <div></div>
       <div></div>
       <div></div>
       <!-- End Divs-->
     </div>
-
   </div>
   <div class=" g-0 about-image-container ">
     <img class="rellax" data-rellax-speed="3" alt="About Us"

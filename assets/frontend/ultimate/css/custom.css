@@ -4,9 +4,11 @@ Project : Decloedt
  */
 
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 
 var {
-  --font-primary: "Montserrat", sans-serif;
+  --font-primary: "Roboto", sans-serif;
 }
 
 body,
@@ -14,6 +16,7 @@ main {
   position: relative;
   z-index: -3 !important;
   background: #212121 !important;
+  font-family: var(--font-primary);
 }
 /*------------------------------------
 Navigation Styling
@@ -30,10 +33,11 @@ Navigation Styling
   top: 0;
   align-items: center;
   justify-content: center;
-  height: 80px;
+  min-height: 80px;
   border-bottom-left-radius: 10px; /* 25px rounded bottom left corner */
   border-bottom-right-radius: 10px;
   transition: all 0.5s;
+  font-weight: 600;
 }
 
 .nav-home {
@@ -78,8 +82,8 @@ label {
   right: 20px;
   margin: 0 auto;
   display: block;
-  width: 30px;
-  height: 30px;
+  min-width: 30px;
+  min-height: 30px;
   transform: translateY(-50%);
   transition: 0.3s ease transform;
   cursor: pointer;
@@ -121,12 +125,12 @@ label div:last-child {
 }
 
 .nav-link:hover {
-  color: #a8a8a8 !important;
+  color: #FFFF !important;
   transition: all 0.3s;
 }
 
 .active {
-  color: #ababab !important;
+  color: #a8a8a8 !important;
 }
 /*----------------------------------------------------------------------------------------------------------------
 Home Page Styling
@@ -223,7 +227,7 @@ First Section Styling
 .intro-text-section p {
   color: #d4d4db;
   font-size: 1em;
-  font-weight: 400;
+  font-weight: 600;
   text-align: left;
   padding-top: 50px;
   padding-bottom: 50px;
@@ -231,9 +235,9 @@ First Section Styling
 }
 
 .display-3 {
-  font-family: "Montserrat", sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
   color: #ffffff !important;
-  font-weight: 700 !important;
+  font-weight: 900 !important;
 }
 
 .section-height {
@@ -251,7 +255,7 @@ Intro Section Button Styling
   position: relative;
   overflow: hidden;
   z-index: 1;
-  font-family: "Montserrat", sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
 }
 
 /*------------------------------------
@@ -264,11 +268,11 @@ Social Media Buttons CSS
 .social-media-main-text {
   color: #ffffff;
   font-size: 1.5em;
-  font-weight: 400;
+  font-weight: 900;
   text-align: center;
   padding-top: 50px;
   padding-bottom: 20px;
-  font-family: "Montserrat", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .social-media-buttons ul {
@@ -442,7 +446,7 @@ Teacher Card Styling
   width: 320px;
   background-color: rgba(255, 255, 255, 0.06) !important;
   border-radius: 8px;
-  font-family: "Poppins", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 .teacher-card-img {
   height: 150px;
@@ -513,7 +517,7 @@ Teacher Card Styling
 }
 .teacher-card a {
   color: #ffffff;
-  font-family: "Poppins", sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   letter-spacing: 0.5px;
   text-decoration: none;
@@ -666,9 +670,8 @@ Event Section Styling
 }
 
 .event-carousel {
-  position: absolute;
   width: 100%;
-  height: 500px !important;
+  min-height: 300px !important;
   z-index: -1;
 }
 
@@ -781,17 +784,15 @@ Footer Styling
 }
 
 .list-group h4 {
-  font-family: "Montserrat", sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
 }
 
 .list-group-item:hover {
-  background-color: #27272d !important;
-  color: white !important;
 }
 
-.custom-list-group-item:hover {
-  background-color: #ededed; /* Darker shade for hover effect */
-  color: white;
+.list-group a:hover {
+  color: #787878 !important;
+
 }
 
 .light-border-top {
