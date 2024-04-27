@@ -1,0 +1,42 @@
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+
+.button-label {
+  background-color: #9800ba !important;
+  font-weight: 700;
+  position: relative;
+  min-width: 250px;
+  min-height: 35px;
+}
+
+.button-label svg {
+  position: absolute;
+  top: 3px;
+  left: 10px;
+}
+
+
+
+.file-spacer {
+  background-color: #ffffff !important;
+  position: absolute;
+  width: 1px !important;
+  height: 100%;
+  bottom: -6px;
+  left: 50px;
+}
+
+.file-name {
+  position: relative;
+  top: 3px;
+  left: 10px;
+  font-weight: 500;
+  font-size: 12px;
+  font-style: italic;
+}

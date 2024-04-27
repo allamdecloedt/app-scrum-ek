@@ -49,3 +49,4 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/about-page.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/general.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/contact-page.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/online-admission-page.css">
