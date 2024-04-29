@@ -1,0 +1,41 @@
+
+/*----------------------------------------------------------------------------------------------------------------
+Footer Styling
+------------------------------------*/
+
+
+.footer {
+  background: #27272d;
+  color: #ffffff;
+  padding: 50px 0;
+}
+
+.footer-email {
+  text-decoration: none !important;
+  color: #ffffff;
+}
+
+.custom-list-group-item {
+  background-color: #27272d !important; /* Custom background color */
+  color: white !important; /* Custom text color */
+}
+
+.list-group h4 {
+  font-family: "Roboto", sans-serif !important;
+}
+
+.list-group-item:hover {
+}
+
+.list-group a:hover {
+  color: #787878 !important;
+
+}
+
+.light-border-top {
+  border-top: 1px solid #ffffff; /* Custom border color */
+}
+
+.light-border-bottom {
+  border-bottom: 1px solid #ffffff; /* Custom border color */
+}

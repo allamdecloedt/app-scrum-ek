@@ -21,8 +21,6 @@
   left: 10px;
 }
 
-
-
 .file-spacer {
   background-color: #ffffff !important;
   position: absolute;
@@ -40,3 +38,26 @@
   font-size: 12px;
   font-style: italic;
 }
+
+.form-title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #bfbfbf;
+}
+
+.admission-title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: #bfbfbf;
+}
+
+.form-section {
+  -webkit-box-shadow: 0px -16px 21px -10px rgba(0, 0, 0, 0.75);
+  -moz-box-shadow: 0px -16px 21px -10px rgba(0, 0, 0, 0.75);
+  box-shadow: 0px -16px 21px -21px rgba(0, 0, 0, 0.75);
+  position: relative;
+}
+
+ textarea {
+  resize: none;
+ }

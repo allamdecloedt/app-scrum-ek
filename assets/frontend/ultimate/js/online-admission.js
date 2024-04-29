@@ -1,4 +1,5 @@
 
+// Function to get the file extension
 
 function getFileExtension(fileName) {
     // Split the fileName by period
@@ -31,3 +32,24 @@ document.getElementById('pdf').addEventListener('change', function() {
 
     document.querySelector('.file-name-pdf').textContent = fileName;
 });
+
+
+//Check for Form selector to display the correct form
+
+document.getElementById('selectorform').addEventListener('change', function() {
+
+if(document.getElementById('studentselector').checked == true) {   
+    document.getElementById('studentform').style.visibility = 'visible';
+    document.getElementById('schoolform').style.visibility = 'hidden';
+           
+} 
+else if(document.getElementById('schoolselector').checked == true){  
+
+    document.getElementById('schoolform').style.visibility = 'visible';
+    document.getElementById('studentform').style.visibility = 'hidden';
+}  
+
+
+});
+
+
