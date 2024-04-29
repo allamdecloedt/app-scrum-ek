@@ -1,3 +1,5 @@
+<?php $base_url = base_url(); ?>
+
 
 <!-- Google Fonts -->
 <link href="//fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" rel="stylesheet">
@@ -15,7 +17,7 @@
 
 
 
-<!--<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/theme.css">-->
+<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/theme.css">
 
 <!-- CSS Bootstrap 5 -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -45,7 +47,28 @@
 
 <!-- Custom CSS-->
 
-<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/custom.css">
-<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/about-page.css">
+
+<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/footer.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/navigation.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/general.css">
-<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/contact-page.css">
+
+<?php
+if ($page_name == "home") {
+
+  echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/custom.css">';
+
+} elseif ($page_name == "about") {
+
+  echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/about-page.css">';
+
+} elseif ($page_name == "contact") {
+
+  echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/contact-page.css">';
+
+}else if ($page_name == "online_admission"){
+
+    echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/online-admission-page.css">';
+
+}
+?>
+
