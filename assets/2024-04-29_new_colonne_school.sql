@@ -1,5 +1,5 @@
 ALTER TABLE schools
-ADD description VARCHAR(255);
+ADD description text;
 
 ALTER TABLE schools
 ADD access int(11);
