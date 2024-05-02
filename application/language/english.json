@@ -1275,5 +1275,8 @@
     "assign": "Assign",
     "school": "School",
     "content_creator": "Content creator",
-    "online_admission_school": "Online admission school"
+    "online_admission_school": "Online admission school",
+    "hr": "Hr",
+    "approved_school": "approved School",
+    "admission_request_has_been_updated": "School request has been updated"
 }

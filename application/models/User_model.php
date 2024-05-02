@@ -914,7 +914,21 @@ class User_model extends CI_Model {
 	public function get_profile_data() {
 		return $this->db->get_where('users', array('id' => $this->session->userdata('user_id')))->row_array();
 	}
+	public function approved_school(){
+		$response = array();
+		$school_id = html_escape($this->input->post('school_id'));
+		// return $school_id;
+		$data['status'] = 1 ;
+		$this->db->where('id', $school_id);
+		$this->db->update('schools', $data);
 
+		$response = array(
+			'status' => true,
+			'notification' => get_phrase('School_updated_successfully')
+		);
+
+		return json_encode($response);
+	}
 	public function update_profile() {
 		$response = array();
 		$user_id = $this->session->userdata('user_id');
