@@ -1262,7 +1262,6 @@
     "provide_driver_gender": "Provide driver gender",
     "provide_driver_blood_group": "Provide driver blood group",
     "provide_driver_address": "Provide driver address",
-    "marks": "Marks",
     "vehicles": "Vehicles",
     "create_vehicle": "Create vehicle",
     "assign_student": "Assign student",
@@ -1274,5 +1273,10 @@
     "select_vehicle": "Select vehicle",
     "first_select_class": "First select class",
     "assign": "Assign",
-    "school": "School"
+    "school": "School",
+    "content_creator": "Content creator",
+    "online_admission_school": "Online admission school",
+    "hr": "Hr",
+    "approved_school": "approved School",
+    "admission_request_has_been_updated": "School request has been updated"
 }

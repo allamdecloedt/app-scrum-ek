@@ -8,7 +8,7 @@ if($user_type == 'parent'){
 ?>
 
 <!-- ========== Left Sidebar Start ========== -->
-<div class="leftside-menu leftside-menu-detached">
+<div class="leftside-menu leftside-menu-detached" style="min-width: 280px; max-width: 280px;">
 
   <div class="leftbar-user">
     <a href="javascript: void(0);">
@@ -108,6 +108,9 @@ if($user_type == 'parent'){
             <span><?php echo get_phrase($main_menu['displayed_name']); ?></span>
             <?php if($main_menu['unique_identifier'] == 'online_admission'): ?>
               <span class="badge bg-danger float-end"><?php echo $this->db->get_where('users', array('status' => 3, 'school_id' => school_id()))->num_rows(); ?></span>
+            <?php endif; ?>
+            <?php if($main_menu['unique_identifier'] == 'online_admission_school'): ?>
+              <span class="badge bg-danger float-end"><?php echo $this->db->get_where('schools', array('status' => 0 , 'Etat' => 1))->num_rows(); ?></span>
             <?php endif; ?>
           </a>
         </li>
