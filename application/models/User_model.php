@@ -115,12 +115,7 @@ class User_model extends CI_Model {
 		// $data['school_id'] = html_escape($this->input->post('school_id'));
 		$data['name'] = html_escape($this->input->post('name'));
 		$data['phone'] = html_escape($this->input->post('phone'));
-		// $data['email'] = html_escape($this->input->post('email'));
-		$data['description'] = html_escape($this->input->post('description'));
 		$data['address'] = html_escape($this->input->post('address'));
-		$data['access'] = html_escape($this->input->post('access'));
-		$data['category'] = html_escape($this->input->post('category'));
-		$data['status'] = 1;
 		// $data['role'] = 'admin';
 		// $data['watch_history'] = '[]';
 
@@ -147,11 +142,7 @@ class User_model extends CI_Model {
 	{
 		$data['name'] = html_escape($this->input->post('name'));
 		$data['phone'] = html_escape($this->input->post('phone'));
-		// $data['email'] = html_escape($this->input->post('email'));
-		$data['description'] = html_escape($this->input->post('description'));
 		$data['address'] = html_escape($this->input->post('address'));
-		$data['access'] = html_escape($this->input->post('access'));
-		$data['category'] = html_escape($this->input->post('category'));
 		// check email duplication
 		// $duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
 		// if($duplication_status){
@@ -175,11 +166,8 @@ class User_model extends CI_Model {
 
 	public function delete_school($param1 = '')
 	{
-		// $this->db->where('id', $param1);
-		$data['Etat'] = 0;
-        $this->db->where('id', $param1);
-        $this->db->update('schools', $data);
-		// $this->db->delete('schools');
+		$this->db->where('id', $param1);
+		$this->db->delete('schools');
 
 		$response = array(
 			'status' => true,
@@ -926,21 +914,7 @@ class User_model extends CI_Model {
 	public function get_profile_data() {
 		return $this->db->get_where('users', array('id' => $this->session->userdata('user_id')))->row_array();
 	}
-	public function approved_school(){
-		$response = array();
-		$school_id = html_escape($this->input->post('school_id'));
-		// return $school_id;
-		$data['status'] = 1 ;
-		$this->db->where('id', $school_id);
-		$this->db->update('schools', $data);
 
-		$response = array(
-			'status' => true,
-			'notification' => get_phrase('School_updated_successfully')
-		);
-
-		return json_encode($response);
-	}
 	public function update_profile() {
 		$response = array();
 		$user_id = $this->session->userdata('user_id');

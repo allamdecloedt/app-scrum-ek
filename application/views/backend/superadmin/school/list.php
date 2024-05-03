@@ -5,30 +5,29 @@ if($check_data->num_rows() > 0):?>
 <table id="basic-datatable" class="table table-striped dt-responsive nowrap" width="100%">
     <thead>
         <tr style="background-color: #313a46; color: #ababab;">
-        <th><?php echo get_phrase('name'); ?></th>
-        <th><?php echo get_phrase('email'); ?></th>
-        <th><?php echo get_phrase('address'); ?></th>
-        <th><?php echo get_phrase('phone'); ?></th>
-        <th><?php echo get_phrase('description'); ?></th>
-        <th><?php echo get_phrase('category'); ?></th>
-        <th><?php echo get_phrase('options'); ?></th>
+            <th><?php echo get_phrase('name'); ?></th>
+            <th><?php echo get_phrase('address'); ?></th>
+            <th><?php echo get_phrase('phone'); ?></th>
+            <th><?php echo get_phrase('options'); ?></th>
         </tr>
     </thead>
     <tbody>
         <?php
-        $admins = $this->db->get_where('schools', array('Etat' => 1 , 'status'=> 1))->result_array();
+        $admins = $this->db->get_where('schools', array())->result_array();
         foreach($admins as $admin){
-            $user = $this->db->get_where('users', array('school_id' => $admin['id']))->row_array();
             ?>
             <tr>
                 <td><?php echo $admin['name']; ?></td>
-                <td><?php echo $user['email']; ?></td>
                 <td><?php echo $admin['address']; ?></td>
                 <td><?php echo $admin['phone']; ?></td>
-
-                <td><?php echo $admin['description']; ?></td>
-                <td><?php echo $admin['category']; ?></td>
- 
+                <!-- <td> -->
+<!--                 
+                        // $school_details = $this->crud_model->get_school_details_by_id($admin['school_id']);
+                        // echo $school_details['name']; -->
+                  
+                     <!-- <br><small> <strong><?php echo get_phrase('phone'); ?></strong>: <?php echo $school_details['phone']; ?></small> -->
+                     <!-- <br><small> <strong><?php echo get_phrase('address'); ?></strong>: <?php echo $school_details['address']; ?></small> -->
+              <!--  </td> -->
                 <td>
                     <div class="dropdown text-center">
                         <button type="button" class="btn btn-sm btn-icon btn-rounded btn-outline-secondary dropdown-btn dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-vertical"></i></button>
