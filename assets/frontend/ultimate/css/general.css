@@ -1,9 +1,11 @@
+
 /*!
 Author : Arran Van Aerschot
 Project : Decloedt
  */
 
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
 
 var {
   --font-primary: "Roboto", sans-serif;
@@ -17,39 +19,20 @@ main {
   font-family: var(--font-primary);
 }
 
+
 .general-container {
   position: relative;
   background: #212121ba;
-  align-items: center;
   width: 100%;
   min-height: 300px;
   backdrop-filter: blur(5px);
+  padding-top: 300px;
   overflow: hidden;
   font-family: "Roboto", sans-serif;
   background-size: cover;
   background-position: top;
-}
-
-.general-container-ol-bot,
-.general-container-ol {
-  position: absolute;
-  background: #2121215e;
-  width: 100%;
-  top: 0;
-  left: 0;
-  min-height: 300px;
-  backdrop-filter: blur(5px);
-  overflow: hidden;
-  font-family: "Roboto", sans-serif;
-  background-size: cover;
-  background-position: top;
-}
-
-.general-container-ol-bot{
-    backdrop-filter: blur(0px);
 
 }
-
 
 .ct-img {
   width: 100%;
@@ -62,12 +45,13 @@ main {
   z-index: -1;
 }
 
+
+
 .general-header h1 {
-  position: absolute;
+  position: relative;
+  overflow-wrap: break-word;
+  bottom: 100px;
   width: 100%;
-  left: 50%;
-  top: 65%;
-  transform: translate(-50%, -50%);
   color: #ffffff;
   letter-spacing: 0.1em;
   font-size: 3rem;
@@ -77,7 +61,6 @@ main {
   text-shadow: hsla(0, 45%, 5%, 0.3) 0 0 1px,
     hsla(360, 55%, 95%, 0.3) 0 -1px 2px, hsla(0, 45%, 5%, 0.3) 0 -1px 2px,
     hsla(360, 55%, 95%, 0.3) 0 20px 15px;
-  z-index: 2;
 }
 
 .general-header .text_fade {
@@ -261,6 +244,7 @@ main {
   }
 }
 
+ 
 /*--------------------------------------------576px---------------------------------------------------*/
 /* Small devices (tablets) */
 @media (min-width: 576px) {
@@ -284,6 +268,10 @@ main {
 /* Extra large devices (large desktops) */
 @media (min-width: 1200px) {
 }
+
+
+
+
 
 /*----------------------
 Scroll Bar Styling

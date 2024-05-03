@@ -14,9 +14,7 @@
       <!-- End Div Section-->
     </div>
     <img class="ct-img rellax " data-rellax-speed="1.5"
-      src="<?php echo base_url('assets/frontend/ultimate/img/contact us/cu-img-top.jpg') ?>" alt="">
-          <div class="general-container-ol"></div>
-
+      src="<?php echo base_url('uploads/images/contact/images/cu-img-top.jpg') ?>" alt="">
   </div>
   <!-- End Header Section -->
 
@@ -82,7 +80,7 @@
   <div class="container-fluid form-section">
     <div class="row">
       <div class="col-12 col-lg-6 text-center">
-        <h1 class="text-light pt-11 text-break form-text-title display-6 text-uppercase">Message us </h1>
+        <h1 class="text-light pt-11 text-break text-capitalize form-text-title display-6">Message us </h1>
         <p class="py-10 text-break form-text ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt itaque
           doloribus
           expedita possimus enim, harum commodi distinctio architecto quaerat culpa, nesciunt reprehenderit, inventore
@@ -246,11 +244,11 @@
     </div>
     <div class="img-mid-ol"></div>
     <img class="cm-img rellax pb-11 " data-rellax-speed="1.5"
-      src="<?php echo base_url('assets/frontend/ultimate/img/contact us/cu-img-mid.jpg') ?>" alt="">
+      src="<?php echo base_url('uploads/images/contact/images/cu-img-mid.jpg') ?>" alt="">
   </div>
   <div class="container-fluid location-container">
     <div class="row">
-      <h1 class="office-title text-center text-break py-10 text-uppercase">Decloedt Academy Location</h1>
+      <h1 class="office-title text-center text-break py-10">Decloedt Academy Location</h1>
     </div>
     <div class="row">
       <div id="map" class="g-0 col-12"></div>
