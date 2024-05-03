@@ -6,6 +6,14 @@
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_name'); ?></small>
         </div>
 
+        
+
+        <div class="form-group mb-1">
+            <label for="description"><?php echo get_phrase('description'); ?></label>
+            <textarea class="form-control" id="description" name = "description" rows="5" required></textarea>
+            <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_description'); ?></small>
+        </div>
+
        
         <div class="form-group mb-1">
             <label for="phone"><?php echo get_phrase('phone_number'); ?></label>
@@ -13,11 +21,30 @@
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_phone_number'); ?></small>
         </div>
 
+        <div class="form-group mb-1">
+            <label for="access"><?php echo get_phrase('Access'); ?></label>
+            <select name="access" id="access" class="form-control select2" data-toggle = "select2">
+                <option value=""><?php echo get_phrase('select_a_access'); ?></option>
+                <option value="1"><?php echo get_phrase('public'); ?></option>
+                <option value="2"><?php echo get_phrase('privé'); ?></option>
+              
+            </select>
+            <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_access'); ?></small>
+        </div>
 
-      
+
+        <div class="form-group mb-1">
+            <label for="access"><?php echo get_phrase('Category'); ?></label>
+            <select name="category" id="category" class="form-control select2" data-toggle = "select2">
+                <option value=""><?php echo get_phrase('select_a_category'); ?></option>
+                <option value="1"><?php echo get_phrase('public'); ?></option>
+                <option value="2"><?php echo get_phrase('privé'); ?></option>
+              
+            </select>
+            <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_category'); ?></small>
+        </div>
 
         
-
 
         <div class="form-group mb-1">
             <label for="phone"><?php echo get_phrase('address'); ?></label>
