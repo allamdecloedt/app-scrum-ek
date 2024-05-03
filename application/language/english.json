@@ -64,6 +64,7 @@
     "port": "Port",
     "username": "Username",
     "password": "Password",
+    "repeat_password": "Repeat password",
     "update_smtp_settings": "Update smtp settings",
     "not_found": "Not found",
     "about_this_application": "About this application",
@@ -1274,5 +1275,18 @@
     "select_vehicle": "Select vehicle",
     "first_select_class": "First select class",
     "assign": "Assign",
-    "school": "School"
+    "school": "School",
+    "student_admission": "Student admission",
+    "school_admission": "School admission",
+    "school_information": "School information",
+    "apply": "Apply",
+    "adress": "Adress",
+    "private": "Private",
+    "public": "Public",
+    "loading_image": "Loading image",
+    "school_image": "School image",
+    "choose_a_file": "Choose a file",
+    "personal information": "Personal information",
+    "full_name": "Full name"
+
 }
