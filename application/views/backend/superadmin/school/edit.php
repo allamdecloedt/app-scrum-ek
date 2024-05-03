@@ -40,9 +40,10 @@ foreach($schools as $school): ?>
             <label for="access"><?php echo get_phrase('Category'); ?></label>
             <select name="category" id="category" class="form-control select2" data-toggle = "select2">
                 <option value=""><?php echo get_phrase('select_a_category'); ?></option>
-                <option <?php if ($school['category'] == 1): ?> selected <?php endif; ?>value="1"><?php echo get_phrase('public'); ?></option>
-                <option <?php if ($school['category'] == 2): ?> selected <?php endif; ?> value="2"><?php echo get_phrase('privé'); ?></option>
-              
+                <?php $categories = $this->db->get_where('categories', array())->result_array(); ?>
+                <?php foreach ($categories as $categorie): ?>
+                    <option <?php if ($school['category'] == $categorie['name']): ?> selected <?php endif; ?> value="<?php echo $categorie['name']; ?>"><?php echo $categorie['name']; ?></option>
+                <?php endforeach; ?>
             </select>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_category'); ?></small>
         </div>
