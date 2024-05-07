@@ -922,6 +922,18 @@ class User_model extends CI_Model {
 		}
 	}
 
+	public function check_duplication_school($action = "", $name = "") {
+		$duplicate_name_check = $this->db->get_where('schools', array('name' => $name));
+
+		if ($action == 'on_create') {
+			if ($duplicate_name_check->num_rows() > 0) {
+				return false;
+			}else {
+				return true;
+			}
+		}
+	}
+
 	//GET LOGGED IN USER DATA
 	public function get_profile_data() {
 		return $this->db->get_where('users', array('id' => $this->session->userdata('user_id')))->row_array();
@@ -929,6 +941,12 @@ class User_model extends CI_Model {
 	public function approved_school(){
 		$response = array();
 		$school_id = html_escape($this->input->post('school_id'));
+ 		$admin_user = $this->db->get_where('users', array('school_id' => $school_id, 'role' == "admin"))->row_array();
+
+		// Update Admin User Status
+		$admin_user['status'] = 1;
+		$this->db->where('id', $admin_user['id']);
+		$this->db->update('users', $admin_user);
 		// return $school_id;
 		$data['status'] = 1 ;
 		$this->db->where('id', $school_id);
@@ -1081,6 +1099,11 @@ class User_model extends CI_Model {
 
 		$this->db->where('school_id', $this->school_id);
 		return $this->db->get_where('users');
+	}
+
+
+	function get_school_id($school_name=""){
+		return $this->db->get_where('schools', array('name' => $school_name))->row()->id;
 	}
 
 }
