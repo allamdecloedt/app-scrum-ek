@@ -56,7 +56,7 @@
 
     <!-- Student Admission Form -->
 
-    <form action="<?php echo site_url('home/online_admission/submit'); ?>" method="post" id="studentform"
+    <form action="<?php echo site_url('admission/online_admission/submit/student'); ?>" method="post" id="studentform"
       class="js-validate studentform realtime-form container" enctype="multipart/form-data">
 
       <div class="row justify-content-center">
@@ -392,7 +392,7 @@
 
     <!-- Start School Admission Form -->
 
-    <form action="<?php echo site_url('home/online_admission_school/submit'); ?>" method="post" id="schoolform"
+    <form action="<?php echo site_url('admission/online_admission/submit/school'); ?>" method="post" id="schoolform"
       class="js-validate studentform realtime-form container" enctype="multipart/form-data">
 
       <div class="row justify-content-center">
@@ -447,10 +447,17 @@
                     d="M5.5 5a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1m0 1a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3M1 7.086a1 1 0 0 0 .293.707L8.75 15.25l-.043.043a1 1 0 0 1-1.414 0l-7-7A1 1 0 0 1 0 7.586V3a1 1 0 0 1 1-1z" />
                 </svg>
               </span>
-              <input type="text" placeholder="<?php echo get_phrase('category'); ?>"
-                class="form-control rounded-end shadow-none" name="school_category" required
-                data-msg="Please enter a valid email address." data-error-class="u-has-error"
-                data-success-class="u-has-success">
+          
+
+                <select name="category" id="category" class="form-control selec2 rounded-end shadow-none"
+                data-toggle="select2" required>
+                <option value=""><?php echo get_phrase('select_a_category'); ?></option>
+                <?php $categories = $this->db->get_where('categories', array())->result_array(); ?>
+                <?php foreach ($categories as $categorie): ?>
+                    <option value="<?php echo $categorie['name']; ?>"><?php echo $categorie['name']; ?></option>
+                <?php endforeach; ?>    
+                
+              </select>
             </div>
           </div>
         </div>
@@ -476,7 +483,7 @@
               </span>
               <input type="tel" required
                 pattern="(?=(?:\D*\d){7,15}\D*$)\+?\d+\s?\d{1,3}\s?\d{1,4}\s?\d{1,4}\s?\d{1,4}\s?\d{1,4}"
-                placeholder="+212 622 22 22 22" class="form-control rounded-end shadow-none" name="phone"
+                placeholder="+212 622 22 22 22" class="form-control rounded-end shadow-none" name="school_phone"
                 data-msg="Please enter a valid phone number." data-error-class="u-has-error"
                 data-success-class="u-has-success">
             </div>
@@ -555,11 +562,11 @@
               <div class="visibility-selector pt-3">
 
                 <div class="vis-button">
-                  <input id="private" type="radio" name="visibility" value="private" checked>
+                  <input id="private" type="radio" name="visibility" value="0" checked>
                   <label class="private-button form-label" for="private"><?php echo get_phrase('private'); ?></label>
                 </div>
                 <div class="vis-button">
-                  <input id="public" type="radio" name="visibility" value="public">
+                  <input id="public" type="radio" name="visibility" value="1">
                   <label class="public-button form-label" for="public"><?php echo get_phrase('public'); ?></label>
                 </div>
               </div>

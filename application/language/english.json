@@ -1286,5 +1286,6 @@
     "privé": "Privé",
     "provide_admin_access": "Provide admin access",
     "provide_admin_category": "Provide admin category",
-    "school_has_been_updated_successfully": "School has been updated successfully"
+    "school_has_been_updated_successfully": "School has been updated successfully",
+    "this_school_name_already_exist": "This school name already exist"
 }

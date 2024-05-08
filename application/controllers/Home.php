@@ -216,21 +216,7 @@ class Home extends CI_Controller {
 		$this->load->view('frontend/'.$this->theme.'/index', $page_data);
 	}
 
-	function online_admission($param1 = ""){
-		
 
-		if($param1 == 'submit'){
-			if(!$this->crud_model->check_recaptcha() && get_common_settings('recaptcha_status') == true){
-				redirect(site_url('home/contact'), 'refresh');
-			}
-			echo $this->frontend_model->online_admission();
-			return;
-		}
-
-		$page_data['page_name']  = 'online_admission';
-		$page_data['page_title'] = get_phrase('online_admission');
-		$this->load->view('frontend/'.$this->theme.'/index', $page_data);
-	}
 
 
 
