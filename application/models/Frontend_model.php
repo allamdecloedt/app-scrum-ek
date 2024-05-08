@@ -620,7 +620,7 @@ class Frontend_model extends CI_Model
       if ($_FILES['school_image']['error'] !== UPLOAD_ERR_OK) {
         return json_encode(['status' => 0, 'message' => 'Error uploading file: ' . $_FILES['school_image']['error']]);
       }
-      else move_uploaded_file($_FILES['school_image']['tmp_name'], '/uploads/schools/' . $school_id . '.jpg');
+      else move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $school_id . '.jpg');
 
       return json_encode(array('status' => 1, 'message' => get_phrase('successfully_has_been_recoded_your_request') . '. ' . get_phrase('you_will_be_notified_by_email_address_about_this_request')));
     } else {
