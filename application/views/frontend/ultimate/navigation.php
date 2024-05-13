@@ -31,16 +31,16 @@ $system_name = get_frontend_settings('website_title');
               <a class="nav-link <?php if ($page_name === 'home')
                 echo 'active'; ?>" href="<?php echo site_url('home'); ?>"><?php echo get_phrase('Home'); ?>
               </a>
-              <a class="nav-link <?php if ($page_name == 'noticeboard' || $page_name == 'notice_details')
+             <!-- <a class="nav-link <?php if ($page_name == 'noticeboard' || $page_name == 'notice_details')
                 echo 'active'; ?>"
                 href="<?php echo site_url('home/noticeboard'); ?>"><?php echo get_phrase('Noticeboard'); ?>
+              </a>-->
+              <a class="nav-link  <?php if ($page_name == 'about')
+                echo 'active'; ?>" href="<?php echo site_url('home/about'); ?>"><?php echo get_phrase('About'); ?>
               </a>
-              <a class="nav-link  <?php if ($page_name == 'event')
-                echo 'active'; ?>" href="<?php echo site_url('home/events'); ?>"><?php echo get_phrase('Events'); ?>
-              </a>
-              <a class="nav-link <?php if ($page_name == 'teacher')
+              <a class="nav-link <?php if ($page_name == 'courses')
                 echo 'active'; ?>"
-                href="<?php echo site_url('home/teachers'); ?>"><?php echo get_phrase('Teachers'); ?>
+                href="<?php echo site_url('home/courses'); ?>"><?php echo get_phrase('Courses'); ?>
               </a>
               <a class="nav-link  <?php if ($page_name == 'contact')
                 echo 'active'; ?>" href="<?php echo site_url('home/contact'); ?>"><?php echo get_phrase('Contact'); ?>

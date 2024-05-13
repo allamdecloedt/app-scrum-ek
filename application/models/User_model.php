@@ -922,6 +922,15 @@ class User_model extends CI_Model {
 		}
 	}
 
+	// Get School Image Starts
+	public function get_school_image($school_id) {
+		if (file_exists('uploads/schools/'.$school_id.'.jpg'))
+		return base_url().'uploads/schools/'.$school_id.'.jpg';
+		else
+		return base_url().'uploads/schools/placeholder.jpg';
+	}
+	// Get School Image Ends
+
 	public function check_duplication_school($action = "", $name = "") {
 		$duplicate_name_check = $this->db->get_where('schools', array('name' => $name));
 
@@ -933,6 +942,20 @@ class User_model extends CI_Model {
 			}
 		}
 	}
+
+	public function get_school_count() {
+		return $this->db->get('schools')->num_rows();
+	}
+
+	public function get_schools( $limit, $start) {
+      $result =  $this->db->limit($limit, $start)->get_where('schools', array('status' => 1));
+        return $result;
+    }
+
+	public function get_schools_per_category( $category ,$limit, $start) {
+      $result = $this->db->limit($limit, $start)->get_where('schools', array('status' => 1,'category' => $category));
+        return $result;
+    }
 
 	//GET LOGGED IN USER DATA
 	public function get_profile_data() {

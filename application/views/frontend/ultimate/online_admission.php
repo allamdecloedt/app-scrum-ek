@@ -12,7 +12,7 @@
   <div class="general-container container-fluid">
     <div class="general-header align-items-center">
       <h1 class='col-6 display-4 text_fade text-uppercase text-center  text-sm-break'>
-        <?php echo get_phrase('online_admission'); ?>
+        <?php echo get_phrase('start_your_journey'); ?>
       </h1>
       <!-- Div Section For Header Background Fade In-Out Animation-->
       <div></div>
@@ -617,7 +617,7 @@
                 <div class="file-spacer"></div>
                 <span class="file-name-school-image file-name"><?php echo get_phrase('choose_a_file'); ?>...</span>
               </label>
-              <input id="school_image" type="file" class="inputfile" name="school_image" accept="image/*" required>
+              <input id="school_image" type="file" class="inputfile" name="school_image" accept=".jpg, .jpeg" required>
             </div>
 
           </div>

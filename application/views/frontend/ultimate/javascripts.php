@@ -143,4 +143,10 @@ else if ($page_name == "online_admission"){
   echo '<script src="' . $base_url . 'assets/frontend/ultimate/js/online-admission.js"></script>';
 
 }
+
+else if($page_name == "courses"){
+  echo '<script defer >var rellax = new Rellax(".rellax");</script>';
+  echo '<script src="' . $base_url . 'assets/frontend/ultimate/js/courses.js"></script>';
+
+}
 ?>
