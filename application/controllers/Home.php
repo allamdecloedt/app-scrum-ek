@@ -355,15 +355,18 @@ class Home extends CI_Controller
 
 	}
 
-	function courses_search($input = '')
+	function courses_search()
 	{
+
 		$input = htmlspecialchars($this->input->get('search'));
 
 		$config = array();
-		$config['base_url'] = site_url('home/courses_search');
+		$config['base_url'] = site_url('home/courses_search/');
+		$config['suffix'] = '?search=' . urlencode($input);
 		$config['per_page'] = 8;
 		$config['use_page_numbers'] = true;
 		$config['uri_segment'] = 3;
+
 
 		if ($input == null) {
 
@@ -377,6 +380,9 @@ class Home extends CI_Controller
 
 			$page = ($this->uri->segment($config['uri_segment'])) ? $this->uri->segment($config['uri_segment']) : 1;
 			$offset = ($page - 1) * $config['per_page'];
+			$page_data['input_search'] = $input;
+
+
 			$page_data['schools'] = $this->user_model->get_schools_search($input, $config['per_page'], $offset);
 			$config['total_rows'] = $this->user_model->get_schools_search_count($input);
 			$page_data['statement'] = 2;
@@ -389,6 +395,8 @@ class Home extends CI_Controller
 
 		//pagination bootstrap settings
 		{
+					$config['first_url'] = $config['base_url'] . $config['suffix'];
+
 
 			$config['num_links'] = 1;
 
@@ -436,7 +444,6 @@ class Home extends CI_Controller
 
 		//set page data
 
-		$page_data['input_search'] = $input;
 
 		$page_data['categories'] = $this->frontend_model->get_categories();
 		$page_data['page_name'] = 'courses';

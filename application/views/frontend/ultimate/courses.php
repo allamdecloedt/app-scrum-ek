@@ -28,7 +28,7 @@
             <form class="col-10 col-lg-6 search-bar " action="<?php echo site_url('home/courses_search'); ?>" method="get">
                 <div class="input-group pb-5 ">
                     <input name="search" type="search" class="form-control " placeholder="<?php echo get_phrase('search'); ?>"
-                        aria-label="Search" aria-describedby="search-addon" value="<?php if ($input_search) echo $input_search ?>"/>
+                        aria-label="Search" aria-describedby="search-addon" value="<?php if ($input_search) echo ($input_search) ?>"/>
                     <button type="submit" class="input-group-text " id="search-addon">
                         <i class="fas fa-search"></i>
                     </button>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-auto g-1 d-flex align-content-center ">
                         <a href="<?php echo base_url('home/courses/') ?>"
-                            class="category text-capitalize py-1"><?php echo get_phrase('All') ?></a>
+                            class="category text-capitalize <?php echo ($selected_category == $category['name']) ? 'active-cat' : ''; ?> py-1"><?php echo get_phrase('All') ?></a>
                     </div>
                     <?php
 
