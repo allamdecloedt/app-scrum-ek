@@ -294,28 +294,50 @@ class Home extends CI_Controller
 
 			$config['uri_segment'] = 2;
 			$page = ($this->uri->segment($config['uri_segment'])) ? $this->uri->segment($config['uri_segment']) : 1;
-			$page_data['schools'] = $this->user_model->get_schools($config['per_page'], 0);
+
+			$page_data['schools'] = $this->user_model->get_schools($config['per_page'], $offset);
 			$config['total_rows'] = $this->db->count_all('schools');
 			$page_data['statement'] = 5;
 		}
 
 		//pagination bootstrap settings
 		{
-			$config['full_tag_open'] = '<nav aria-label="course page navigation"><ul class="pagination">';
-			$config['full_tag_close'] = '</ul></nav>';
-			$config['first_tag_open'] = '<li class="page-item">';
-			$config['first_tag_close'] = '</li>';
-			$config['last_tag_open'] = '<li class="page-item">';
-			$config['last_tag_close'] = '</li>';
-			$config['next_tag_open'] = '<li class="page-item">';
-			$config['next_tag_close'] = '</li>';
-			$config['prev_tag_open'] = '<li class="page-item">';
-			$config['prev_tag_close'] = '</li>';
-			$config['cur_tag_open'] = '<li class="page-item active"><a class="page-link" href="#">';
-			$config['cur_tag_close'] = '</a></li>';
-			$config['num_tag_open'] = '<li class="page-item">';
-			$config['num_tag_close'] = '</li>';
-			$config['attributes'] = array('class' => 'page-link');
+
+			$config['num_links'] = 1;
+
+			$config['first_link'] = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+  			<path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708z"/>
+			</svg>';
+
+			$config['last_link'] = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-90deg-right" viewBox="0 0 16 16">
+  			<path fill-rule="evenodd" d="M14.854 4.854a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 4H3.5A2.5 2.5 0 0 0 1 6.5v8a.5.5 0 0 0 1 0v-8A1.5 1.5 0 0 1 3.5 5h9.793l-3.147 3.146a.5.5 0 0 0 .708.708z"/>
+			</svg>';
+
+			$config['next_link'] = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class=bi bi-arrow-bar-right" viewBox="0 0 16 16">
+  			<path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8m-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5"/>
+			</svg>';
+
+			$config['prev_link'] = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+  			<path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"/>
+			</svg>';
+
+			$config['full_tag_open'] = '<nav aria-label="course page navigation "><div class="pagination-list">';
+			$config['full_tag_close'] = '</div></nav>';
+			$config['first_tag_open'] = '<div class="pagination-item">';
+			$config['first_tag_close'] = '</div>';
+			$config['last_tag_open'] = '<div class="pagination-item">';
+			$config['last_tag_close'] = '</div>';
+			$config['next_tag_open'] = '<div class="pagination-item">';
+			$config['next_tag_close'] = '</div>';
+			$config['prev_tag_open'] = '<div class="pagination-item">';
+			$config['prev_tag_close'] = '</div>';
+			$config['cur_tag_open'] = '<div class="pagination-item active"><a class="pagination-link" href="#">';
+			$config['cur_tag_close'] = '</a></div>';
+			$config['num_tag_open'] = '<div class="pagination-item">';
+			$config['num_tag_close'] = '</div>';
+			$config['attributes'] = array('class' => 'pagination-link');
+
+
 		}
 
 		//initialize pagination
@@ -335,6 +357,93 @@ class Home extends CI_Controller
 
 	function courses_search($input = '')
 	{
+		$input = htmlspecialchars($this->input->get('search'));
+
+		$config = array();
+		$config['base_url'] = site_url('home/courses_search');
+		$config['per_page'] = 8;
+		$config['use_page_numbers'] = true;
+		$config['uri_segment'] = 3;
+
+		if ($input == null) {
+
+			$page = ($this->uri->segment($config['uri_segment'])) ? $this->uri->segment($config['uri_segment']) : 1;
+			$offset = ($page - 1) * $config['per_page'];
+			$page_data['schools'] = $this->user_model->get_schools($config['per_page'], $offset);
+			$config['total_rows'] = $this->db->count_all('schools');
+			$page_data['statement'] = 1;
+
+		} else {
+
+			$page = ($this->uri->segment($config['uri_segment'])) ? $this->uri->segment($config['uri_segment']) : 1;
+			$offset = ($page - 1) * $config['per_page'];
+			$page_data['schools'] = $this->user_model->get_schools_search($input, $config['per_page'], $offset);
+			$config['total_rows'] = $this->user_model->get_schools_search_count($input);
+			$page_data['statement'] = 2;
+
+		}
+
+		if ($page_data['schools']->num_rows() == 0) {
+			$page_data['no_courses_found'] = get_phrase('0_courses_found_for_search') . ' ' . '"' . $input . '"';
+		}
+
+		//pagination bootstrap settings
+		{
+
+			$config['num_links'] = 1;
+
+			$config['first_link'] = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-90deg-left" viewBox="0 0 16 16">
+  			<path fill-rule="evenodd" d="M1.146 4.854a.5.5 0 0 1 0-.708l4-4a.5.5 0 1 1 .708.708L2.707 4H12.5A2.5 2.5 0 0 1 15 6.5v8a.5.5 0 0 1-1 0v-8A1.5 1.5 0 0 0 12.5 5H2.707l3.147 3.146a.5.5 0 1 1-.708.708z"/>
+			</svg>';
+
+			$config['last_link'] = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-90deg-right" viewBox="0 0 16 16">
+  			<path fill-rule="evenodd" d="M14.854 4.854a.5.5 0 0 0 0-.708l-4-4a.5.5 0 0 0-.708.708L13.293 4H3.5A2.5 2.5 0 0 0 1 6.5v8a.5.5 0 0 0 1 0v-8A1.5 1.5 0 0 1 3.5 5h9.793l-3.147 3.146a.5.5 0 0 0 .708.708z"/>
+			</svg>';
+
+			$config['next_link'] = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class=bi bi-arrow-bar-right" viewBox="0 0 16 16">
+  			<path fill-rule="evenodd" d="M6 8a.5.5 0 0 0 .5.5h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L12.293 7.5H6.5A.5.5 0 0 0 6 8m-2.5 7a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5"/>
+			</svg>';
+
+			$config['prev_link'] = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-arrow-bar-left" viewBox="0 0 16 16">
+  			<path fill-rule="evenodd" d="M12.5 15a.5.5 0 0 1-.5-.5v-13a.5.5 0 0 1 1 0v13a.5.5 0 0 1-.5.5M10 8a.5.5 0 0 1-.5.5H3.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L3.707 7.5H9.5a.5.5 0 0 1 .5.5"/>
+			</svg>';
+
+			$config['full_tag_open'] = '<nav aria-label="course page navigation "><div class="pagination-list">';
+			$config['full_tag_close'] = '</div></nav>';
+			$config['first_tag_open'] = '<div class="pagination-item">';
+			$config['first_tag_close'] = '</div>';
+			$config['last_tag_open'] = '<div class="pagination-item">';
+			$config['last_tag_close'] = '</div>';
+			$config['next_tag_open'] = '<div class="pagination-item">';
+			$config['next_tag_close'] = '</div>';
+			$config['prev_tag_open'] = '<div class="pagination-item">';
+			$config['prev_tag_close'] = '</div>';
+			$config['cur_tag_open'] = '<div class="pagination-item active"><a class="pagination-link" href="#">';
+			$config['cur_tag_close'] = '</a></div>';
+			$config['num_tag_open'] = '<div class="pagination-item">';
+			$config['num_tag_close'] = '</div>';
+			$config['attributes'] = array('class' => 'pagination-link');
+
+
+
+		}
+
+		//initialize pagination
+		$this->pagination->initialize($config);
+
+		//create pagination links
+		$page_data['links'] = $this->pagination->create_links();
+
+		//set page data
+
+		$page_data['input_search'] = $input;
+
+		$page_data['categories'] = $this->frontend_model->get_categories();
+		$page_data['page_name'] = 'courses';
+		$page_data['page_title'] = get_phrase('courses');
+		$this->load->view('frontend/' . $this->theme . '/index', $page_data);
+
+
 	}
 
 	function course_details($course_id = '')

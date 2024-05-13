@@ -1,15 +1,16 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
-*  @author   : Creativeitem
-*  date      : November, 2019
-*  Ekattor School Management System With Addons
-*  http://codecanyon.net/user/Creativeitem
-*  http://support.creativeitem.com
-*/
+ *  @author   : Creativeitem
+ *  date      : November, 2019
+ *  Ekattor School Management System With Addons
+ *  http://codecanyon.net/user/Creativeitem
+ *  http://support.creativeitem.com
+ */
 
-class User_model extends CI_Model {
+class User_model extends CI_Model
+{
 
 	protected $school_id;
 	protected $active_session;
@@ -22,21 +23,24 @@ class User_model extends CI_Model {
 	}
 
 	// GET SUPERADMIN DETAILS
-	public function get_superadmin() {
+	public function get_superadmin()
+	{
 		$this->db->where('role', 'superadmin');
 		return $this->db->get('users')->row_array();
 	}
 	// GET USER DETAILS
-	public function get_user_details($user_id = '', $column_name = '') {
-		if($column_name != ''){
+	public function get_user_details($user_id = '', $column_name = '')
+	{
+		if ($column_name != '') {
 			return $this->db->get_where('users', array('id' => $user_id))->row($column_name);
-		}else{
+		} else {
 			return $this->db->get_where('users', array('id' => $user_id))->row_array();
 		}
 	}
 
 	// ADMIN CRUD SECTION STARTS
-	public function create_admin() {
+	public function create_admin()
+	{
 		$data['school_id'] = html_escape($this->input->post('school_id'));
 		$data['name'] = html_escape($this->input->post('name'));
 		$data['email'] = html_escape($this->input->post('email'));
@@ -50,14 +54,14 @@ class User_model extends CI_Model {
 
 		// check email duplication
 		$duplication_status = $this->check_duplication('on_create', $data['email']);
-		if($duplication_status){
+		if ($duplication_status) {
 			$this->db->insert('users', $data);
 
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('admin_added_successfully')
 			);
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -78,7 +82,7 @@ class User_model extends CI_Model {
 		$data['school_id'] = html_escape($this->input->post('school_id'));
 		// check email duplication
 		$duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
-		if($duplication_status){
+		if ($duplication_status) {
 			$this->db->where('id', $param1);
 			$this->db->update('users', $data);
 
@@ -87,7 +91,7 @@ class User_model extends CI_Model {
 				'notification' => get_phrase('admin_has_been_updated_successfully')
 			);
 
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -111,7 +115,8 @@ class User_model extends CI_Model {
 	// ADMIN CRUD SECTION ENDS
 
 	// SCHOOL CRUD SECTION STARTS
-	public function create_school() {
+	public function create_school()
+	{
 		// $data['school_id'] = html_escape($this->input->post('school_id'));
 		$data['name'] = html_escape($this->input->post('name'));
 		$data['phone'] = html_escape($this->input->post('phone'));
@@ -127,12 +132,12 @@ class User_model extends CI_Model {
 		// check email duplication
 		// $duplication_status = $this->check_duplication('on_create', $data['email']);
 		// if($duplication_status){
-			$this->db->insert('schools', $data);
+		$this->db->insert('schools', $data);
 
-			$response = array(
-				'status' => true,
-				'notification' => get_phrase('school_added_successfully')
-			);
+		$response = array(
+			'status' => true,
+			'notification' => get_phrase('school_added_successfully')
+		);
 		// }else{
 		// 	$response = array(
 		// 		'status' => false,
@@ -155,13 +160,13 @@ class User_model extends CI_Model {
 		// check email duplication
 		// $duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
 		// if($duplication_status){
-			$this->db->where('id', $param1);
-			$this->db->update('schools', $data);
+		$this->db->where('id', $param1);
+		$this->db->update('schools', $data);
 
-			$response = array(
-				'status' => true,
-				'notification' => get_phrase('school_has_been_updated_successfully')
-			);
+		$response = array(
+			'status' => true,
+			'notification' => get_phrase('school_has_been_updated_successfully')
+		);
 
 		// }else{
 		// 	$response = array(
@@ -177,8 +182,8 @@ class User_model extends CI_Model {
 	{
 		// $this->db->where('id', $param1);
 		$data['Etat'] = 0;
-        $this->db->where('id', $param1);
-        $this->db->update('schools', $data);
+		$this->db->where('id', $param1);
+		$this->db->update('schools', $data);
 		// $this->db->delete('schools');
 
 		$response = array(
@@ -205,7 +210,7 @@ class User_model extends CI_Model {
 
 		// check email duplication
 		$duplication_status = $this->check_duplication('on_create', $data['email']);
-		if($duplication_status){
+		if ($duplication_status) {
 			$this->db->insert('users', $data);
 
 
@@ -225,14 +230,14 @@ class User_model extends CI_Model {
 			$this->db->insert('teachers', $teacher_table_data);
 
 			if ($_FILES['image_file']['name'] != "") {
-					move_uploaded_file($_FILES['image_file']['tmp_name'], 'uploads/users/'.$teacher_id.'.jpg');
+				move_uploaded_file($_FILES['image_file']['tmp_name'], 'uploads/users/' . $teacher_id . '.jpg');
 			}
 
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('teacher_added_successfully')
 			);
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -253,7 +258,7 @@ class User_model extends CI_Model {
 
 		// check email duplication
 		$duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
-		if($duplication_status){
+		if ($duplication_status) {
 			$this->db->where('id', $param1);
 			$this->db->where('school_id', $this->input->post('school_id'));
 			$this->db->update('users', $data);
@@ -273,7 +278,7 @@ class User_model extends CI_Model {
 			$this->db->update('teachers', $teacher_table_data);
 
 			if ($_FILES['image_file']['name'] != "") {
-				move_uploaded_file($_FILES['image_file']['tmp_name'], 'uploads/users/'.$param1.'.jpg');
+				move_uploaded_file($_FILES['image_file']['tmp_name'], 'uploads/users/' . $param1 . '.jpg');
 			}
 
 			$response = array(
@@ -281,7 +286,7 @@ class User_model extends CI_Model {
 				'notification' => get_phrase('teacher_has_been_updated_successfully')
 			);
 
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -309,7 +314,8 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function get_teachers() {
+	public function get_teachers()
+	{
 		$checker = array(
 			'school_id' => $this->school_id,
 			'role' => 'teacher'
@@ -317,7 +323,8 @@ class User_model extends CI_Model {
 		return $this->db->get_where('users', $checker);
 	}
 
-	public function get_teacher_by_id($teacher_id = "") {
+	public function get_teacher_by_id($teacher_id = "")
+	{
 		$checker = array(
 			'school_id' => $this->school_id,
 			'id' => $teacher_id
@@ -329,7 +336,8 @@ class User_model extends CI_Model {
 
 
 	//START TEACHER PERMISSION section
-	public function teacher_permission(){
+	public function teacher_permission()
+	{
 		$class_id = html_escape($this->input->post('class_id'));
 		$section_id = html_escape($this->input->post('section_id'));
 		$teacher_id = html_escape($this->input->post('teacher_id'));
@@ -337,13 +345,13 @@ class User_model extends CI_Model {
 		$value = html_escape($this->input->post('value'));
 
 		$check_row = $this->db->get_where('teacher_permissions', array('class_id' => $class_id, 'section_id' => $section_id, 'teacher_id' => $teacher_id));
-		if($check_row->num_rows() > 0){
+		if ($check_row->num_rows() > 0) {
 			$data[$column_name] = $value;
 			$this->db->where('class_id', $class_id);
 			$this->db->where('section_id', $section_id);
 			$this->db->where('teacher_id', $teacher_id);
 			$this->db->update('teacher_permissions', $data);
-		}else{
+		} else {
 			$data['class_id'] = $class_id;
 			$data['section_id'] = $section_id;
 			$data['teacher_id'] = $teacher_id;
@@ -368,14 +376,14 @@ class User_model extends CI_Model {
 		$data['watch_history'] = '[]';
 
 		$duplication_status = $this->check_duplication('on_create', $data['email']);
-		if($duplication_status){
+		if ($duplication_status) {
 			$this->db->insert('users', $data);
 
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('accountant_added_successfully')
 			);
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -395,7 +403,7 @@ class User_model extends CI_Model {
 		$data['address'] = html_escape($this->input->post('address'));
 
 		$duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
-		if($duplication_status){
+		if ($duplication_status) {
 			$this->db->where('id', $param1);
 			$this->db->update('users', $data);
 
@@ -404,7 +412,7 @@ class User_model extends CI_Model {
 				'notification' => get_phrase('accountant_has_been_updated_successfully')
 			);
 
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -428,7 +436,8 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function get_accountants() {
+	public function get_accountants()
+	{
 		$checker = array(
 			'school_id' => $this->school_id,
 			'role' => 'accountant'
@@ -436,7 +445,8 @@ class User_model extends CI_Model {
 		return $this->db->get_where('users', $checker);
 	}
 
-	public function get_accountant_by_id($accountant_id = "") {
+	public function get_accountant_by_id($accountant_id = "")
+	{
 		$checker = array(
 			'school_id' => $this->school_id,
 			'id' => $accountant_id
@@ -461,14 +471,14 @@ class User_model extends CI_Model {
 
 		// check email duplication
 		$duplication_status = $this->check_duplication('on_create', $data['email']);
-		if($duplication_status){
+		if ($duplication_status) {
 			$this->db->insert('users', $data);
 
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('librarian_added_successfully')
 			);
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -489,7 +499,7 @@ class User_model extends CI_Model {
 
 		// check email duplication
 		$duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
-		if($duplication_status){
+		if ($duplication_status) {
 			$this->db->where('id', $param1);
 			$this->db->update('users', $data);
 
@@ -497,7 +507,7 @@ class User_model extends CI_Model {
 				'status' => true,
 				'notification' => get_phrase('librarian_updated_successfully')
 			);
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -520,7 +530,8 @@ class User_model extends CI_Model {
 	}
 
 
-	public function get_librarians() {
+	public function get_librarians()
+	{
 		$checker = array(
 			'school_id' => $this->school_id,
 			'role' => 'librarian'
@@ -528,7 +539,8 @@ class User_model extends CI_Model {
 		return $this->db->get_where('users', $checker);
 	}
 
-	public function get_librarian_by_id($librarian_id = "") {
+	public function get_librarian_by_id($librarian_id = "")
+	{
 		$checker = array(
 			'school_id' => $this->school_id,
 			'id' => $librarian_id
@@ -539,7 +551,8 @@ class User_model extends CI_Model {
 
 
 	//START STUDENT AND ADMISSION section
-	public function single_student_create(){
+	public function single_student_create()
+	{
 		$user_data['name'] = html_escape($this->input->post('name'));
 		$user_data['email'] = html_escape($this->input->post('email'));
 		$user_data['password'] = sha1(html_escape($this->input->post('password')));
@@ -555,13 +568,13 @@ class User_model extends CI_Model {
 
 		// check email duplication
 		$duplication_status = $this->check_duplication('on_create', $user_data['email']);
-		if($duplication_status){
+		if ($duplication_status) {
 			$this->db->insert('users', $user_data);
 			$user_id = $this->db->insert_id();
 
 			$student_data['code'] = student_code();
 			$student_data['user_id'] = $user_id;
-		
+
 			$student_data['session'] = $this->active_session;
 			$student_data['school_id'] = $this->school_id;
 			$this->db->insert('students', $student_data);
@@ -574,13 +587,13 @@ class User_model extends CI_Model {
 			$enroll_data['school_id'] = $this->school_id;
 			$this->db->insert('enrols', $enroll_data);
 
-			move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/'.$user_id.'.jpg');
+			move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/' . $user_id . '.jpg');
 
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('student_added_successfully')
 			);
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -590,7 +603,8 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function bulk_student_create(){
+	public function bulk_student_create()
+	{
 		$duplication_counter = 0;
 		$class_id = html_escape($this->input->post('class_id'));
 		$section_id = html_escape($this->input->post('section_id'));
@@ -601,10 +615,10 @@ class User_model extends CI_Model {
 		$students_gender = html_escape($this->input->post('gender'));
 		$students_parent = html_escape($this->input->post('parent_id'));
 
-		foreach($students_name as $key => $value):
+		foreach ($students_name as $key => $value):
 			// check email duplication
 			$duplication_status = $this->check_duplication('on_create', $students_email[$key]);
-			if($duplication_status){
+			if ($duplication_status) {
 				$user_data['name'] = $students_name[$key];
 				$user_data['email'] = $students_email[$key];
 				$user_data['password'] = sha1($students_password[$key]);
@@ -618,7 +632,7 @@ class User_model extends CI_Model {
 
 				$student_data['code'] = student_code();
 				$student_data['user_id'] = $user_id;
-				
+
 				$student_data['session'] = $this->active_session;
 				$student_data['school_id'] = $this->school_id;
 				$this->db->insert('students', $student_data);
@@ -630,7 +644,7 @@ class User_model extends CI_Model {
 				$enroll_data['session'] = $this->active_session;
 				$enroll_data['school_id'] = $this->school_id;
 				$this->db->insert('enrols', $enroll_data);
-			}else{
+			} else {
 				$duplication_counter++;
 			}
 		endforeach;
@@ -640,7 +654,7 @@ class User_model extends CI_Model {
 				'status' => true,
 				'notification' => get_phrase('some_of_the_emails_have_been_taken')
 			);
-		}else{
+		} else {
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('students_added_successfully')
@@ -650,7 +664,8 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function excel_create(){
+	public function excel_create()
+	{
 		$class_id = html_escape($this->input->post('class_id'));
 		$section_id = html_escape($this->input->post('section_id'));
 		$school_id = $this->school_id;
@@ -658,13 +673,13 @@ class User_model extends CI_Model {
 		$role = 'student';
 
 		$file_name = $_FILES['csv_file']['name'];
-		move_uploaded_file($_FILES['csv_file']['tmp_name'],'uploads/csv_file/student.generate.csv');
+		move_uploaded_file($_FILES['csv_file']['tmp_name'], 'uploads/csv_file/student.generate.csv');
 
 		if (($handle = fopen('uploads/csv_file/student.generate.csv', 'r')) !== FALSE) { // Check the resource is valid
 			$count = 0;
 			$duplication_counter = 0;
 			while (($all_data = fgetcsv($handle, 1000, ",")) !== FALSE) { // Check opening the file is OK!
-				if($count > 0){
+				if ($count > 0) {
 					$user_data['name'] = html_escape($all_data[0]);
 					$user_data['email'] = html_escape($all_data[1]);
 					$user_data['password'] = sha1($all_data[2]);
@@ -677,7 +692,7 @@ class User_model extends CI_Model {
 
 					// check email duplication
 					$duplication_status = $this->check_duplication('on_create', $user_data['email']);
-					if($duplication_status){
+					if ($duplication_status) {
 						$this->db->insert('users', $user_data);
 						$user_id = $this->db->insert_id();
 
@@ -695,7 +710,7 @@ class User_model extends CI_Model {
 						$enroll_data['session'] = $session_id;
 						$enroll_data['school_id'] = $school_id;
 						$this->db->insert('enrols', $enroll_data);
-					}else{
+					} else {
 						$duplication_counter++;
 					}
 				}
@@ -709,7 +724,7 @@ class User_model extends CI_Model {
 				'status' => true,
 				'notification' => get_phrase('some_of_the_emails_have_been_taken')
 			);
-		}else{
+		} else {
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('students_added_successfully')
@@ -719,7 +734,8 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function student_update($student_id = '', $user_id = ''){
+	public function student_update($student_id = '', $user_id = '')
+	{
 
 		$enroll_data['class_id'] = html_escape($this->input->post('class_id'));
 		$enroll_data['section_id'] = html_escape($this->input->post('section_id'));
@@ -743,14 +759,14 @@ class User_model extends CI_Model {
 			$this->db->where('id', $user_id);
 			$this->db->update('users', $user_data);
 
-			move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/'.$user_id.'.jpg');
+			move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/' . $user_id . '.jpg');
 
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('student_updated_successfully')
 			);
 
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -760,7 +776,8 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function delete_student($student_id, $user_id) {
+	public function delete_student($student_id, $user_id)
+	{
 		$this->db->where('id', $student_id);
 		$this->db->delete('students');
 
@@ -770,8 +787,8 @@ class User_model extends CI_Model {
 		$this->db->where('id', $user_id);
 		$this->db->delete('users');
 
-		$path = 'uploads/users/'.$user_id.'.jpg';
-		if(file_exists($path)){
+		$path = 'uploads/users/' . $user_id . '.jpg';
+		if (file_exists($path)) {
 			unlink($path);
 		}
 
@@ -783,13 +800,15 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function student_enrolment($section_id = "") {
+	public function student_enrolment($section_id = "")
+	{
 		return $this->db->get_where('enrols', array('section_id' => $section_id, 'school_id' => $this->school_id, 'session' => $this->active_session));
 	}
 
 
 	// This function will help to fetch student data by section, class or student id
-	public function get_student_details_by_id($type = "", $id = "") {
+	public function get_student_details_by_id($type = "", $id = "")
+	{
 		$enrol_data = array();
 		if ($type == "section") {
 			$checker = array(
@@ -802,7 +821,7 @@ class User_model extends CI_Model {
 				$student_details = $this->db->get_where('students', array('id' => $enrol['student_id']))->row_array();
 				$enrol_data[$key]['code'] = $student_details['code'];
 				$enrol_data[$key]['user_id'] = $student_details['user_id'];
-				
+
 				$user_details = $this->db->get_where('users', array('id' => $student_details['user_id']))->row_array();
 				$enrol_data[$key]['name'] = $user_details['name'];
 				$enrol_data[$key]['email'] = $user_details['email'];
@@ -819,8 +838,7 @@ class User_model extends CI_Model {
 				$enrol_data[$key]['class_name'] = $class_details['name'];
 				$enrol_data[$key]['section_name'] = $section_details['name'];
 			}
-		}
-		elseif ($type == "class") {
+		} elseif ($type == "class") {
 			$checker = array(
 				'class_id' => $id,
 				'session' => $this->active_session,
@@ -831,7 +849,7 @@ class User_model extends CI_Model {
 				$student_details = $this->db->get_where('students', array('id' => $enrol['student_id']))->row_array();
 				$enrol_data[$key]['code'] = $student_details['code'];
 				$enrol_data[$key]['user_id'] = $student_details['user_id'];
-				
+
 				$user_details = $this->db->get_where('users', array('id' => $student_details['user_id']))->row_array();
 				$enrol_data[$key]['name'] = $user_details['name'];
 				$enrol_data[$key]['email'] = $user_details['email'];
@@ -848,8 +866,7 @@ class User_model extends CI_Model {
 				$enrol_data[$key]['class_name'] = $class_details['name'];
 				$enrol_data[$key]['section_name'] = $section_details['name'];
 			}
-		}
-		elseif ($type == "student") {
+		} elseif ($type == "student") {
 			$checker = array(
 				'student_id' => $id,
 				'session' => $this->active_session,
@@ -859,7 +876,7 @@ class User_model extends CI_Model {
 			$student_details = $this->db->get_where('students', array('id' => $enrol_data['student_id']))->row_array();
 			$enrol_data['code'] = $student_details['code'];
 			$enrol_data['user_id'] = $student_details['user_id'];
-			
+
 			$user_details = $this->db->get_where('users', array('id' => $student_details['user_id']))->row_array();
 			$enrol_data['name'] = $user_details['name'];
 			$enrol_data['email'] = $user_details['email'];
@@ -882,7 +899,8 @@ class User_model extends CI_Model {
 
 
 	//STUDENT OF EACH SESSION
-	public function get_session_wise_student() {
+	public function get_session_wise_student()
+	{
 		$checker = array(
 			'session' => $this->active_session,
 			'school_id' => $this->school_id
@@ -891,87 +909,121 @@ class User_model extends CI_Model {
 	}
 
 	// Get User Image Starts
-	public function get_user_image($user_id) {
-		if (file_exists('uploads/users/'.$user_id.'.jpg'))
-		return base_url().'uploads/users/'.$user_id.'.jpg';
+	public function get_user_image($user_id)
+	{
+		if (file_exists('uploads/users/' . $user_id . '.jpg'))
+			return base_url() . 'uploads/users/' . $user_id . '.jpg';
 		else
-		return base_url().'uploads/users/placeholder.jpg';
+			return base_url() . 'uploads/users/placeholder.jpg';
 	}
 	// Get User Image Ends
 
 	// Check user duplication
-	public function check_duplication($action = "", $email = "", $user_id = "") {
+	public function check_duplication($action = "", $email = "", $user_id = "")
+	{
 		$duplicate_email_check = $this->db->get_where('users', array('email' => $email));
 
 		if ($action == 'on_create') {
 			if ($duplicate_email_check->num_rows() > 0) {
 				return false;
-			}else {
+			} else {
 				return true;
 			}
-		}elseif ($action == 'on_update') {
+		} elseif ($action == 'on_update') {
 			if ($duplicate_email_check->num_rows() > 0) {
 				if ($duplicate_email_check->row()->id == $user_id) {
 					return true;
-				}else {
+				} else {
 					return false;
 				}
-			}else {
+			} else {
 				return true;
 			}
 		}
 	}
 
 	// Get School Image Starts
-	public function get_school_image($school_id) {
-		if (file_exists('uploads/schools/'.$school_id.'.jpg'))
-		return base_url().'uploads/schools/'.$school_id.'.jpg';
+	public function get_school_image($school_id)
+	{
+		if (file_exists('uploads/schools/' . $school_id . '.jpg'))
+			return base_url() . 'uploads/schools/' . $school_id . '.jpg';
 		else
-		return base_url().'uploads/schools/placeholder.jpg';
+			return base_url() . 'uploads/schools/placeholder.jpg';
 	}
 	// Get School Image Ends
 
-	public function check_duplication_school($action = "", $name = "") {
+	public function check_duplication_school($action = "", $name = "")
+	{
 		$duplicate_name_check = $this->db->get_where('schools', array('name' => $name));
 
 		if ($action == 'on_create') {
 			if ($duplicate_name_check->num_rows() > 0) {
 				return false;
-			}else {
+			} else {
 				return true;
 			}
 		}
 	}
 
-	public function get_school_count() {
+	public function get_school_count()
+	{
 		return $this->db->get('schools')->num_rows();
 	}
 
-	public function get_schools( $limit, $start) {
-      $result =  $this->db->limit($limit, $start)->get_where('schools', array('status' => 1));
-        return $result;
-    }
+	public function get_schools($limit, $start)
+	{
+		$result = $this->db->limit($limit, $start)->get_where('schools', array('status' => 1));
+		return $result;
+	}
 
-	public function get_schools_per_category( $category ,$limit, $start) {
-      $result = $this->db->limit($limit, $start)->get_where('schools', array('status' => 1,'category' => $category));
-        return $result;
-    }
+	public function get_schools_per_category($category, $limit, $start)
+	{
+		$result = $this->db->limit($limit, $start)->get_where('schools', array('status' => 1, 'category' => $category));
+		return $result;
+	}
+
+	public function get_schools_search($input, $limit, $start)
+	{
+		$this->db->limit($limit, $start);
+		$this->db->where('status', 1);
+		$this->db->group_start();
+		$this->db->like('name', $input);
+		$this->db->or_like('description', $input);
+		$this->db->or_like('category', $input);
+		$this->db->group_end();
+		$result = $this->db->get('schools');
+		return $result;
+	}
+
+	public function get_schools_search_count($input)
+	{
+		$this->db->where('status', 1);
+		$this->db->group_start();
+		$this->db->like('name', $input);
+		$this->db->or_like('description', $input);
+		$this->db->or_like('category', $input);
+		$this->db->group_end();
+		$result = $this->db->get('schools');
+		return $result->num_rows();
+	}
 
 	//GET LOGGED IN USER DATA
-	public function get_profile_data() {
+	public function get_profile_data()
+	{
 		return $this->db->get_where('users', array('id' => $this->session->userdata('user_id')))->row_array();
 	}
-	public function approved_school(){
+	public function approved_school()
+	{
 		$response = array();
 		$school_id = html_escape($this->input->post('school_id'));
- 		$admin_user = $this->db->get_where('users', array('school_id' => $school_id, 'role' == "admin"))->row_array();
+		$admin_user = $this->db->get_where('users', array('school_id' => $school_id, 'role' == "admin"))->row_array();
 
 		// Update Admin User Status
 		$admin_user['status'] = 1;
 		$this->db->where('id', $admin_user['id']);
 		$this->db->update('users', $admin_user);
 		// return $school_id;
-		$data['status'] = 1 ;
+		$data['status'] = 1;
 		$this->db->where('id', $school_id);
 		$this->db->update('schools', $data);
 
@@ -982,7 +1034,8 @@ class User_model extends CI_Model {
 
 		return json_encode($response);
 	}
-	public function update_profile() {
+	public function update_profile()
+	{
 		$response = array();
 		$user_id = $this->session->userdata('user_id');
 		$data['name'] = htmlspecialchars($this->input->post('name'));
@@ -991,17 +1044,17 @@ class User_model extends CI_Model {
 		$data['address'] = htmlspecialchars($this->input->post('address'));
 		// Check Duplication
 		$duplication_status = $this->check_duplication('on_update', $data['email'], $user_id);
-		if($duplication_status) {
+		if ($duplication_status) {
 			$this->db->where('id', $user_id);
 			$this->db->update('users', $data);
 
-			move_uploaded_file($_FILES['profile_image']['tmp_name'], 'uploads/users/'.$user_id.'.jpg');
+			move_uploaded_file($_FILES['profile_image']['tmp_name'], 'uploads/users/' . $user_id . '.jpg');
 
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('profile_updated_successfully')
 			);
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -1011,7 +1064,8 @@ class User_model extends CI_Model {
 		return json_encode($response);
 	}
 
-	public function update_password() {
+	public function update_password()
+	{
 		$user_id = $this->session->userdata('user_id');
 		if (!empty($_POST['current_password']) && !empty($_POST['new_password']) && !empty($_POST['confirm_password'])) {
 			$user_details = $this->get_user_details($user_id);
@@ -1027,14 +1081,14 @@ class User_model extends CI_Model {
 					'status' => true,
 					'notification' => get_phrase('password_updated_successfully')
 				);
-			}else {
+			} else {
 
 				$response = array(
 					'status' => false,
 					'notification' => get_phrase('mismatch_password')
 				);
 			}
-		}else{
+		} else {
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('password_can_not_be_empty')
@@ -1044,7 +1098,8 @@ class User_model extends CI_Model {
 	}
 
 	//GET LOGGED IN USERS CLASS ID AND SECTION ID (FOR STUDENT LOGGED IN VIEW)
-	public function get_logged_in_student_details() {
+	public function get_logged_in_student_details()
+	{
 		$user_id = $this->session->userdata('user_id');
 		$student_data = $this->db->get_where('students', array('user_id' => $user_id))->row_array();
 		$student_details = $this->get_student_details_by_id('student', $student_data['id']);
@@ -1052,7 +1107,8 @@ class User_model extends CI_Model {
 	}
 
 	// GET STUDENT LIST BY PARENT
-	public function get_student_list_of_logged_in_parent() {
+	public function get_student_list_of_logged_in_parent()
+	{
 		$parent_id = $this->session->userdata('user_id');
 		$parent_data = $this->db->get_where('parents', array('user_id' => $parent_id))->row_array();
 		$checker = array(
@@ -1092,10 +1148,11 @@ class User_model extends CI_Model {
 	}
 
 	// In Array for associative array
-	function is_in_array($associative_array = array(), $look_up_key = "", $look_up_value = "") {
+	function is_in_array($associative_array = array(), $look_up_key = "", $look_up_value = "")
+	{
 		foreach ($associative_array as $associative) {
 			$keys = array_keys($associative);
-			for($i = 0; $i < count($keys); $i++){
+			for ($i = 0; $i < count($keys); $i++) {
 				if ($keys[$i] == $look_up_key) {
 					if ($associative[$look_up_key] == $look_up_value) {
 						return true;
@@ -1106,8 +1163,9 @@ class User_model extends CI_Model {
 		return false;
 	}
 
-	function get_all_teachers($user_id = ""){
-		if($user_id > 0){
+	function get_all_teachers($user_id = "")
+	{
+		if ($user_id > 0) {
 			$this->db->where('id', $user_id);
 		}
 
@@ -1115,8 +1173,9 @@ class User_model extends CI_Model {
 		$this->db->where("(role='superadmin' OR role='admin' OR role='teacher')");
 		return $this->db->get_where('users');
 	}
-	function get_all_users($user_id = ""){
-		if($user_id > 0){
+	function get_all_users($user_id = "")
+	{
+		if ($user_id > 0) {
 			$this->db->where('id', $user_id);
 		}
 
@@ -1125,7 +1184,8 @@ class User_model extends CI_Model {
 	}
 
 
-	function get_school_id($school_name=""){
+	function get_school_id($school_name = "")
+	{
 		return $this->db->get_where('schools', array('name' => $school_name))->row()->id;
 	}
 

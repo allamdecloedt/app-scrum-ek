@@ -6,7 +6,7 @@ less.addEventListener("click", function () {
   more.style.display = "block";
   less.style.display = "none";
   section.style.height = "35px";
-   
+   section.style.maxWidth = "60%";
 
   
 });
@@ -15,6 +15,8 @@ more.addEventListener("click", function () {
   less.style.display = "block";
   more.style.display = "none";
   section.style.height = "100%";
+     section.style.maxWidth = "80%";
+
 });
 
 
