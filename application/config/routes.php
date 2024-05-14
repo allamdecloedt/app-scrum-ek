@@ -68,4 +68,4 @@ $route['api/getDashboard'] = 'api/Admin/get_dashboard_data';
 $route['api/getexpenses/(:num)'] = 'api/Admin/expense/$1';
 
 
-$route['api/getinvoices/(:num)'] = 'api/Admin/invoice/$1';
+
