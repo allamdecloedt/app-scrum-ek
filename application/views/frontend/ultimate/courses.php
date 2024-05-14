@@ -12,9 +12,6 @@
             <div></div>
             <div></div>
             <!-- End Div Section-->
-            <script>console.log("<?php echo $input_search ?>") </script>
-                        <script>console.log("<?php echo $statement ?>") </script>
-
         </div>
         <img class="ct-img rellax " data-rellax-speed="1.5"
             src="<?php echo base_url('assets/frontend/ultimate/img/online admission/oa-img-top.jpg') ?>" alt="">

@@ -137,6 +137,7 @@
   height: 100%;
   max-width: 80%;
   overflow: hidden;
+  
 }
 
 #more-button {
@@ -216,6 +217,7 @@
 .pagination-item.active {
   background-color: #be02e8;
   color: #ffffff;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 5px;
 }
 
 
