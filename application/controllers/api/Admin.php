@@ -84,7 +84,346 @@ public function getUserRole($user_id) {
       return null;
   }
 }
+//Online Admission API CALL
+public function fetchStudentsByName_get($school_id, $name) {
+  // Fetch students by name from the database
+  $this->db->select('*');
+  $this->db->from('users');
+  $this->db->where('role', 'student');
+  $this->db->where('school_id', $school_id);
+  
+  // Check if the name parameter is provided and not empty
+  if (!empty($name)) {
+      // If the name is just a single letter, filter by the first letter of the name
+      if (strlen($name) === 1) {
+          $this->db->like('name', $name, 'after'); // Filter by names starting with the provided letter
+      } else {
+          $this->db->like('name', $name); // Filter by the provided name
+      }
+  }
+  
+  $students = $this->db->get()->result_array();
 
+  // Check if students were found
+  if ($students) {
+      // Students found, return success response
+      $response['status'] = 200;
+      $response['message'] = 'Students retrieved successfully';
+      $response['students'] = $students;
+  } else {
+      // No students found
+      $response['status'] = 404;
+      $response['message'] = 'No students found with the specified name';
+      $response['students'] = [];
+  }
+
+  // Send response
+  $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($response));
+  
+  // Debugging: Print the generated SQL query
+  // echo $this->db->last_query();
+}
+
+
+
+public function onlineadmission_post() {
+  $response = array();
+  $data = array(
+      'name' => $this->post('name'),
+      'email' => $this->post('email'),
+      'password' => sha1($this->post('password')),
+      'role' => 'student',
+      'address' => $this->post('address'),
+      'phone' => $this->post('phone'),
+      'birthday' => date('Y-m-d', strtotime($this->post('birthday'))),
+      'gender' => $this->post('gender'),
+      'blood_group' => $this->post('blood_group'),
+      'school_id' => $this->post('school_id'), 
+      'status' => $this->post('status') ?? 1, // Set status to 1 by default for students
+      'watch_history' => json_encode($this->post('watch_history')), 
+  );
+  $existing_email = $this->db->get_where('users', array('email' => $data['email']))->row_array();
+
+  if ($existing_email) {
+      $response['status'] = 409; 
+      $response['message'] = 'Email already exists';
+  } else {
+      $insert = $this->db->insert('users', $data);
+      if ($insert) {
+          $user_id = $this->db->insert_id();
+          if (isset($_FILES['student_image']) && $_FILES['student_image']['error'] === UPLOAD_ERR_OK) {
+              move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/'.$user_id.'.jpg');
+          }
+          $data['watch_history'] = json_decode($data['watch_history']);
+
+          $response['status'] = 201;
+          $response['message'] = 'User registered successfully';
+          $response['user_id'] = $user_id;
+          $response['name'] = $data['name'];
+          $response['email'] = $data['email'];
+          $response['role'] = $data['role'];
+          $response['address'] = $data['address'];
+          $response['phone'] = $data['phone'];
+          $response['birthday'] = date('d-M-Y', strtotime($data['birthday']));
+          $response['gender'] = $data['gender'];
+          $response['blood_group'] = $data['blood_group'];
+          $response['school_id'] = $data['school_id'];
+          $response['status'] = $data['status']; 
+          $response['watch_history'] = $data['watch_history']; 
+
+      } else {
+          $response['status'] = 500;
+          $response['message'] = 'Failed to register user';
+      }
+  }
+
+  // Send response
+  $this->set_response($response, REST_Controller::HTTP_CREATED);
+}
+
+public function onlineadmissionEdit_put($id) {
+  $response = array();
+
+  // Get user input data
+  $data = array(
+      'name' => $this->put('name'),
+      'email' => $this->put('email'),
+      'address' => $this->put('address'),
+      'phone' => $this->put('phone'),
+      'birthday' => date('Y-m-d', strtotime($this->put('birthday'))),
+      'gender' => $this->put('gender'),
+      'blood_group' => $this->put('blood_group'),
+      'watch_history' => json_encode($this->put('watch_history')), // Convert watch_history array to JSON
+  );
+
+  // Check if user with given id exists in the database
+  $existing_user = $this->db->get_where('users', array('id' => $id))->row_array();
+
+  if ($existing_user) {
+      // Update user data in the database
+      $this->db->where('id', $id);
+      $update = $this->db->update('users', $data);
+
+      if ($update) {
+          // User data updated successfully
+          $response['status'] = 200;
+          $response['message'] = 'User data updated successfully';
+
+          // Handle image update
+          $user_id = $this->db->insert_id(); // Get the ID of the updated user
+          if (isset($_FILES['student_image']) && $_FILES['student_image']['error'] === UPLOAD_ERR_OK) {
+              // Move the uploaded image to the desired location with the new filename based on the user's ID
+              move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/'.$user_id.'.jpg');
+          }
+      } else {
+          // Failed to update user data
+          $response['status'] = 500;
+          $response['message'] = 'Failed to update user data';
+      }
+  } else {
+      // User with given id does not exist
+      $response['status'] = 404;
+      $response['message'] = 'User not found';
+  }
+
+  // Send response
+  $this->set_response($response, REST_Controller::HTTP_OK);
+}
+
+
+public function onlineadmissionList_get($school_id) {
+  // Fetch online admissions for new students (status = 3) from the database
+  $this->db->where('role', 'student');
+  $this->db->where('status', 3); // Add condition for status = 3
+  $online_admissions = $this->db->get('users')->result_array();
+  
+  $num_students = count($online_admissions); // Count the number of students
+  
+  if ($online_admissions) {
+      // Online admissions found, return success response
+      $response['status'] = 200; // Use status code 200 for success
+      $response['message'] = 'Online admissions retrieved successfully';
+      $response['num_students'] = $num_students; // Include the number of students in the response
+      
+      // Iterate through each online admission entry
+      foreach ($online_admissions as &$admission) {
+          // Add school_id to the admission entry
+          $admission['school_id'] = $school_id;
+          
+          // Fetch and add image URL for the user
+          $user_id = $admission['user_id']; // Assuming user_id is the primary key
+          $image_path = 'uploads/users/'.$user_id.'.jpg'; // Construct image path
+          
+          // Check if the image file exists
+          if (file_exists($image_path)) {
+              // Image exists, include its URL in the admission entry
+              $admission['image_url'] = base_url($image_path);
+          } else {
+              // Image does not exist, set image URL to null
+              $admission['image_url'] = null;
+          }
+          
+          // Add an empty watch_history array to the admission entry
+          $admission['watch_history'] = [];
+          
+          // Optionally, you can remove 'user_id' from the admission entry if it's not needed in the response
+          unset($admission['user_id']);
+      }
+      
+      $response['online_admissions'] = $online_admissions;
+  } else {
+      // No online admissions found
+      $response['status'] = 404; // Use status code 404 for not found
+      $response['message'] = 'No new online admissions found for students';
+      $response['num_students'] = 0; // Set the number of students to 0
+      
+      $response['online_admissions'] = [];
+  }
+  
+  // Send response
+  $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($response));
+}
+
+public function onlineadmissionListApprovedAndDesapproved_get($school_id) {
+   $this->db->where('role', 'student');
+   $this->db->group_start();
+   $this->db->where('status', 0); 
+   $this->db->or_where('status', 1); 
+   $this->db->group_end(); 
+   $online_admissions = $this->db->get('users')->result_array();
+   
+   $num_students = count($online_admissions);
+   
+   if ($online_admissions) {
+       
+       $response['status'] = 200; 
+       $response['message'] = 'Online admissions retrieved successfully';
+       $response['num_students'] = $num_students;
+       $response['online_admissions'] = $online_admissions;
+   } else {
+       
+       $response['status'] = 404; 
+       $response['message'] = 'No new online admissions found for students with status = 0 or status = 1';
+       $response['num_students'] = 0;
+       $response['online_admissions'] = [];
+   }
+   $this->output
+       ->set_content_type('application/json')
+       ->set_output(json_encode($response));
+}
+public function approveOnlineAdmissions_put($id) {
+  // Retrieve online admission with status 3 for the specified user ID
+  $this->db->where('id', $id);
+  $this->db->where('role', 'student');
+  $this->db->where('status', 3);
+  $online_admission = $this->db->get('users')->row_array();
+
+  // Check if online admission with status 3 is found for the specified ID
+  if ($online_admission) {
+      // Update status to 1
+      $this->db->where('id', $id);
+      $this->db->update('users', array('status' => 1));
+
+      // Return success response
+      $response['status'] = 200;
+      $response['message'] = 'Status updated successfully from 3 to 1';
+  } else {
+      // No online admission with status 3 found for the specified ID
+      $response['status'] = 404;
+      $response['message'] = 'No online admission found with status 3 for the specified ID';
+  }
+
+  // Send response
+  $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($response));
+}
+
+public function deactivate_put($id) {
+  // Retrieve online admission with status 1 for the specified user ID
+  $this->db->where('id', $id);
+  $this->db->where('role', 'student');
+  $this->db->where('status', 1);
+  $online_admission = $this->db->get('users')->row_array();
+
+  // Check if online admission with status 1 is found for the specified ID
+  if ($online_admission) {
+      // Update status to 0
+      $this->db->where('id', $id);
+      $this->db->update('users', array('status' => 0));
+
+      // Return success response
+      $response['status'] = 200;
+      $response['message'] = 'Status updated successfully from 1 to 0';
+  } else {
+      // No online admission with status 1 found for the specified ID
+      $response['status'] = 404;
+      $response['message'] = 'No online admission found with status 1 for the specified ID';
+  }
+
+  // Send response
+  $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($response));
+}
+public function activate_put($id) {
+  // Retrieve online admission with status 0 for the specified user ID
+  $this->db->where('id', $id);
+  $this->db->where('role', 'student');
+  $this->db->where('status', 0);
+  $online_admission = $this->db->get('users')->row_array();
+
+  // Check if online admission with status 0 is found for the specified ID
+  if ($online_admission) {
+      // Update status to 1
+      $this->db->where('id', $id);
+      $this->db->update('users', array('status' => 1));
+
+      // Return success response
+      $response['status'] = 200;
+      $response['message'] = 'Status updated successfully from 0 to 1';
+  } else {
+      // No online admission with status 0 found for the specified ID
+      $response['status'] = 404;
+      $response['message'] = 'No online admission found with status 0 for the specified ID';
+  }
+
+  // Send response
+  $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($response));
+}
+
+public function onlineadmissionDelete_delete($id) {
+  $existing_user = $this->db->get_where('users', array('id' => $id))->row_array();
+  
+  if ($existing_user) {
+
+      $this->db->where('id', $id);
+      $delete = $this->db->delete('users');
+      
+      if ($delete) {
+      
+          $response['status'] = 200;
+          $response['message'] = 'User deleted successfully';
+      } else {
+         
+          $response['status'] = 500;
+          $response['message'] = 'Failed to delete user';
+      }
+  } else {
+     
+      $response['status'] = 404;
+      $response['message'] = 'User not found';
+  }
+  
+  // Send response
+  $this->set_response($response, REST_Controller::HTTP_OK);
+}
 
 //Edit API CALL
 public function editProfile_post() {
@@ -276,14 +615,14 @@ public function get_expenses_by_school($school_id) {
 
 
 
-
-public function invoice_get($student_id) {
-  $invoices = $this->get_invoices_with_user($student_id);
+public function invoices_get($school_id) {
+  // Assuming you have a function to fetch invoices based on school_id
+  $invoices = $this->get_invoices_by_school($school_id);
 
   if ($invoices === null) {
       $this->response([
           'status' => false,
-          'message' => 'No invoices found for the specified student_id'
+          'message' => 'No invoices found for the specified school_id'
       ], REST_Controller::HTTP_NOT_FOUND);
   } else {
       $formatted_invoices = array();
@@ -309,6 +648,22 @@ public function invoice_get($student_id) {
           'status' => true,
           'invoices' => $formatted_invoices
       ], REST_Controller::HTTP_OK);
+  }
+}
+public function get_invoices_by_school($school_id) {
+  $sql = "SELECT invoices.*, users.name AS student_name, classes.name AS class_name
+          FROM invoices 
+          JOIN students ON invoices.student_id = students.id
+          JOIN users ON students.user_id = users.id
+          JOIN classes ON invoices.class_id = classes.id
+          WHERE users.school_id = ?";
+
+  $query = $this->db->query($sql, array($school_id));
+  if ($query->num_rows() > 0) {
+      $invoices = $query->result_array();
+      return $invoices;
+  } else {
+      return null;
   }
 }
 

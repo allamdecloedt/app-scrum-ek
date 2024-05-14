@@ -68,9 +68,23 @@ $route['api/getDashboard'] = 'api/Admin/get_dashboard_data';
 $route['api/getexpenses/(:num)'] = 'api/Admin/expense/$1';
 
 
-$route['api/getinvoices/(:num)'] = 'api/Admin/invoice/$1';
+$route['api/getinvoices/(:num)'] = 'api/Admin/invoices/$1';
+
+
+$route['api/onlineadmission'] = 'api/Admin/onlineadmission';
+$route['api/onlineadmissionList/(:num)'] = 'api/Admin/onlineadmissionList/$1';
+$route['api/onlineadmissionDelete/(:num)'] = 'api/Admin/onlineadmissionDelete/$1';
+$route['api/onlineadmissionListApproved/(:num)'] = 'api/Admin/onlineadmissionListApproved/$1';
+$route['api/onlineadmissionListApprovedAndDesapproved/(:num)'] = 'api/Admin/onlineadmissionListApprovedAndDesapproved/$1';
+$route['api/approveOnlineAdmissions/(:num)']['PUT'] = 'api/Admin/approveOnlineAdmissions/$1';
+$route['api/deactivate/(:num)']['PUT'] = 'api/Admin/deactivate/$1';
+$route['api/activate/(:num)']['PUT'] = 'api/Admin/activate/$1';
+$route['api/onlineadmissionEdit/(:num)']['PUT'] = 'api/Admin/onlineadmissionEdit/$1';
+$route['api/onlineadmission'] = 'api/Admin/onlineadmission';
+$route['api/fetchStudentsByName/(:num)/(:any)'] = 'api/Admin/fetchStudentsByName/$1/$2';
 
 $route['api/school/create']= 'api/Admin/create_school'; 
 $route['api/school/update/(:num)'] = 'api/Admin/update_school/$1';
 $route['api/school/delete/(:num)'] = 'api/Admin/delete_school/$1'; 
 $route['api/schools'] = 'api/Admin/schools';
+
