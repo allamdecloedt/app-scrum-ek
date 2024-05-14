@@ -225,7 +225,7 @@ class Lms_model extends CI_Model {
         $course_details = $this->get_course_by_id($course_id);
         $previous_sections = json_decode($course_details['section']);
 
-        if (sizeof($previous_sections) > 0) {
+        if (isset($previous_sections) > 0) {
             array_push($previous_sections, $section_id);
             $updater['section'] = json_encode($previous_sections);
             $this->db->where('id', $course_id);
