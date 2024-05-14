@@ -65,10 +65,11 @@ if ($page_name == "home") {
 
   echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/contact-page.css">';
 
-}else if ($page_name == "online_admission"){
+}elseif ($page_name == "online_admission"){
 
     echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/online-admission-page.css">';
+}elseif ($page_name == "courses"){
 
+    echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/courses-page.css">';
 }
 ?>
-

@@ -448,6 +448,104 @@ public function get_dashboard_data_get() {
 
   return $this->set_response($response, REST_Controller::HTTP_OK);
 }
+//CREATE SCHOOL API CALL
+
+public function create_school_post() {
+  $name = $this->post('name');
+  $phone = $this->post('phone');
+  $address = $this->post('address');
+
+  // Validate input data if needed
+
+  $data = array(
+      'name' => $name,
+      'phone' => $phone,
+      'address' => $address
+  );
+
+  $this->db->insert('schools', $data);
+
+  $new_school_id = $this->db->insert_id();
+  $new_school_data = $this->db->get_where('schools', array('id' => $new_school_id))->row_array();
+
+  $response = array(
+      'status' => true,
+      'message' => 'School added successfully',
+      'school' => $new_school_data
+  );
+
+  $this->response($response, REST_Controller::HTTP_OK);
+}
+
+
+public function update_school_post($param1) {
+  $name = $this->post('name');
+  $phone = $this->post('phone');
+  $address = $this->post('address');
+
+  $data = array(
+      'name' => $name,
+      'phone' => $phone,
+      'address' => $address
+  );
+
+  $this->db->where('id', $param1);
+  $this->db->update('schools', $data);
+
+  // Fetch updated school data
+  $updated_school = $this->db->get_where('schools', array('id' => $param1))->row_array();
+
+  $response = array(
+      'status' => true,
+      'notification' => get_phrase('school_has_been_updated_successfully'),
+      'school' => $updated_school  // Return updated school data
+  );
+
+  $this->response($response, REST_Controller::HTTP_OK);
+}
+
+public function delete_school_post($param1) {
+  $this->db->where('id', $param1);
+  $this->db->delete('schools');
+
+  $response = array(
+      'status' => true,
+      'notification' => get_phrase('school_has_been_deleted_successfully')
+  );
+
+  $this->response($response, REST_Controller::HTTP_OK);
+}
+
+public function schools_get() {
+  // Load necessary libraries if not already loaded
+  $this->load->database(); // Load the database library if not already loaded
+
+  // Query to retrieve all schools
+  $schools = $this->db->get('schools')->result_array();
+
+  // Check if schools are found
+  if ($schools) {
+      // Prepare success response
+      $response = array(
+          'status' => true,
+          'schools' => $schools
+      );
+  } else {
+      // Prepare failure response
+      $response = array(
+          'status' => false,
+          'notification' => 'No schools found'
+      );
+  }
+
+  // Return the response
+  $this->output
+      ->set_content_type('application/json')
+      ->set_output(json_encode($response));
+}
+
+
+///////////////////////////////////////
 
 
 //Expense API CALL

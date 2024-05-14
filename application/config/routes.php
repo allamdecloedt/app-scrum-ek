@@ -86,3 +86,11 @@ $route['api/fetchStudentsByName/(:num)/(:any)'] = 'api/Admin/fetchStudentsByName
 
 
 
+
+$route['api/getinvoices/(:num)'] = 'api/Admin/invoice/$1';
+
+$route['api/school/create']= 'api/Admin/create_school'; 
+$route['api/school/update/(:num)'] = 'api/Admin/update_school/$1';
+$route['api/school/delete/(:num)'] = 'api/Admin/delete_school/$1'; 
+$route['api/schools'] = 'api/Admin/schools';
+

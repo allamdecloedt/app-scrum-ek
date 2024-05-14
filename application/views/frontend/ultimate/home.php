@@ -35,7 +35,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
                 <div class="row">
                   <div class="col-sm-auto  w-sm-50  col-12 align-self-center pb-sm-0 pb-4 d-flex ">
                     <a class="text-light  btn btn-change5 btn-sm w-100 btn-wide"
-                      href="<?php echo site_url('home/online_admission'); ?>">
+                      href="<?php echo site_url('admission/online_admission'); ?>">
                       ONLINE ADMISSION</a>
                   </div>
                   <div class="col-sm-auto  w-50 col align-self-center ">

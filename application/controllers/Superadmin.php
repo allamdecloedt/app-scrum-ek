@@ -1558,4 +1558,32 @@ class Superadmin extends CI_Controller {
     $this->load->view('backend/index', $page_data);
   }
   // ABOUT APPLICATION ENDS
+    // ABOUT APPLICATION STARTS
+    public function online_admission_school($param1 = "", $school_id = "") {
+
+      if($param1 == 'approved'){
+
+        $response = $this->user_model->approved_school();
+  
+        $this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
+        redirect(site_url('superadmin/online_admission_school'), 'refresh');
+      }
+      if($param1 == 'delete'){
+
+        $data['Etat'] = 0;
+        $this->db->where('id', $school_id);
+        $this->db->update('schools', $data);
+  
+        // $this->db->where('user_id', $user_id);
+        // $this->db->delete('students');
+        $this->session->set_flashdata('flash_message', get_phrase('admission_data_deleted_successfully'));
+        redirect(site_url('superadmin/online_admission_school'), 'refresh');
+      }
+      $page_data['applications'] = $this->db->get_where('users', array('status' => 4, 'school_id' => school_id()));
+      $page_data['schools'] = $this->db->get_where('schools', array('status' => 0 , 'Etat' => 1));
+      $page_data['folder_name'] = 'online_admission_school';
+      $page_data['page_title']  = 'online_admission_school';
+      $this->load->view('backend/index', $page_data);
+    }
+    // ABOUT APPLICATION ENDS
 }
