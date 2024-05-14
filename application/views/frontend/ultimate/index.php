@@ -6,6 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+  
     <?php include 'metas.php'; ?>
     <?php include 'stylesheets.php';?>
     
@@ -15,6 +16,7 @@
     <?php include 'navigation.php';?>
 
     <?php include $page_name . '.php';?>
+    
 
     <?php include 'footer.php';?>
 

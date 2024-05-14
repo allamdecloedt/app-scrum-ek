@@ -279,9 +279,11 @@ class Frontend_model extends CI_Model
 
   function delete_gallery_image($gallery_image_id)
   {
-    $image = $this->db->get_where('frontend_gallery_image', array(
-      'frontend_gallery_image_id' => $gallery_image_id
-    )
+    $image = $this->db->get_where(
+      'frontend_gallery_image',
+      array(
+        'frontend_gallery_image_id' => $gallery_image_id
+      )
     )->row()->image;
     if (file_exists('uploads/frontend/gallery_images/' . $image)) {
       unlink('uploads/frontend/gallery_images/' . $image);
@@ -316,9 +318,11 @@ class Frontend_model extends CI_Model
   // get general settings
   function get_frontend_general_settings($type = '')
   {
-    $result = $this->db->get_where('frontend_settings', array(
-      'type' => $type
-    )
+    $result = $this->db->get_where(
+      'frontend_settings',
+      array(
+        'type' => $type
+      )
     )->row()->description;
     return $result == null ? '' : $result;
   }
@@ -596,7 +600,7 @@ class Frontend_model extends CI_Model
       $school_data['status'] = 0;
       $school_data['description'] = htmlspecialchars($this->input->post('school_description'));
       $school_data['access'] = htmlspecialchars($this->input->post('visibility'));
-      $school_data['category'] = htmlspecialchars($this->input->post('category'));
+      $school_data['category'] = $this->input->post('category');
 
 
       $this->db->insert('schools', $school_data);
@@ -619,12 +623,40 @@ class Frontend_model extends CI_Model
 
       if ($_FILES['school_image']['error'] !== UPLOAD_ERR_OK) {
         return json_encode(['status' => 0, 'message' => 'Error uploading file: ' . $_FILES['school_image']['error']]);
-      }
-      else move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $school_id . '.jpg');
+      } else
+        move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $school_id . '.jpg');
 
       return json_encode(array('status' => 1, 'message' => get_phrase('successfully_has_been_recoded_your_request') . '. ' . get_phrase('you_will_be_notified_by_email_address_about_this_request')));
     } else {
       return json_encode(array('status' => 0, 'message' => get_phrase('this_school_name_already_exist')));
     }
   }
+
+
+
+
+  function contains($table_name = '', $column_name = '', $value = '')
+  {
+    // Check if a value exists in the table
+    $query = $this->db->get_where($table_name, array($column_name => $value))->num_rows();
+
+    return $query > 0;
+  }
+
+  function get_categories()
+  {
+    $this->db->order_by('name', 'ASC');
+    $categories = $this->db->get('categories')->result_array();
+    return $categories;
+  }
+
+  function get_category_formated($category)
+  {
+    $cat_formated = str_replace(" ", "_", $category);
+    return $cat_formated;
+  }
+
+
 }
+
+
