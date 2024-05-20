@@ -12,6 +12,13 @@
                                     <input type="text" id="school_name" name="school_name" class="form-control"  value="<?php echo $school_data['name'] ;?>" required>
                                 </div>
                             </div>
+                            <div class="form-group row mb-3">
+                                <label class="col-md-3 col-form-label" for="description"><?php echo get_phrase('description'); ?></label>
+                                <div class="col-md-9">
+                                <textarea class="form-control"  id="description"  name = "description" rows="5" required><?php echo $school_data['description']; ?></textarea>
+                                <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_description'); ?></small>
+                                </div>
+                            </div>
 
                             <div class="form-group row mb-3">
                                 <label class="col-md-3 col-form-label" for="phone"><?php echo get_phrase('phone') ;?></label>
@@ -21,9 +28,36 @@
                             </div>
 
                             <div class="form-group row mb-3">
+                                <label class="col-md-3 col-form-label" for="access"><?php echo get_phrase('Access'); ?></label>
+                                <div class="col-md-9">
+                                <select name="access" id="access" class="form-control select2" data-toggle = "select2">
+                                    <option value=""><?php echo get_phrase('select_a_access'); ?></option>
+                                    <option <?php if ($school_data['access'] == 1): ?> selected <?php endif; ?> value="1"><?php echo get_phrase('public'); ?></option>
+                                    <option <?php if ($school_data['access'] == 2): ?> selected <?php endif; ?> value="2"><?php echo get_phrase('privé'); ?></option>
+                                
+                                </select>
+                                <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_access'); ?></small>
+                                </div>
+                           </div>
+
+                            <div class="form-group row mb-3">
                                 <label class="col-md-3 col-form-label" for="address"> <?php echo get_phrase('address') ;?></label>
                                 <div class="col-md-9">
                                     <textarea class="form-control" id="address" name = "address" rows="5" required><?php echo $school_data['address'] ;?></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group row mb-3">
+                                <label class="col-md-3 col-form-label"  for="access"><?php echo get_phrase('Category'); ?></label>
+                                <div class="col-md-9">
+                                    <select name="category" id="category" class="form-control select2" data-toggle = "select2">
+                                        <option value=""><?php echo get_phrase('select_a_category'); ?></option>
+                                        <?php $categories = $this->db->get_where('categories', array())->result_array(); ?>
+                                        <?php foreach ($categories as $categorie): ?>
+                                            <option <?php if ($school_data['category'] == $categorie['name']): ?> selected <?php endif; ?> value="<?php echo $categorie['name']; ?>"><?php echo $categorie['name']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_category'); ?></small>
                                 </div>
                             </div>
 

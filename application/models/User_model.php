@@ -156,7 +156,7 @@ class User_model extends CI_Model
 		$data['description'] = html_escape($this->input->post('description'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['access'] = html_escape($this->input->post('access'));
-		$data['category'] = html_escape($this->input->post('category'));
+		$data['category'] = htmlspecialchars_decode($this->input->post('category'));
 		// check email duplication
 		// $duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
 		// if($duplication_status){

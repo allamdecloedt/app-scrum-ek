@@ -74,6 +74,9 @@ class Settings_model extends CI_Model {
     $data['name'] = htmlspecialchars($this->input->post('school_name'));
     $data['phone'] = htmlspecialchars($this->input->post('phone'));
     $data['address'] = htmlspecialchars($this->input->post('address'));
+    $data['description'] = htmlspecialchars($this->input->post('description'));
+    $data['access'] = htmlspecialchars($this->input->post('access'));
+    $data['category'] = htmlspecialchars_decode($this->input->post('category'));
     $this->db->where('id', school_id());
     $this->db->update('schools', $data);
     $response = array(

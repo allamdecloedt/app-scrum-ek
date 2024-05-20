@@ -1287,5 +1287,21 @@
     "provide_admin_access": "Provide admin access",
     "provide_admin_category": "Provide admin category",
     "school_has_been_updated_successfully": "School has been updated successfully",
-    "this_school_name_already_exist": "This school name already exist"
+    "this_school_name_already_exist": "This school name already exist",
+    "start_your_journey": "Start your journey",
+    "student_admission": "Student admission",
+    "loading_photo": "Loading photo",
+    "choose_a_file": "Choose a file",
+    "loading_pdf": "Loading pdf",
+    "apply": "Apply",
+    "school_admission": "School admission",
+    "school_information": "School information",
+    "adress": "Adress",
+    "private": "Private",
+    "loading_image": "Loading image",
+    "school_image": "School image",
+    "personal_information": "Personal information",
+    "full_name": "Full name",
+    "repeat_password": "Repeat password",
+    "passwords_need_to_match": "Passwords need to match"
 }
