@@ -40,6 +40,7 @@
                 <option value="youtube"><?php echo get_phrase('youtube'); ?></option>
                 <option value="vimeo"><?php echo get_phrase('vimeo'); ?></option>
                 <option value="html5">HTML5</option>
+                <option value="mydevice"><?php echo get_phrase('mydevice');?></option>
             </select>
         </div>
 
@@ -81,7 +82,9 @@
             </div>
         </div>
     </div>
-
+    <div class="dv_none" id="mydevice">
+    <input type="file" id="userfileMe" name="userfileMe" size="20" />
+    </div>
     <div class="dv_none" id = "other">
         <div class="form-group mb-2">
             <label> <?php echo get_phrase('attachment'); ?></label>

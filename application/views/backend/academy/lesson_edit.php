@@ -46,6 +46,7 @@ $sections = $this->lms_model->get_section('course', $param2)->result_array();
                 <option value="youtube" <?php if(strtolower($lesson_details['video_type']) == 'youtube') echo 'selected'; ?>><?php echo get_phrase('youtube'); ?></option>
                 <option value="vimeo" <?php if(strtolower($lesson_details['video_type']) == 'vimeo') echo 'selected'; ?>><?php echo get_phrase('vimeo'); ?></option>
                 <option value="html5" <?php if(strtolower($lesson_details['video_type']) == 'html5') echo 'selected'; ?>>HTML5</option>
+                <option value="mydevice" <?php if(strtolower($lesson_details['video_type']) == 'mydevice') echo 'selected'; ?>><?php echo get_phrase('mydevice');?></option>
             </select>
         </div>
 
@@ -62,6 +63,18 @@ $sections = $this->lms_model->get_section('course', $param2)->result_array();
                 <label><?php echo get_phrase('duration'); ?>( <?php echo get_phrase('for_web_application'); ?> )</label>
                 <input type="text" name = "duration" id = "duration" class="form-control" value="<?php echo $lesson_details['duration']; ?>" autocomplete="off">
             </div>
+        </div>
+        <div class="<?php if(strtolower($lesson_details['video_type']) == 'mydevice' ):?>  <?php else: ?> dv_none <?php endif; ?>" id = "mydevice">
+
+            <div class="form-group mb-2">
+                <label><?php echo get_phrase('video_url'); ?>( <?php echo get_phrase('for_web_application'); ?> )</label>
+                <video width="320" height="240" controls>
+                    <source src="<?php echo base_url('uploads/videos/'.$lesson_details['video_uplaod']); ?>" type="video/mp4">
+                </video>
+                <input type="file" id="userfileMe" name="userfileMe" size="20" />
+            </div>
+
+            
         </div>
 
         <div class="<?php if($lesson_details['lesson_type'] != 'other'):?> dv_none <?php endif; ?>" id = "html5">

@@ -287,7 +287,11 @@ class Lms_model extends CI_Model {
                 $sec = sprintf('%02d', $duration_formatter[2]);
                 $data['duration'] = $hour . ':' . $min . ':' . $sec;
                 $data['video_type'] = 'html5';
-            } else {
+            } elseif ($lesson_provider == 'mydevice'){
+                $data['video_type'] = 'mydevice';
+                 $data['video_uplaod'] = rand().'.mp4';
+                move_uploaded_file($_FILES['userfileMe']['tmp_name'], 'uploads/videos/'.$data['video_uplaod']);
+            }else {
                 $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_provider'));
                 redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
             }
@@ -322,6 +326,14 @@ class Lms_model extends CI_Model {
                 mkdir('uploads/thumbnails/lesson_thumbnails', 0777, true);
             }
             move_uploaded_file($_FILES['thumbnail']['tmp_name'], 'uploads/thumbnails/lesson_thumbnails/' . $inserted_id . '.jpg');
+        }
+    }
+    private function delete_old_files($path) {
+        $files = glob($path . '*'); // Obtenir tous les fichiers dans le répertoire
+        foreach($files as $file) {
+            if(is_file($file)) {
+                unlink($file); // Supprimer chaque fichier
+            }
         }
     }
 
@@ -374,7 +386,12 @@ class Lms_model extends CI_Model {
                     }
                     move_uploaded_file($_FILES['thumbnail']['tmp_name'], 'uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg');
                 }
-            } else {
+            } elseif ($lesson_provider == 'mydevice'){
+                $data['video_type'] = 'mydevice';
+                 $data['video_uplaod'] = rand().'.mp4';
+                move_uploaded_file($_FILES['userfileMe']['tmp_name'], 'uploads/videos/'.$data['video_uplaod']);
+                $this->delete_old_files( 'uploads/videos/'.$previous_data['video_uplaod']);
+            }else {
                 $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_provider'));
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
             }
