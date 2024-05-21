@@ -1007,6 +1007,13 @@ class User_model extends CI_Model
 		return $result->num_rows();
 	}
 
+	public function get_school_details($school_name = '')
+	{
+		return $this->db->get_where('schools', array('status' => 1 ,'name' => $school_name));
+	}
+
+
+
 	//GET LOGGED IN USER DATA
 	public function get_profile_data()
 	{
@@ -1184,9 +1191,15 @@ class User_model extends CI_Model
 	}
 
 
-	function get_school_id($school_name = "")
+	public function get_school_id($school_name)
 	{
 		return $this->db->get_where('schools', array('name' => $school_name))->row()->id;
 	}
+
+	public function googleAPI(){
+    {
+        $api = 'AIzaSyBFK8O-Fqob7VAuakxtTd66YA44hkdFEk8';
+       return $api;
+    }	}
 
 }

@@ -395,7 +395,7 @@ class Home extends CI_Controller
 
 		//pagination bootstrap settings
 		{
-					$config['first_url'] = $config['base_url'] . $config['suffix'];
+			$config['first_url'] = $config['base_url'] . $config['suffix'];
 
 
 			$config['num_links'] = 1;
@@ -453,9 +453,12 @@ class Home extends CI_Controller
 
 	}
 
-	function course_details($course_id = '')
+	function course_details($course_name = '')
 	{
-		$page_data['school'] = $this->db->get_where('schools', array('id' => $course_id))->row_array();
+		$page_data['school'] = $this->user_model->get_school_details( urldecode($course_name));
+		$page_data['school_id'] = $this->user_model->get_school_id( urldecode($course_name));
+		$page_data['course_name'] = urldecode($course_name) ;
+
 		$page_data['page_name'] = 'course_details';
 		$page_data['page_title'] = get_phrase('course_details');
 		$this->load->view('frontend/' . $this->theme . '/index', $page_data);

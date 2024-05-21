@@ -19,7 +19,18 @@
     </div>
     <!-- End Header Section -->
 
-  
+    <div class="details-section container  mt-5 mb-5">
+        <div class="row g-0 mt-2 details-img">
+            <img src="<?php echo $this->user_model->get_school_image($school_id); ?>" alt="">
+        </div>
+        <div class="row">
+
+        </div>
+    </div>
+
+
+
+
 
 
 
