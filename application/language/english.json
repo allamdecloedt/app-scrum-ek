@@ -1303,5 +1303,8 @@
     "personal_information": "Personal information",
     "full_name": "Full name",
     "repeat_password": "Repeat password",
-    "passwords_need_to_match": "Passwords need to match"
+    "passwords_need_to_match": "Passwords need to match",
+    "sec": "Sec",
+    "mydevice": "My Device",
+    "invalid_lesson_provider": "Invalid lesson provider"
 }

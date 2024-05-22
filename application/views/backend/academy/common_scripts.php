@@ -128,12 +128,19 @@
         if (provider === 'youtube' || provider === 'vimeo') {
             $('#html5').hide();
             $('#youtube_vimeo').show();
+            $('#mydevice').hide();
         }else if(provider === 'html5'){
             $('#youtube_vimeo').hide();
             $('#html5').show();
+            $('#mydevice').hide();
+        }else if(provider === 'mydevice'){
+            $('#youtube_vimeo').hide();
+            $('#html5').hide();
+            $('#mydevice').show();
         }else {
             $('#youtube_vimeo').hide();
             $('#html5').hide();
+            $('#mydevice').hide();
         }
     }
 
