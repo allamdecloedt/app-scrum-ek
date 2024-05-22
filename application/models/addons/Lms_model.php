@@ -290,6 +290,9 @@ class Lms_model extends CI_Model {
             } elseif ($lesson_provider == 'mydevice'){
                 $data['video_type'] = 'mydevice';
                  $data['video_uplaod'] = rand().'.mp4';
+                 if (!file_exists('uploads/videos')) {
+                    mkdir('uploads/videos', 0777, true);
+                }
                 move_uploaded_file($_FILES['userfileMe']['tmp_name'], 'uploads/videos/'.$data['video_uplaod']);
             }else {
                 $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_provider'));
