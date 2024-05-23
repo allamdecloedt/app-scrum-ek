@@ -1009,7 +1009,7 @@ class User_model extends CI_Model
 
 	public function get_school_details($school_name = '')
 	{
-		return $this->db->get_where('schools', array('status' => 1 ,'name' => $school_name));
+		return $this->db->get_where('schools', array('status' => 1, 'name' => $school_name))->row_array();
 	}
 
 
@@ -1196,10 +1196,23 @@ class User_model extends CI_Model
 		return $this->db->get_where('schools', array('name' => $school_name))->row()->id;
 	}
 
-	public function googleAPI(){
-    {
-        $api = 'AIzaSyBFK8O-Fqob7VAuakxtTd66YA44hkdFEk8';
-       return $api;
-    }	}
+	public function googleAPI()
+	{ {
+			$api = 'AIzaSyBFK8O-Fqob7VAuakxtTd66YA44hkdFEk8';
+			return $api;
+		}
+	}
+
+
+	public function get_school_students_count($school_id)
+	{
+		return $this->db->get_where('users', array(
+			'status' => 1,
+			'school_id' => $school_id,
+			'role' => 'student'
+			
+		)
+		)-> num_rows();
+	}
 
 }
