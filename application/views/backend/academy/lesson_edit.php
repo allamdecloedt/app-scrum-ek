@@ -46,7 +46,7 @@ $sections = $this->lms_model->get_section('course', $param2)->result_array();
                 <option value="youtube" <?php if(strtolower($lesson_details['video_type']) == 'youtube') echo 'selected'; ?>><?php echo get_phrase('youtube'); ?></option>
                 <option value="vimeo" <?php if(strtolower($lesson_details['video_type']) == 'vimeo') echo 'selected'; ?>><?php echo get_phrase('vimeo'); ?></option>
                 <option value="html5" <?php if(strtolower($lesson_details['video_type']) == 'html5') echo 'selected'; ?>>HTML5</option>
-                <option value="mydevice" <?php if(strtolower($lesson_details['video_type']) == 'mydevice') echo 'selected'; ?>><?php echo get_phrase('mydevice');?></option>
+                <option value="mydevice" <?php if(strtolower($lesson_details['video_type']) == 'mydevice') echo 'selected'; ?>>My Device </option>
             </select>
         </div>
 
@@ -159,6 +159,7 @@ document.getElementById('uploadForm').addEventListener('submit', function(event)
                         // Si tout est correct, soumettre le formulaire
                         document.getElementById('uploadForm').submit();
                         document.getElementById('success').innerText = 'Good video';
+                        document.getElementById('error').innerText = ' ';
                     }
                 };
  
