@@ -40,7 +40,7 @@
                 <option value="youtube"><?php echo get_phrase('youtube'); ?></option>
                 <option value="vimeo"><?php echo get_phrase('vimeo'); ?></option>
                 <option value="html5">HTML5</option>
-                <option value="mydevice"><?php echo get_phrase('mydevice');?></option>
+                <option value="mydevice"> My Device </option>
             </select>
         </div>
 
@@ -144,6 +144,7 @@
                         // Si tout est correct, soumettre le formulaire
                         document.getElementById('uploadForm').submit();
                         document.getElementById('success').innerText = 'Good video';
+                        document.getElementById('error').innerText = ' ';
                     }
                 };
  
