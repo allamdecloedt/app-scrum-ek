@@ -909,6 +909,7 @@
     "youtube": "Youtube",
     "vimeo": "Vimeo",
     "html5": "Html5",
+    "mydevice": "My Device",
     "course_overview_url": "Course overview url",
     "meta_keywords": "Meta keywords",
     "meta_description": "Meta description",
@@ -1305,6 +1306,5 @@
     "repeat_password": "Repeat password",
     "passwords_need_to_match": "Passwords need to match",
     "sec": "Sec",
-    "mydevice": "My Device",
     "invalid_lesson_provider": "Invalid lesson provider"
 }
