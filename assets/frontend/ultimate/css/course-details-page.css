@@ -98,6 +98,9 @@
 .course-information{
   background-color: #373737;
   width: auto;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
   
 }
 

@@ -49,7 +49,7 @@
 
 
 
-                    <div class="row mt-4  mb-5 mb-md-0 justify-content-center m-auto course-information">
+                    <div class="row mt-4 p-2  mb-5 mb-md-0 justify-content-center m-auto course-information">
                         <div class="col-4 col-md-auto align-content-center grand-pill ml-md-3 mb-2 mb-sm-0">
                             <div class=" d-flex justify-content-center ">
                                 <?php if ($school["access"] > 0) { ?>
