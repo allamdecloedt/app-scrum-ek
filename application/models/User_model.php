@@ -1007,6 +1007,13 @@ class User_model extends CI_Model
 		return $result->num_rows();
 	}
 
+	public function get_school_details($school_id = '')
+	{
+		return $this->db->get_where('schools', array('status' => 1, 'id' => $school_id))->row_array();
+	}
+
+
+
 	//GET LOGGED IN USER DATA
 	public function get_profile_data()
 	{
@@ -1184,9 +1191,45 @@ class User_model extends CI_Model
 	}
 
 
-	function get_school_id($school_name = "")
+	public function get_school_id($school_name)
 	{
 		return $this->db->get_where('schools', array('name' => $school_name))->row()->id;
+	}
+
+	public function googleAPI()
+	{ {
+			$api = 'AIzaSyBFK8O-Fqob7VAuakxtTd66YA44hkdFEk8';
+			return $api;
+		}
+	}
+
+
+	public function get_school_students_count($school_id)
+	{
+		return $this->db->get_where('users', array(
+			'status' => 1,
+			'school_id' => $school_id,
+			'role' => 'student'
+		)
+		)-> num_rows();
+	}
+
+	public function get_school_admin($school_id)
+	{
+		return $this->db->get_where('users', array(
+			'school_id' => $school_id,
+			'role' => 'admin'
+		))->row_array();
+	}
+
+	public function get_school_admin_image($school_id)
+	{
+		$admin = get_school_admin($school_id);	
+
+		if (file_exists('uploads/users/' . $admin["id"] . '.jpg'))
+			return base_url() . 'uploads/users/' . $admin["id"] . '.jpg';
+		else
+			return base_url() . 'uploads/schools/placeholder.jpg';
 	}
 
 }

@@ -71,5 +71,8 @@ if ($page_name == "home") {
 }elseif ($page_name == "courses"){
 
     echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/courses-page.css">';
+}elseif ($page_name == "course_details"){
+
+    echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/course-details-page.css">';
 }
 ?>
