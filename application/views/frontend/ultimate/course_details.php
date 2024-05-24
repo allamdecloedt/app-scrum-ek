@@ -115,11 +115,11 @@
 
 
 
-                            <div class="col-12 col-md-auto justify-content-center grand-pill mb- mb-sm-0 mt-2 mt-md-0">
+                            <div class="col-12 col-md-auto justify-content-center grand-pill  mb-sm-0 mt-2 mt-md-0">
                                 <div class="mt-2 mb-3 mb-md-0">
                                     <img class=" teacher-img mr-1"
-                                        src="<?php echo base_url("uploads/schools/placeholder.jpg") ?>" alt="">
-                                <span class="text-white d-inline">Teacher</span>
+                                        src="<?php echo $this->user_model->get_school_image($school_id); ?>" alt="">
+                                <span class="text-white d-inline"><?php echo $this->user_model->get_school_admin($school_id)["name"]; ?></span>
                             </div>
                         </div>
                     </div>
@@ -131,7 +131,7 @@
 
                     <!-- Course Details Description Section -->
 
-                    <div class="row">
+                    <div class="row mb-">
                         <span class="text-white px-8"> <?php echo $school["description"] ?> </span>
                     </div>
 
@@ -157,9 +157,9 @@
                         </p>
                     </div>
 
-                    <div class="row justify-content-center card-details  ">
+                    <div class="row justify-content-center course-information ">
 
-                        <div class=" col-auto align-content-center text-white small-pill">
+                        <div class=" col-auto align-content-center text-white ">
                             <div class="d-flex ">
 
                                 <?php if ($school["access"] > 0) { ?>
@@ -202,7 +202,7 @@
 
                     <div class="h-divider mt-2"></div>
 
-                    <div class="row justify-content-center">
+                    <div class="row justify-content-center ">
 
                          <div class="col-4 col-md-auto  text-center grand-pill mb-2 mb-sm-0">
                             <span class="text-white font-weight-bold"><?php if ($course_students_count > 0)
@@ -224,9 +224,9 @@
 
                         <div class=" mt-4 mb-2 row justify-content-center">
                             <div class="col-auto teacher-pill">
-                                <img class=" teacher-img " src="<?php echo base_url("uploads/schools/placeholder.jpg") ?>"
+                                <img class=" teacher-img " src="<?php echo $this->user_model->get_school_image($school_id); ?>"
                                 alt="">
-                            <p class="text-white d-inline">Teacher</p>
+                            <p class="text-white d-inline text-uppercase"><?php echo $this->user_model->get_school_admin($school_id)["name"]; ?></p>
                         </div>
                     </div>
 

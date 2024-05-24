@@ -1210,9 +1210,26 @@ class User_model extends CI_Model
 			'status' => 1,
 			'school_id' => $school_id,
 			'role' => 'student'
-			
 		)
 		)-> num_rows();
+	}
+
+	public function get_school_admin($school_id)
+	{
+		return $this->db->get_where('users', array(
+			'school_id' => $school_id,
+			'role' => 'admin'
+		))->row_array();
+	}
+
+	public function get_school_admin_image($school_id)
+	{
+		$admin = get_school_admin($school_id);	
+
+		if (file_exists('uploads/users/' . $admin["id"] . '.jpg'))
+			return base_url() . 'uploads/users/' . $admin["id"] . '.jpg';
+		else
+			return base_url() . 'uploads/schools/placeholder.jpg';
 	}
 
 }
