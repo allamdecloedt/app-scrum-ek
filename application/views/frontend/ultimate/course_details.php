@@ -30,7 +30,6 @@
                         <img src="<?php echo $this->user_model->get_school_image($school_id); ?>" alt="">
                     </div>
 
-                    <div class="row g-0 h-divider"></div>
 
 
                     <div class="row  mt-4 justify-content-center ">
@@ -104,7 +103,7 @@
 
                         <div class="col-4 col-md-auto  text-center grand-pill mb-2 mb-sm-0">
                             <span class="text-white font-weight-bold"><?php if ($course_students_count > 0)
-                                echo $course_students_count  ;
+                                echo $course_students_count;
                             else
                                 echo "0" ?></span>
                                 <p class="details-text text-uppercase">students</p>
@@ -119,7 +118,8 @@
                                 <div class="mt-2 mb-3 mb-md-0">
                                     <img class=" teacher-img mr-1"
                                         src="<?php echo $this->user_model->get_school_image($school_id); ?>" alt="">
-                                <span class="text-white d-inline"><?php echo $this->user_model->get_school_admin($school_id)["name"]; ?></span>
+                                <span
+                                    class="text-white d-inline"><?php echo $this->user_model->get_school_admin($school_id)["name"]; ?></span>
                             </div>
                         </div>
                     </div>
@@ -159,7 +159,7 @@
 
                     <div class="row justify-content-center course-information ">
 
-                        <div class=" col-auto align-content-center text-white ">
+                        <div class=" col-auto align-content-center mr-1 text-white ">
                             <div class="d-flex ">
 
                                 <?php if ($school["access"] > 0) { ?>
@@ -194,8 +194,9 @@
 
 
                         </div>
+                        <div class=" col-auto v-divider my-0 m-1"></div>
 
-                        <div class="col-auto small-pill align-content-center">
+                        <div class=" col-auto small-pill align-content-center ml">
                             <span class="text-white"> <?php echo $school["category"] ?></span>
                         </div>
                     </div>
@@ -204,16 +205,16 @@
 
                     <div class="row justify-content-center ">
 
-                         <div class="col-4 col-md-auto  text-center grand-pill mb-2 mb-sm-0">
+                        <div class="col-4 col-md-4 text-center grand-pill mb-2 mb-sm-0">
                             <span class="text-white font-weight-bold"><?php if ($course_students_count > 0)
-                                echo $course_students_count  ;
+                                echo $course_students_count;
                             else
                                 echo "0" ?></span>
                                 <p class="details-text text-uppercase">students</p>
                             </div>
-                            <div class="col-auto v-divider mx-4"></div>
+                            <div class="col-4 v-divider"></div>
 
-                            <div class="col-auto text-center">
+                            <div class="col-4 text-center">
                                 <span class="text-white font-weight-bold">1$</span>
                                 <p class="details-text text-uppercase">Price</p>
                             </div>
@@ -224,9 +225,10 @@
 
                         <div class=" mt-4 mb-2 row justify-content-center">
                             <div class="col-auto teacher-pill">
-                                <img class=" teacher-img " src="<?php echo $this->user_model->get_school_image($school_id); ?>"
-                                alt="">
-                            <p class="text-white d-inline text-uppercase"><?php echo $this->user_model->get_school_admin($school_id)["name"]; ?></p>
+                                <img class=" teacher-img "
+                                    src="<?php echo $this->user_model->get_school_image($school_id); ?>" alt="">
+                            <p class="text-white d-inline text-uppercase">
+                                <?php echo $this->user_model->get_school_admin($school_id)["name"]; ?></p>
                         </div>
                     </div>
 

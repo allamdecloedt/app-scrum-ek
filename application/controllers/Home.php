@@ -453,10 +453,9 @@ class Home extends CI_Controller
 
 	}
 
-	function course_details($course_name = '')
+	function course_details($school_id = '')
 	{
-		$page_data['school'] = $this->user_model->get_school_details( urldecode($course_name));
-		$page_data['course_name'] = urldecode($course_name) ;
+		$page_data['school'] = $this->user_model->get_school_details( urldecode($school_id));
 		$page_data['school_id'] = $page_data['school']["id"];
 		$page_data['course_students_count'] = $this->user_model->get_school_students_count($page_data['school']["id"]);
 

@@ -94,7 +94,7 @@
                     foreach ($courses_array as $c) {
                         ?>
                         <!-- Course Card Start -->
-                        <a href="<?php echo base_url('home/course_details/' . $c['name']) ?>"
+                        <a href="<?php echo base_url('home/course_details/' . $c['id']) ?>"
                             class="col-11 col-sm-10 col-md-5 col-lg-3 pt-4 pb-4 ">
                             <div class=" course-card row g-0 ">
                                 <div class="course-category text-break text-capitalize">

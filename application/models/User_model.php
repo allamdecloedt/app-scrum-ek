@@ -1007,9 +1007,9 @@ class User_model extends CI_Model
 		return $result->num_rows();
 	}
 
-	public function get_school_details($school_name = '')
+	public function get_school_details($school_id = '')
 	{
-		return $this->db->get_where('schools', array('status' => 1, 'name' => $school_name))->row_array();
+		return $this->db->get_where('schools', array('status' => 1, 'id' => $school_id))->row_array();
 	}
 
 
