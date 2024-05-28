@@ -75,9 +75,9 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
+	'hostname' => 'formation-db-public.cfaq06em20sk.eu-south-2.rds.amazonaws.com',
+	'username' => 'admin',
+	'password' => ')N8V:!G]}B+Em>v{_w]C#Qlo+wS9',
 	'database' => 'formation_db',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
