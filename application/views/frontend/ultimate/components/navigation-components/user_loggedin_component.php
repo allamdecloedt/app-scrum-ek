@@ -6,7 +6,7 @@
     <img src="<?php echo $this->user_model->get_user_image($this->session->userdata('user_id')); ?>" alt="user-image"
         class="rounded-circle nav-user-img">
 
-    <div class="user-dropdown hidden-section">
+    <div class="user-dropdown hidden-section display-none">
 
         <!-- item-->
         <a href="<?php echo route('dashboard'); ?>" class="user-dropdown-item text-white">

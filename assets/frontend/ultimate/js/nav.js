@@ -19,11 +19,18 @@ $(document).ready(function () {
 
   if (document.querySelector(".user-section")) {
     userButton.addEventListener("click", function () {
-      userDropdown.classList.toggle("show");
-
-      setTimeout(() => {
-        loginDropdown.classList.toggle("display-none");
-      }, 500);
+      if (userDropdown.classList.contains("display-none")) {
+        userDropdown.classList.toggle("display-none");
+        
+        setTimeout(() => {
+          userDropdown.classList.toggle("show");
+        }, 100);
+        
+      } else {
+        userDropdown.classList.toggle("show");
+        userDropdown.classList.toggle("display-none");
+       
+      }
     });
   }
 
