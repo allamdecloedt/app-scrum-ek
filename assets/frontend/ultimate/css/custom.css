@@ -877,38 +877,7 @@ Responsive Styling
   }
 
 
-  /*--------------Navigation----------------*/
-  .navbar-nav a {
-  position: relative;
-}
-
-.navbar-nav a::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 3px;
-  background-color: #a8a8a86d;
-  bottom: 0;
-  left: 50%;
-  border-radius: 5px;
-  transition: width 0.3s ease 0s, left 0.3s ease 0s;
-}
-
-.navbar-nav a:hover::after,
-.navbar-nav a:focus::after {
-  width: 100%;
-  left: 0;
-}
-
-.hidden div {
-display: none;
-pointer-events: none;
-}
-
-.hidden {
-
-pointer-events: none;
-}
+ 
 }
 
 /*-----------------------------------------min-1200px-------------------------------------------------------------*/
