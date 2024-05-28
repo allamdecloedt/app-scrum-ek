@@ -449,82 +449,400 @@ public function get_dashboard_data_get() {
   return $this->set_response($response, REST_Controller::HTTP_OK);
 }
 //CREATE SCHOOL API CALL
+public function categoriesByName_get() {
+  $this->db->select('name');
+  $this->db->order_by('name', 'ASC');
+  $query = $this->db->get('categories');
+  $categories = $query->result();
 
-public function create_school_post() {
-  $name = $this->post('name');
-  $phone = $this->post('phone');
-  $address = $this->post('address');
+  // Format the response to include only names
+  $category_names = array_map(function($category) {
+      return $category->name;
+  }, $categories);
 
-  // Validate input data if needed
-
-  $data = array(
-      'name' => $name,
-      'phone' => $phone,
-      'address' => $address
-  );
-
-  $this->db->insert('schools', $data);
-
-  $new_school_id = $this->db->insert_id();
-  $new_school_data = $this->db->get_where('schools', array('id' => $new_school_id))->row_array();
-
+  // Return the response in JSON format
   $response = array(
       'status' => true,
-      'message' => 'School added successfully',
-      'school' => $new_school_data
+      'categories' => $category_names
   );
 
-  $this->response($response, REST_Controller::HTTP_OK);
+  echo json_encode($response);
+}
+/*  public function create_school_post() {
+  // Get post data for the school
+  $school_name = $this->post('name');
+  $school_phone = $this->post('phone');
+  $address = $this->post('address');
+  $description = $this->post('description');
+  $access = $this->post('access') === 'private' ? 0 : 1; // Convert 'private' to 0 and 'public' to 1
+  $category = $this->post('category');
+
+  // Get post data for the admin user
+  $admin_full_name = $this->post('admin_full_name');
+  $admin_email = $this->post('email');
+  $admin_password = $this->post('password');
+  $admin_gender = $this->post('gender');
+  $admin_phone = $this->post('phone');
+
+  // Check for duplicate email for admin
+  $email_exists = $this->db->get_where('users', array('email' => $admin_email))->row_array();
+  if ($email_exists) {
+      // Duplicate email found
+      $response = array(
+          'status' => false,
+          'message' => 'Admin email already exists'
+      );
+      $this->response($response, REST_Controller::HTTP_BAD_REQUEST);
+      return; 
+  }
+
+  // No duplicate email found for admin, proceed with inserting data for both school and admin user
+  $this->db->trans_start(); // Start transaction
+  $school_data = array(
+      'name' => $school_name,
+      'phone' => $school_phone,
+      'address' => $address,
+      'description' => $description,
+      'access' => $access,
+      'category' => $category
+  );
+
+  $this->db->insert('schools', $school_data);
+  $school_id = $this->db->insert_id();
+
+  // Insert admin user data
+  $hashed_password = password_hash($admin_password, PASSWORD_DEFAULT); // Hash the password
+  $admin_data = array(
+      'name' => $admin_full_name,
+      'email' => $admin_email,
+      'password' => $hashed_password,
+      'role' => 'admin',
+      'status' => 1,
+      'gender' => $admin_gender,
+      'phone' => $admin_phone,
+      'school_id' => $school_id,
+      'watch_history' => '[]' 
+  );
+
+  $this->db->insert('users', $admin_data);
+  $admin_id = $this->db->insert_id();
+
+  // Handle the image upload
+  if (!empty($_FILES['image_file']['name'])) {
+      $image_path = 'uploads/schools/' . $school_id . '.jpg';
+      if (!move_uploaded_file($_FILES['image_file']['tmp_name'], $image_path)) {
+          // Image upload failed, rollback transaction
+          $this->db->trans_rollback();
+          $response = array(
+              'status' => false,
+              'message' => 'Failed to upload school image'
+          );
+          $this->response($response, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+          return;
+      }
+  }
+
+  $this->db->trans_complete(); // Complete transaction
+
+  if ($this->db->trans_status() === false) {
+      // Transaction failed, rollback
+      $this->db->trans_rollback();
+      $response = array(
+          'status' => false,
+          'message' => 'Failed to create school and admin user'
+      );
+      $this->response($response, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+  } else {
+      // Transaction successful
+      $response = array(
+          'status' => true,
+          'message' => 'School and admin user added successfully'
+      );
+      $this->response($response, REST_Controller::HTTP_CREATED);
+  }
+}   */
+
+
+public function online_admission_school_post()
+{
+    // Begin transaction
+    $this->db->trans_begin();
+
+    // Decode JSON data from the request body
+    $json_data = json_decode($this->input->post('json_data'), true);
+
+    if (is_null($json_data)) {
+        $this->db->trans_rollback();
+        $response = array(
+            'status' => false,
+            'message' => 'Invalid JSON data'
+        );
+        $this->response($response, REST_Controller::HTTP_BAD_REQUEST);
+        return;
+    }
+
+    // Check for duplicates
+    $duplication_status = $this->user_model->check_duplication_school('on_create', $json_data['schoolName']);
+
+    if ($duplication_status) {
+        // Extract school data from JSON
+        $school_data = array(
+            'name' => htmlspecialchars($json_data['schoolName']),
+            'address' => htmlspecialchars($json_data['schoolAddress']),
+            'phone' => htmlspecialchars($json_data['schoolPhone']),
+            'status' => 0,
+            'description' => htmlspecialchars($json_data['description']),
+            'access' => htmlspecialchars($json_data['access']),
+            'category' => htmlspecialchars($json_data['selectedCategory']),
+        );
+
+        // Insert school data into the database
+        $this->db->insert('schools', $school_data);
+        $school_id = $this->db->insert_id();
+
+        // Extract admin data from JSON
+        $admin_data = array(
+            'name' => htmlspecialchars($json_data['adminName']),
+            'email' => htmlspecialchars($json_data['adminEmail']),
+            'gender' => htmlspecialchars($json_data['adminGender']),
+            'phone' => htmlspecialchars($json_data['adminPhone']),
+            'password' => sha1($json_data['adminPassword']),
+            'role' => 'admin',
+            'school_id' => $school_id,
+            'status' => 1,
+            'watch_history' => '[]',
+        );
+
+        // Insert admin data into the database
+        $this->db->insert('users', $admin_data);
+        $user_id = $this->db->insert_id();
+
+        // Handle image upload if it exists
+        if (!empty($_FILES['image_file']['name'])) {
+            $image_path = 'uploads/schools/' . $school_id . '.jpg';
+            if (!move_uploaded_file($_FILES['image_file']['tmp_name'], $image_path)) {
+                // Image upload failed, rollback transaction
+                $this->db->trans_rollback();
+                $response = array(
+                    'status' => false,
+                    'message' => 'Failed to upload school image'
+                );
+                $this->response($response, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+                return;
+            }
+        }
+
+        // Commit transaction
+        $this->db->trans_commit();
+
+        // Send success response
+        $response = array('status' => 1, 'message' => 'School created successfully.');
+        $this->response($response, REST_Controller::HTTP_OK);
+    } else {
+        // Rollback transaction in case of duplication error
+        $this->db->trans_rollback();
+
+        // Send duplication error response
+        $response = array('status' => 0, 'message' => 'This school name already exists.');
+        $this->response($response, REST_Controller::HTTP_CONFLICT);
+    }
+}
+public function update_school_post()
+{
+    // Begin transaction
+    $this->db->trans_begin();
+
+    // Fetch raw POST data and decode JSON
+    $raw_post_data = $this->input->raw_input_stream;
+    log_message('debug', 'Raw POST data: ' . $raw_post_data);
+
+    $json_data = json_decode($raw_post_data, true);
+
+    if (is_null($json_data) || !isset($json_data['schoolId'])) {
+        $this->db->trans_rollback();
+        $response = array(
+            'status' => false,
+            'message' => 'Invalid JSON data or missing school ID'
+        );
+        log_message('error', 'Invalid JSON data or missing school ID');
+        $this->response($response, REST_Controller::HTTP_BAD_REQUEST);
+        return;
+    }
+
+    // Extract school ID from JSON
+    $school_id = htmlspecialchars($json_data['schoolId']);
+    log_message('debug', 'Extracted school ID: ' . $school_id);
+
+    // Check for duplicates (if updating the school name)
+    if (isset($json_data['schoolName'])) {
+        $duplication_status = $this->user_model->check_duplication_school('on_update', $json_data['schoolName'], $school_id);
+        log_message('debug', 'Duplication check status: ' . $duplication_status);
+
+       
+    }
+
+    // Prepare school data for update
+    $school_data = array(
+        'name' => isset($json_data['schoolName']) ? htmlspecialchars($json_data['schoolName']) : null,
+        'address' => isset($json_data['schoolAddress']) ? htmlspecialchars($json_data['schoolAddress']) : null,
+        'phone' => isset($json_data['schoolPhone']) ? htmlspecialchars($json_data['schoolPhone']) : null,
+        'description' => isset($json_data['description']) ? htmlspecialchars($json_data['description']) : null,
+        'access' => isset($json_data['access']) ? htmlspecialchars($json_data['access']) : null,
+        'category' => isset($json_data['selectedCategory']) ? htmlspecialchars($json_data['selectedCategory']) : null,
+    );
+
+    // Remove null values from the update array
+    $school_data = array_filter($school_data, function($value) {
+        return !is_null($value);
+    });
+
+    log_message('debug', 'School data to update: ' . json_encode($school_data));
+
+    // Update school data in the database
+    $this->db->where('id', $school_id);
+    if (!$this->db->update('schools', $school_data)) {
+        $this->db->trans_rollback();
+        $response = array(
+            'status' => false,
+            'message' => 'Failed to update school.'
+        );
+        log_message('error', 'Failed to update school.');
+        $this->response($response, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        return;
+    }
+
+    // Prepare admin data for update
+    $admin_data = array(
+        'name' => isset($json_data['adminName']) ? htmlspecialchars($json_data['adminName']) : null,
+        'email' => isset($json_data['adminEmail']) ? htmlspecialchars($json_data['adminEmail']) : null,
+        'gender' => isset($json_data['adminGender']) ? htmlspecialchars($json_data['adminGender']) : null,
+        'phone' => isset($json_data['adminPhone']) ? htmlspecialchars($json_data['adminPhone']) : null,
+        'password' => isset($json_data['adminPassword']) ? sha1($json_data['adminPassword']) : null,
+    );
+
+    // Remove null values from the update array
+    $admin_data = array_filter($admin_data, function($value) {
+        return !is_null($value);
+    });
+
+    log_message('debug', 'Admin data to update: ' . json_encode($admin_data));
+
+    // Update admin data in the database
+    if (!empty($admin_data)) {
+        $this->db->where('school_id', $school_id);
+        $this->db->where('role', 'admin');
+        if (!$this->db->update('users', $admin_data)) {
+            $this->db->trans_rollback();
+            $response = array(
+                'status' => false,
+                'message' => 'Failed to update admin user.'
+            );
+            log_message('error', 'Failed to update admin user.');
+            $this->response($response, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            return;
+        }
+    }
+
+    // Handle image upload if it exists
+    if (!empty($_FILES['image_file']['name'])) {
+        $image_path = 'uploads/schools/' . $school_id . '.jpg';
+        if (!move_uploaded_file($_FILES['image_file']['tmp_name'], $image_path)) {
+            // Image upload failed, rollback transaction
+            $this->db->trans_rollback();
+            $response = array(
+                'status' => false,
+                'message' => 'Failed to upload school image.'
+            );
+            log_message('error', 'Failed to upload school image.');
+            $this->response($response, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            return;
+        }
+    }
+
+    // Commit transaction
+    $this->db->trans_commit();
+
+    // Send success response
+    $response = array(
+        'status' => true,
+        'message' => 'School updated successfully.'
+    );
+    log_message('debug', 'School updated successfully.');
+    $this->response($response, REST_Controller::HTTP_OK);
 }
 
 
-public function update_school_post($param1) {
-  $name = $this->post('name');
-  $phone = $this->post('phone');
-  $address = $this->post('address');
 
-  $data = array(
-      'name' => $name,
-      'phone' => $phone,
-      'address' => $address
-  );
 
-  $this->db->where('id', $param1);
-  $this->db->update('schools', $data);
 
-  // Fetch updated school data
-  $updated_school = $this->db->get_where('schools', array('id' => $param1))->row_array();
 
-  $response = array(
-      'status' => true,
-      'notification' => get_phrase('school_has_been_updated_successfully'),
-      'school' => $updated_school  // Return updated school data
-  );
-
-  $this->response($response, REST_Controller::HTTP_OK);
-}
 
 public function delete_school_post($param1) {
+  // Update the school's state to 0 (inactive) instead of deleting the record
   $this->db->where('id', $param1);
-  $this->db->delete('schools');
+  $this->db->update('schools', array('etat' => 0));
 
+  // Find and update the status of the admin user associated with the school
+  $this->db->from('users');
+  $this->db->where('school_id', $param1);
+  $this->db->where('role', 'admin');
+  $admin_user = $this->db->get()->row_array();
+
+  if ($admin_user) {
+      $this->db->where('id', $admin_user['id']);
+      $this->db->update('users', array('status' => 0));
+  }
+
+  // Prepare the response
   $response = array(
       'status' => true,
-      'notification' => get_phrase('school_has_been_deleted_successfully')
+      'notification' => get_phrase('school_has_been_deactivated_and_admin_status_updated_successfully')
   );
 
+  // Send the response
   $this->response($response, REST_Controller::HTTP_OK);
 }
 
-public function schools_get() {
-  // Load necessary libraries if not already loaded
-  $this->load->database(); // Load the database library if not already loaded
 
+
+public function schools_get() {
   // Query to retrieve all schools
   $schools = $this->db->get('schools')->result_array();
 
   // Check if schools are found
   if ($schools) {
+      // Iterate over each school to add image path and admin info
+      foreach ($schools as &$school) {
+          // Add image path
+          $image_path = 'uploads/schools/' . $school['id'] . '.jpg';
+          if (file_exists($image_path)) {
+              $school['image_url'] = base_url($image_path);
+          } else {
+              $school['image_url'] = null; // Or set a default image path
+          }
+
+          // Retrieve admin info from users table
+          $this->db->select('name, email, gender, phone, role, status, watch_history');
+          $this->db->from('users');
+          $this->db->where('school_id', $school['id']);
+          $this->db->where('role', 'admin');
+          $admin = $this->db->get()->row_array();
+
+          if ($admin) {
+              $school['admin'] = array(
+                  'name' => htmlspecialchars($admin['name']),
+                  'email' => htmlspecialchars($admin['email']),
+                  'gender' => htmlspecialchars($admin['gender']),
+                  'phone' => htmlspecialchars($admin['phone']),
+                  'role' => htmlspecialchars($admin['role']),
+                  'status' => (int) $admin['status'],
+                  'watch_history' => json_decode($admin['watch_history'])
+              );
+          } else {
+              $school['admin'] = null; // Or provide default admin info
+          }
+      }
+
       // Prepare success response
       $response = array(
           'status' => true,
@@ -543,6 +861,7 @@ public function schools_get() {
       ->set_content_type('application/json')
       ->set_output(json_encode($response));
 }
+
 
 
 ///////////////////////////////////////

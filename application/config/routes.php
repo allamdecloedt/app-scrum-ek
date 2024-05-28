@@ -83,8 +83,8 @@ $route['api/onlineadmissionEdit/(:num)']['PUT'] = 'api/Admin/onlineadmissionEdit
 $route['api/onlineadmission'] = 'api/Admin/onlineadmission';
 $route['api/fetchStudentsByName/(:num)/(:any)'] = 'api/Admin/fetchStudentsByName/$1/$2';
 
-$route['api/school/create']= 'api/Admin/create_school'; 
-$route['api/school/update/(:num)'] = 'api/Admin/update_school/$1';
+$route['api/school/create']= 'api/Admin/online_admission_school'; 
+$route['api/school/update'] = 'api/Admin/update_school';
 $route['api/school/delete/(:num)'] = 'api/Admin/delete_school/$1'; 
 $route['api/schools'] = 'api/Admin/schools';
-
+$route['api/categoriesByName']= 'api/Admin/categoriesByName'; 
