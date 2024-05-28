@@ -94,7 +94,6 @@ label {
   transform: translateY(-50%);
   transition: 0.3s ease transform;
   cursor: pointer;
-  pointer-events: none;
 }
 
 label div {
