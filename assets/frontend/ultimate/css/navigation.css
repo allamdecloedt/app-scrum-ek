@@ -7,21 +7,39 @@ Navigation Styling
 }
 
 .sticky-nav {
-  background: #606060c4;
-  transition: 0.5s;
+  background: #212121a6;
   position: fixed !important;
   top: 0;
-  align-items: center;
-  justify-content: center;
-  min-height: 80px;
-  border-bottom-left-radius: 10px; /* 25px rounded bottom left corner */
-  border-bottom-right-radius: 10px;
+  height: 80px;
   transition: all 0.5s;
   font-weight: 600;
+  backdrop-filter: blur(10px);
+  transition: all 0.5s ease-in-out;
 }
 
-.nav-home {
-  background: #212121a6 !important;
+.logo {
+  scale: 0.9;
+  transition: all 0.5s ease-in-out;
+}
+
+.small-nav {
+  height: 60px;
+  background: #212121;
+  transition: all 0.5s ease-in-out;
+
+  .logo {
+    scale: 0.8;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .user-dropdown {
+    bottom: -60px;
+  }
+
+  .login-dropdown {
+    top: 60px;
+    transition: all 0.5s ease-in-out;
+  }
 }
 
 .nav-link {
@@ -29,11 +47,6 @@ Navigation Styling
   text-transform: uppercase;
   margin: 0 10px;
   transition: all 0.5s ease-in-out;
-}
-
-.show {
-  background: #212121d2 !important;
-  border-radius: 10px;
 }
 
 .collapsing {
@@ -51,8 +64,24 @@ Navigation Styling
   border: none;
   padding: 0;
   font: inherit;
-  cursor: pointer;
   outline: inherit;
+  height: 0;
+}
+
+.hidden-section {
+  opacity: 0;
+  transition: all 0.5s ;
+  height: 0 !important;
+}
+
+.show {
+  opacity: 1;
+  transition: all 0.5s ;
+  height: auto !important;
+}
+
+.display-none {
+  display: none;
 }
 
 label {
@@ -65,6 +94,7 @@ label {
   transform: translateY(-50%);
   transition: 0.3s ease transform;
   cursor: pointer;
+  pointer-events: none;
 }
 
 label div {
@@ -103,7 +133,7 @@ label div:last-child {
 }
 
 .nav-link:hover {
-  color: #ffff !important;
+  color: #a8a8a8 !important;
   transition: all 0.3s;
 }
 
@@ -111,23 +141,111 @@ label div:last-child {
   color: #a8a8a8 !important;
 }
 
+.v-divider-nav {
+  height: auto;
+  width: 1px;
+  background-color: #6e6e6e;
+  padding: 0;
+}
+
+.nav-user-img {
+  width: 40px;
+  height: 40px;
+  margin-left: 15px;
+  margin-right: 10px;
+}
+
+.user-section {
+  cursor: pointer;
+}
+
+.user-dropdown {
+  position: absolute;
+  height: auto;
+  min-width: 180px;
+  bottom: -79px !important;
+  right: 1%;
+  background-color: #464646dd;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  backdrop-filter: blur(10px);
+  transition: all 0.5s ease-in-out;
+}
+
+.user-dropdown-item {
+  display: block;
+  color: #ffffff;
+  border-radius: 5px;
+  margin: 10px;
+  text-decoration: none;
+}
+.login-section{
+  
+}
+
+.login-dropdown {
+  position: absolute;
+  height: auto;
+  width: 300px;
+  top: 80px;
+  padding-left: 20px;
+  padding-right: 20px;
+  right: 1%;
+  background-color: #9c9c9ce4;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  transition: all 0.5s ease-in-out;
+}
+
+.login-input input {
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  height: 30px;
+  background-color: #ffffff;
+  font-size: 14px;
+}
+
+.login-input-label {
+  color: #ffffff;
+  font-size: 12px !important;
+  padding-bottom: 15px !important;
+  right: 20px;
+  font-weight: 500;
+}
+
+.login-button{
+  background-color: #515151;
+  color: #ffffff;
+  border-radius: 5px;
+  border: none;
+  height: 30px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+
+}
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------
 Responsive Styling
 -----------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
-
 /*-----------------------------------------min-992px-------------------------------------------------------------*/
 
+@media (max-width: 768px) {
+  .user-dropdown {
+    min-width: 97%;
+    right: 0;
+  }
+}
 
 @media (min-width: 992px) {
   /*--------------Navigation----------------*/
-  .navbar-nav a {
+  .navbar-nav .nav-link {
     position: relative;
   }
 
-  .navbar-nav a::after {
+  .navbar-nav .nav-link::after {
     content: "";
     position: absolute;
     width: 0;
@@ -139,18 +257,14 @@ Responsive Styling
     transition: width 0.3s ease 0s, left 0.3s ease 0s;
   }
 
-  .navbar-nav a:hover::after,
-  .navbar-nav a:focus::after {
+  .navbar-nav .nav-link:hover::after,
+  .navbar-nav .nav-link:focus::after {
     width: 100%;
     left: 0;
   }
 
   .hidden div {
     display: none;
-    pointer-events: none;
-  }
-
-  .hidden {
     pointer-events: none;
   }
 }

@@ -19,6 +19,7 @@
     </div>
     <!-- End Header Section -->
     <div class="container">
+    
 
         <div class="row justify-content-center">
             <!-- Course Details Grand Section -->
@@ -45,6 +46,7 @@
 
 
                     <!-- Course Details Pills Section -->
+                   
 
 
 
@@ -234,7 +236,7 @@
 
 
                     <div class="row justify-content-center">
-                        <button class="join-button text-uppercase"><?php echo get_phrase("join") ?></button>
+                        <button id="join-button" class="join-button text-uppercase"><?php echo get_phrase("join") ?></button>
                     </div>
                 </div>
             </div>
