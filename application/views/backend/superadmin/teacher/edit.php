@@ -55,21 +55,6 @@ foreach($users as $user):
         <small id="" class="form-text text-muted"><?php echo get_phrase('provide_teacher_gender'); ?></small>
       </div>
 
-      <div class="form-group mb-1">
-        <label for="blood_group"><?php echo get_phrase('blood_group'); ?></label>
-        <select name="blood_group" id="blood_group" class="form-control select2" data-toggle = "select2">
-          <option value=""><?php echo get_phrase('select_a_blood_group'); ?></option>
-          <option value="a+" <?php if($user['blood_group'] == 'a+') echo 'selected'; ?>>A+</option>
-          <option value="a-" <?php if($user['blood_group'] == 'a-') echo 'selected'; ?>>A-</option>
-          <option value="b+" <?php if($user['blood_group'] == 'b+') echo 'selected'; ?>>B+</option>
-          <option value="b-" <?php if($user['blood_group'] == 'b-') echo 'selected'; ?>>B-</option>
-          <option value="ab+" <?php if($user['blood_group'] == 'ab+') echo 'selected'; ?>>AB+</option>
-          <option value="ab-" <?php if($user['blood_group'] == 'ab-') echo 'selected'; ?>>AB-</option>
-          <option value="o+" <?php if($user['blood_group'] == 'o+') echo 'selected'; ?>>O+</option>
-          <option value="o-" <?php if($user['blood_group'] == '0-') echo 'selected'; ?>>O-</option>
-        </select>
-        <small id="" class="form-text text-muted"><?php echo get_phrase('provide_teacher_blood_group'); ?></small>
-      </div>
 
       <div class="form-group mb-1">
         <label><?php echo get_phrase('facebook_profile_link'); ?></label>
@@ -140,7 +125,7 @@ foreach($users as $user):
 <script>
 
 $(document).ready(function () {
-  $('select.select2:not(.normal)').each(function () { $(this).select2({ dropdownParent: '#right-modal' }); }); //initSelect2(['#department', '#gender', '#blood_group', '#show_on_website']);
+  $('select.select2:not(.normal)').each(function () { $(this).select2({ dropdownParent: '#right-modal' }); }); //initSelect2(['#department', '#gender', '#show_on_website']);
 });
 $(".ajaxForm").validate({}); // Jquery form validation initialization
 $(".ajaxForm").submit(function(e) {
