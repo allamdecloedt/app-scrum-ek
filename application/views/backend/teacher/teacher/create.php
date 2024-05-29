@@ -55,21 +55,6 @@
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_teacher_gender'); ?></small>
         </div>
 
-        <div class="form-group mb-1">
-            <label for="blood_group"><?php echo get_phrase('blood_group'); ?></label>
-            <select name="blood_group" id="blood_group" class="form-control">
-                <option value=""><?php echo get_phrase('select_a_blood_group'); ?></option>
-                <option value="a+">A+</option>
-                <option value="a-">A-</option>
-                <option value="b+">B+</option>
-                <option value="b-">B-</option>
-                <option value="ab+">AB+</option>
-                <option value="ab-">AB-</option>
-                <option value="o+">O+</option>
-                <option value="o-">O-</option>
-            </select>
-            <small id="" class="form-text text-muted"><?php echo get_phrase('provide_teacher_blood_group'); ?></small>
-        </div>
 
         <div class="form-group mb-1">
             <label for="phone"><?php echo get_phrase('address'); ?></label>

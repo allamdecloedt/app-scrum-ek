@@ -906,7 +906,6 @@ CREATE TABLE `users` (
   `remember_token` varchar(255) DEFAULT NULL,
   `birthday` varchar(255) DEFAULT NULL,
   `gender` varchar(255) DEFAULT NULL,
-  `blood_group` varchar(255) DEFAULT NULL,
   `school_id` int(11) DEFAULT NULL,
   `authentication_key` varchar(255) DEFAULT NULL,
   `watch_history` longtext DEFAULT NULL,

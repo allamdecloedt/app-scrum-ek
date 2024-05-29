@@ -47,7 +47,6 @@ class User_model extends CI_Model
 		$data['password'] = sha1($this->input->post('password'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['role'] = 'admin';
 		$data['watch_history'] = '[]';
@@ -77,7 +76,6 @@ class User_model extends CI_Model
 		$data['email'] = html_escape($this->input->post('email'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['school_id'] = html_escape($this->input->post('school_id'));
 		// check email duplication
@@ -203,7 +201,6 @@ class User_model extends CI_Model
 		$data['password'] = sha1($this->input->post('password'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['role'] = 'teacher';
 		$data['watch_history'] = '[]';
@@ -253,7 +250,6 @@ class User_model extends CI_Model
 		$data['email'] = html_escape($this->input->post('email'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 
 		// check email duplication
@@ -369,7 +365,6 @@ class User_model extends CI_Model
 		$data['password'] = sha1($this->input->post('password'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['school_id'] = $this->school_id;
 		$data['role'] = 'accountant';
@@ -399,7 +394,6 @@ class User_model extends CI_Model
 		$data['email'] = html_escape($this->input->post('email'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 
 		$duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
@@ -463,7 +457,6 @@ class User_model extends CI_Model
 		$data['password'] = sha1($this->input->post('password'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['school_id'] = $this->school_id;
 		$data['role'] = 'librarian';
@@ -494,7 +487,6 @@ class User_model extends CI_Model
 		$data['email'] = html_escape($this->input->post('email'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 
 		// check email duplication
@@ -558,7 +550,6 @@ class User_model extends CI_Model
 		$user_data['password'] = sha1(html_escape($this->input->post('password')));
 		$user_data['birthday'] = strtotime(html_escape($this->input->post('birthday')));
 		$user_data['gender'] = html_escape($this->input->post('gender'));
-		$user_data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$user_data['address'] = html_escape($this->input->post('address'));
 		$user_data['phone'] = html_escape($this->input->post('phone'));
 		$user_data['role'] = 'student';
@@ -744,7 +735,6 @@ class User_model extends CI_Model
 		$user_data['email'] = html_escape($this->input->post('email'));
 		$user_data['birthday'] = strtotime(html_escape($this->input->post('birthday')));
 		$user_data['gender'] = html_escape($this->input->post('gender'));
-		$user_data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$user_data['address'] = html_escape($this->input->post('address'));
 		$user_data['phone'] = html_escape($this->input->post('phone'));
 		// Check Duplication
@@ -830,7 +820,6 @@ class User_model extends CI_Model
 				$enrol_data[$key]['phone'] = $user_details['phone'];
 				$enrol_data[$key]['birthday'] = $user_details['birthday'];
 				$enrol_data[$key]['gender'] = $user_details['gender'];
-				$enrol_data[$key]['blood_group'] = $user_details['blood_group'];
 
 				$class_details = $this->crud_model->get_class_details_by_id($enrol['class_id'])->row_array();
 				$section_details = $this->crud_model->get_section_details_by_id('section', $enrol['section_id'])->row_array();
@@ -858,7 +847,6 @@ class User_model extends CI_Model
 				$enrol_data[$key]['phone'] = $user_details['phone'];
 				$enrol_data[$key]['birthday'] = $user_details['birthday'];
 				$enrol_data[$key]['gender'] = $user_details['gender'];
-				$enrol_data[$key]['blood_group'] = $user_details['blood_group'];
 
 				$class_details = $this->crud_model->get_class_details_by_id($enrol['class_id'])->row_array();
 				$section_details = $this->crud_model->get_section_details_by_id('section', $enrol['section_id'])->row_array();
@@ -885,7 +873,6 @@ class User_model extends CI_Model
 			$enrol_data['phone'] = $user_details['phone'];
 			$enrol_data['birthday'] = $user_details['birthday'];
 			$enrol_data['gender'] = $user_details['gender'];
-			$enrol_data['blood_group'] = $user_details['blood_group'];
 
 			$class_details = $this->crud_model->get_class_details_by_id($enrol_data['class_id'])->row_array();
 			$section_details = $this->crud_model->get_section_details_by_id('section', $enrol_data['section_id'])->row_array();
@@ -1141,7 +1128,6 @@ class User_model extends CI_Model
 			$students[$key]['phone'] = $user_details['phone'];
 			$students[$key]['birthday'] = $user_details['birthday'];
 			$students[$key]['gender'] = $user_details['gender'];
-			$students[$key]['blood_group'] = $user_details['blood_group'];
 			$students[$key]['class_id'] = $enrol_data['class_id'];
 			$students[$key]['section_id'] = $enrol_data['section_id'];
 

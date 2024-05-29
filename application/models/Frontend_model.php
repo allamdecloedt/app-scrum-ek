@@ -562,7 +562,6 @@ class Frontend_model extends CI_Model
       $user_data['gender'] = htmlspecialchars($this->input->post('gender'));
       $user_data['phone'] = htmlspecialchars($this->input->post('phone'));
       $user_data['birthday'] = htmlspecialchars($this->input->post('date_of_birth'));
-      $user_data['blood_group'] = htmlspecialchars($this->input->post('blood_group'));
       $user_data['role'] = 'student';
       $user_data['school_id'] = $this->session->userdata('active_school_id');
       $user_data['watch_history'] = '[]';
