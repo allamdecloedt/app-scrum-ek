@@ -68,7 +68,7 @@ $system_name = get_frontend_settings('website_title');
 
           <?php } else { ?>
 
-            <?php include 'components/navigation-components/login_component.php'; ?>
+            <?php include 'components/navigation-components/login_register_component.php'; ?>
 
           <?php } ?>
           <!-- End Navigation -->
