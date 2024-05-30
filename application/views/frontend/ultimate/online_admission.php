@@ -317,57 +317,6 @@
         </div>
         <!-- End Input -->
 
-        <!-- Input -->
-        <div class="pdf-modal display-none">
-          <div class="modal-content">
-            <div id="pdf-container" class="pdf-container">
-              <span class="close-pdf">
-                <svg class="m-1" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"
-                  class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
-                  <path
-                    d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z" />
-                  <path
-                    d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z" />
-                </svg></span>
-              <p class="loading text-uppercase"><?php echo get_phrase('loading_pdf'); ?>...</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-11 col-sm-8 col-lg-4  ">
-          <div class="js-form-message">
-            <div class="mb-3">
-              <p class="form-label pb-3 mt- mt-sm-0 text-white text-end">
-                <?php echo get_phrase('educational_qualifications'); ?>
-                <span class="text-secondary">(<?php echo get_phrase('PDF'); ?>)</span>
-                <span class="text-danger">*</span>
-              </p>
-              <div id="pdf-preview" class="">
-                <a role="button" class="btn pdf-preview-btn disabled">
-                  <svg class="m-1 preview-svg" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                    fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                    <path
-                      d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                  </svg>
-                </a>
-              </div>
-              <label for="pdf" class="form-label btn btn-sm button-label text-white">
-                <svg class="" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"
-                  class="bi bi-filetype-pdf" viewBox="0 0 16 16">
-                  <path fill-rule="evenodd"
-                    d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z" />
-                </svg>
-                <div class="file-spacer"></div>
-                <span class="file-name-pdf file-name"><?php echo get_phrase('choose_a_file'); ?>...</span>
-              </label>
-
-              <input id="pdf" type="file" class="inputfile text-white pt-2" name="educational_qualifications"
-                accept=".pdf" required>
-            </div>
-          </div>
-        </div>
-        <!-- End Input -->
-
 
       </div>
 

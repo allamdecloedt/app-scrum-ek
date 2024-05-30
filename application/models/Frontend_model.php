@@ -545,13 +545,7 @@ class Frontend_model extends CI_Model
   }
 
   function online_admission_student()
-  {
-    $educational_qualifications = $_FILES['educational_qualifications']['name'];
-    if (pathinfo($educational_qualifications, PATHINFO_EXTENSION) != 'pdf') {
-      return json_encode(array('status' => 0, 'message' => get_phrase('attach_PDF_file_for_educational_qualification')));
-    }
-
-
+  { 
 
     $duplication_status = $this->user_model->check_duplication('on_create', $this->input->post('name'));
 
@@ -578,7 +572,6 @@ class Frontend_model extends CI_Model
       $student_id = $this->db->insert_id();
 
       move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/' . $user_id . '.jpg');
-      move_uploaded_file($_FILES['educational_qualifications']['tmp_name'], 'uploads/admission_docs/' . $user_id . '.pdf');
       return json_encode(array('status' => 1, 'message' => get_phrase('successfully_has_been_recoded_your_request') . '. ' . get_phrase('you_will_be_notified_by_email_address_about_this_request')));
     } else {
       return json_encode(array('status' => 0, 'message' => get_phrase('this_student_email_already_exist')));

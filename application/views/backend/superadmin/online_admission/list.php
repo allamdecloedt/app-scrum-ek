@@ -9,7 +9,6 @@
       <th><?php echo get_phrase('photo'); ?></th>
       <th><?php echo get_phrase('name'); ?></th>
       <th><?php echo get_phrase('email'); ?></th>
-      <th><?php echo get_phrase('education_qualification'); ?></th>
       <th><?php echo get_phrase('options'); ?></th>
     </tr>
   </thead>
@@ -24,7 +23,6 @@
         </td>
         <td><?php echo $application['name']; ?></td>
         <td><?php echo $application['email']; ?></td>
-        <td><a href="<?php echo base_url('uploads/admission_docs/'.$application['id'].'.pdf'); ?>" download><?php echo get_phrase('education_qualification'); ?> <i class="mdi mdi-download"></i></td>
         <td>
           <div class="dropdown text-center">
             <button type="button" class="btn btn-sm btn-icon btn-rounded btn-outline-secondary dropdown-btn dropdown-toggle arrow-none card-drop" data-bs-toggle="dropdown" aria-expanded="false"><i class="mdi mdi-dots-vertical"></i></button>
