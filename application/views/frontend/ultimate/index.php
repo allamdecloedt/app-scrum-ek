@@ -10,6 +10,7 @@
     <?php include 'metas.php'; ?>
     <?php include 'stylesheets.php';?>
     
+    
   </head>
   <body>
 
@@ -21,6 +22,7 @@
     <?php include 'footer.php';?>
 
     <?php include 'javascripts.php'; ?>
+    <?php include 'notify.php';?>
 
   </body>
 </html>

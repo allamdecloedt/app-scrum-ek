@@ -122,6 +122,10 @@
   </script>
 
 <!-- Custom JS. -->
+
+<script src="<?php echo base_url()?>assets/frontend/ultimate/js/nav.js" > </script>
+
+
 <?php
 if ($page_name == "home") {
 

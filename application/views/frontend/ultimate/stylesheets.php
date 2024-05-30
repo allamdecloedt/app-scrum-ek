@@ -42,7 +42,6 @@
   integrity="sha512-f5HTYZYTDZelxS7LEQYv8ppMHTZ6JJWglzeQmr0CVTS70vJgaJiIO15ALqI7bhsracojbXkezUIL+35UXwwGrQ=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script src="<?php echo base_url()?>assets/frontend/ultimate/js/nav.js" > </script>
 
 
 <!-- Custom CSS-->
