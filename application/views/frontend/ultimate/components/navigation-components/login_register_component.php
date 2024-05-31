@@ -61,7 +61,7 @@
         <a class="register-back text-uppercase" id="prevBtn" onclick="nextPrev(-1)"><?php echo get_phrase("back") ?></a>
         <a class="register-next text-uppercase" id="nextBtn" onclick="nextPrev(1)"><?php echo get_phrase("next") ?></a>
 
-        <form class="register-form mt-10" id="register-form" method="post" action="">
+        <form class="register-form mt-10" id="register-form" method="post" action="<?php echo site_url('register/register_user'); ?>">
 
             <!-- First Register Form Section -->
             <div class="tab">
@@ -72,15 +72,15 @@
                         name="register_first_name" required data-msg="<?php echo get_phrase("required") ?>">
                 </div>
                 <div class="mb-4 login-input">
-                    <label for="registerPasswordRepeat"
+                    <label for="registerLastName"
                         class=" login-input-label text-uppercase"><?php echo get_phrase("last name") ?></label>
-                    <input type="text" class="form-control shadow-none information" id="" name="register_last_name"
+                    <input id="registerLastName" type="text" class="form-control shadow-none information" id="" name="register_last_name"
                         required data-msg="<?php echo get_phrase("required") ?>">
                 </div>
                 <div class="mb-4 login-input">
-                    <label for="registerPasswordRepeat"
+                    <label for="registerEmail"
                         class=" login-input-label text-uppercase"><?php echo get_phrase("e-mail") ?></label>
-                    <input type="email" class="form-control shadow-none information" id="" name="register_email"
+                    <input id="registerEmail" type="email" class="form-control shadow-none information" id="" name="register_email"
                         required data-msg="<?php echo get_phrase("required") ?>">
                 </div>
             </div>
