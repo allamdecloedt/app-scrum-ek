@@ -8,7 +8,8 @@
             <path fill-rule="evenodd"
                 d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z" />
         </svg>
-        <form class="login-form mt-10" action="<?php echo site_url('login/validate_login_frontend'); ?>" method="post">
+        <form class="login-form mt-10" id="login-form" action="<?php echo site_url('login/validate_login_frontend'); ?>"
+            method="post">
             <div class="mb-4 mt-4 login-input">
                 <label for="loginEmail"
                     class="login-input-label text-uppercase"><?php echo get_phrase("email adress") ?></label>
@@ -21,11 +22,13 @@
                     class=" login-input-label text-uppercase"><?php echo get_phrase("password") ?></label>
                 <input type="password" class="form-control shadow-none" id="loginPassword" name="login_password">
             </div>
-            <button type="submit" class="login-button text-uppercase mb-3"><?php echo get_phrase("login") ?></button>
+            <button type="submit" id="loginSubmit"
+                class="login-button text-uppercase mb-3"><?php echo get_phrase("login") ?></button>
         </form>
         <a class="register-phrase text-uppercase">
             <?php echo get_phrase("no account yet? ") ?>
-            <span class="ml-1  register-link"><span>(</span> <?php echo get_phrase("register") ?><span class="ml-1">)</span></span>
+            <span class="ml-1  register-link"><span>(</span> <?php echo get_phrase("register") ?><span
+                    class="ml-1">)</span></span>
         </a>
     </div>
 
@@ -139,6 +142,76 @@
 
 <script type="text/javascript">
 
+
+    //input validator functions
+
+    function validateEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    //login form validation
+    var loginForm = document.getElementById('login-form');
+    var loginInputs = loginForm.getElementsByTagName('input');
+
+    for (var i = 0; i < loginInputs.length; i++) {
+        loginInputs[i].addEventListener('input', function () {
+
+            if (this.value != "")
+                this.classList.remove("invalid");
+
+        });
+
+    }
+
+    document.getElementById("loginSubmit").addEventListener("click", function (event) {
+        let loginDropdowm = document.querySelector(".login-dropdown");
+        let inputfields = loginDropdowm.getElementsByTagName("input");
+        let valid = true;
+
+        for (let i = 0; i < inputfields.length; i++) {
+            (function (index) {
+
+                if ((inputfields[index].value != "" && inputfields[index].type == "email")){
+                    if (!validateEmail(inputfields[index].value)) {
+                        error_notify('<?php echo get_phrase("please_use_a_valid_email_address"); ?>');
+                        inputfields[index].classList.add("invalid");
+                        valid = false;
+                    }
+                }
+                if ((inputfields[index].value == "" && inputfields[index].type == "email")) {
+                    error_notify('<?php echo get_phrase('please_fill_in_your_email_address'); ?>');
+                    inputfields[index].classList.add("invalid");
+                    valid = false;
+                }
+
+                if ((inputfields[index].type == "password" && inputfields[index].value == "")) {
+                    error_notify('<?php echo get_phrase('please_fill_in_your_password'); ?>');
+                    inputfields[index].classList.add("invalid");
+                    valid = false;
+
+                }
+            })(i);
+
+        }
+        if (!valid) {
+            event.preventDefault();
+
+        }
+
+        if (valid) {
+
+            document.getElementById("login-form").submit();
+
+        }
+    });
+
+
+
+
+
+
+    //register form validation
     var currentTab = 0;
     showTab(currentTab);
 
@@ -200,10 +273,6 @@
         if (n == 1 && !validateForm()) return false;
         x[currentTab].style.display = "none";
         currentTab = currentTab + n;
-        if (currentTab >= x.length) {
-            document.getElementById("register-form").submit();
-            return false;
-        }
         showTab(currentTab);
     }
 
@@ -213,11 +282,12 @@
         x = document.getElementsByClassName("tab");
         y = x[currentTab].getElementsByTagName("input");
         z = x[currentTab].getElementsByTagName("select");
+        var errorMessages =[]
+    
 
         // A loop that checks every select field in the current tab:
         for (i = 0; i < z.length; i++) {
             if (z[i].value == "") {
-
                 z[i].className += " invalid";
                 valid = false;
             }
@@ -226,21 +296,36 @@
         // A loop that checks every input field in the current tab:
         for (i = 0; i < y.length; i++) {
             if (y[i].value == "") {
-
                 y[i].className += " invalid";
+                errorMessages.push('<?php echo get_phrase('please_fill_in_the_required_fields'); ?>');
+                valid = false;
+            }
+            if (y[i].type == "email" && !validateEmail(y[i].value)) {
+                y[i].className += " invalid";
+                 errorMessages.push('<?php echo get_phrase('please_fill_in_a_valid_email_address'); ?>') ;
                 valid = false;
             }
         }
 
         // Error popup if the form is not valid:
-        if (!valid) {
-            error_notify('<?php echo get_phrase('please_fill_in_the required_fields'); ?>');
-
+        if (!valid && errorMessages.length > 0) {
+            for (let i = 0; i < errorMessages.length; i++) {
+                error_notify(errorMessages[i]);
+            }
+            
         }
+
+        if (!valid && errorMessages.length == 0) {
+            error_notify('<?php echo get_phrase('please_fill_in_the_required_fields'); ?>');
+        }
+
+
+
         // If the valid status is true, mark the step as finished and valid:
-        if (valid) {
+        else if (valid) {
             document.getElementsByClassName("step")[currentTab].className += " finish";
         }
+
         return valid;
     }
 
@@ -301,14 +386,14 @@
         }
         if (!valid) {
             event.preventDefault();
-            
+
         }
 
         if (valid) {
-            
+
             document.getElementById("register-form").submit();
             success_notify('<?php echo get_phrase('succesfully registered'); ?>');
-            
+
         }
     });
 
