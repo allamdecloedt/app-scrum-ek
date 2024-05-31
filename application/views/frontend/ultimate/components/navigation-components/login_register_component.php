@@ -12,7 +12,7 @@
             method="post">
             <div class="mb-4 mt-4 login-input">
                 <label for="loginEmail"
-                    class="login-input-label text-uppercase"><?php echo get_phrase("email adress") ?></label>
+                    class="login-input-label text-uppercase"><?php echo get_phrase("e-mail") ?></label>
                 <input type="email" class="form-control shadow-none" id="loginEmail" aria-describedby="emailHelp"
                     name="login_email">
 
