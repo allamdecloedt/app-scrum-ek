@@ -270,8 +270,8 @@ label div:last-child {
 }
 
 .register-link {
-  color: #1c1c1c;
-  text-decoration: underline;
+  color: #ffffff;
+  text-decoration: none;
   font-size: 11px !important;
   transition: all 0.3s;
   cursor: pointer;

@@ -25,7 +25,7 @@
         </form>
         <a class="register-phrase text-uppercase">
             <?php echo get_phrase("no account yet? ") ?>
-            <span class="ml-1 register-link"> (<?php echo get_phrase("register") ?>)</span>
+            <span class="ml-1  register-link"><span>(</span> <?php echo get_phrase("register") ?><span class="ml-1">)</span></span>
         </a>
     </div>
 

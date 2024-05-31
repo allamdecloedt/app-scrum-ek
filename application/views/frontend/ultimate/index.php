@@ -22,7 +22,6 @@
     <?php include 'footer.php';?>
 
     <?php include 'javascripts.php'; ?>
-    <?php include 'notify.php';?>
 
   </body>
 </html>
