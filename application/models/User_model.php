@@ -160,6 +160,7 @@ class User_model extends CI_Model
 		// if($duplication_status){
 		$this->db->where('id', $param1);
 		$this->db->update('schools', $data);
+		move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $param1. '.jpg');
 
 		$response = array(
 			'status' => true,

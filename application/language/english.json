@@ -1304,5 +1304,9 @@
     "login": "Login",
     "accountant_has_been_updated_successfully": "Accountant has been updated successfully",
     "paid_amount_is_not_equal_to_total_amount": "Paid amount is not equal to total amount",
-    "paid_amount_can_not_get_bigger_than_total_amount": "Paid amount can not get bigger than total amount"
+    "paid_amount_can_not_get_bigger_than_total_amount": "Paid amount can not get bigger than total amount",
+    "discover_our_courses": "Discover our courses",
+    "search": "Search",
+    "less": "Less",
+    "school_profile_image": "School profile image"
 }

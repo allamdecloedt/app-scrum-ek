@@ -79,6 +79,7 @@ class Settings_model extends CI_Model {
     $data['category'] = htmlspecialchars_decode($this->input->post('category'));
     $this->db->where('id', school_id());
     $this->db->update('schools', $data);
+    move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . school_id(). '.jpg');
     $response = array(
       'status' => true,
       'notification' => get_phrase('school_settings_updated_successfully')
