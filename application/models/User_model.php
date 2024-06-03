@@ -580,11 +580,14 @@ class User_model extends CI_Model
 
 			move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/' . $user_id . '.jpg');
 
+			$this->session->set_flashdata('flash_message', get_phrase('student_added_successfully'));
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('student_added_successfully')
 			);
 		} else {
+
+			$this->session->set_flashdata('error_message', get_phrase('sorry_this_email_has_been_taken'));
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')

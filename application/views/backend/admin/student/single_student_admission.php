@@ -1,6 +1,6 @@
 <?php $school_id = school_id(); ?>
 
-<form method="POST" class="p-3 d-block ajaxForm" action="<?php echo route('student/create_single_student'); ?>" id = "student_admission_form" enctype="multipart/form-data">
+<form method="POST" class="p-3 d-block ajaxForm" action="<?php echo route('student/create_single_student/submit'); ?>" id = "student_admission_form" enctype="multipart/form-data">
     <div class="col-md-12">
         <div class="form-group row mb-3">
             <label class="col-md-3 col-form-label" for="name"><?php echo get_phrase('name'); ?></label>
