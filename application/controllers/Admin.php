@@ -513,6 +513,7 @@ class Admin extends CI_Controller
 	//START STUDENT ADN ADMISSION section
 	public function student($param1 = '', $param2 = '', $param3 = '', $param4 = '', $param5 = '')
 	{
+		$this->session->unset_session();
 
 		$page_data['class_id'] = '';
 		$page_data['section_id'] = '';
@@ -542,13 +543,19 @@ class Admin extends CI_Controller
 
 		//create to database
 		if ($param1 == 'create_single_student') {
-			$response = $this->user_model->single_student_create();
-			$page_data['class_id'] = html_escape($this->input->post('class_id'));
-			$page_data['section_id'] = html_escape($this->input->post('section_id'));
-			$page_data['working_page'] = 'filter';
-			$page_data['folder_name'] = 'student';
-			$page_data['page_title'] = 'student_list';
-			$this->load->view('backend/index', $page_data);
+			if($param2 == "submit")
+			{
+			  
+			  $response = $this->user_model->single_student_create();
+			  $page_data['class_id'] = html_escape($this->input->post('class_id'));
+			  $page_data['section_id'] = html_escape($this->input->post('section_id'));
+			  $page_data['working_page'] = 'filter';
+			  $page_data['folder_name'] = 'student';
+			  $page_data['page_title'] = 'student_list';
+			  $this->load->view('backend/index', $page_data);
+			}else{
+			  $this->session->set_flashdata('flash_message', get_phrase('welcome_back'));
+			}
 		}
 
 		if ($param1 == 'create_bulk_student') {

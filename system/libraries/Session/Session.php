@@ -900,6 +900,11 @@ class CI_Session {
 		$this->mark_as_flash(is_array($data) ? array_keys($data) : $data);
 	}
 
+	public function unset_session(){
+			$this->unset_userdata('info_message');
+			$this->unset_userdata('error_message');
+			$this->unset_userdata('flash_message');
+	  }
 	// ------------------------------------------------------------------------
 
 	/**
