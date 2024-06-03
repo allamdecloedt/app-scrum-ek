@@ -61,6 +61,11 @@ foreach($schools as $school): ?>
       <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_address'); ?></small>
     </div>
 
+    <div class="form-group mb-1">
+          <label for="image_file"><?php echo get_phrase('upload_image'); ?></label>
+          <input type="file" class="form-control" id="school_image" name = "school_image">
+      </div>
+
     <div class="form-group mt-2 col-md-12">
       <button class="btn btn-block btn-primary" type="submit"><?php echo get_phrase('update_school'); ?></button>
     </div>
