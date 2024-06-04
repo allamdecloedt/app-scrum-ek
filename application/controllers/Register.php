@@ -82,6 +82,23 @@ class Register extends CI_Controller
 
 
 
+   public function validate_email()
+{
+    $json_data = json_decode(file_get_contents('php://input'), true);
+    $email = $json_data['email'];
+    $query = $this->db->get_where('users', array('email' => $email));
+    $num_rows = $query->num_rows();
+
+    if ($num_rows > 0) {
+        echo json_encode(array('status' => false, 'debug' => 'Email exists, num_rows: ' . $num_rows, "email" => $email));
+    } else {
+        echo json_encode(array('status' => true, 'debug' => 'Email does not exist, num_rows: ' . $num_rows, "email" => $email));
+    }
+}
+
+
+
+
 
 
 }
