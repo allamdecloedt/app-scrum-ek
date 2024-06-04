@@ -1,10 +1,6 @@
-<div class="user-section ">
+<div class="">
 
-    <span
-        class="text-capitalize ml-2 ml-lg-3 align-content-center text-white"><?php echo $this->session->user_name; ?></span>
-
-    <img src="<?php echo $this->user_model->get_user_image($this->session->userdata('user_id')); ?>" alt="user-image"
-        class="rounded-circle nav-user-img">
+    
 
     <div class="user-dropdown hidden-section display-none">
 

@@ -41,7 +41,7 @@
     "newestOnTop": true,
     "progressBar": true,
     "positionClass": "toast-top-right",
-    "preventDuplicates": false,
+    "preventDuplicates": true,
     "onclick": null,
     "showDuration": "300",
     "hideDuration": "1000",
@@ -52,12 +52,20 @@
     "showMethod": "fadeIn",
     "hideMethod": "slideUp"
   }
-  function success_notify(message) {
+   function success_notify(message) {
     toastr.success(message);
   }
 
   function error_notify(message) {
     toastr.error(message);
+  }
+
+   function warning_notify(message) {
+    toastr.warning(message);
+  }
+
+   function info_notify(message) {
+    toastr.info(message);
   }
 </script>
 
@@ -122,6 +130,10 @@
   </script>
 
 <!-- Custom JS. -->
+
+<script src="<?php echo base_url()?>assets/frontend/ultimate/js/nav.js" > </script>
+
+
 <?php
 if ($page_name == "home") {
 

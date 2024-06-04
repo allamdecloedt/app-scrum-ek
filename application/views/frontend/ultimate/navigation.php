@@ -10,13 +10,12 @@ $system_name = get_frontend_settings('website_title');
       <nav class="navbar position-relative navbar-expand-lg container-fluid sticky-nav nav-home">
         <div class="container-fluid">
           <!-- Logo -->
-          <a class="logo navbar-brand pl-3" href="<?php echo site_url('home'); ?>">
+          <a class="logo navbar-brand " href="<?php echo site_url('home'); ?>">
             <img src="<?php echo $logo_light; ?>" />
           </a>
           <!-- End Logo -->
           <!-- Responsive Toggle Button -->
-          <button class="hidden toggle" data-bs-toggle="collapse" data-bs-target="#navBar" aria-controls="navBar"
-            aria-expanded="false" aria-label="Toggle navigation">
+          <button id="navToggle" class="hidden toggle">
             <input type="checkbox" id="menu_checkbox">
             <label for="menu_checkbox">
               <div></div>
@@ -26,7 +25,8 @@ $system_name = get_frontend_settings('website_title');
           </button>
           <!-- End Responsive Toggle Button -->
           <!-- Navigation -->
-          <div id="navBar" class=" nav-bar-items collapse navbar-collapse container-fluid justify-content-end">
+          <div id="navBar"
+            class=" nav-bar-items navbar container-fluid justify-content-start justify-content-lg-end collapse-nav ">
             <div class="navbar-nav ">
               <a class="nav-link <?php if ($page_name === 'home')
                 echo 'active'; ?>" href="<?php echo site_url('home'); ?>"><?php echo get_phrase('Home'); ?>
@@ -48,19 +48,29 @@ $system_name = get_frontend_settings('website_title');
               <div class=" v-divider-nav"></div>
 
               <?php if ($this->session->userdata('user_id')) { ?>
-              
-               
-                <?php include 'components/navigation-components/user_loggedin_component.php'; ?>
 
+                <div class="user-section "><span
+                    class="text-capitalize ml-2 ml-lg-3  align-content-center text-white"><?php echo $this->session->user_name; ?></span>
+
+                  <img src="<?php echo $this->user_model->get_user_image($this->session->userdata('user_id')); ?>"
+                    alt="user-image" class=" rounded-circle nav-user-img">
+                </div>
+                <?php include 'components/navigation-components/user_loggedin_component.php'; ?>
 
               <?php } else { ?>
 
-                <?php include 'components/navigation-components/login_component.php'; ?>
+                <a class="nav-link login-toggle"><?php echo get_phrase('Login'); ?> </a>
 
               <?php } ?>
-
             </div>
           </div>
+          <?php if ($this->session->userdata('user_id')) { ?>
+
+          <?php } else { ?>
+
+            <?php include 'components/navigation-components/login_register_component.php'; ?>
+
+          <?php } ?>
           <!-- End Navigation -->
         </div>
       </nav>

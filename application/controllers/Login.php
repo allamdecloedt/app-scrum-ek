@@ -151,7 +151,7 @@ class Login extends CI_Controller
 
 	public function validate_login_frontend()
 	{
-		$email = $this->input->post('login_email');
+		$email = htmlspecialchars($this->input->post('login_email'));
 		$password = $this->input->post('login_password');
 		$credential = array('email' => $email, 'password' => sha1($password));
 
@@ -193,7 +193,9 @@ class Login extends CI_Controller
 			} elseif ($row->role == 'student') {
 				if ($row->status != 1) {
 					$this->session->set_flashdata('error_message', get_phrase('your_account_has_been_disabled'));
-					redirect(site_url('login'), 'refresh');
+					if (isset($_SERVER['HTTP_REFERER'])) {
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
 				}
 				$this->session->set_userdata('student_login', true);
 				$this->session->set_userdata('user_id', $row->id);
