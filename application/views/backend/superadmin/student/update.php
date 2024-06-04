@@ -45,6 +45,19 @@
                                 </select>
                             </div>
                         </div>
+                        <div class="form-group row mb-3">
+                         <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?></label>
+                            <div class="col-md-9">
+                                <select name="class_id[]" id="class_id" class="form-control" multiple required onchange="classWiseSectionOnStudentEdit(this.value)">
+                                    <option value=""><?php echo get_phrase('select_classes'); ?></option>
+                                    <?php $classes = $this->db->get_where('classes', array('school_id' => $school_id))->result_array(); ?>
+                                    <?php foreach($classes as $class){ ?>
+                                        <option value="<?php echo $class['id']; ?>" <?php if(in_array($class['id'], explode(',', $enroll['class_id']))) echo 'selected'; ?>><?php echo $class['name']; ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+
 
                         <div class="form-group row mb-3">
                             <label class="col-md-3 col-form-label" for="section_id"><?php echo get_phrase('section'); ?></label>
