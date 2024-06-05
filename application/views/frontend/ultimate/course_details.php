@@ -19,7 +19,7 @@
     </div>
     <!-- End Header Section -->
     <div class="container">
-    
+
 
         <div class="row justify-content-center">
             <!-- Course Details Grand Section -->
@@ -46,7 +46,7 @@
 
 
                     <!-- Course Details Pills Section -->
-                   
+
 
 
 
@@ -230,13 +230,32 @@
                                 <img class=" teacher-img "
                                     src="<?php echo $this->user_model->get_school_image($school_id); ?>" alt="">
                             <p class="text-white d-inline text-uppercase">
-                                <?php echo $this->user_model->get_school_admin($school_id)["name"]; ?></p>
+                                <?php echo $this->user_model->get_school_admin($school_id)["name"]; ?>
+                            </p>
                         </div>
                     </div>
 
 
                     <div class="row justify-content-center">
-                        <button id="join-button" class="join-button text-uppercase"><?php echo get_phrase("join") ?></button>
+                        <?php if ($this->session->userdata("user_type") != "student" && $this->session->userdata('user_id')) { ?>
+                            <button id="join-button" disabled class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("no_student_account")); ?></button>
+                        <?php } ?>
+
+                        <?php if ($this->session->userdata('user_id') && $this->session->userdata('user_type') == "student") { ?>
+                            <?php if ($this->user_model->check_student_status($school_id) == 1) { ?>
+                                <button id="join-button" disabled class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("enrolled")); ?></button>
+                            <?php } elseif ($this->user_model->check_student_status($school_id) == 0) { ?>
+                                <button id="join-button" disabled class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("pending")); ?></button>
+                            <?php } else { ?>
+                                <form action="<?php echo base_url('home/join_school/' . $school_id); ?>" method="post">
+                                    <button id="join-button" type="submit" class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("join")); ?></button>
+                                </form>
+                            <?php } ?>
+                        <?php } ?>
+
+                        <?php if (!$this->session->userdata('user_id')) { ?>
+                            <button id="login-join-button" class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("login")); ?></button>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -250,3 +269,17 @@
 
 
 </main>
+
+<script>
+
+    if (document.getElementById("login-join-button")) {
+        document.getElementById("login-join-button").addEventListener("click", function () {
+            document.querySelector('.login-toggle').click();
+        })
+    }
+
+
+
+
+
+</script>

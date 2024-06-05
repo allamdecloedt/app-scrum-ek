@@ -464,6 +464,10 @@ class Home extends CI_Controller
 		$this->load->view('frontend/' . $this->theme . '/index', $page_data);
 	}
 
+	function join_school($school_id){
+		$this->user_model->join_school($school_id);
+	}
+
 
 
 
