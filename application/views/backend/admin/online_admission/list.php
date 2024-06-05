@@ -14,6 +14,7 @@
   </thead>
   <tbody>
     <?php
+    if($applications){
     foreach($applications->result_array() as $application){
       $student = $this->db->get_where('students', array('user_id' => $application['id']))->row_array();
       ?>
@@ -36,6 +37,6 @@
           </div>
         </td>
       </tr>
-    <?php } ?>
+    <?php }} ?>
   </tbody>
 </table>
