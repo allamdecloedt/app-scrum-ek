@@ -322,7 +322,7 @@ label div:last-child {
   background-color: #6e6e6e;
   transition: all 0.3s;
   border-radius: 50%;
-   display: flex;
+  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -333,8 +333,6 @@ label div:last-child {
   line-height: 1; /* Ensure line-height does not affect centering */
   padding: 0;
 }
-
-
 
 .line-1 {
   position: absolute;
@@ -378,8 +376,7 @@ label div:last-child {
 
 .step.active {
   opacity: 1;
-    background-color: #8f00afff;
-
+  background-color: #8f00afff;
 }
 
 .step.finish {
@@ -443,12 +440,12 @@ label div:last-child {
 /* Mark input boxes that gets an error on validation: */
 input.invalid {
   border-color: rgb(250, 78, 78);
-  background-color: #ffe5e5;
+  background-color: #ffe5e5 !important;
 }
 
 select.invalid {
   border-color: rgb(250, 78, 78);
-  background-color: #ffe5e5;
+  background-color: #ffe5e5 !important;
 }
 
 .login-section label.error {
@@ -460,6 +457,63 @@ select.invalid {
 
   font-weight: 600;
 }
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.student-img-button-label {
+  position: relative;
+  padding: 0;
+  margin-top: 18px;
+  right: 0;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  height: 35px;
+  background-color: rgb(143, 0, 175);
+  font-size: 14px;
+  border: #515151 1px solid;
+}
+
+.student-img-button-label:hover {
+  box-shadow: none;
+  background-color: #2f2f2f;
+}
+
+.student-img-button-label svg {
+  position: relative;
+  left: -20px;
+  bottom: -1px;
+}
+
+.student-img-button-label span {
+  position: relative;
+  top: 5px !important;
+}
+
+.file-spacer {
+  position: absolute;
+  background-color: #ffffff !important;
+  width: 1px !important;
+  height: 100%;
+  bottom: -6px;
+  left: 115px;
+}
+
+.file-name {
+  position: relative;
+  bottom: -6px;
+  left: 0px;
+  font-weight: 500;
+  font-size: 12px;
+  font-style: italic;
+}
+
 /*---------------------------------------------------------------------------------------------------------------------------------------------
 Responsive Styling
 -----------------------------------------------------------------------------------------------------------------------------------------------*/
