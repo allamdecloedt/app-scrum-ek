@@ -66,8 +66,11 @@
 
 .course-title {
   position: absolute;
+  text-overflow: ellipsis;
+  overflow: hidden;
   bottom: 30%;
   left: 50%;
+  max-width: 90%;
   transform: translate(-50%, -50%);
   color: #ffffff;
   font-size: 1.3rem;

@@ -1297,4 +1297,57 @@ class User_model extends CI_Model
 		}
 	}
 
+
+ public function register_user()
+{
+    $emailPattern = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
+
+    if ($this->input->post('register_email') == '' || !preg_match($emailPattern, $this->input->post('register_email')) || $this->input->post('register_password') == '' || $this->input->post('register_first_name') == '' || $this->input->post('register_last_name') == '' || $this->input->post('register_date_of_birth') == '' || $this->input->post('register_repeat_password') == '') {
+
+        $this->session->set_flashdata('error', get_phrase('validation_error'));
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            redirect($_SERVER['HTTP_REFERER'], 'refresh');
+        }
+
+    } else if ($this->db->get_where('users', array('email' => $this->input->post('register_email')))->num_rows() > 0) {
+
+        $this->session->set_flashdata('error', get_phrase('email_already_exists'));
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            redirect($_SERVER['HTTP_REFERER'], 'refresh');
+        }
+
+    } else {
+
+        $data['name'] = htmlspecialchars($this->input->post('register_first_name') . ' ' . $this->input->post('register_last_name'));
+        $data['email'] = htmlspecialchars($this->input->post('register_email'));
+        $data['birthday'] = htmlspecialchars($this->input->post('register_date_of_birth'));
+        $data['gender'] = htmlspecialchars($this->input->post('register_gender'));
+        $data['password'] = sha1($this->input->post('register_password'));
+        $data['role'] = 'student';
+        $data['status'] = 1;
+        $data['school_id'] = 1;
+        $data['watch_history'] = '[]';
+
+        $this->db->insert('users', $data);
+        $user_id = $this->db->insert_id();
+
+
+        if (isset($_FILES['student_image_upload']) && $_FILES['student_image_upload']['error'] == UPLOAD_ERR_OK) {
+            $upload_path = 'uploads/users/' . $user_id . '.jpg';
+            move_uploaded_file($_FILES['student_image_upload']['tmp_name'], $upload_path);
+        }
+
+        $this->session->set_userdata('student_login', true);
+        $this->session->set_userdata('user_id', $user_id);
+        $this->session->set_userdata('school_id', 1);
+        $this->session->set_userdata('user_name', $data['name']);
+        $this->session->set_userdata('user_type', 'student');
+        $this->session->set_flashdata('success', get_phrase('registration_successful'));
+    }
+
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        redirect($_SERVER['HTTP_REFERER'], 'refresh');
+    }
+}
+
 }
