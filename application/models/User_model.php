@@ -160,7 +160,7 @@ class User_model extends CI_Model
 		// if($duplication_status){
 		$this->db->where('id', $param1);
 		$this->db->update('schools', $data);
-		move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $param1. '.jpg');
+		move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $param1 . '.jpg');
 
 		$response = array(
 			'status' => true,
@@ -1188,7 +1188,7 @@ class User_model extends CI_Model
 
 	public function googleAPI()
 	{ {
-			$api = 'AIzaSyBFK8O-Fqob7VAuakxtTd66YA44hkdFEk8';
+			$api = '';
 			return $api;
 		}
 	}
@@ -1196,30 +1196,105 @@ class User_model extends CI_Model
 
 	public function get_school_students_count($school_id)
 	{
-		return $this->db->get_where('users', array(
-			'status' => 1,
-			'school_id' => $school_id,
-			'role' => 'student'
-		)
-		)-> num_rows();
+		return $this->db->get_where(
+			'users',
+			array(
+				'status' => 1,
+				'school_id' => $school_id,
+				'role' => 'student'
+			)
+		)->num_rows();
 	}
 
 	public function get_school_admin($school_id)
 	{
-		return $this->db->get_where('users', array(
-			'school_id' => $school_id,
-			'role' => 'admin'
-		))->row_array();
+		return $this->db->get_where(
+			'users',
+			array(
+				'school_id' => $school_id,
+				'role' => 'admin'
+			)
+		)->row_array();
 	}
 
 	public function get_school_admin_image($school_id)
 	{
-		$admin = get_school_admin($school_id);	
+		$admin = get_school_admin($school_id);
 
 		if (file_exists('uploads/users/' . $admin["id"] . '.jpg'))
 			return base_url() . 'uploads/users/' . $admin["id"] . '.jpg';
 		else
 			return base_url() . 'uploads/schools/placeholder.jpg';
+	}
+
+
+	public function join_school($school_id)
+	{
+		if ($this->session->userdata('user_id') == null || $this->session->userdata('user_id') == "") {
+			$this->session->set_flashdata('error', get_phrase('please_login_before_continuing'));
+			if (isset($_SERVER['HTTP_REFERER'])) {
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+			}
+		} else
+			$user_id = $this->session->userdata('user_id');
+
+		if ($school_id == null || $school_id == "") {
+
+			$this->session->set_flashdata('error', get_phrase('no_school_found'));
+			if (isset($_SERVER['HTTP_REFERER'])) {
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+			}
+		} else {
+
+			if ($this->db->get_where('students', array('user_id' => $user_id, 'school_id' => $school_id))->num_rows() > 0) {
+				$this->session->set_flashdata('success', get_phrase('already_joined_school'));
+				if (isset($_SERVER['HTTP_REFERER'])) {
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			} else {
+
+				$data['school_id'] = $school_id;
+				$data['user_id'] = $user_id;
+				$data['code'] = student_code();
+				$data['session'] = $this->active_session;
+
+				$query = $this->db->get_where('schools', array('id' => $school_id));
+				if ($query->num_rows() > 0) {
+					$row = $query->row();
+					if ($row->access == 1) {
+						$data['status'] = 1; //Public
+					} else {
+						$data['status'] = 0; //Private
+					}
+				}
+
+				$this->db->insert('students', $data);
+
+				if (isset($_SERVER['HTTP_REFERER'])) {
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+		}
+	}
+
+
+
+	public function check_student_status($school_id)
+	{
+		$user_id = $this->session->userdata('user_id');
+		$student = $this->db->get_where('students', array('user_id' => $user_id, 'school_id' => $school_id));
+
+		if ($student->num_rows() == 0) {
+			return -1;
+		}
+
+		$student_data = $student->row_array();
+
+		if ($student_data['status'] == 1) {
+			return 1;
+		} else if ($student_data['status'] == 0) {
+			return 0;
+		}
 	}
 
 }

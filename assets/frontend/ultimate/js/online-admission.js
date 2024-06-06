@@ -24,14 +24,7 @@ document
 
 // Listen for file input change for educational qualifications
 
-document.getElementById("pdf").addEventListener("change", function () {
-  var fileName = this.value.split("\\").pop(); // Gets the file name
-  if (fileName.length > 10) {
-    fileName = fileName.substring(0, 10) + "... ." + getFileExtension(fileName); // Truncate the file name if it's too long
-  }
 
-  document.querySelector(".file-name-pdf").textContent = fileName;
-});
 
 document.getElementById("school_image").addEventListener("change", function () {
   var fileName = this.value.split("\\").pop(); // Gets the file name
@@ -114,31 +107,9 @@ var pdfContainer = document.getElementById("pdf-container");
 var pdfCloseBtn = document.querySelector(".close-pdf");
 var pdfModal = document.querySelector(".pdf-modal");
 var pdfPreviewBtn = document.querySelector(".pdf-preview-btn");
-var pdfInput = document.querySelector("#pdf");
 
-pdfInput.addEventListener("change", function () {
-  const file = pdfInput.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const pdf = document.createElement("object");
-      pdf.setAttribute("data", e.target.result);
-      pdf.setAttribute("type", "application/pdf");
-      pdf.classList.add("preview");
-      pdfContainer.appendChild(pdf);
-      pdfPreviewBtn.classList.remove("disabled");
-    };
-    reader.readAsDataURL(file);
-  }
 
-  pdfPreviewBtn.addEventListener("click", function () {
-    pdfModal.classList.toggle("display-none");
-  });
 
-  pdfCloseBtn.addEventListener("click", function () {
-    pdfModal.classList.toggle("display-none");
-  });
-});
 
 
 
