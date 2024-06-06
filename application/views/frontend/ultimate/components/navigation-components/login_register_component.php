@@ -90,14 +90,14 @@
             <!-- Second Register Form Section -->
             <div class="tab">
 
-                <div class="mb-4 login-input">
+                <div class="mb-4 pt-3 login-input">
                     <label for="register_date_of_birth"
                         class=" login-input-label text-uppercase"><?php echo get_phrase("date of birth") ?></label>
                     <input onfocus="'showPicker' in this && this.showPicker()" type="date"
                         class="form-control  shadow-none information" id="register_date_of_birth"
                         name="register_date_of_birth" required data-msg="<?php echo get_phrase("required") ?>">
                 </div>
-                <div class="mb-4 login-input">
+                <div class="mb-4 pt-2 login-input">
                     <label for="register_gender"
                         class=" login-input-label text-uppercase"><?php echo get_phrase("gender") ?></label>
                     <select name="register_gender" id="register_gender"
@@ -108,20 +108,6 @@
                         <option value="Female"><?php echo get_phrase('female'); ?></option>
                         <option value="Others"><?php echo get_phrase('others'); ?></option>
                     </select>
-                </div>
-                <div class="mt-4 login-input">
-
-                    <label for="student_image" class="btn btn-sm student-img-button-label form-label text-white ">
-                        <svg class="" xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor"
-                            class="bi bi-filetype-png" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                d="M14 4.5V14a2 2 0 0 1-2 2v-1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zm-3.76 8.132q.114.23.14.492h-.776a.8.8 0 0 0-.097-.249.7.7 0 0 0-.17-.19.7.7 0 0 0-.237-.126 1 1 0 0 0-.299-.044q-.427 0-.665.302-.234.301-.234.85v.498q0 .351.097.615a.9.9 0 0 0 .304.413.87.87 0 0 0 .519.146 1 1 0 0 0 .457-.096.67.67 0 0 0 .272-.264q.09-.164.091-.363v-.255H8.82v-.59h1.576v.798q0 .29-.097.55a1.3 1.3 0 0 1-.293.458 1.4 1.4 0 0 1-.495.313q-.296.111-.697.111a2 2 0 0 1-.753-.132 1.45 1.45 0 0 1-.533-.377 1.6 1.6 0 0 1-.32-.58 2.5 2.5 0 0 1-.105-.745v-.506q0-.543.2-.95.201-.406.582-.633.384-.228.926-.228.357 0 .636.1.281.1.48.275.2.176.314.407Zm-8.64-.706H0v4h.791v-1.343h.803q.43 0 .732-.172.305-.177.463-.475a1.4 1.4 0 0 0 .161-.677q0-.374-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.381.57.57 0 0 1-.238.24.8.8 0 0 1-.375.082H.788v-1.406h.66q.327 0 .512.182.185.181.185.521m1.964 2.666V13.25h.032l1.761 2.675h.656v-3.999h-.75v2.66h-.032l-1.752-2.66h-.662v4z" />
-                        </svg>
-
-                        <span class="file-name-photo file-name"><?php echo get_phrase('picture'); ?>...</span>
-                    </label>
-                    <input id="student_image" type="file" class="inputfile" name="student_image" accept="image/*"
-                        required>
                 </div>
             </div>
             <!-- Second Register Form Section End-->
@@ -241,7 +227,7 @@
     function showTab(n) {
         var x = document.getElementsByClassName("tab");
         for (var i = 0; i < x.length; i++) {
-            x[i].style.display = "none";
+            x[i].style.display = "none"; 
         }
         x[n].style.display = "block";
 
@@ -278,7 +264,6 @@
         for (i = 0; i < z.length; i++) {
             if (z[i].value == "") {
                 z[i].className += " invalid";
-                error_notify('<?php echo get_phrase('please_fill_in_the_required_fields'); ?>');
                 valid = false;
             }
         }
@@ -286,17 +271,8 @@
         for (i = 0; i < y.length; i++) {
             if (y[i].value == "") {
                 y[i].className += " invalid";
-                if (y[i].type == "file") {
-                    error_notify('<?php echo get_phrase('please_choose_an_image'); ?>');
-
-                    y[i].className += " invalid";
-                    valid = false;
-
-                } else
-                    error_notify('<?php echo get_phrase('please_fill_in_the_required_fields'); ?>');
                 valid = false;
             }
-
             if (y[i].type == "email") {
                 const emailValid = await validateEmail(y[i].value);
                 if (!emailValid) {
@@ -332,7 +308,7 @@
 
     document.getElementById("register_date_of_birth").addEventListener("click", () => {
         try {
-            document.getElementById("register_date_of_birth");
+            document.getElementById("register_date_of_birth").hidePicker();
         } catch (error) {
             console.error(error);
         }
@@ -364,28 +340,5 @@
             document.getElementById("register-form").submit();
         }
     });
-
-
-    function getFileExtension(fileName) {
-        // Split the fileName by period
-        var parts = fileName.split(".");
-        // Get the last part of the array which should be the extension
-        var extension = parts[parts.length - 1];
-        return extension.toLowerCase();
-    }
-
-    // Listen for file input change for student image
-
-    document
-        .getElementById("student_image")
-        .addEventListener("change", function () {
-            var fileName = this.value.split("\\").pop(); // Gets the file name
-            if (fileName.length > 10) {
-                fileName =
-                    fileName.substring(0, 10) + "... ." + getFileExtension(fileName); // Truncate the file name if it's too long
-            }
-
-            document.querySelector(".file-name-photo").textContent = fileName;
-        });
 
 </script>
