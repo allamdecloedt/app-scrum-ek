@@ -55,11 +55,6 @@ class Admission extends CI_Controller
             if ($param2 == 'school'){
                 echo $this->frontend_model->online_admission_school();
                 return;}
-
-            if  ($param2 == 'student'){
-                echo $this->frontend_model->online_admission_student();
-                return;
-            }
           
         }
 
