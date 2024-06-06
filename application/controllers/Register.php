@@ -60,9 +60,14 @@ class Register extends CI_Controller
             $data['school_id'] = 1;
             $data['watch_history'] = '[]';
 
-
             $this->db->insert('users', $data);
 
+            $user_id = $this->db->insert_id();
+
+            if ($_FILES['student_image']['error'] !== UPLOAD_ERR_OK) {
+                return json_encode(['status' => 0, 'message' => 'Error uploading file: ' . $_FILES['student_image']['error']]);
+            } else
+                move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/' . $user_id . '.jpg');
 
             $this->session->set_userdata('student_login', true);
             $this->session->set_userdata('user_id', $this->db->insert_id());
@@ -82,19 +87,19 @@ class Register extends CI_Controller
 
 
 
-   public function validate_email()
-{
-    $json_data = json_decode(file_get_contents('php://input'), true);
-    $email = $json_data['email'];
-    $query = $this->db->get_where('users', array('email' => $email));
-    $num_rows = $query->num_rows();
+    public function validate_email()
+    {
+        $json_data = json_decode(file_get_contents('php://input'), true);
+        $email = $json_data['email'];
+        $query = $this->db->get_where('users', array('email' => $email));
+        $num_rows = $query->num_rows();
 
-    if ($num_rows > 0) {
-        echo json_encode(array('status' => false, 'debug' => 'Email exists, num_rows: ' . $num_rows, "email" => $email));
-    } else {
-        echo json_encode(array('status' => true, 'debug' => 'Email does not exist, num_rows: ' . $num_rows, "email" => $email));
+        if ($num_rows > 0) {
+            echo json_encode(array('status' => false, 'debug' => 'Email exists, num_rows: ' . $num_rows, "email" => $email));
+        } else {
+            echo json_encode(array('status' => true, 'debug' => 'Email does not exist, num_rows: ' . $num_rows, "email" => $email));
+        }
     }
-}
 
 
 

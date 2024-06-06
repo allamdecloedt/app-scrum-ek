@@ -544,38 +544,7 @@ class Frontend_model extends CI_Model
     }
   }
 
-  function online_admission_student()
-  { 
-
-    $duplication_status = $this->user_model->check_duplication('on_create', $this->input->post('name'));
-
-    if ($duplication_status) {
-      $user_data['name'] = htmlspecialchars($this->input->post('name'));
-      $user_data['email'] = htmlspecialchars($this->input->post('email'));
-      $user_data['password'] = sha1(rand(500, 10000));
-      $user_data['gender'] = htmlspecialchars($this->input->post('gender'));
-      $user_data['phone'] = htmlspecialchars($this->input->post('phone'));
-      $user_data['birthday'] = htmlspecialchars($this->input->post('date_of_birth'));
-      $user_data['role'] = 'student';
-      $user_data['school_id'] = $this->session->userdata('active_school_id');
-      $user_data['watch_history'] = '[]';
-      $user_data['status'] = 3;
-      $this->db->insert('users', $user_data);
-      $user_id = $this->db->insert_id();
-
-      $student_data['code'] = student_code();
-      $student_data['user_id'] = $user_id;
-      $student_data['session'] = active_session();
-      $student_data['school_id'] = $this->session->userdata('active_school_id');
-      $this->db->insert('students', $student_data);
-      $student_id = $this->db->insert_id();
-
-      move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/' . $user_id . '.jpg');
-      return json_encode(array('status' => 1, 'message' => get_phrase('successfully_has_been_recoded_your_request') . '. ' . get_phrase('you_will_be_notified_by_email_address_about_this_request')));
-    } else {
-      return json_encode(array('status' => 0, 'message' => get_phrase('this_student_email_already_exist')));
-    }
-  }
+ 
 
 
 
@@ -583,7 +552,7 @@ class Frontend_model extends CI_Model
   {
 
 
-    $duplication_status = $this->user_model->check_duplication_school('on_create', $this->input->post('school_name'));
+    $duplication_status = ($this->user_model->check_duplication_school('on_create', $this->input->post('school_name')) && $this->user_model->check_duplication('on_create', $this->input->post('email')));
 
     if ($duplication_status) {
       $school_data['name'] = htmlspecialchars($this->input->post('school_name'));
@@ -620,7 +589,11 @@ class Frontend_model extends CI_Model
 
       return json_encode(array('status' => 1, 'message' => get_phrase('successfully_has_been_recoded_your_request') . '. ' . get_phrase('you_will_be_notified_by_email_address_about_this_request')));
     } else {
-      return json_encode(array('status' => 0, 'message' => get_phrase('this_school_name_already_exist')));
+
+      if (!$this->user_model->check_duplication_school('on_create', $this->input->post('school_name')))
+        return json_encode(array('status' => 0, 'message' => get_phrase('this_school_name_already_exist')));
+      else if (!$this->user_model->check_duplication('on_create', $this->input->post('email')))
+        return json_encode(array('status' => 0, 'message' => get_phrase('this_email_already_exist')));
     }
   }
 
