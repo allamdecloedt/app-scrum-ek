@@ -93,7 +93,7 @@
                                               <div class="form-group row mb-3">
                                                   <label class="col-md-2 col-form-label" for="class_id"><?php echo get_phrase('class'); ?><span class="required">*</span></label>
                                                   <div class="col-md-10">
-                                                      <select class="form-control select2" data-toggle="select2" onchange="get_subject()" name="class_id" id="class_id" required>
+                                                      <select class="form-control select2" data-toggle="select2" onchange="get_subject()" name="class_id" id="class_id_add_cours" required>
                                                           <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                                                           <?php foreach ($classes->result_array() as $class): ?>
                                                               <option value="<?php echo $class['id']; ?>" <?php if($class['id'] == $course['class_id']) echo 'selected'; ?>><?php echo $class['name']; ?></option>

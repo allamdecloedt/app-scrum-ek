@@ -563,6 +563,7 @@ class Superadmin extends CI_Controller {
       if($param2 == "submit")
       { 
         $response = $this->user_model->single_student_create();
+        
         $page_data['class_id'] = html_escape($this->input->post('class_id'));
         $page_data['section_id'] = html_escape($this->input->post('section_id'));
         $page_data['working_page'] = 'filter';
@@ -636,6 +637,23 @@ class Superadmin extends CI_Controller {
     }
   }
   //END STUDENT ADN ADMISSION section
+  public function get_sections_by_class() {
+    $class_ids = $this->input->post('class_ids');
+    if (empty($class_ids)) {
+        echo json_encode([]);
+        return;
+    }
+
+    $sections = [];
+    foreach ($class_ids as $class_id) {
+        $this->db->where('class_id', $class_id);
+        $result = $this->db->get('sections')->result_array();
+        $sections = array_merge($sections, $result);
+    }
+    
+    echo json_encode($sections);
+}
+
 
 
   //START EXAM section

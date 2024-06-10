@@ -16,7 +16,7 @@
 			<div class="row mt-3">
 				<div class="col-md-1 mb-1"></div>
 				<div class="col-md-4 mb-1">
-					<select name="class" id="class_id" class="form-control select2" data-bs-toggle="select2" required>
+					<select name="class" id="class_id_routine" class="form-control select2" data-bs-toggle="select2" required>
 						<?php 
 						$school_id = school_id();
 						$this->db->where('class_id', $student_data['class_id']);
@@ -59,7 +59,7 @@ function classWiseSection(classId) {
 }
 
 function filter_class_routine(){
-	var class_id = $('#class_id').val();
+	var class_id = $('#class_id_routine').val();
 	var section_id = $('#section_id').val();
 	if(class_id != "" && section_id!= ""){
 		getFilteredClassRoutine();
@@ -69,7 +69,7 @@ function filter_class_routine(){
 }
 
 var getFilteredClassRoutine = function() {
-	var class_id = $('#class_id').val();
+	var class_id = $('#class_id_routine').val();
 	var section_id = $('#section_id').val();
 	if(class_id != "" && section_id!= ""){
 		$.ajax({

@@ -732,9 +732,6 @@ class User_model extends CI_Model
 	public function student_update($student_id = '', $user_id = '')
 	{
 
-		$enroll_data['class_id'] = html_escape($this->input->post('class_id'));
-		$enroll_data['section_id'] = html_escape($this->input->post('section_id'));
-
 		$user_data['name'] = html_escape($this->input->post('name'));
 		$user_data['email'] = html_escape($this->input->post('email'));
 		$user_data['birthday'] = strtotime(html_escape($this->input->post('birthday')));
@@ -743,13 +740,31 @@ class User_model extends CI_Model
 		$user_data['phone'] = html_escape($this->input->post('phone'));
 		// Check Duplication
 		$duplication_status = $this->check_duplication('on_update', $user_data['email'], $user_id);
-		if ($duplication_status) {
-			$this->db->where('id', $student_id);
-			// $this->db->update('students', $student_data);
-
+		if ($duplication_status) {			
+			// Supprimer les anciennes classes de l'inscription de l'étudiant
 			$this->db->where('student_id', $student_id);
-			$this->db->update('enrols', $enroll_data);
+			$this->db->delete('enrols');
+			
+			// Insérer les nouvelles classes sélectionnées
+			$class_ids = $this->input->post('class_id');
+			
+			if (!empty($class_ids)) {
+				foreach ($class_ids as $class_id) {
+					$sections = $this->input->post('section_id_'.$class_id);
+					$data = array(
+						'student_id' => $student_id,
+						'class_id' => html_escape($class_id),
+						'section_id' => $sections,
+						'session' => $this->active_session,
+						'school_id' => $this->school_id,
+					);
+					$this->db->insert('enrols', $data);
+				}
+			}
 
+
+			
+			// Mettre à jour les données de l'utilisateur
 			$this->db->where('id', $user_id);
 			$this->db->update('users', $user_data);
 

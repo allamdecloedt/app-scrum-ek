@@ -44,7 +44,7 @@
           </select>
         </div>
         <div class="col-md-2 mb-1">
-          <select name="class" id="class_id" class="form-control select2" data-bs-toggle="select2" onchange="classWiseSection(this.value)" required>
+          <select name="class" id="class_id_daily" class="form-control select2" data-bs-toggle="select2" onchange="classWiseSection(this.value)" required>
             <option value=""><?php echo get_phrase('select_a_class'); ?></option>
             <?php
             $classes = $this->db->get_where('classes', array('school_id' => school_id()))->result_array();
@@ -98,7 +98,7 @@ function classWiseSection(classId) {
 function filter_attendance(){
   var month = $('#month').val();
   var year = $('#year').val();
-  var class_id = $('#class_id').val();
+  var class_id = $('#class_id_daily').val();
   var section_id = $('#section_id').val();
   if(class_id != "" && section_id != "" && month != "" && year != ""){
     getDailtyAttendance();
@@ -110,7 +110,7 @@ function filter_attendance(){
 var getDailtyAttendance = function () {
   var month = $('#month').val();
   var year = $('#year').val();
-  var class_id = $('#class_id').val();
+  var class_id = $('#class_id_daily').val();
   var section_id = $('#section_id').val();
   if(class_id != "" && section_id != "" && month != "" && year != ""){
     $.ajax({

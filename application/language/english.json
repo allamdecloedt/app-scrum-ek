@@ -1308,5 +1308,7 @@
     "discover_our_courses": "Discover our courses",
     "search": "Search",
     "less": "Less",
-    "school_profile_image": "School profile image"
+    "school_profile_image": "School profile image",
+    "select_classes": "Select classes",
+    "section_for_class": "Section for class"
 }

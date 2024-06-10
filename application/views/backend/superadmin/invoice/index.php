@@ -28,7 +28,7 @@
           </div>
           <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-3 mb-lg-0">
             <div class="form-group">
-              <select name="class" id="class_id" class="form-control select2" data-bs-toggle="select2">
+              <select name="class" id="class_id_invoice" class="form-control select2" data-bs-toggle="select2">
                 <option value="all"><?php echo get_phrase('all_class'); ?></option>
                 <?php
                 $classes = $this->db->get_where('classes', array('school_id' => school_id()))->result_array();
@@ -84,7 +84,7 @@
 var showAllInvoices = function () {
   var url = '<?php echo route('invoice/list'); ?>';
   var dateRange = $('#selectedValue').text();
-  var selectedClass = $('#class_id').val();
+  var selectedClass = $('#class_id_invoice').val();
   var selectedStatus = $('#status').val();
   $.ajax({
     type : 'GET',
@@ -101,7 +101,7 @@ var showAllInvoices = function () {
 function getExportUrl(type) {
   var url = '<?php echo route('export/url'); ?>';
   var dateRange = $('#selectedValue').text();
-  var selectedClass = $('#class_id').val();
+  var selectedClass = $('#class_id_invoice').val();
   var selectedStatus = $('#status').val();
   $.ajax({
     type : 'post',
