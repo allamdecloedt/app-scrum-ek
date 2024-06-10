@@ -10,6 +10,7 @@
 <link href="<?php echo base_url(); ?>assets/backend/css/vendor/responsive.bootstrap5.css" rel="stylesheet" type="text/css" />
 <link href="<?php echo base_url(); ?>assets/backend/css/vendor/buttons.bootstrap5.css" rel="stylesheet" type="text/css" />
 <link href="<?php echo base_url(); ?>assets/backend/css/vendor/select.bootstrap5.css" rel="stylesheet" type="text/css" />
+<link href="<?php echo base_url(); ?>assets/backend/css/vendor/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
 <link href="<?php echo base_url(); ?>assets/backend/css/vendor/summernote-bs4.css" rel="stylesheet" type="text/css" />
 <!-- third party css end -->
 
@@ -17,5 +18,5 @@
 <link href="<?php echo base_url(); ?>assets/backend/css/custom.css" rel="stylesheet" type="text/css" />
 <link href="<?php echo base_url(); ?>assets/backend/css/content-placeholder.css" rel="stylesheet" type="text/css" />
 
-
+<!-- jQuery -->
 <script type="text/javascript" src="<?php echo base_url(); ?>assets/backend/js/jquery-3.6.0.min.js"></script>

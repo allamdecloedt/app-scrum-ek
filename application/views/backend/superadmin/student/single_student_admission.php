@@ -27,7 +27,7 @@
         <div class="form-group row mb-3">
             <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?></label>
             <div class="col-md-9">
-                <select name="class_id" id="class_id" class="form-control select2" data-toggle = "select2" required onchange="classWiseSection(this.value)">
+                <select name="class_id" id="class_id_add" class="form-control select2" data-toggle = "select2" required onchange="classWiseSection(this.value)">
                     <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                     <?php $classes = $this->db->get_where('classes', array('school_id' => $school_id))->result_array(); ?>
                     <?php foreach($classes as $class){ ?>

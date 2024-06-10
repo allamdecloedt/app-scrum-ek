@@ -16,7 +16,7 @@
                 <div class="row mb-3">
                     <div class="col-md-1 mb-1"></div>
                     <div class="col-md-4 mb-1">
-                        <select name="class" id="class_id" class="form-control select2" data-toggle = "select2" required>
+                        <select name="class" id="class_id_syllabus" class="form-control select2" data-toggle = "select2" required>
                             <?php 
                             $school_id = school_id();
                             $this->db->where('class_id', $student_data['class_id']);
@@ -63,7 +63,7 @@ function classWiseSection(classId) {
 }
 
 function filter_syllabus(){
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_syllabus').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id!= ""){
         showAllSyllabuses();
@@ -73,7 +73,7 @@ function filter_syllabus(){
 }
 
 var showAllSyllabuses = function () {
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_syllabus').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id!= ""){
         $.ajax({

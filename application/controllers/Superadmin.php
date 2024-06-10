@@ -636,6 +636,23 @@ class Superadmin extends CI_Controller {
     }
   }
   //END STUDENT ADN ADMISSION section
+  public function get_sections_by_class() {
+    $class_ids = $this->input->post('class_ids');
+    if (empty($class_ids)) {
+        echo json_encode([]);
+        return;
+    }
+
+    $sections = [];
+    foreach ($class_ids as $class_id) {
+        $this->db->where('class_id', $class_id);
+        $result = $this->db->get('sections')->result_array();
+        $sections = array_merge($sections, $result);
+    }
+    
+    echo json_encode($sections);
+}
+
 
 
   //START EXAM section

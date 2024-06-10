@@ -6,7 +6,7 @@
 
     function filterCourse(){
         var url         = '<?php echo site_url('addons/courses'); ?>';
-        var class_id    = $('#class_id').val();
+        var class_id    = $('#class_id_course').val();
         var user_id     = $('#user_id').val();
         var status      = $('#course_status').val();
         var subject_id  = $('#subject_id').val();
@@ -54,7 +54,7 @@
     }
 
     function get_subject(){
-        var class_id = $('#class_id').val();
+        var class_id = $('#class_id_add_cours').val();
         $.ajax({
             url: "<?php echo site_url('addons/courses/get_subject_by_class/'); ?>"+class_id,
             success: function(response){
