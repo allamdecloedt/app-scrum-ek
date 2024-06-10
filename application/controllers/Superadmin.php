@@ -563,6 +563,7 @@ class Superadmin extends CI_Controller {
       if($param2 == "submit")
       { 
         $response = $this->user_model->single_student_create();
+        
         $page_data['class_id'] = html_escape($this->input->post('class_id'));
         $page_data['section_id'] = html_escape($this->input->post('section_id'));
         $page_data['working_page'] = 'filter';
