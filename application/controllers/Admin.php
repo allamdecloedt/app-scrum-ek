@@ -62,23 +62,24 @@ class Admin extends CI_Controller
 		$this->load->view('backend/index', $page_data);
 	}
 
-	public function get_sections_by_class() {
+	public function get_sections_by_class()
+	{
 		$class_ids = $this->input->post('class_ids');
 		if (empty($class_ids)) {
 			echo json_encode([]);
 			return;
 		}
-	
+
 		$sections = [];
 		foreach ($class_ids as $class_id) {
 			$this->db->where('class_id', $class_id);
 			$result = $this->db->get('sections')->result_array();
 			$sections = array_merge($sections, $result);
 		}
-		
+
 		echo json_encode($sections);
 	}
-	
+
 
 	//START CLASS secion
 	public function manage_class($param1 = '', $param2 = '', $param3 = '')
@@ -1194,6 +1195,7 @@ class Admin extends CI_Controller
 
 			// $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
 
+			$this->db->where('user_id', $user_id);
 			$this->db->update('students', array('status' => 1));
 
 
@@ -1226,10 +1228,10 @@ class Admin extends CI_Controller
 
 			$this->db->where_in('id', $user_ids);
 			$page_data['applications'] = $this->db->get('users');
-		}else{
+		} else {
 			$page_data['applications'] = null;
 		}
-		
+
 
 		$page_data['folder_name'] = 'online_admission';
 		$page_data['page_title'] = 'online_admission';
