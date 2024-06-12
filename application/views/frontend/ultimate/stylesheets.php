@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/font-awesome/css/fontawesome-all.min.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/animate.css/animate.min.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/fancybox/jquery.fancybox.css">
-<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/slick-carousel/slick/slick.css">
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/cubeportfolio/css/cubeportfolio.min.css">
 
 <!-- CSS Front Template -->
