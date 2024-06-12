@@ -12,8 +12,9 @@
       <th><?php echo get_phrase('options'); ?></th>
     </tr>
   </thead>
-  <tbody>
+ <tbody>
     <?php
+    if($applications){
     foreach($applications->result_array() as $application){
       $student = $this->db->get_where('students', array('user_id' => $application['id']))->row_array();
       ?>
@@ -31,11 +32,11 @@
               <!-- item-->
               <a href="javascript:;" onclick="rightModal('<?php echo site_url('modal/popup/online_admission/add/'.$student['id'])?>', '<?php echo get_phrase('assign_class_and_section'); ?>');" class="dropdown-item"><?php echo get_phrase('approved'); ?></a>
               <!-- item -->
-              <a href="javascript:;" class="dropdown-item" onclick="confirmModalRedirect('<?php echo site_url('superadmin/online_admission/delete/'.$application['id']); ?>')"><?php echo get_phrase('delete'); ?></a>
+              <a href="javascript:;" class="dropdown-item" onclick="confirmModalRedirect('<?php echo site_url('admin/online_admission/delete/'.$application['id']); ?>')"><?php echo get_phrase('delete'); ?></a>
             </div>
           </div>
         </td>
       </tr>
-    <?php } ?>
+    <?php }} ?>
   </tbody>
 </table>

@@ -1544,43 +1544,62 @@ class Superadmin extends CI_Controller {
 
 
   // ABOUT APPLICATION STARTS
-  public function online_admission($param1 = "", $user_id = "") {
-
-    if($param1 == 'assigned'){
-      $data['student_id'] = $this->input->post('student_id');
-      $data['class_id'] = $this->input->post('class_id');
-      $data['section_id'] = $this->input->post('section_id');
-      $data['school_id'] = school_id();
-      $data['session'] = active_session();
-
-      $this->db->insert('enrols', $data);
-
-      $user_id = $this->db->get_where('students', array('id' => $data['student_id']))->row('user_id');
-
-      $password = rand(100000, 999999);
-      $this->db->where('id', $user_id);
-      $this->db->update('users', array('status' => 1, 'password' => sha1($password)));
-      $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
+  public function online_admission($param1 = "", $user_id = "")
+	{
 
 
-      $this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
-      redirect(site_url('superadmin/online_admission'), 'refresh');
-    }
-    if($param1 == 'delete'){
+		if ($param1 == 'assigned') {
+			$data['student_id'] = $this->input->post('student_id');
+			$data['class_id'] = $this->input->post('class_id');
+			$data['section_id'] = $this->input->post('section_id');
+			$data['session'] = active_session();
 
-      $this->db->where('id', $user_id);
-      $this->db->delete('users');
+			$this->db->insert('enrols', $data);
 
-      $this->db->where('user_id', $user_id);
-      $this->db->delete('students');
-      $this->session->set_flashdata('flash_message', get_phrase('admission_data_deleted_successfully'));
-      redirect(site_url('superadmin/online_admission'), 'refresh');
-    }
-    $page_data['applications'] = $this->db->get_where('users', array('status' => 3, 'school_id' => school_id()));
-    $page_data['folder_name'] = 'online_admission';
-    $page_data['page_title']  = 'online_admission';
-    $this->load->view('backend/index', $page_data);
-  }
+			$user_id = $this->db->get_where('students', array('id' => $data['student_id']))->row('user_id');
+
+			// $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
+
+			$this->db->update('students', array('status' => 1));
+
+
+			$this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
+			redirect(site_url('superadmin/online_admission'), 'refresh');
+		}
+		if ($param1 == 'delete') {
+
+			$this->db->where('id', $user_id);
+			$this->db->delete('users');
+
+			$this->db->where('user_id', $user_id);
+			$this->db->delete('students');
+			$this->session->set_flashdata('flash_message', get_phrase('admission_data_deleted_successfully'));
+			redirect(site_url('superadmin/online_admission'), 'refresh');
+		}
+
+		$this->db->select('user_id');
+		$this->db->where('status', 0);
+		$query = $this->db->get('students');
+
+		if ($query->num_rows() > 0) {
+			foreach ($query->result() as $row) {
+				$user_ids[] = $row->user_id;
+			}
+		}
+
+		if (!empty($user_ids)) {
+
+			$this->db->where_in('id', $user_ids);
+			$page_data['applications'] = $this->db->get('users');
+		}else{
+			$page_data['applications'] = null;
+		}
+		
+
+		$page_data['folder_name'] = 'online_admission';
+		$page_data['page_title'] = 'online_admission';
+		$this->load->view('backend/index', $page_data);
+	}
   // ABOUT APPLICATION ENDS
     // ABOUT APPLICATION STARTS
     public function online_admission_school($param1 = "", $school_id = "") {
