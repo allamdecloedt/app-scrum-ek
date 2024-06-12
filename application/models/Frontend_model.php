@@ -544,7 +544,7 @@ class Frontend_model extends CI_Model
     }
   }
 
- 
+
 
 
 
@@ -622,6 +622,25 @@ class Frontend_model extends CI_Model
   }
 
 
+  function get_school_courses($school_id)
+  {
+
+    $courses = $this->db->get_where('course', array('school_id' => $school_id))->result_array();
+
+    return $courses;
+  }
+
+  public function get_course_image($thumbnail)
+  {
+    if (file_exists('uploads/course_thumbnail/' . $thumbnail))
+
+      echo base_url() . 'uploads/course_thumbnail/' . $thumbnail;
+    else
+      echo base_url() . 'uploads/course_thumbnail/placeholder.png';
+  }
+
 }
+
+
 
 

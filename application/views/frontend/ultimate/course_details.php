@@ -133,11 +133,38 @@
 
                     <!-- Course Details Description Section -->
 
-                    <div class="row mb-">
+                    <div class="row mb-4">
                         <span class="text-white px-8"> <?php echo $school["description"] ?> </span>
                     </div>
 
                     <!-- END Course Details Description Section -->
+
+                    <!-- Course Details Curriculum Section -->
+                    <div class="px-8  courses-slider">
+                        <?php $courses = $this->frontend_model->get_school_courses($school_id) ?>
+                        <?php if ($courses) { ?>
+                            <?php foreach ($courses as $course) { ?>
+                                <div class="course-slider-item align-items-center justify-content-center">
+                                    <div>
+
+                                        <img src="<?php base_url($this->frontend_model->get_course_image($course["thumbnail"])) ?>"
+                                            alt="">
+                                        <p class="text-grey text-center pt-2"><?php echo $course["title"] ?></p>
+                                        <div class="course-slider-description">
+                                            <?php echo $course["description"] ?>
+                                        </div>
+
+
+
+                                    </div>
+
+                                </div>
+
+                            <?php }
+                        } ?>
+
+                    </div>
+                    <!-- END Course Details Curriculum Section -->
                 </div>
             </div>
 
@@ -155,7 +182,7 @@
                     </div>
 
                     <div class="row g-0 justify-content-center ">
-                        <p class=" mt-2 mb-2 col-12 details text-white"><?php echo $school["name"] ?>
+                        <p class=" mt-2 mb-2 col-12 details text-white"><?php echo $school["title"] ?>
                         </p>
                     </div>
 
@@ -238,23 +265,28 @@
 
                     <div class="row justify-content-center">
                         <?php if ($this->session->userdata("user_type") != "student" && $this->session->userdata('user_id')) { ?>
-                            <button id="join-button" disabled class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("no_student_account")); ?></button>
+                            <button id="join-button" disabled
+                                class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("no_student_account")); ?></button>
                         <?php } ?>
 
                         <?php if ($this->session->userdata('user_id') && $this->session->userdata('user_type') == "student") { ?>
                             <?php if ($this->user_model->check_student_status($school_id) == 1) { ?>
-                                <button id="join-button" disabled class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("enrolled")); ?></button>
+                                <button id="join-button" disabled
+                                    class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("enrolled")); ?></button>
                             <?php } elseif ($this->user_model->check_student_status($school_id) == 0) { ?>
-                                <button id="join-button" disabled class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("pending")); ?></button>
+                                <button id="join-button" disabled
+                                    class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("pending")); ?></button>
                             <?php } else { ?>
                                 <form action="<?php echo base_url('home/join_school/' . $school_id); ?>" method="post">
-                                    <button id="join-button" type="submit" class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("join")); ?></button>
+                                    <button id="join-button" type="submit"
+                                        class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("join")); ?></button>
                                 </form>
                             <?php } ?>
                         <?php } ?>
 
                         <?php if (!$this->session->userdata('user_id')) { ?>
-                            <button id="login-join-button" class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("login")); ?></button>
+                            <button id="login-join-button"
+                                class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("login")); ?></button>
                         <?php } ?>
                     </div>
                 </div>
@@ -279,6 +311,30 @@
     }
 
 
+
+
+    $(document).ready(function () {
+        $('.courses-slider').slick({
+            fade: true,
+            autoplay: true,
+            autoplaySpeed: 4000,
+            arrows: false,
+            infininte: true,
+            pauseOnFocus: false,
+            addaptiveHeight: true,
+
+        });
+
+        const descs = document.querySelectorAll(".course-slider-description")
+        descs.forEach(desc => {
+           const pars = desc.getElementsByTagName("p");
+           Array.from(pars).forEach(par => {
+               par.classList.add("text-white")
+               par.classList.add("text-center")
+           })
+            
+        });
+    });
 
 
 
