@@ -18,7 +18,7 @@ class Lms_model extends CI_Model {
         return $this->db->get_where('course', array('id' => $course_id))->row_array();
     }
 
-    public function filter_course_for_backend($class_id ="", $user_id="", $status="", $subject_id=""){
+    public function filter_course_for_backend($class_id ="", $user_id="", $status="", $subject_id="",$school_id=""){
         $superadmin_login = $this->session->userdata('superadmin_login');
         $admin_login = $this->session->userdata('admin_login');
         $teacher_login = $this->session->userdata('teacher_login');
@@ -33,7 +33,7 @@ class Lms_model extends CI_Model {
         endif;
         
         if($student_login == 1):
-            return $this->filter_course_for_student($class_id, $user_id, $status, $subject_id);
+            return $this->filter_course_for_student($class_id, $user_id, $status, $subject_id,$school_id);
         endif;
     }
     public function filter_course_for_admin($class_id, $user_id, $status){
@@ -65,20 +65,35 @@ class Lms_model extends CI_Model {
         }
         return $this->db->get('course')->result_array();
     }
-    public function filter_course_for_student($class_id, $user_id, $status, $subject_id){
-        $class_id = $this->get_class_id_by_user($this->session->userdata('user_id'));
-        $this->db->where('school_id', school_id());
-        $this->db->where('status', 'active');
-        $this->db->where('class_id', $class_id);
+    public function filter_course_for_student($class_id, $user_id, $status, $subject_id,$school_id){
+        // $class_id = $this->get_class_id_by_user($this->session->userdata('user_id'));
+        // // $this->db->where('school_id', school_id());
+
+        
+        $schools =  $this->db->select('*,course.thumbnail as thumbnail');
+        $this->db->from('course');
+        $this->db->join('students', 'course.school_id = students.school_id', 'left');
+        $this->db->join('schools', 'schools.id = course.school_id', 'left');
+        $this->db->where('students.user_id', $this->session->userdata('user_id'));
+        $this->db->where('course.status', 'active');
+
 
         if ($user_id != "all") {
-            $this->db->where('user_id', $user_id);
+            $this->db->where('course.user_id', $user_id);
         }
         if ($subject_id != "all") {
-            $this->db->where('subject_id', $subject_id);
+            $this->db->where('course.subject_id', $subject_id);
         }
+        if ($school_id != "all") {
+            $this->db->where('course.school_id', $school_id);
+        }
+        if ($class_id != "all") {
+            $this->db->where('course.class_id', $class_id);
+        }
+        
 
-        return $this->db->get('course')->result_array();
+        // return $this->db->get('course')->result_array();
+        return $this->db->get()->result_array();
     }
 
     public function get_subject_by_class_id($class_id = ""){
@@ -754,7 +769,7 @@ class Lms_model extends CI_Model {
             $user_id = $this->session->userdata('user_id');
         }
         $student_id = $this->db->get_where('students', array('user_id' => $user_id))->row('id');
-        return $class_id = $this->db->get_where('enrols', array('student_id' => $student_id, 'school_id' => school_id(), 'session' => active_session()))->row('class_id');
+        return $class_id = $this->db->get_where('enrols', array('student_id' => $student_id,  'session' => active_session()))->row('class_id');
     }
 
 }

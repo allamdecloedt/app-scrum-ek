@@ -1321,5 +1321,10 @@
     "email_already_in_use": "Email already in use",
     "please_fill_in_the_required_fields": "Please fill in the required fields",
     "please_choose_an_image": "Please choose an image",
-    "please_fill_in_your_password": "Please fill in your password"
+    "please_fill_in_your_password": "Please fill in your password",
+    "schools": "Schools",
+    "course_details": "Course details",
+    "enrolled": "Enrolled",
+    "no_classe_found": "No classe found",
+    "registration_successful": "Registration successful"
 }
