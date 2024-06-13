@@ -172,6 +172,17 @@ class Student extends CI_Controller {
 	}
 	//END DAILY ATTENDANCE section
 
+  //	academy STARTED
+  public function academy($action = "", $id = "") {
+		
+    // PROVIDE A LIST OF SECTION ACCORDING TO CLASS ID
+    if ($action == 'list') {
+		// echo $id;
+      $page_data['school_id'] = $id;
+      $this->load->view('backend/academy/liste_classe', $page_data);
+    }
+  }
+  //	academy ENDED
 
 	//START EVENT CALENDAR section
 	public function event_calendar($param1 = '', $param2 = ''){
