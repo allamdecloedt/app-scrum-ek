@@ -1612,11 +1612,12 @@ class Superadmin extends CI_Controller
       $this->db->insert('enrols', $data);
 
       $user_id = $this->db->get_where('students', array('id' => $data['student_id']))->row('user_id');
+      $code = $this->db->get_where('students', array('id' => $data['student_id'],'school_id'=>$data['school_id']))->row('code');
 
       // $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
 
 
-      $this->db->where('user_id', $user_id);
+      $this->db->where('code', $code);
       $this->db->update('students', array('status' => 1));
 
 
@@ -1628,7 +1629,7 @@ class Superadmin extends CI_Controller
       $this->db->where('id', $user_id);
       $this->db->delete('users');
 
-      $this->db->where('user_id', $user_id);
+      $this->db->where('user_id', $code);
       $this->db->delete('students');
       $this->session->set_flashdata('flash_message', get_phrase('admission_data_deleted_successfully'));
       redirect(site_url('superadmin/online_admission'), 'refresh');

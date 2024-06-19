@@ -1,3 +1,4 @@
+<option value="<?php echo 'all'; ?>" ><?php echo get_phrase('all'); ?></option>
 <?php
 $classes = $this->db->get_where('classes', array('school_id' => $school_id))->result_array();
 if (count($classes) > 0):

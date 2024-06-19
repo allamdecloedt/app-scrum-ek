@@ -183,7 +183,34 @@ class Student extends CI_Controller {
     }
   }
   //	academy ENDED
+  public function online_admission($param1 = "", $user_id = "")
+  {
 
+
+    if ($param1 == 'assigned') {
+      $data['student_id'] = $this->input->post('student_id');
+      $data['class_id'] = $this->input->post('class_id');
+      $data['section_id'] = $this->input->post('section_id');
+	  $data['school_id'] = $this->input->post('school_id');
+      $data['session'] = active_session();
+    //   $data['school_id'] = school_id();
+      $this->db->insert('enrols', $data);
+
+      $this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
+      redirect(site_url('addons/courses'), 'refresh');
+    }
+
+
+
+
+
+
+
+
+    $page_data['folder_name'] = 'academy';
+    $page_data['page_title'] = 'academy';
+    $this->load->view('backend/index', $page_data);
+  }
 	//START EVENT CALENDAR section
 	public function event_calendar($param1 = '', $param2 = ''){
 
