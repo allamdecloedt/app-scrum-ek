@@ -104,8 +104,18 @@ if($check_data->num_rows() > 0): ?>
                     $class_details = $this->crud_model->get_classes($course['class_id'])->row_array();
                     $sections = $this->lms_model->get_section('course', $course['id']);
                     $subject = $this->crud_model->get_subject_by_id($course['subject_id']);
-                    $lessons = $this->lms_model->get_lessons('course', $course['id']); ?>
-                    
+                    $lessons = $this->lms_model->get_lessons('course', $course['id']); 
+
+                    $this->db->where('user_id', $user_id);
+                    $this->db->where('school_id', $course['school_id']);
+                    $check_student = $this->db->get('students')->row_array();                    
+
+                    $this->db->where('student_id', $check_student['id']);
+                    $this->db->where('school_id', $course['school_id']);
+                    $this->db->where('class_id', $course['class_id']);
+                    $query = $this->db->get('enrols');
+                    $count = $query->num_rows();
+                    ?>  
                     <div class="col-md-6 col-lg-4 col-xl-3">
                         <div class="card d-block">
                             <?php if(file_exists('uploads/course_thumbnail/'.$course['thumbnail'])):
@@ -157,6 +167,7 @@ if($check_data->num_rows() > 0): ?>
                                     </div>
                                     <div class="col-sm-2 col-md-2 text-left p-0 progress_value_count"><p><?php echo ceil($progress_value); ?>%</p></div>
                                 </div>
+                                <?php if($count != 0 ): ?>
                                 <div class="w-100 text-center">
                                     <?php if($progress_value > 0): ?>
                                         <a href="<?php echo site_url('addons/lessons/play/'.slugify($course['title']).'/'.$course['id'].'/'.$lessons->row('id')); ?>" class="btn btn-secondary mw-50"><?php echo get_phrase('continue_lesson'); ?></a>
@@ -164,6 +175,13 @@ if($check_data->num_rows() > 0): ?>
                                         <a href="<?php echo site_url('addons/lessons/play/'.slugify($course['title']).'/'.$course['id'].'/'.$lessons->row('id')); ?>" class="btn btn-primary mw-50"><?php echo get_phrase('start_course'); ?></a>
                                     <?php endif; ?>
                                 </div>
+                                <?php else: ?>
+                                <div class="w-100 text-center">
+
+                                        <a href="javascript:;" onclick="rightModal('<?php echo site_url('modal/popup/academy/add/'.$check_student['id'].'/'.$course['class_id'].'/'.$course['school_id'])?>', '<?php echo get_phrase('join'); ?>');" class="btn btn-primary mw-50"><?php echo get_phrase('Join'); ?></a>
+                                
+                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
