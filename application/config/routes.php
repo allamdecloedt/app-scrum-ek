@@ -88,3 +88,10 @@ $route['api/school/update'] = 'api/Admin/update_school';
 $route['api/school/delete/(:num)'] = 'api/Admin/delete_school/$1'; 
 $route['api/schools'] = 'api/Admin/schools';
 $route['api/categoriesByName']= 'api/Admin/categoriesByName'; 
+
+$route['api/create_admin']= 'api/Admin/create_admin'; 
+$route['api/get_admin']= 'api/Admin/all_admins';
+$route['api/fetch_admins']= 'api/Admin/fetch_admins_by_name';
+$route['api/schoolsName']= 'api/Admin/all_school_names';
+$route['api/editAdmin/(:num)']= 'api/Admin/edit_admin/$1';
+$route['api/deleteAdmin/(:num)']= 'api/Admin/Deladmin/$1';
