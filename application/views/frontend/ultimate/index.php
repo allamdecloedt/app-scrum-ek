@@ -10,6 +10,7 @@
     <?php include 'metas.php'; ?>
     <?php include 'stylesheets.php';?>
     
+    
   </head>
   <body>
 

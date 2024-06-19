@@ -47,7 +47,6 @@ class User_model extends CI_Model
 		$data['password'] = sha1($this->input->post('password'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['role'] = 'admin';
 		$data['watch_history'] = '[]';
@@ -77,7 +76,6 @@ class User_model extends CI_Model
 		$data['email'] = html_escape($this->input->post('email'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['school_id'] = html_escape($this->input->post('school_id'));
 		// check email duplication
@@ -162,6 +160,7 @@ class User_model extends CI_Model
 		// if($duplication_status){
 		$this->db->where('id', $param1);
 		$this->db->update('schools', $data);
+		move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $param1 . '.jpg');
 
 		$response = array(
 			'status' => true,
@@ -203,7 +202,6 @@ class User_model extends CI_Model
 		$data['password'] = sha1($this->input->post('password'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['role'] = 'teacher';
 		$data['watch_history'] = '[]';
@@ -253,7 +251,6 @@ class User_model extends CI_Model
 		$data['email'] = html_escape($this->input->post('email'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 
 		// check email duplication
@@ -369,7 +366,6 @@ class User_model extends CI_Model
 		$data['password'] = sha1($this->input->post('password'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['school_id'] = $this->school_id;
 		$data['role'] = 'accountant';
@@ -399,7 +395,6 @@ class User_model extends CI_Model
 		$data['email'] = html_escape($this->input->post('email'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 
 		$duplication_status = $this->check_duplication('on_update', $data['email'], $param1);
@@ -463,7 +458,6 @@ class User_model extends CI_Model
 		$data['password'] = sha1($this->input->post('password'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 		$data['school_id'] = $this->school_id;
 		$data['role'] = 'librarian';
@@ -494,7 +488,6 @@ class User_model extends CI_Model
 		$data['email'] = html_escape($this->input->post('email'));
 		$data['phone'] = html_escape($this->input->post('phone'));
 		$data['gender'] = html_escape($this->input->post('gender'));
-		$data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$data['address'] = html_escape($this->input->post('address'));
 
 		// check email duplication
@@ -558,7 +551,6 @@ class User_model extends CI_Model
 		$user_data['password'] = sha1(html_escape($this->input->post('password')));
 		$user_data['birthday'] = strtotime(html_escape($this->input->post('birthday')));
 		$user_data['gender'] = html_escape($this->input->post('gender'));
-		$user_data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$user_data['address'] = html_escape($this->input->post('address'));
 		$user_data['phone'] = html_escape($this->input->post('phone'));
 		$user_data['role'] = 'student';
@@ -589,11 +581,14 @@ class User_model extends CI_Model
 
 			move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/' . $user_id . '.jpg');
 
+			$this->session->set_flashdata('flash_message', get_phrase('student_added_successfully'));
 			$response = array(
 				'status' => true,
 				'notification' => get_phrase('student_added_successfully')
 			);
 		} else {
+
+			$this->session->set_flashdata('error_message', get_phrase('sorry_this_email_has_been_taken'));
 			$response = array(
 				'status' => false,
 				'notification' => get_phrase('sorry_this_email_has_been_taken')
@@ -737,25 +732,39 @@ class User_model extends CI_Model
 	public function student_update($student_id = '', $user_id = '')
 	{
 
-		$enroll_data['class_id'] = html_escape($this->input->post('class_id'));
-		$enroll_data['section_id'] = html_escape($this->input->post('section_id'));
-
 		$user_data['name'] = html_escape($this->input->post('name'));
 		$user_data['email'] = html_escape($this->input->post('email'));
 		$user_data['birthday'] = strtotime(html_escape($this->input->post('birthday')));
 		$user_data['gender'] = html_escape($this->input->post('gender'));
-		$user_data['blood_group'] = html_escape($this->input->post('blood_group'));
 		$user_data['address'] = html_escape($this->input->post('address'));
 		$user_data['phone'] = html_escape($this->input->post('phone'));
 		// Check Duplication
 		$duplication_status = $this->check_duplication('on_update', $user_data['email'], $user_id);
-		if ($duplication_status) {
-			$this->db->where('id', $student_id);
-			// $this->db->update('students', $student_data);
-
+		if ($duplication_status) {			
+			// Supprimer les anciennes classes de l'inscription de l'étudiant
 			$this->db->where('student_id', $student_id);
-			$this->db->update('enrols', $enroll_data);
+			$this->db->delete('enrols');
+			
+			// Insérer les nouvelles classes sélectionnées
+			$class_ids = $this->input->post('class_id');
+			
+			if (!empty($class_ids)) {
+				foreach ($class_ids as $class_id) {
+					$sections = $this->input->post('section_id_'.$class_id);
+					$data = array(
+						'student_id' => $student_id,
+						'class_id' => html_escape($class_id),
+						'section_id' => $sections,
+						'session' => $this->active_session,
+						'school_id' => $this->school_id,
+					);
+					$this->db->insert('enrols', $data);
+				}
+			}
 
+
+			
+			// Mettre à jour les données de l'utilisateur
 			$this->db->where('id', $user_id);
 			$this->db->update('users', $user_data);
 
@@ -830,7 +839,6 @@ class User_model extends CI_Model
 				$enrol_data[$key]['phone'] = $user_details['phone'];
 				$enrol_data[$key]['birthday'] = $user_details['birthday'];
 				$enrol_data[$key]['gender'] = $user_details['gender'];
-				$enrol_data[$key]['blood_group'] = $user_details['blood_group'];
 
 				$class_details = $this->crud_model->get_class_details_by_id($enrol['class_id'])->row_array();
 				$section_details = $this->crud_model->get_section_details_by_id('section', $enrol['section_id'])->row_array();
@@ -858,7 +866,6 @@ class User_model extends CI_Model
 				$enrol_data[$key]['phone'] = $user_details['phone'];
 				$enrol_data[$key]['birthday'] = $user_details['birthday'];
 				$enrol_data[$key]['gender'] = $user_details['gender'];
-				$enrol_data[$key]['blood_group'] = $user_details['blood_group'];
 
 				$class_details = $this->crud_model->get_class_details_by_id($enrol['class_id'])->row_array();
 				$section_details = $this->crud_model->get_section_details_by_id('section', $enrol['section_id'])->row_array();
@@ -885,7 +892,6 @@ class User_model extends CI_Model
 			$enrol_data['phone'] = $user_details['phone'];
 			$enrol_data['birthday'] = $user_details['birthday'];
 			$enrol_data['gender'] = $user_details['gender'];
-			$enrol_data['blood_group'] = $user_details['blood_group'];
 
 			$class_details = $this->crud_model->get_class_details_by_id($enrol_data['class_id'])->row_array();
 			$section_details = $this->crud_model->get_section_details_by_id('section', $enrol_data['section_id'])->row_array();
@@ -1006,6 +1012,13 @@ class User_model extends CI_Model
 		$result = $this->db->get('schools');
 		return $result->num_rows();
 	}
+
+	public function get_school_details($school_id = '')
+	{
+		return $this->db->get_where('schools', array('status' => 1, 'id' => $school_id))->row_array();
+	}
+
+
 
 	//GET LOGGED IN USER DATA
 	public function get_profile_data()
@@ -1134,7 +1147,6 @@ class User_model extends CI_Model
 			$students[$key]['phone'] = $user_details['phone'];
 			$students[$key]['birthday'] = $user_details['birthday'];
 			$students[$key]['gender'] = $user_details['gender'];
-			$students[$key]['blood_group'] = $user_details['blood_group'];
 			$students[$key]['class_id'] = $enrol_data['class_id'];
 			$students[$key]['section_id'] = $enrol_data['section_id'];
 
@@ -1184,9 +1196,173 @@ class User_model extends CI_Model
 	}
 
 
-	function get_school_id($school_name = "")
+	public function get_school_id($school_name)
 	{
 		return $this->db->get_where('schools', array('name' => $school_name))->row()->id;
 	}
+
+	public function googleAPI()
+	{ {
+			$api = '';
+			return $api;
+		}
+	}
+
+
+	public function get_school_students_count($school_id)
+	{
+		return $this->db->get_where(
+			'users',
+			array(
+				'status' => 1,
+				'school_id' => $school_id,
+				'role' => 'student'
+			)
+		)->num_rows();
+	}
+
+	public function get_school_admin($school_id)
+	{
+		return $this->db->get_where(
+			'users',
+			array(
+				'school_id' => $school_id,
+				'role' => 'admin'
+			)
+		)->row_array();
+	}
+
+	public function get_school_admin_image($school_id)
+	{
+		$admin = get_school_admin($school_id);
+
+		if (file_exists('uploads/users/' . $admin["id"] . '.jpg'))
+			return base_url() . 'uploads/users/' . $admin["id"] . '.jpg';
+		else
+			return base_url() . 'uploads/schools/placeholder.jpg';
+	}
+
+
+	public function join_school($school_id)
+	{
+		if ($this->session->userdata('user_id') == null || $this->session->userdata('user_id') == "") {
+			$this->session->set_flashdata('error', get_phrase('please_login_before_continuing'));
+			if (isset($_SERVER['HTTP_REFERER'])) {
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+			}
+		} else
+			$user_id = $this->session->userdata('user_id');
+
+		if ($school_id == null || $school_id == "") {
+
+			$this->session->set_flashdata('error', get_phrase('no_school_found'));
+			if (isset($_SERVER['HTTP_REFERER'])) {
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+			}
+		} else {
+
+			if ($this->db->get_where('students', array('user_id' => $user_id, 'school_id' => $school_id))->num_rows() > 0) {
+				$this->session->set_flashdata('success', get_phrase('already_joined_school'));
+				if (isset($_SERVER['HTTP_REFERER'])) {
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			} else {
+
+				$data['school_id'] = $school_id;
+				$data['user_id'] = $user_id;
+				$data['code'] = student_code();
+				$data['session'] = $this->active_session;
+
+				$query = $this->db->get_where('schools', array('id' => $school_id));
+				if ($query->num_rows() > 0) {
+					$row = $query->row();
+					if ($row->access == 1) {
+						$data['status'] = 1; //Public
+					} else {
+						$data['status'] = 0; //Private
+					}
+				}
+
+				$this->db->insert('students', $data);
+
+				if (isset($_SERVER['HTTP_REFERER'])) {
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+		}
+	}
+
+
+
+	public function check_student_status($school_id)
+	{
+		$user_id = $this->session->userdata('user_id');
+		$student = $this->db->get_where('students', array('user_id' => $user_id, 'school_id' => $school_id));
+
+		if ($student->num_rows() == 0) {
+			return -1;
+		}
+
+		$student_data = $student->row_array();
+
+		if ($student_data['status'] == 1) {
+			return 1;
+		} else if ($student_data['status'] == 0) {
+			return 0;
+		}
+	}
+
+
+ public function register_user()
+{
+    $emailPattern = '/^[^\s@]+@[^\s@]+\.[^\s@]+$/';
+
+    if ($this->input->post('register_email') == '' || !preg_match($emailPattern, $this->input->post('register_email')) || $this->input->post('register_password') == '' || $this->input->post('register_first_name') == '' || $this->input->post('register_last_name') == '' || $this->input->post('register_date_of_birth') == '' || $this->input->post('register_repeat_password') == '') {
+
+        $this->session->set_flashdata('error', get_phrase('validation_error'));
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            redirect($_SERVER['HTTP_REFERER'], 'refresh');
+        }
+
+    } else if ($this->db->get_where('users', array('email' => $this->input->post('register_email')))->num_rows() > 0) {
+
+        $this->session->set_flashdata('error', get_phrase('email_already_exists'));
+        if (isset($_SERVER['HTTP_REFERER'])) {
+            redirect($_SERVER['HTTP_REFERER'], 'refresh');
+        }
+
+    } else {
+
+        $data['name'] = htmlspecialchars($this->input->post('register_first_name') . ' ' . $this->input->post('register_last_name'));
+        $data['email'] = htmlspecialchars($this->input->post('register_email'));
+        $data['birthday'] = htmlspecialchars($this->input->post('register_date_of_birth'));
+        $data['gender'] = htmlspecialchars($this->input->post('register_gender'));
+        $data['password'] = sha1($this->input->post('register_password'));
+        $data['role'] = 'student';
+        $data['status'] = 1;
+        $data['school_id'] = 1;
+        $data['watch_history'] = '[]';
+
+        $this->db->insert('users', $data);
+        $user_id = $this->db->insert_id();
+
+
+        if (isset($_FILES['student_image_upload']) && $_FILES['student_image_upload']['error'] == UPLOAD_ERR_OK) {
+            $upload_path = 'uploads/users/' . $user_id . '.jpg';
+            move_uploaded_file($_FILES['student_image_upload']['tmp_name'], $upload_path);
+        }
+
+        $this->session->set_userdata('student_login', true);
+        $this->session->set_userdata('user_id', $user_id);
+        $this->session->set_userdata('school_id', 1);
+        $this->session->set_userdata('user_name', $data['name']);
+        $this->session->set_userdata('user_type', 'student');
+        $this->session->set_flashdata('success', get_phrase('registration_successful'));
+    }
+
+    if (isset($_SERVER['HTTP_REFERER'])) {
+        redirect($_SERVER['HTTP_REFERER'], 'refresh');
+    }
+}
 
 }

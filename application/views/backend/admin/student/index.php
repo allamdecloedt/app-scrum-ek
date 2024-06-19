@@ -19,7 +19,7 @@
                 <div class="row mt-3">
                     <div class="col-md-1 mb-1"></div>
                     <div class="col-md-4 mb-1">
-                        <select name="class" id="class_id" class="form-control select2" data-toggle = "select2" required onchange="classWiseSection(this.value)">
+                        <select name="class" id="class_id_list_ad" class="form-control select2" data-toggle = "select2" required onchange="classWiseSection(this.value)">
                             <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                             <?php
                             $classes = $this->db->get_where('classes', array('school_id' => school_id()))->result_array();
@@ -87,7 +87,7 @@ function classWiseSection(classId) {
 }
 
 function filter_student(){
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_list_ad').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id!= ""){
         showAllStudents();
@@ -97,7 +97,7 @@ function filter_student(){
 }
 
 var showAllStudents = function() {
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_list_ad').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id!= ""){
         $.ajax({

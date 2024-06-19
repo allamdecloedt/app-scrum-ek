@@ -6,12 +6,13 @@
 
     function filterCourse(){
         var url         = '<?php echo site_url('addons/courses'); ?>';
-        var class_id    = $('#class_id').val();
+        var class_id    = $('#class_id_course').val();
         var user_id     = $('#user_id').val();
         var status      = $('#course_status').val();
         var subject_id  = $('#subject_id').val();
+        var school_id  = $('#school_id').val();
         $.ajax({
-            url: url+"?class_id="+class_id+"&user_id="+user_id+"&status="+status+"&subject_id="+subject_id+"&only_list=true",
+            url: url+"?class_id="+class_id+"&user_id="+user_id+"&status="+status+"&subject_id="+subject_id+"&school_id="+school_id+"&only_list=true",
             success : function(response) {
                 $('.academy_content').html(response);
                 initDataTable('basic-datatable');
@@ -54,7 +55,7 @@
     }
 
     function get_subject(){
-        var class_id = $('#class_id').val();
+        var class_id = $('#class_id_add_cours').val();
         $.ajax({
             url: "<?php echo site_url('addons/courses/get_subject_by_class/'); ?>"+class_id,
             success: function(response){
@@ -128,12 +129,19 @@
         if (provider === 'youtube' || provider === 'vimeo') {
             $('#html5').hide();
             $('#youtube_vimeo').show();
+            $('#mydevice').hide();
         }else if(provider === 'html5'){
             $('#youtube_vimeo').hide();
             $('#html5').show();
+            $('#mydevice').hide();
+        }else if(provider === 'mydevice'){
+            $('#youtube_vimeo').hide();
+            $('#html5').hide();
+            $('#mydevice').show();
         }else {
             $('#youtube_vimeo').hide();
             $('#html5').hide();
+            $('#mydevice').hide();
         }
     }
 

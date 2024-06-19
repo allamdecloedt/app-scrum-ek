@@ -1,0 +1,24 @@
+# Ignorer les fichiers de configuration
+application/config/database.php
+application/config/config.php
+
+
+# Ignorer les dossiers de cache et de logs
+application/cache/*
+application/logs/*
+
+
+# Ignorer les fichiers temporaires et les uploads
+/uploads/*
+tmp/*
+
+
+# Ignorer les fichiers et dossiers générés par l'IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Ignorer les fichiers système
+.DS_Store
+Thumbs.db

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/font-awesome/css/fontawesome-all.min.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/animate.css/animate.min.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/fancybox/jquery.fancybox.css">
-<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/slick-carousel/slick/slick.css">
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/cubeportfolio/css/cubeportfolio.min.css">
 
 <!-- CSS Front Template -->
@@ -42,7 +42,6 @@
   integrity="sha512-f5HTYZYTDZelxS7LEQYv8ppMHTZ6JJWglzeQmr0CVTS70vJgaJiIO15ALqI7bhsracojbXkezUIL+35UXwwGrQ=="
   crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<script src="<?php echo base_url()?>assets/frontend/ultimate/js/nav.js" > </script>
 
 
 <!-- Custom CSS-->
@@ -51,6 +50,8 @@
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/footer.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/navigation.css">
 <link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/general.css">
+<link rel="stylesheet" href="<?php echo base_url();?>assets/frontend/ultimate/css/toastr.min.css">
+
 
 <?php
 if ($page_name == "home") {
@@ -71,5 +72,8 @@ if ($page_name == "home") {
 }elseif ($page_name == "courses"){
 
     echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/courses-page.css">';
+}elseif ($page_name == "course_details"){
+
+    echo '<link rel="stylesheet" href="' . $base_url . 'assets/frontend/ultimate/css/course-details-page.css">';
 }
 ?>

@@ -1,6 +1,6 @@
 <?php $school_id = school_id(); ?>
 
-<form method="POST" class="p-3 d-block ajaxForm" action="<?php echo route('student/create_single_student'); ?>" id = "student_admission_form" enctype="multipart/form-data">
+<form method="POST" class="p-3 d-block ajaxForm" action="<?php echo route('student/create_single_student/submit'); ?>" id = "student_admission_form" enctype="multipart/form-data">
     <div class="col-md-12">
         <div class="form-group row mb-3">
             <label class="col-md-3 col-form-label" for="name"><?php echo get_phrase('name'); ?></label>
@@ -27,7 +27,7 @@
         <div class="form-group row mb-3">
             <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?></label>
             <div class="col-md-9">
-                <select name="class_id" id="class_id" class="form-control select2" data-toggle = "select2" required onchange="classWiseSection(this.value)">
+                <select name="class_id" id="class_id_add" class="form-control select2" data-toggle = "select2" required onchange="classWiseSection(this.value)">
                     <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                     <?php $classes = $this->db->get_where('classes', array('school_id' => $school_id))->result_array(); ?>
                     <?php foreach($classes as $class){ ?>
@@ -65,22 +65,7 @@
             </div>
         </div>
         
-        <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="blood_group"><?php echo get_phrase('blood_group'); ?></label>
-            <div class="col-md-9">
-                <select name="blood_group" id="blood_group" class="form-control select2" data-toggle = "select2"  required>
-                    <option value=""><?php echo get_phrase('select_a_blood_group'); ?></option>
-                    <option value="a+">A+</option>
-                    <option value="a-">A-</option>
-                    <option value="b+">B+</option>
-                    <option value="b-">B-</option>
-                    <option value="ab+">AB+</option>
-                    <option value="ab-">AB-</option>
-                    <option value="o+">O+</option>
-                    <option value="o-">O-</option>
-                </select>
-            </div>
-        </div>
+    
 
         <div class="form-group row mb-3">
             <label class="col-md-3 col-form-label" for="example-textarea"><?php echo get_phrase('address'); ?></label>
@@ -135,10 +120,9 @@ function check() {
     var class_id = $("#class_id").val();
     var birthday = $("#birthday").val();
     var gender = $("#gender").val();
-    var blood_group = $("#blood_group").val();
     var address = $("#address").val();
     var phone = $("#phone").val();
-    if(name == "" || email == "" || password == "" || parent_id == "" || class_id == "" || birthday == "" || gender == "" || blood_group == "" || address == "" || phone == ""){
+    if(name == "" || email == "" || password == "" || parent_id == "" || class_id == "" || birthday == "" || gender == "" || address == "" || phone == ""){
         error_notify('<?php echo get_phrase('please_select_in_all_fields !'); ?>');
     }
 }

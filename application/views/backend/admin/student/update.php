@@ -14,7 +14,25 @@
             <div class="card-body">
                 <?php $school_id = school_id(); ?>
                 <?php $student = $this->db->get_where('students', array('id' => $student_id))->row_array(); ?>
-                <?php $enroll = $this->db->get_where('enrols', array('student_id' => $student_id))->row_array(); ?>
+                <?php 
+                $enroll = $this->db->get_where('enrols', array('student_id' => $student_id))->row_array(); 
+                $selected_classes = $this->db->get_where('enrols', array('student_id' => $student_id))->result_array();
+                $selected_class_ids = array();
+                foreach ($selected_classes as $selected_class) {
+                    $selected_class_ids[] = $selected_class['class_id'];
+                }             
+
+
+                $selected_sections = $this->db->get_where('enrols', array('student_id' => $student_id))->result_array();
+                $selected_section_ids = array();
+                foreach ($selected_sections as $section) {
+                    if (!isset($selected_section_ids[$section['class_id']])) {
+                        $selected_section_ids[$section['class_id']] = array();
+                    }
+                    $selected_section_ids[$section['class_id']][] = $section['section_id'];
+                }
+
+                ?>
                 <h4 class="text-center mx-0 py-2 mt-0 mb-3 px-0 text-white bg-primary"><?php echo get_phrase('update_student_information'); ?></h4>
                 <form method="POST" class="col-12 d-block ajaxForm" action="<?php echo route('student/updated/'.$student_id.'/'.$student['user_id']); ?>" id = "student_update_form" enctype="multipart/form-data">
                     <div class="col-md-12">
@@ -35,30 +53,47 @@
                        
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?></label>
-                            <div class="col-md-9">
-                                <select name="class_id" id="class_id" class="form-control" required onchange="classWiseSectionOnStudentEdit(this.value)">
-                                    <option value=""><?php echo get_phrase('select_a_class'); ?></option>
-                                    <?php $classes = $this->db->get_where('classes', array('school_id' => $school_id))->result_array(); ?>
-                                    <?php foreach($classes as $class){ ?>
-                                        <option value="<?php echo $class['id']; ?>" <?php if($enroll['class_id'] == $class['id']) echo 'selected'; ?>><?php echo $class['name']; ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
+                                <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?></label>
+                                <div class="col-md-9">
+                                    <select name="class_id[]" id="class_id" class=" form-control"  onchange="classWiseSectionOnStudentEdit(this.value)" multiple="multiple" required data-live-search="true">
+                                        <option value=""><?php echo get_phrase('select_classes'); ?></option>
+                                        <?php                                        
+                                        $classes = $this->db->get_where('classes', array('school_id' => $school_id))->result_array(); 
+                                        foreach($classes as $class){ ?>
+                                            <option value="<?php echo $class['id']; ?>" data-class-name="<?php echo $class['name']; ?>"  <?php if (in_array($class['id'], $selected_class_ids)) echo 'selected'; ?>><?php echo $class['name']; ?></option>
+                                        <?php } ?>
+
+
+                                        
+                                    </select>
+                                </div>
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="section_id"><?php echo get_phrase('section'); ?></label>
-                            <div class="col-md-9" id = "section_content">
-                                <select name="section_id" id="section_id" class="form-control" required >
-                                    <option value=""><?php echo get_phrase('select_a_section'); ?></option>
-                                    <?php $sections = $this->db->get_where('sections', array('class_id' => $enroll['class_id']))->result_array(); ?>
-                                    <?php foreach($sections as $section){ ?>
-                                        <option value="<?php echo $section['id']; ?>" <?php if($enroll['section_id'] == $section['id']) echo 'selected'; ?>><?php echo $section['name']; ?></option>
-                                    <?php } ?>
-                                </select>
+                            <div id="section_selects_container">
+                                <?php foreach($selected_class_ids as $class_id) {
+                                    $class_name = $this->db->get_where('classes', array('id' => $class_id))->row()->name;
+
+                                    ?>
+                                    <div class="form-group row mb-3 section-select " id="section_select_<?php echo $class_id; ?>">
+                                        <label class="col-md-3 col-form-label"><?php echo get_phrase('section_for_class') . ' ' . $class_name; ?></label>
+                                        <div class="col-md-9">
+                                            <select name="section_id_<?php echo $class_id; ?>"  id="section_id_<?php echo $class_id; ?>" class=" form-control" >
+                                                <option value=""><?php echo get_phrase('select_a_section'); ?></option>
+                                                <?php 
+                                                $sections = $this->db->get_where('sections', array('class_id' => $class_id))->result_array(); 
+                                                foreach($sections as $section) { ?>
+                                                    <option value="<?php echo $section['id']; ?>" <?php if (isset($selected_section_ids[$class_id]) && in_array($section['id'], $selected_section_ids[$class_id])) echo 'selected'; ?>>
+                                                        <?php echo $section['name']; ?>
+                                                    </option>
+                                                <?php } ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
+
 
                         <div class="form-group row mb-3">
                             <label class="col-md-3 col-form-label" for="birthdatepicker"><?php echo get_phrase('birthday'); ?></label>
@@ -75,23 +110,6 @@
                                     <option value="Male" <?php if($this->user_model->get_user_details($student['user_id'], 'gender') == 'Male') echo 'selected'; ?>><?php echo get_phrase('male'); ?></option>
                                     <option value="Female" <?php if($this->user_model->get_user_details($student['user_id'], 'gender') == 'Female') echo 'selected'; ?>><?php echo get_phrase('female'); ?></option>
                                     <option value="Others" <?php if($this->user_model->get_user_details($student['user_id'], 'gender') == 'Others') echo 'selected'; ?>><?php echo get_phrase('others'); ?></option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="blood_group"><?php echo get_phrase('blood_group'); ?></label>
-                            <div class="col-md-9">
-                                <select name="blood_group" id="blood_group" class="form-control select2" data-toggle = "select2"  required>
-                                    <option value=""><?php echo get_phrase('select_a_blood_group'); ?></option>
-                                    <option value="a+"  <?php if(strtolower($this->user_model->get_user_details($student['user_id'], 'blood_group')) == 'a+') echo 'selected'; ?>>A+</option>
-                                    <option value="a-"  <?php if(strtolower($this->user_model->get_user_details($student['user_id'], 'blood_group')) == 'a-') echo 'selected'; ?>>A-</option>
-                                    <option value="b+"  <?php if(strtolower($this->user_model->get_user_details($student['user_id'], 'blood_group')) == 'b+') echo 'selected'; ?>>B+</option>
-                                    <option value="b-"  <?php if(strtolower($this->user_model->get_user_details($student['user_id'], 'blood_group')) == 'b-') echo 'selected'; ?>>B-</option>
-                                    <option value="ab+" <?php if(strtolower($this->user_model->get_user_details($student['user_id'], 'blood_group')) == 'ab+') echo 'selected'; ?>>AB+</option>
-                                    <option value="ab-" <?php if(strtolower($this->user_model->get_user_details($student['user_id'], 'blood_group')) == 'ab-') echo 'selected'; ?>>AB-</option>
-                                    <option value="o+"  <?php if(strtolower($this->user_model->get_user_details($student['user_id'], 'blood_group')) == 'o+') echo 'selected'; ?>>O+</option>
-                                    <option value="o-"  <?php if(strtolower($this->user_model->get_user_details($student['user_id'], 'blood_group')) == '0-') echo 'selected'; ?>>O-</option>
                                 </select>
                             </div>
                         </div>
@@ -145,12 +163,57 @@ var refreshForm = function () {
 
 }
 
-function classWiseSectionOnStudentEdit(classId) {
-    $.ajax({
-        url: "<?php echo route('section/list/'); ?>"+classId,
-        success: function(response){
-            $('#section_id').html(response);
-        }
-    });
+function classWiseSectionOnStudentEdit() {
+            var classIds = $('#class_id').val(); // Récupère les IDs des classes sélectionnées
+           
+            var sectionContainer = $('#section_selects_container');
+             sectionContainer.empty(); // Vider le conteneur des selects de section
+
+            if (classIds.length > 0) {
+                classIds.forEach(function(classId) {
+                    var className = $('#class_id option[value="' + classId + '"]').data('class-name'); // Récupère le nom de la classe
+
+                    $.ajax({
+                        url: "<?php echo site_url('admin/get_sections_by_class'); ?>",
+                        type: 'POST',
+                        data: {class_ids: [classId]}, // Passer un tableau contenant un seul ID de classe
+                        success: function(response) {
+
+                            var sections = JSON.parse(response);
+                            var selectedSections = <?php echo json_encode($selected_section_ids); ?>;
+                            sectionOptions = '<option value=""><?php echo get_phrase('select_a_section'); ?></option>';
+                      
+                             if (sections.length > 0) {
+                                sections.forEach(function(section) {
+                                    var selected = (selectedSections[classId] && selectedSections[classId].includes(section.id)) ? 'selected' : '';
+                                    sectionOptions += '<option value="' + section.id + '" ' + selected + ' >' + section.name + '</option>';
+                                });
+                            } else {
+                                sectionOptions += '<option value="" disabled><?php echo get_phrase('no_section_found'); ?></option>';
+                            }
+                          
+                            
+                           
+
+                            var sectionSelect = `
+                                <div class="form-group row mb-3 section-select" id="${classId}">
+                                    <label class="col-md-3 col-form-label"><?php echo get_phrase('section_for_class'); ?> ${className}</label>
+                                    <div class="col-md-9">
+                                        <select name="section_id_${classId}" id="section_id_${classId}" class=" form-control" >
+                                           ${sectionOptions}
+                                        </select>
+                                    </div>
+                                </div>
+                            `;
+                            console.log("sectionOptions sélectionnées : ", sectionOptions);
+                            sectionContainer.append(sectionSelect);
+
+                        },
+                        error: function(xhr, status, error) {
+                            console.error("Erreur pour la classe ", classId, ": ", error);
+                        }
+                    });
+                });
+            }
 }
 </script>

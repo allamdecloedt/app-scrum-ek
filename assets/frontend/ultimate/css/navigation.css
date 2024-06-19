@@ -7,21 +7,52 @@ Navigation Styling
 }
 
 .sticky-nav {
-  background: #606060c4;
-  transition: 0.5s;
   position: fixed !important;
   top: 0;
-  align-items: center;
-  justify-content: center;
-  min-height: 80px;
-  border-bottom-left-radius: 10px; /* 25px rounded bottom left corner */
-  border-bottom-right-radius: 10px;
-  transition: all 0.5s;
+  height: 80px;
   font-weight: 600;
+  z-index: 1;
+  transition: all 0.2s;
 }
 
-.nav-home {
-  background: #212121a6 !important;
+#navBar {
+  backdrop-filter: blur(0px);
+  height: 80px;
+}
+
+.navbar {
+  padding: 0;
+}
+
+.logo {
+  scale: 0.9;
+  transition: all 0.5s ease-in-out;
+}
+
+.small-nav {
+  height: 60px !important;
+  background: #212121;
+  overflow: visible;
+  width: 100%;
+
+  .logo {
+    scale: 0.8;
+    transition: all 0.5s ease-in-out;
+  }
+
+  .user-dropdown {
+    bottom: -91px;
+  }
+
+  .login-dropdown {
+    top: 60px;
+    transition: all 0.5s ease-in-out;
+  }
+
+  #navBar {
+    height: 60px;
+    transition: all 0.2s ease-in-out;
+  }
 }
 
 .nav-link {
@@ -29,16 +60,6 @@ Navigation Styling
   text-transform: uppercase;
   margin: 0 10px;
   transition: all 0.5s ease-in-out;
-}
-
-.show {
-  background: #212121d2 !important;
-  border-radius: 10px;
-}
-
-.collapsing {
-  background: #212121d2 !important;
-  border-radius: 10px;
 }
 
 #menu_checkbox {
@@ -51,8 +72,24 @@ Navigation Styling
   border: none;
   padding: 0;
   font: inherit;
-  cursor: pointer;
   outline: inherit;
+  height: 0;
+}
+
+.hidden-section {
+  transition: all 0.5s;
+  opacity: 0;
+  height: 0 !important;
+}
+
+.show {
+  opacity: 1;
+  transition: all 0.5s;
+  height: auto !important;
+}
+
+.display-none {
+  display: none;
 }
 
 label {
@@ -103,7 +140,7 @@ label div:last-child {
 }
 
 .nav-link:hover {
-  color: #ffff !important;
+  color: #a8a8a8 !important;
   transition: all 0.3s;
 }
 
@@ -111,23 +148,455 @@ label div:last-child {
   color: #a8a8a8 !important;
 }
 
+.v-divider-nav {
+  height: auto;
+  width: 1px;
+  background-color: #6e6e6e;
+  padding: 0;
+}
+
+.nav-user-img {
+  width: 40px;
+  height: 40px;
+  margin-left: 15px;
+  margin-right: 10px;
+}
+
+.user-section {
+  cursor: pointer;
+}
+
+.user-dropdown {
+  position: fixed;
+  height: auto;
+  width: auto;
+  right: 1%;
+  bottom: -79px;
+  background-color: #464646dd;
+  border-radius: 6px;
+  backdrop-filter: blur(10px);
+  transition: all 0.1s ease-in;
+}
+
+.user-dropdown-item {
+  display: block;
+  color: #ffffff;
+  border-radius: 5px;
+  margin: 10px;
+  text-decoration: none;
+}
+
+.login-section {
+  position: relative;
+}
+
+.login-dropdown {
+  position: absolute;
+  height: 300px !important;
+  width: 300px;
+  top: 60px;
+  padding-left: 20px;
+  padding-right: 20px;
+  right: 0;
+  background-color: #dadada91;
+  border-radius: 6px;
+  transition: all 0.3s ease-in-out;
+  backdrop-filter: blur(10px);
+  border: #ffffffcf solid 1px;
+}
+
+.register-dropdown {
+  position: absolute;
+  height: 300px !important;
+  width: 400px;
+  top: 60px;
+  right: 0;
+  padding-left: 50px;
+  padding-right: 20px;
+  background-color: #dadada91;
+  border-radius: 6px;
+  transition: all 0.3s ease-in-out;
+  backdrop-filter: blur(10px);
+  border: #ffffffcf solid 1px;
+}
+
+.login-input-label {
+  color: #3a3a3a;
+  font-size: 12px !important;
+  padding-bottom: 15px !important;
+  right: 20px;
+  font-weight: 500;
+}
+
+.login-button {
+  background-color: rgba(143, 0, 175, 0.55);
+  color: #ffffff;
+  border-radius: 5px;
+  border: none;
+  height: 30px;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.login-button:hover {
+  background-color: #2f2f2f;
+}
+
+.login-exit-svg,
+.register-exit-svg {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  cursor: pointer;
+  color: #ffffff;
+  pointer-events: all;
+  z-index: 4;
+}
+
+.register-phrase {
+  color: #3a3a3a !important;
+  text-decoration: none;
+  font-size: 11px !important;
+  display: flex;
+  margin-bottom: 20px;
+  cursor: default;
+  pointer-events: none;
+}
+
+.register-phrase:hover {
+  color: #3a3a3a;
+}
+
+.register-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 11px !important;
+  transition: all 0.3s;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.register-link:hover {
+  color: #8f00af;
+  transition: all 0.3s;
+}
+
+.register-next {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: rgba(143, 0, 175, 0.55);
+  padding: 5px 10px;
+  border-radius: 6px;
+  color: #ffffff !important;
+  transition: all 0.3s;
+  font-size: 12px;
+}
+
+.register-next:hover {
+  background-color: #2f2f2f;
+}
+
+.register-back {
+  position: absolute;
+  font-size: 12px;
+  bottom: 20px;
+  left: 20px;
+  background-color: rgba(143, 0, 175, 0.55);
+  padding: 5px 10px;
+  border-radius: 6px;
+  color: #ffffff !important;
+  transition: all 0.3s;
+}
+
+.register-back:hover {
+  background-color: #2f2f2f;
+}
+
+.round-indicator {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #6e6e6e;
+  transition: all 0.3s;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.round-indicator span {
+  font-size: 11px;
+  color: #ffffff;
+  line-height: 1; /* Ensure line-height does not affect centering */
+  padding: 0;
+}
+
+.line-1 {
+  position: absolute;
+  width: 1px;
+  height: 15px;
+  background-color: #6e6e6e;
+  transition: all 0.3s;
+  left: 22px;
+  top: 37.5%;
+}
+
+.line-2 {
+  position: absolute;
+  width: 1px;
+  height: 15px;
+  background-color: #6e6e6e;
+  transition: all 0.3s;
+  left: 22px;
+  top: 52.5%;
+}
+
+.section-1-indicator {
+  top: 30%;
+  left: 15px;
+}
+
+.section-2-indicator {
+  top: 45%;
+  left: 15px;
+}
+
+.section-3-indicator {
+  top: 60%;
+  left: 15px;
+}
+
+.step {
+  opacity: 0.6;
+  transition: all 0.3s;
+}
+
+.step.active {
+  opacity: 1;
+  background-color: #8f00afff;
+}
+
+.step.finish {
+  background-color: #8f00afff;
+}
+
+.tab {
+  display: none;
+}
+
+.register-button {
+  position: absolute;
+  background-color: rgb(143, 0, 175);
+  padding: 5px 10px;
+  right: 0;
+  color: #ffffff;
+  border-radius: 5px;
+  border: none;
+  transition: all 0.3s;
+  font-weight: 600;
+  bottom: 20px;
+  right: 20px;
+  font-size: 12px;
+}
+
+.register-button:hover {
+  background-color: #2f2f2f;
+}
+
+.login-link {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #1c1c1c !important;
+  text-decoration: underline;
+  font-size: 11px !important;
+  transition: all 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  pointer-events: all;
+}
+
+.login-link:hover {
+  color: #8f00af !important;
+  transition: all 0.3s;
+}
+
+/* Style the input fields */
+
+.login-input input,
+.login-input select {
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  height: 35px;
+  background-color: #ffffff;
+  font-size: 14px;
+  border: #515151 1px solid;
+}
+
+/* Mark input boxes that gets an error on validation: */
+input.invalid {
+  border-color: rgb(250, 78, 78);
+  background-color: #ffe5e5 !important;
+}
+
+select.invalid {
+  border-color: rgb(250, 78, 78);
+  background-color: #ffe5e5 !important;
+}
+
+.login-section label.error {
+  color: #ca0000;
+  font-size: 11px !important;
+  padding-top: 17px !important;
+  left: 0;
+  position: relative;
+
+  font-weight: 600;
+}
+
+.inputfile {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.student-img-button-label {
+  position: relative;
+  padding: 0;
+  margin-top: 18px;
+  right: 0;
+  width: 100%;
+  border-radius: 5px;
+  border: none;
+  height: 35px;
+  background-color: rgb(143, 0, 175);
+  font-size: 14px;
+  border: #515151 1px solid;
+}
+
+.student-img-button-label:hover {
+  box-shadow: none;
+  background-color: #2f2f2f;
+}
+
+.student-img-button-label svg {
+  position: relative;
+  left: -20px;
+  bottom: -1px;
+}
+
+.student-img-button-label span {
+  position: relative;
+  top: 5px !important;
+}
+
+.file-spacer {
+  position: absolute;
+  background-color: #ffffff !important;
+  width: 1px !important;
+  height: 100%;
+  bottom: -6px;
+  left: 115px;
+}
+
+.file-name {
+  position: relative;
+  bottom: -6px;
+  left: 0px;
+  font-weight: 500;
+  font-size: 12px;
+  font-style: italic;
+}
 
 /*---------------------------------------------------------------------------------------------------------------------------------------------
 Responsive Styling
 -----------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
-
 /*-----------------------------------------min-992px-------------------------------------------------------------*/
 
+@media (max-width: 768px) {
+  .user-dropdown {
+    min-width: 97%;
+    left: 1%;
+    bottom: -79px;
+  }
+
+  .login-dropdown {
+    width: 95vw;
+  }
+
+  .register-dropdown {
+    width: 95vw;
+  }
+
+  .small-nav {
+    height: 80px;
+  }
+}
+
+@media (max-width: 992px) {
+  .nav-bar-items {
+    background-color: #212121;
+  }
+
+  .collapse-nav {
+    height: 0px !important;
+    overflow: auto;
+    opacity: 0;
+    transition: all 0.2s;
+  }
+
+  .show-nav {
+    height: 220px !important;
+    overflow: visible;
+    opacity: 1;
+    transition: all 0.2s;
+  }
+
+  .small-nav {
+    height: 80px !important;
+
+    .user-dropdown {
+      bottom: -79px;
+    }
+
+    .login-dropdown {
+      top: 0px;
+    }
+
+    .register-dropdown {
+      top: 0px;
+    }
+  }
+
+  .user-dropdown {
+    left: 1% !important;
+  }
+
+  .login-dropdown {
+    top: 0;
+    left: 0;
+  }
+
+  .register-dropdown {
+    top: 0;
+    left: 0;
+  }
+}
 
 @media (min-width: 992px) {
   /*--------------Navigation----------------*/
-  .navbar-nav a {
+  .navbar-nav .nav-link {
     position: relative;
   }
 
-  .navbar-nav a::after {
+  .navbar-nav .nav-link::after {
     content: "";
     position: absolute;
     width: 0;
@@ -139,18 +608,14 @@ Responsive Styling
     transition: width 0.3s ease 0s, left 0.3s ease 0s;
   }
 
-  .navbar-nav a:hover::after,
-  .navbar-nav a:focus::after {
+  .navbar-nav .nav-link:hover::after,
+  .navbar-nav .nav-link:focus::after {
     width: 100%;
     left: 0;
   }
 
   .hidden div {
     display: none;
-    pointer-events: none;
-  }
-
-  .hidden {
     pointer-events: none;
   }
 }

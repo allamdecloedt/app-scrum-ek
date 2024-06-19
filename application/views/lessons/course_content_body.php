@@ -43,6 +43,11 @@
                 <script src="<?php echo base_url();?>assets/global/plyr/plyr.js"></script>
                 <script>const player = new Plyr('#player');</script>
                 <!------------- PLYR.IO ------------>
+                <?php elseif (strtolower($provider) == 'mydevice'):; ?>
+                   <link rel="stylesheet" href="<?php echo base_url();?>assets/global/plyr/plyr.css">
+                   <video  poster="<?php echo $lesson_thumbnail_url;?>" width="900" height="800"  playsinline controls>
+                    <source src="<?php echo base_url('uploads/videos/'.$lesson_details['video_uplaod']); ?>" type="video/mp4">
+                </video>
             <?php else :?>
                 <!------------- PLYR.IO ------------>
                 <link rel="stylesheet" href="<?php echo base_url();?>assets/global/plyr/plyr.css">

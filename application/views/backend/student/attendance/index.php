@@ -42,7 +42,7 @@
                     </select>
                 </div>
                 <div class="col-md-2 mb-1">
-                    <select name="class" id="class_id" class="form-control select2" data-bs-toggle="select2" required>
+                    <select name="class" id="class_id_attendance" class="form-control select2" data-bs-toggle="select2" required>
                         <?php 
                         $school_id = school_id();
                         $this->db->where('class_id', $student_data['class_id']);
@@ -95,7 +95,7 @@ function classWiseSection(classId) {
 function filter_attendance(){
     var month = $('#month').val();
     var year = $('#year').val();
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_attendance').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id != "" && month != "" && year != ""){
         getDailtyAttendance();
@@ -107,7 +107,7 @@ function filter_attendance(){
 var getDailtyAttendance = function () {
     var month = $('#month').val();
     var year = $('#year').val();
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_attendance').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id != "" && month != "" && year != ""){
         $.ajax({

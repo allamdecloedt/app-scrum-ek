@@ -6,10 +6,56 @@ if($check_data->num_rows() > 0): ?>
             <div class="card-body">
                 <h4 class="mb-3 header-title mdi mdi-library-video"> <?php echo get_phrase('online_course'); ?></h4>
                 <form class="row justify-content-center" action="javascript:void(0)" method="get">
-                    <div class="col-md-10">
+                    <div class="col-md-12">
                         <div class="row justify-content-center">
+
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="school_id"><?php echo get_phrase('schools'); ?></label>
+                                    <select class="form-control select2" data-toggle="select2" name="school_id" id="school_id" onchange="schoolWiseClasse(this.value)">
+                                        <option value="<?php echo 'all'; ?>" <?php if($selected_school_id == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
+                                        <?php 
+                                        $user_id   = $this->session->userdata('user_id');
+                                        // $schools = $this->db->get('schools')->result_array();
+                                        // $schools = $this->crud_model->get_schools()->result_array();                            
+                                        $schools =  $this->db->select('*,schools.id as id');
+                                        $this->db->from('schools');
+                                        $this->db->join('students', 'schools.id = students.school_id', 'left');
+                                        $this->db->where('students.user_id', $user_id);
+                                        $query = $this->db->get()->result_array();
+                                        ?>
+                                        <?php foreach ($query as $school): ?>
+                                            <option value="<?php echo $school['id']; ?>" <?php if($selected_school_id == $school['id']) echo 'selected'; ?>>   <?php echo  $school['name']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Course Categories -->
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label for="class_id"><?php echo get_phrase('classes'); ?></label>
+                                    <select class="form-control select2" data-toggle="select2" name="class_id" id="class_id_course">
+                                        <option value="<?php echo 'all'; ?>" <?php if($selected_class_id == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
+                                        
+
+                                <?php if($selected_school_id !=""){
+                               $classes = $this->db->get_where('classes', array('school_id' => $selected_school_id))->result_array(); ?>
+                                <?php foreach($classes as $classe): ?>
+                                    <option value="<?php echo $classe['id']; ?>" <?php if($classe['id'] == $selected_class_id) echo 'selected'; ?>><?php echo $classe['name']; ?></option>
+                                <?php endforeach; ?>
+                            <?php } else { ?>
+                                <option value=""><?php echo get_phrase('select_section'); ?></option>
+                            <?php } ?>
+                                  
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+
                             <!-- Course Teacher -->
-                                <div class="col-md-3" <?php if($this->session->userdata('teacher_login') == 1) echo 'hidden'; ?>>
+                                <div class="col-md-2" <?php if($this->session->userdata('teacher_login') == 1) echo 'hidden'; ?>>
                                     <div class="form-group">
                                         <label for="user_id"><?php echo get_phrase('instructor'); ?></label>
                                         <select class="form-control select2" data-toggle="select2" name="user_id" id = 'user_id'>
@@ -22,7 +68,7 @@ if($check_data->num_rows() > 0): ?>
                                 </div>
 
                             <!-- Course subject -->
-                                <div class="col-md-3"<?php if($this->session->userdata('student_login') != 1) echo 'hidden'; ?>>
+                                <div class="col-md-2"<?php if($this->session->userdata('student_login') != 1) echo 'hidden'; ?>>
                                     <div class="form-group">
                                         <?php $class_id = $this->lms_model->get_class_id_by_user($this->session->userdata('user_id'));; ?>
                                             <?php $subjects = $this->lms_model->get_subject_by_class_id($class_id); ?>
@@ -38,9 +84,11 @@ if($check_data->num_rows() > 0): ?>
                                     </div>
                                 </div>
 
-                            <div class="col-md-3">
-                                <label for=".." class="text-white">..</label>
-                                <button type="submit" class="btn btn-primary btn-block" onclick="filterCourse()" name="button"><?php echo get_phrase('filter'); ?></button>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for=".." class="text-white">..</label>
+                                    <button type="submit" class="btn btn-primary btn-block" onclick="filterCourse()" name="button"><?php echo get_phrase('filter'); ?></button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -131,5 +179,14 @@ if($check_data->num_rows() > 0): ?>
 <?php endif; ?>
 
 <script>
+    function schoolWiseClasse(school_id) {
+    $.ajax({
+        url: "<?php echo route('academy/list/'); ?>"+school_id,
+        success: function(response){
+            $('#class_id_course').html(response);
+        }
+    });
+}
+
     $('.select2').select2();
 </script>

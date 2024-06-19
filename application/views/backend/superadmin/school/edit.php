@@ -29,7 +29,7 @@ foreach($schools as $school): ?>
             <select name="access" id="access" class="form-control select2" data-toggle = "select2">
                 <option value=""><?php echo get_phrase('select_a_access'); ?></option>
                 <option <?php if ($school['access'] == 1): ?> selected <?php endif; ?> value="1"><?php echo get_phrase('public'); ?></option>
-                <option <?php if ($school['access'] == 2): ?> selected <?php endif; ?> value="2"><?php echo get_phrase('privé'); ?></option>
+                <option <?php if ($school['access'] == 0): ?> selected <?php endif; ?> value="0"><?php echo get_phrase('privé'); ?></option>
               
             </select>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_access'); ?></small>
@@ -60,6 +60,11 @@ foreach($schools as $school): ?>
       <textarea class="form-control" id="address" name = "address" rows="5" required><?php echo $school['address']; ?></textarea>
       <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_address'); ?></small>
     </div>
+
+    <div class="form-group mb-1">
+          <label for="image_file"><?php echo get_phrase('upload_image'); ?></label>
+          <input type="file" class="form-control" id="school_image" name = "school_image">
+      </div>
 
     <div class="form-group mt-2 col-md-12">
       <button class="btn btn-block btn-primary" type="submit"><?php echo get_phrase('update_school'); ?></button>

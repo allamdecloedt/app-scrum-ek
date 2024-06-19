@@ -36,7 +36,7 @@ if($check_data->num_rows() > 0): ?>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="class_id"><?php echo get_phrase('classes'); ?></label>
-                                    <select class="form-control select2" data-toggle="select2" name="class_id" id="class_id">
+                                    <select class="form-control select2" data-toggle="select2" name="class_id" id="class_id_course">
                                         <option value="<?php echo 'all'; ?>" <?php if($selected_class_id == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
                                         <?php foreach ($classes->result_array() as $class): ?>
                                             <option value="<?php echo $class['id']; ?>" <?php if($selected_class_id == $class['id']) echo 'selected'; ?>><?php echo $class['name']; ?></option>

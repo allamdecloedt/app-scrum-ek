@@ -26,7 +26,7 @@
             <select name="access" id="access" class="form-control select2" data-toggle = "select2">
                 <option value=""><?php echo get_phrase('select_a_access'); ?></option>
                 <option value="1"><?php echo get_phrase('public'); ?></option>
-                <option value="2"><?php echo get_phrase('privé'); ?></option>
+                <option value="0"><?php echo get_phrase('privé'); ?></option>
               
             </select>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_access'); ?></small>

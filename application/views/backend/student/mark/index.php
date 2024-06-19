@@ -26,7 +26,7 @@
                     </select>
                 </div>
                 <div class="col-md-2 mb-1">
-                    <select name="class" id="class_id" class="form-control select2" data-toggle = "select2" required onchange="classWiseSubject(this.value)">
+                    <select name="class" id="class_id_mark" class="form-control select2" data-toggle = "select2" required onchange="classWiseSubject(this.value)">
                         <?php 
                         $school_id = school_id();
                         $this->db->where('class_id', $student_data['class_id']);
@@ -92,7 +92,7 @@ function classWiseSubject(classId) {
 
 function filter_marks(){
     var exam = $('#exam_id').val();
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_mark').val();
     var section_id = $('#section_id').val();
     var subject = $('#subject_id').val();
     if(class_id != "" && section_id != "" && exam != "" && subject != ""){

@@ -1,5 +1,7 @@
 <?php $base_url = base_url(); ?>
 
+<?php $GoogleAPI = $this->user_model->googleAPI() ?>
+
 <!-- JS Global Compulsory -->
   <script src="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/jquery-migrate/dist/jquery-migrate.min.js"></script>
   <script src="<?php echo base_url();?>assets/frontend/<?php echo $theme;?>/vendor/popper.js/dist/umd/popper.min.js"></script>
@@ -39,7 +41,7 @@
     "newestOnTop": true,
     "progressBar": true,
     "positionClass": "toast-top-right",
-    "preventDuplicates": false,
+    "preventDuplicates": true,
     "onclick": null,
     "showDuration": "300",
     "hideDuration": "1000",
@@ -50,12 +52,20 @@
     "showMethod": "fadeIn",
     "hideMethod": "slideUp"
   }
-  function success_notify(message) {
+   function success_notify(message) {
     toastr.success(message);
   }
 
   function error_notify(message) {
     toastr.error(message);
+  }
+
+   function warning_notify(message) {
+    toastr.warning(message);
+  }
+
+   function info_notify(message) {
+    toastr.info(message);
   }
 </script>
 
@@ -120,6 +130,10 @@
   </script>
 
 <!-- Custom JS. -->
+
+<script src="<?php echo base_url()?>assets/frontend/ultimate/js/nav.js" > </script>
+
+
 <?php
 if ($page_name == "home") {
 
@@ -132,7 +146,8 @@ if ($page_name == "home") {
 
 } elseif ($page_name == "contact") {
 
-  echo ' <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBFK8O-Fqob7VAuakxtTd66YA44hkdFEk8&callback=console.debug&libraries=maps,marker&v=beta"></script>';
+
+  echo ' <script src="https://maps.googleapis.com/maps/api/js?key=' . $GoogleAPI .  '&callback=console.debug&libraries=maps,marker&v=beta"></script>';
   echo '<script src="' . $base_url . 'assets/frontend/ultimate/js/contact-map.js"></script>';
   echo '<script defer >var rellax = new Rellax(".rellax");</script>';
 }

@@ -2,12 +2,12 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
-*  @author   : Creativeitem
-*  date      : November, 2019
-*  Ekattor School Management System With Addons
-*  http://codecanyon.net/user/Creativeitem
-*  http://support.creativeitem.com
-*/
+ *  @author   : Creativeitem
+ *  date      : November, 2019
+ *  Ekattor School Management System With Addons
+ *  http://codecanyon.net/user/Creativeitem
+ *  http://support.creativeitem.com
+ */
 
 class Admin extends CI_Controller
 {
@@ -20,13 +20,13 @@ class Admin extends CI_Controller
 		$this->load->database();
 		$this->load->library('session');
 
-		/*LOADING ALL THE MODELS HERE model  */ 
-		$this->load->model('Crud_model',     'crud_model');
-		$this->load->model('User_model',     'user_model');
+		/*LOADING ALL THE MODELS HERE model  */
+		$this->load->model('Crud_model', 'crud_model');
+		$this->load->model('User_model', 'user_model');
 		$this->load->model('Settings_model', 'settings_model');
-		$this->load->model('Payment_model',  'payment_model');
-		$this->load->model('Email_model',    'email_model');
-		$this->load->model('Addon_model',    'addon_model');
+		$this->load->model('Payment_model', 'payment_model');
+		$this->load->model('Email_model', 'email_model');
+		$this->load->model('Addon_model', 'addon_model');
 		$this->load->model('Frontend_model', 'frontend_model');
 		$this->load->model('Driver_model', 'driver_model');
 
@@ -61,6 +61,25 @@ class Admin extends CI_Controller
 		$page_data['folder_name'] = 'dashboard';
 		$this->load->view('backend/index', $page_data);
 	}
+
+	public function get_sections_by_class()
+	{
+		$class_ids = $this->input->post('class_ids');
+		if (empty($class_ids)) {
+			echo json_encode([]);
+			return;
+		}
+
+		$sections = [];
+		foreach ($class_ids as $class_id) {
+			$this->db->where('class_id', $class_id);
+			$result = $this->db->get('sections')->result_array();
+			$sections = array_merge($sections, $result);
+		}
+
+		echo json_encode($sections);
+	}
+
 
 	//START CLASS secion
 	public function manage_class($param1 = '', $param2 = '', $param3 = '')
@@ -513,6 +532,7 @@ class Admin extends CI_Controller
 	//START STUDENT ADN ADMISSION section
 	public function student($param1 = '', $param2 = '', $param3 = '', $param4 = '', $param5 = '')
 	{
+		$this->session->unset_session();
 
 		$page_data['class_id'] = '';
 		$page_data['section_id'] = '';
@@ -542,13 +562,18 @@ class Admin extends CI_Controller
 
 		//create to database
 		if ($param1 == 'create_single_student') {
-			$response = $this->user_model->single_student_create();
-			$page_data['class_id'] = html_escape($this->input->post('class_id'));
-			$page_data['section_id'] = html_escape($this->input->post('section_id'));
-			$page_data['working_page'] = 'filter';
-			$page_data['folder_name'] = 'student';
-			$page_data['page_title'] = 'student_list';
-			$this->load->view('backend/index', $page_data);
+			if ($param2 == "submit") {
+
+				$response = $this->user_model->single_student_create();
+				$page_data['class_id'] = html_escape($this->input->post('class_id'));
+				$page_data['section_id'] = html_escape($this->input->post('section_id'));
+				$page_data['working_page'] = 'filter';
+				$page_data['folder_name'] = 'student';
+				$page_data['page_title'] = 'student_list';
+				$this->load->view('backend/index', $page_data);
+			} else {
+				$this->session->set_flashdata('flash_message', get_phrase('welcome_back'));
+			}
 		}
 
 		if ($param1 == 'create_bulk_student') {
@@ -782,7 +807,7 @@ class Admin extends CI_Controller
 			$page_data['invoice_id'] = $param2;
 			$page_data['folder_name'] = 'invoice';
 			$page_data['page_name'] = 'invoice';
-			$page_data['page_title']  = 'invoice';
+			$page_data['page_title'] = 'invoice';
 			$this->load->view('backend/index', $page_data);
 		}
 
@@ -790,7 +815,7 @@ class Admin extends CI_Controller
 		if ($param1 == 'list') {
 			$date = explode('-', $this->input->get('date'));
 			$page_data['date_from'] = strtotime($date[0] . ' 00:00:00');
-			$page_data['date_to']   = strtotime($date[1] . ' 23:59:59');
+			$page_data['date_to'] = strtotime($date[1] . ' 23:59:59');
 			$page_data['selected_class'] = htmlspecialchars($this->input->get('selectedClass'));
 			$page_data['selected_status'] = htmlspecialchars($this->input->get('selectedStatus'));
 			$this->load->view('backend/admin/invoice/list', $page_data);
@@ -798,11 +823,11 @@ class Admin extends CI_Controller
 		// showing the index file
 		if (empty($param1)) {
 			$page_data['folder_name'] = 'invoice';
-			$page_data['page_title']  = 'invoice';
+			$page_data['page_title'] = 'invoice';
 			$first_day_of_month = "1 " . date("M") . " " . date("Y") . ' 00:00:00';
 			$last_day_of_month = date("t") . " " . date("M") . " " . date("Y") . ' 23:59:59';
-			$page_data['date_from']   = strtotime($first_day_of_month);
-			$page_data['date_to']     = strtotime($last_day_of_month);
+			$page_data['date_from'] = strtotime($first_day_of_month);
+			$page_data['date_to'] = strtotime($last_day_of_month);
 			$page_data['selected_class'] = 'all';
 			$page_data['selected_status'] = 'all';
 			$this->load->view('backend/index', $page_data);
@@ -817,16 +842,16 @@ class Admin extends CI_Controller
 			$type = htmlspecialchars($this->input->post('type'));
 			$date = explode('-', $this->input->post('dateRange'));
 			$date_from = strtotime($date[0] . ' 00:00:00');
-			$date_to   = strtotime($date[1] . ' 23:59:59');
+			$date_to = strtotime($date[1] . ' 23:59:59');
 			$selected_class = htmlspecialchars($this->input->post('selectedClass'));
 			$selected_status = htmlspecialchars($this->input->post('selectedStatus'));
 			echo route('export/' . $type . '/' . $date_from . '/' . $date_to . '/' . $selected_class . '/' . $selected_status);
 		}
 		// EXPORT AS PDF
 		if ($param1 == 'pdf' || $param1 == 'print') {
-			$page_data['action']   = $param1;
-			$page_data['date_from']   = $date_from;
-			$page_data['date_to']     = $date_to;
+			$page_data['action'] = $param1;
+			$page_data['date_from'] = $date_from;
+			$page_data['date_to'] = $date_to;
 			$page_data['selected_class'] = $selected_class;
 			$page_data['selected_status'] = $selected_status;
 			$html = $this->load->view('backend/admin/invoice/export', $page_data, true);
@@ -857,8 +882,8 @@ class Admin extends CI_Controller
 		}
 		// EXPORT AS CSV
 		if ($param1 == 'csv') {
-			$date_from   = $date_from;
-			$date_to     = $date_to;
+			$date_from = $date_from;
+			$date_to = $date_to;
 			$selected_class = $selected_class;
 			$selected_status = $selected_status;
 
@@ -950,7 +975,7 @@ class Admin extends CI_Controller
 		// showing the index file
 		if (empty($param1)) {
 			$page_data['folder_name'] = 'expense_category';
-			$page_data['page_title']  = 'expense_category';
+			$page_data['page_title'] = 'expense_category';
 			$this->load->view('backend/index', $page_data);
 		}
 	}
@@ -980,7 +1005,7 @@ class Admin extends CI_Controller
 		if ($param1 == 'list') {
 			$date = explode('-', $this->input->get('date'));
 			$page_data['date_from'] = strtotime($date[0] . ' 00:00:00');
-			$page_data['date_to']   = strtotime($date[1] . ' 23:59:59');
+			$page_data['date_to'] = strtotime($date[1] . ' 23:59:59');
 			$page_data['expense_category_id'] = htmlspecialchars($this->input->get('expense_category_id'));
 			$this->load->view('backend/admin/expense/list', $page_data);
 		}
@@ -988,9 +1013,9 @@ class Admin extends CI_Controller
 		// showing the index file
 		if (empty($param1)) {
 			$page_data['folder_name'] = 'expense';
-			$page_data['page_title']  = 'expense';
-			$page_data['date_from']   = strtotime(date('d-M-Y', strtotime(' -30 day')) . ' 00:00:00');
-			$page_data['date_to']     = strtotime(date('d-M-Y') . ' 23:59:59');
+			$page_data['page_title'] = 'expense';
+			$page_data['date_from'] = strtotime(date('d-M-Y', strtotime(' -30 day')) . ' 00:00:00');
+			$page_data['date_to'] = strtotime(date('d-M-Y') . ' 23:59:59');
 			$this->load->view('backend/index', $page_data);
 		}
 	}
@@ -1025,7 +1050,7 @@ class Admin extends CI_Controller
 		// showing the index file
 		if (empty($param1)) {
 			$page_data['folder_name'] = 'book';
-			$page_data['page_title']  = 'books';
+			$page_data['page_title'] = 'books';
 			$this->load->view('backend/index', $page_data);
 		}
 	}
@@ -1060,16 +1085,16 @@ class Admin extends CI_Controller
 		if ($param1 == 'list') {
 			$date = explode('-', $this->input->get('date'));
 			$page_data['date_from'] = strtotime($date[0] . ' 00:00:00');
-			$page_data['date_to']   = strtotime($date[1] . ' 23:59:59');
+			$page_data['date_to'] = strtotime($date[1] . ' 23:59:59');
 			$this->load->view('backend/admin/book_issue/list', $page_data);
 		}
 
 		// showing the index file
 		if (empty($param1)) {
 			$page_data['folder_name'] = 'book_issue';
-			$page_data['page_title']  = 'book_issue';
+			$page_data['page_title'] = 'book_issue';
 			$page_data['date_from'] = strtotime(date('d-M-Y', strtotime(' -30 day')) . ' 00:00:00');
-			$page_data['date_to']   = strtotime(date('d-M-Y') . ' 23:59:59');
+			$page_data['date_to'] = strtotime(date('d-M-Y') . ' 23:59:59');
 			$this->load->view('backend/index', $page_data);
 		}
 	}
@@ -1108,7 +1133,7 @@ class Admin extends CI_Controller
 		// showing the index file
 		if (empty($param1)) {
 			$page_data['folder_name'] = 'noticeboard';
-			$page_data['page_title']  = 'noticeboard';
+			$page_data['page_title'] = 'noticeboard';
 			$this->load->view('backend/index', $page_data);
 		}
 	}
@@ -1124,7 +1149,7 @@ class Admin extends CI_Controller
 		// showing the System Settings file
 		if (empty($param1)) {
 			$page_data['folder_name'] = 'settings';
-			$page_data['page_title']  = 'school_settings';
+			$page_data['page_title'] = 'school_settings';
 			$page_data['settings_type'] = 'school_settings';
 			$this->load->view('backend/index', $page_data);
 		}
@@ -1146,7 +1171,7 @@ class Admin extends CI_Controller
 		// showing the Smtp Settings file
 		if (empty($param1)) {
 			$page_data['folder_name'] = 'profile';
-			$page_data['page_title']  = 'manage_profile';
+			$page_data['page_title'] = 'manage_profile';
 			$this->load->view('backend/index', $page_data);
 		}
 	}
@@ -1155,6 +1180,7 @@ class Admin extends CI_Controller
 	// ABOUT APPLICATION STARTS
 	public function online_admission($param1 = "", $user_id = "")
 	{
+
 
 		if ($param1 == 'assigned') {
 			$data['student_id'] = $this->input->post('student_id');
@@ -1167,10 +1193,10 @@ class Admin extends CI_Controller
 
 			$user_id = $this->db->get_where('students', array('id' => $data['student_id']))->row('user_id');
 
-			$password = rand(100000, 999999);
-			$this->db->where('id', $user_id);
-			$this->db->update('users', array('status' => 1, 'password' => sha1($password)));
-			$this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
+			// $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
+
+			$this->db->where('user_id', $user_id);
+			$this->db->update('students', array('status' => 1));
 
 
 			$this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
@@ -1186,9 +1212,29 @@ class Admin extends CI_Controller
 			$this->session->set_flashdata('flash_message', get_phrase('admission_data_deleted_successfully'));
 			redirect(site_url('admin/online_admission'), 'refresh');
 		}
-		$page_data['applications'] = $this->db->get_where('users', array('status' => 3, 'school_id' => school_id()));
+
+		$this->db->select('user_id');
+		$this->db->where('status', 0);
+		$this->db->where('school_id', $this->session->userdata('school_id'));
+		$query = $this->db->get('students');
+
+		if ($query->num_rows() > 0) {
+			foreach ($query->result() as $row) {
+				$user_ids[] = $row->user_id;
+			}
+		}
+
+		if (!empty($user_ids)) {
+
+			$this->db->where_in('id', $user_ids);
+			$page_data['applications'] = $this->db->get('users');
+		} else {
+			$page_data['applications'] = null;
+		}
+
+
 		$page_data['folder_name'] = 'online_admission';
-		$page_data['page_title']  = 'online_admission';
+		$page_data['page_title'] = 'online_admission';
 		$this->load->view('backend/index', $page_data);
 	}
 	// ABOUT APPLICATION ENDS

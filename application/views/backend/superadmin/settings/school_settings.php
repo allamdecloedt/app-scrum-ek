@@ -61,6 +61,21 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row mb-3">
+                                <label class="col-md-3 col-form-label" for="example-fileinput"><?php echo get_phrase('school_profile_image'); ?></label>
+                                <div class="col-md-9 custom-file-upload">
+                                    <div class="wrapper-image-preview" style="margin-left: -6px;">
+                                        <div class="box" style="width: 250px;">
+                                            <div class="js--image-preview" style="background-image: url(<?php echo $this->user_model->get_school_image($school_data['id']); ?>); background-color: #F5F5F5;"></div>
+                                            <div class="upload-options">
+                                                <label for="school_image" class="btn"> <i class="mdi mdi-camera"></i> <?php echo get_phrase('upload_an_image'); ?> </label>
+                                                <input id="school_image" style="visibility:hidden;" type="file" class="image-upload" name="school_image" accept="image/*">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                           </div>
+
                             <div class="text-center">
                                 <button type="submit" class="btn btn-secondary col-xl-4 col-lg-4 col-md-12 col-sm-12" onclick="updateSchoolInfo()"><?php echo get_phrase('update_settings') ;?></button>
                             </div>

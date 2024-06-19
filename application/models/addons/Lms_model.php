@@ -7,6 +7,7 @@ class Lms_model extends CI_Model {
     function __construct()
     {
         parent::__construct();
+        $this->load->library('upload');
     }
 
     function index(){
@@ -17,7 +18,7 @@ class Lms_model extends CI_Model {
         return $this->db->get_where('course', array('id' => $course_id))->row_array();
     }
 
-    public function filter_course_for_backend($class_id ="", $user_id="", $status="", $subject_id=""){
+    public function filter_course_for_backend($class_id ="", $user_id="", $status="", $subject_id="",$school_id=""){
         $superadmin_login = $this->session->userdata('superadmin_login');
         $admin_login = $this->session->userdata('admin_login');
         $teacher_login = $this->session->userdata('teacher_login');
@@ -32,7 +33,7 @@ class Lms_model extends CI_Model {
         endif;
         
         if($student_login == 1):
-            return $this->filter_course_for_student($class_id, $user_id, $status, $subject_id);
+            return $this->filter_course_for_student($class_id, $user_id, $status, $subject_id,$school_id);
         endif;
     }
     public function filter_course_for_admin($class_id, $user_id, $status){
@@ -64,20 +65,35 @@ class Lms_model extends CI_Model {
         }
         return $this->db->get('course')->result_array();
     }
-    public function filter_course_for_student($class_id, $user_id, $status, $subject_id){
-        $class_id = $this->get_class_id_by_user($this->session->userdata('user_id'));
-        $this->db->where('school_id', school_id());
-        $this->db->where('status', 'active');
-        $this->db->where('class_id', $class_id);
+    public function filter_course_for_student($class_id, $user_id, $status, $subject_id,$school_id){
+        // $class_id = $this->get_class_id_by_user($this->session->userdata('user_id'));
+        // // $this->db->where('school_id', school_id());
+
+        
+        $schools =  $this->db->select('*,course.thumbnail as thumbnail');
+        $this->db->from('course');
+        $this->db->join('students', 'course.school_id = students.school_id', 'left');
+        $this->db->join('schools', 'schools.id = course.school_id', 'left');
+        $this->db->where('students.user_id', $this->session->userdata('user_id'));
+        $this->db->where('course.status', 'active');
+
 
         if ($user_id != "all") {
-            $this->db->where('user_id', $user_id);
+            $this->db->where('course.user_id', $user_id);
         }
         if ($subject_id != "all") {
-            $this->db->where('subject_id', $subject_id);
+            $this->db->where('course.subject_id', $subject_id);
         }
+        if ($school_id != "all") {
+            $this->db->where('course.school_id', $school_id);
+        }
+        if ($class_id != "all") {
+            $this->db->where('course.class_id', $class_id);
+        }
+        
 
-        return $this->db->get('course')->result_array();
+        // return $this->db->get('course')->result_array();
+        return $this->db->get()->result_array();
     }
 
     public function get_subject_by_class_id($class_id = ""){
@@ -287,7 +303,63 @@ class Lms_model extends CI_Model {
                 $sec = sprintf('%02d', $duration_formatter[2]);
                 $data['duration'] = $hour . ':' . $min . ':' . $sec;
                 $data['video_type'] = 'html5';
-            } else {
+            } elseif ($lesson_provider == 'mydevice'){
+                $data['video_type'] = 'mydevice';
+            
+                 if (!file_exists('uploads/videos')) {
+                    mkdir('uploads/videos', 0777, true);
+                }
+              
+
+                // move_uploaded_file($_FILES['userfileMe']['tmp_name'], 'uploads/videos/'.$data['video_uplaod']);
+                // Configuration de l'upload
+                        $upload_path = './uploads/videos/';
+                        $allowed_types = array('mp4', 'avi', 'mov');
+                        $max_size = 102400; // 100MB
+
+                    if (isset($_FILES['userfileMe']) && $_FILES['userfileMe']['error'] == 0) {
+                        // Vérifiez le type de fichier
+                        $file_type = pathinfo($_FILES['userfileMe']['name'], PATHINFO_EXTENSION);
+                        if (in_array($file_type, $allowed_types)) {
+                            // Vérifiez la taille du fichier
+                            if ($_FILES['userfileMe']['size'] <= $max_size * 1024) {
+                                // Déplacez le fichier vers le dossier de téléchargement
+                                $data['video_uplaod'] = rand().'.mp4';
+                                $file_name = $data['video_uplaod'];
+                                $tmp_name = $_FILES['userfileMe']['tmp_name'];
+                                $destination = $upload_path . $file_name;
+
+                                if (move_uploaded_file($tmp_name, $destination)) {
+                                    // Upload réussi
+                                    $datavideo['upload_data'] = array(
+                                        'file_name' => $file_name,
+                                        'file_type' => $file_type,
+                                        'file_path' => $upload_path,
+                                        'full_path' => $destination,
+                                        'file_size' => $_FILES['userfileMe']['size'],
+                                    );
+                                } else {
+                                    // Erreur de déplacement du fichier
+                                    $this->session->set_flashdata('error_message', get_phrase('There was a problem moving the file.'));
+                                    redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
+                                }
+                            } else {
+                                // Fichier trop grand
+                                $this->session->set_flashdata('error_message', get_phrase('The file size exceeds the limit.'));
+                                    redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
+                            }
+                        } else {
+                            // Type de fichier non autorisé
+                            $this->session->set_flashdata('error_message', get_phrase('The file type is not allowed.'));
+                            redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
+                        }
+                    } else {
+                        // Erreur d'upload
+                        $this->session->set_flashdata('error_message', get_phrase('No file uploaded or there was an upload error.'));
+                        redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
+                    }
+                            
+            }else {
                 $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_provider'));
                 redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
             }
@@ -322,6 +394,14 @@ class Lms_model extends CI_Model {
                 mkdir('uploads/thumbnails/lesson_thumbnails', 0777, true);
             }
             move_uploaded_file($_FILES['thumbnail']['tmp_name'], 'uploads/thumbnails/lesson_thumbnails/' . $inserted_id . '.jpg');
+        }
+    }
+    private function delete_old_files($path) {
+        $files = glob($path . '*'); // Obtenir tous les fichiers dans le répertoire
+        foreach($files as $file) {
+            if(is_file($file)) {
+                unlink($file); // Supprimer chaque fichier
+            }
         }
     }
 
@@ -374,7 +454,70 @@ class Lms_model extends CI_Model {
                     }
                     move_uploaded_file($_FILES['thumbnail']['tmp_name'], 'uploads/thumbnails/lesson_thumbnails/' . $lesson_id . '.jpg');
                 }
+            } elseif ($lesson_provider == 'mydevice'){
+
+
+
+                // $data['video_type'] = 'mydevice';
+                //  $data['video_uplaod'] = rand().'.mp4';
+                // move_uploaded_file($_FILES['userfileMe']['tmp_name'], 'uploads/videos/'.$data['video_uplaod']);
+                // Configuration de l'upload
+                $upload_path = './uploads/videos/';
+                $allowed_types = array('mp4', 'avi', 'mov');
+                $max_size = 102400; // 100MB
+
+            if (isset($_FILES['userfileMe']) && $_FILES['userfileMe']['error'] == 0) {
+                // Vérifiez le type de fichier
+                $file_type = pathinfo($_FILES['userfileMe']['name'], PATHINFO_EXTENSION);
+                if (in_array($file_type, $allowed_types)) {
+                    // Vérifiez la taille du fichier
+                    if ($_FILES['userfileMe']['size'] <= $max_size * 1024) {
+                        // Déplacez le fichier vers le dossier de téléchargement
+                        $data['video_uplaod'] = rand().'.mp4';
+                        $file_name = $data['video_uplaod'];
+                        $tmp_name = $_FILES['userfileMe']['tmp_name'];
+                        $destination = $upload_path . $file_name;
+
+                        if (move_uploaded_file($tmp_name, $destination)) {
+                            // Upload réussi
+                            $datavideo['upload_data'] = array(
+                                'file_name' => $file_name,
+                                'file_type' => $file_type,
+                                'file_path' => $upload_path,
+                                'full_path' => $destination,
+                                'file_size' => $_FILES['userfileMe']['size'],
+                            );
+                            $this->delete_old_files( 'uploads/videos/'.$previous_data['video_uplaod']);
+
+                        } else {
+                            // Erreur de déplacement du fichier
+                            $this->session->set_flashdata('error_message', get_phrase('There was a problem moving the file.'));
+                            redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
+                        }
+                    } else {
+                        // Fichier trop grand
+                        $this->session->set_flashdata('error_message', get_phrase('The file size exceeds the limit.'));
+                            redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
+                    }
+                } else {
+                    // Type de fichier non autorisé
+                    $this->session->set_flashdata('error_message', get_phrase('The file type is not allowed.'));
+                    redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
+                }
             } else {
+                // Erreur d'upload
+                $this->session->set_flashdata('error_message', get_phrase('No file uploaded or there was an upload error.'));
+                redirect(site_url('addons/courses/course_edit/' . $data['course_id']), 'refresh');
+            }
+
+
+
+
+
+
+
+
+            }else {
                 $this->session->set_flashdata('error_message', get_phrase('invalid_lesson_provider'));
                 redirect(site_url(strtolower($this->session->userdata('role')) . '/course_form/course_edit/' . $data['course_id']), 'refresh');
             }
@@ -626,7 +769,7 @@ class Lms_model extends CI_Model {
             $user_id = $this->session->userdata('user_id');
         }
         $student_id = $this->db->get_where('students', array('user_id' => $user_id))->row('id');
-        return $class_id = $this->db->get_where('enrols', array('student_id' => $student_id, 'school_id' => school_id(), 'session' => active_session()))->row('class_id');
+        return $class_id = $this->db->get_where('enrols', array('student_id' => $student_id,  'session' => active_session()))->row('class_id');
     }
 
 }
