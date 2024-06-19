@@ -139,7 +139,6 @@ public function onlineadmission_post() {
       'phone' => $this->post('phone'),
       'birthday' => date('Y-m-d', strtotime($this->post('birthday'))),
       'gender' => $this->post('gender'),
-      'blood_group' => $this->post('blood_group'),
       'school_id' => $this->post('school_id'), 
       'status' => $this->post('status') ?? 1, // Set status to 1 by default for students
       'watch_history' => json_encode($this->post('watch_history')), 
@@ -168,7 +167,6 @@ public function onlineadmission_post() {
           $response['phone'] = $data['phone'];
           $response['birthday'] = date('d-M-Y', strtotime($data['birthday']));
           $response['gender'] = $data['gender'];
-          $response['blood_group'] = $data['blood_group'];
           $response['school_id'] = $data['school_id'];
           $response['status'] = $data['status']; 
           $response['watch_history'] = $data['watch_history']; 
@@ -194,7 +192,6 @@ public function onlineadmissionEdit_put($id) {
       'phone' => $this->put('phone'),
       'birthday' => date('Y-m-d', strtotime($this->put('birthday'))),
       'gender' => $this->put('gender'),
-      'blood_group' => $this->put('blood_group'),
       'watch_history' => json_encode($this->put('watch_history')), // Convert watch_history array to JSON
   );
 
@@ -862,10 +859,166 @@ public function schools_get() {
       ->set_output(json_encode($response));
 }
 
+public function schools_by_category_get() {
+    // Set response content type to JSON
+    $this->output->set_content_type('application/json');
 
+    // Query to retrieve all schools
+    $this->db->select('schools.*');
+    $this->db->from('schools');
+    $schools = $this->db->get()->result_array();
+
+    // Check if schools are found
+    if ($schools) {
+        // Initialize an array to hold schools grouped by category
+        $schools_by_category = array();
+
+        // Iterate over each school to add image path and admin info
+        foreach ($schools as &$school) {
+            // Add image path
+            $image_path = 'uploads/schools/' . $school['id'] . '.jpg';
+            if (file_exists($image_path)) {
+                $school['image_url'] = base_url($image_path);
+            } else {
+                $school['image_url'] = null; // Or set a default image path
+            }
+
+            // Retrieve admin info from users table
+            $this->db->select('name, email, gender, phone, role, status, watch_history');
+            $this->db->from('users');
+            $this->db->where('school_id', $school['id']);
+            $this->db->where('role', 'admin');
+            $admin = $this->db->get()->row_array();
+
+            if ($admin) {
+                $school['admin'] = array(
+                    'name' => htmlspecialchars($admin['name']),
+                    'email' => htmlspecialchars($admin['email']),
+                    'gender' => htmlspecialchars($admin['gender']),
+                    'phone' => htmlspecialchars($admin['phone']),
+                    'role' => htmlspecialchars($admin['role']),
+                    'status' => (int) $admin['status'],
+                    'watch_history' => json_decode($admin['watch_history'])
+                );
+            } else {
+                $school['admin'] = null; // Or provide default admin info
+            }
+
+            // Group schools by category attribute
+            $category_name = $school['category'];
+            if (!isset($schools_by_category[$category_name])) {
+                $schools_by_category[$category_name] = array();
+            }
+            $schools_by_category[$category_name][] = $school;
+        }
+
+        // Add "All" category that includes all schools
+        $schools_by_category['All'] = $schools;
+
+        // Prepare success response
+        $response = array(
+            'status' => true,
+            'schools_by_category' => $schools_by_category
+        );
+    } else {
+        // Prepare failure response
+        $response = array(
+            'status' => false,
+            'notification' => 'No schools found'
+        );
+    }
+
+    // Return the response
+    $this->output->set_output(json_encode($response));
+}
+public function search_schools_post() {
+    // Set response content type to JSON
+    $this->output->set_content_type('application/json');
+
+    // Decode JSON data from the request body
+    $json_data = json_decode($this->input->raw_input_stream, true);
+
+    if (is_null($json_data)) {
+        $response = array(
+            'status' => false,
+            'message' => 'Invalid JSON data'
+        );
+        $this->output->set_output(json_encode($response));
+        return;
+    }
+
+    // Extract search parameters
+    $search_name = isset($json_data['name']) ? htmlspecialchars($json_data['name']) : '';
+    $search_category = isset($json_data['category']) ? htmlspecialchars($json_data['category']) : '';
+
+    // Start building the query
+    $this->db->select('schools.*');
+    $this->db->from('schools');
+
+    // Add search conditions
+    if (!empty($search_name)) {
+        $this->db->like('name', $search_name);
+    }
+    if (!empty($search_category) && $search_category !== 'All') {
+        $this->db->where('category', $search_category);
+    }
+
+    // Execute the query
+    $schools = $this->db->get()->result_array();
+
+    // Check if schools are found
+    if ($schools) {
+        // Iterate over each school to add image path and admin info
+        foreach ($schools as &$school) {
+            // Add image path
+            $image_path = 'uploads/schools/' . $school['id'] . '.jpg';
+            if (file_exists($image_path)) {
+                $school['image_url'] = base_url($image_path);
+            } else {
+                $school['image_url'] = null; // Or set a default image path
+            }
+
+           
+            // Retrieve admin info from users table
+            $this->db->select('name, email, gender, phone, role, status, watch_history');
+            $this->db->from('users');
+            $this->db->where('school_id', $school['id']);
+            $this->db->where('role', 'admin');
+            $admin = $this->db->get()->row_array();
+
+            if ($admin) {
+                $school['admin'] = array(
+                    'name' => htmlspecialchars($admin['name']),
+                    'email' => htmlspecialchars($admin['email']),
+                    'gender' => htmlspecialchars($admin['gender']),
+                    'phone' => htmlspecialchars($admin['phone']),
+                    'role' => htmlspecialchars($admin['role']),
+                    'status' => (int) $admin['status'],
+                    'watch_history' => json_decode($admin['watch_history'])
+                );
+            } else {
+                $school['admin'] = null; // Or provide default admin info
+            }
+        }
+
+        // Prepare success response
+        $response = array(
+            'status' => true,
+            'schools' => $schools
+        );
+    } else {
+        // Prepare failure response
+        $response = array(
+            'status' => false,
+            'message' => 'No schools found'
+        );
+    }
+
+    // Return the response
+    $this->output->set_output(json_encode($response));
+}
 
 ///////////////////////////////////////
-
 
 //Expense API CALL
 
