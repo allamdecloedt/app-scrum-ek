@@ -865,7 +865,373 @@ public function schools_get() {
 
 
 ///////////////////////////////////////
+//Create Admin
 
+
+public function create_admin_post()
+{
+    // Check if all required fields are present
+    $required_fields = ['adminName', 'adminEmail', 'adminGender', 'adminPhone', 'adminPassword', 'school_name', 'adminAddress'];
+    foreach ($required_fields as $field) {
+        if (empty($_POST[$field])) {
+            $this->response(array(
+                'status' => false,
+                'message' => 'Missing field: ' . $field
+            ), REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+    }
+
+    // Retrieve the school ID based on the school name
+    $school_name = $_POST['school_name'];
+    $school_id = $this->getSchoolId($school_name);
+
+    if (!$school_id) {
+        $this->response(array(
+            'status' => false,
+            'message' => 'Invalid school name'
+        ), REST_Controller::HTTP_BAD_REQUEST);
+        return;
+    }
+
+    // Extract admin data from POST
+    $admin_data = array(
+        'name' => $_POST['adminName'],
+        'email' => $_POST['adminEmail'],
+        'gender' => $_POST['adminGender'],
+        'phone' => $_POST['adminPhone'],
+        'password' => password_hash($_POST['adminPassword'], PASSWORD_BCRYPT),
+        'role' => 'admin',
+        'school_id' => $school_id,
+        'status' => 1,
+        'watch_history' => '[]',
+        'address' => $_POST['adminAddress'], // Adding address field
+    );
+
+    // Insert admin data into the database
+    $this->db->insert('users', $admin_data);
+    $user_id = $this->db->insert_id();
+
+    // Handle image upload if it exists
+    if (!empty($_FILES['image_file']['name'])) {
+        $image_path = 'uploads/users/' . $user_id . '.jpg';
+        if (!move_uploaded_file($_FILES['image_file']['tmp_name'], $image_path)) {
+            // Image upload failed
+            $this->response(array(
+                'status' => false,
+                'message' => 'Failed to upload user image'
+            ), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            return;
+        }
+    }
+
+    // Send success response
+    $this->response(array('status' => true, 'message' => 'Admin created successfully.'), REST_Controller::HTTP_OK);
+}
+
+
+private function getSchoolId($school_name) {
+    // Query the database to get the school ID
+    $query = $this->db->get_where('schools', array('name' => $school_name));
+
+    // Check if the query returned a result
+    if ($query->num_rows() > 0) {
+        // Extract the row and return the school ID
+        $result = $query->row();
+        return $result->id;
+    } else {
+        // Return null if the school name was not found
+        return null;
+    }
+}
+
+public function edit_admin_put($admin_id)
+{
+    if (empty($admin_id)) {
+        $this->response([
+            'status' => false,
+            'message' => 'Missing admin ID'
+        ], REST_Controller::HTTP_BAD_REQUEST);
+        return;
+    }
+    // Check if the admin exists
+    $admin_exists = $this->db->get_where('users', array('id' => $admin_id, 'role' => 'admin'));
+    if ($admin_exists->num_rows() == 0) {
+        $this->response(array(
+            'status' => false,
+            'message' => 'Admin not found'
+        ), REST_Controller::HTTP_NOT_FOUND);
+        return;
+    }
+
+    // Validate required fields
+
+    // Handle image upload if it exists
+    if (isset($_FILES['image_file']['name']) && !empty($_FILES['image_file']['name'])) {
+        $config['upload_path'] = './uploads/users/';
+        $config['allowed_types'] = 'gif|jpg|png';
+        $config['file_name'] = $admin_id . '.jpg';  // Ensure extension matches
+        $config['overwrite'] = TRUE;  // Overwrite the file if it already exists
+    
+        $this->load->library('upload', $config);
+    
+        if (!$this->upload->do_upload('image_file')) {
+            $error = $this->upload->display_errors();
+            $this->response([
+                'status' => false,
+                'message' => 'Failed to upload user image: ' . $error
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+            return;
+        } else {
+            // Optionally, you might want to add the path to the uploaded file in the database
+            $upload_data = $this->upload->data();
+            $admin_data['image_path'] = 'uploads/users/' . $upload_data['file_name'];
+        }
+    }
+    
+    // Retrieve the school ID based on the school name
+    $school_name = $this->put('school_name');
+    $school_id = $this->getSchoolId($school_name);
+    if (!$school_id) {
+        $this->response(array(
+            'status' => false,
+            'message' => "Invalid school name provided: $school_name"
+        ), REST_Controller::HTTP_BAD_REQUEST);
+        return;
+    }
+
+    // Extract admin data from PUT request
+    $admin_data = array(
+        'name' => $this->put('adminName'),
+        'email' => $this->put('adminEmail'),
+        'gender' => $this->put('adminGender'),
+        'phone' => $this->put('adminPhone'),
+        'password' => password_hash($this->put('adminPassword'), PASSWORD_BCRYPT), // Consider only updating if password is actually changed
+        'role' => 'admin',
+        'school_id' => $school_id,
+        'status' => 1,
+        'watch_history' => '[]',
+        'address' => $this->put('adminAddress'),
+    );
+
+    // Update the admin data in the database
+    $this->db->where('id', $admin_id);
+    $this->db->update('users', $admin_data);
+
+    // Check if the update was successful
+    if ($this->db->affected_rows() > 0) {
+        $this->response(array(
+            'status' => true,
+            'message' => 'Admin updated successfully'
+        ), REST_Controller::HTTP_OK);
+    } else {
+        $this->response(array(
+            'status' => false,
+            'message' => 'No changes made or update failed'
+        ), REST_Controller::HTTP_BAD_REQUEST);
+    }
+}
+
+
+public function all_school_names_get()
+{
+    // Query the database to get all school names
+    $this->db->select('name');
+    $this->db->from('schools');
+    $query = $this->db->get();
+
+    // Check if any schools are found
+    if ($query->num_rows() > 0) {
+        $school_names = $query->result_array();
+        $response = array(
+            'status' => true,
+            'data' => $school_names
+        );
+        $this->response($response, REST_Controller::HTTP_OK);
+    } else {
+        // No schools found
+        $response = array(
+            'status' => false,
+            'message' => 'No schools found'
+        );
+        $this->response($response, REST_Controller::HTTP_NOT_FOUND);
+    }
+}
+
+public function Deladmin_delete($admin_id)
+{
+    // Validate that admin ID is provided and is numeric
+    if (empty($admin_id) || !is_numeric($admin_id)) {
+        $this->response(array(
+            'status' => false,
+            'message' => 'Invalid or missing admin ID'
+        ), REST_Controller::HTTP_BAD_REQUEST);
+        return;
+    }
+
+    // Start transaction
+    $this->db->trans_start();
+
+    // Check if the admin exists
+    $this->db->where('id', $admin_id);
+    $query = $this->db->get('users');
+    if ($query->num_rows() == 0) {
+        $this->db->trans_rollback();
+        $this->response(array(
+            'status' => false,
+            'message' => 'Admin not found'
+        ), REST_Controller::HTTP_NOT_FOUND);
+        return;
+    }
+
+    // Delete the admin from the database
+    $this->db->where('id', $admin_id);
+    $this->db->delete('users');
+
+    // Check if there's an associated image and delete it
+    $image_path = 'uploads/users/' . $admin_id . '.jpg';
+    if (file_exists($image_path) && !unlink($image_path)) {
+        $this->db->trans_rollback();
+        $this->response(array(
+            'status' => false,
+            'message' => 'Failed to delete admin image'
+        ), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        return;
+    }
+
+    // Complete the transaction
+    $this->db->trans_complete();
+    if ($this->db->trans_status() === FALSE) {
+        $this->response(array(
+            'status' => false,
+            'message' => 'Failed to delete admin'
+        ), REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    } else {
+        $this->response(array(
+            'status' => true,
+            'message' => 'Admin deleted successfully'
+        ), REST_Controller::HTTP_OK);
+    }
+}
+
+
+
+
+
+public function all_admins_get()
+{
+    // Retrieve all admins including their hashed passwords (Not recommended)
+    $this->db->select('users.id, users.name, users.email, users.phone, users.address, users.gender, schools.name as school_name'); // Included password
+    $this->db->from('users');
+    $this->db->join('schools', 'users.school_id = schools.id', 'left');
+    $this->db->where('users.role', 'admin');
+    $this->db->order_by('users.name', 'ASC'); // Order by name in ascending order
+    $admins = $this->db->get()->result_array();
+
+    // Check if any admins were found
+    if (empty($admins)) {
+        $response = array(
+            'status' => false,
+            'notification' => 'No admins found'
+        );
+    } else {
+        // Iterate through each admin and check if image exists
+        foreach ($admins as &$admin) {
+            $image_path = 'uploads/users/' . $admin['id'] . '.jpg'; // Assuming 'id' is the unique identifier for each admin
+            if (file_exists($image_path)) {
+                $admin['image_url'] = base_url($image_path); // Assuming you're using CodeIgniter and 'base_url' is configured
+            }
+        
+        }
+
+        $response = array(
+            'status' => true,
+            'admins' => $admins
+        );
+    }
+
+    // Return the JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($response));
+}
+
+
+
+public function fetch_admins_by_name_get()
+{
+    // Retrieve the name, alphabet, and school_name query parameters
+    $name = $this->input->get('name');
+    $alphabet = $this->input->get('alphabet');
+    $school_name = $this->input->get('school_name');
+
+    // Log or echo the name, alphabet, and school_name for debugging
+    log_message('debug', 'Provided name: ' . $name);
+    log_message('debug', 'Provided alphabet: ' . $alphabet);
+    log_message('debug', 'Provided school name: ' . $school_name);
+
+    // Check if name, alphabet, or school_name is provided
+    if (!$name && !$alphabet && !$school_name) {
+        $response = array(
+            'status' => false,
+            'notification' => 'No name, alphabet, or school name provided'
+        );
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
+        return;
+    }
+
+    // Retrieve admins from the 'users' table where role is 'admin' and apply filters
+    $this->db->select('users.*, schools.name as school_name'); // Select users and join with school names
+    $this->db->from('users');
+    $this->db->join('schools', 'users.school_id = schools.id', 'left');
+    $this->db->where('role', 'admin');
+    
+    if ($name) {
+        $this->db->like('users.name', $name);
+    }
+    if ($alphabet) {
+        $this->db->like('users.name', $alphabet, 'after'); // Filter by name starting with the provided alphabet
+    }
+    if ($school_name) {
+        $this->db->where('schools.name', $school_name);
+    }
+
+    // Execute the query to retrieve admins
+    $admins = $this->db->get()->result_array();
+
+    // Log or echo the generated SQL query for debugging
+    log_message('debug', 'Generated SQL query: ' . $this->db->last_query());
+
+    // Check if any admins were found
+    if (empty($admins)) {
+        $response = array(
+            'status' => false,
+            'notification' => 'No admins found with the provided criteria'
+        );
+    } else {
+        // Iterate through each admin and check if image exists
+        foreach ($admins as &$admin) {
+            $image_path = 'uploads/users/' . $admin['id'] . '.jpg'; // Assuming 'id' is the unique identifier for each admin
+            if (file_exists($image_path)) {
+                $admin['image_url'] = base_url($image_path); // Assuming you're using CodeIgniter and 'base_url' is configured
+            }
+        }
+
+        $response = array(
+            'status' => true,
+            'admins' => $admins
+        );
+    }
+
+    // Return the JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($response));
+}
+
+//END ADMIN PART////////
 
 //Expense API CALL
 
