@@ -1607,22 +1607,22 @@ class Superadmin extends CI_Controller
 
       $school_id = $this->db->get_where('students', array('id' => $data['student_id']))->row('school_id');
       $user_id = $this->db->get_where('students', array('id' => $data['student_id']))->row('user_id');
-      $code = $this->db->get_where('students', array('id' => $data['student_id'],'school_id'=>$school_id))->row('code');
+      $code = $this->db->get_where('students', array('id' => $data['student_id'], 'school_id' => $school_id))->row('code');
 
       // $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
 
       $this->db->where('code', $code);
       $this->db->where('id', $data['student_id']);
       $this->db->update('students', array('status' => 1));
-      
+
       $this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
       redirect(site_url('superadmin/online_admission'), 'refresh');
 
     }
 
     if ($param1 == 'delete') {
-      $this->db->where('id', $user_id);
-      $this->db->delete('users');
+      //$this->db->where('id', $user_id);
+      //$this->db->delete('users');
       $this->db->where('code', $code);
       $this->db->delete('students');
 
@@ -1631,17 +1631,19 @@ class Superadmin extends CI_Controller
     }
 
     $empty = true;
-
-    $this->db->where('status', 0);
-    $query = $this->db->get('students');
     
+    $this->db->where('school_id', school_id());
+    $this->db->where('status', 0);
+
+    $query = $this->db->get('students');
+
     if ($query->num_rows() > 0) {
       $empty = false;
     }
 
     if (!$empty) {
 
-      $page_data['applications'] = $this->db->get_where('students', array('status' => 0));
+      $page_data['applications'] = $this->db->get_where('students', array('status' => 0, 'school_id' => school_id()));
     } else {
       $page_data['applications'] = null;
     }

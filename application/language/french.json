@@ -1272,5 +1272,19 @@
     "trips": "Trips",
     "total_number_osdzdf_student": "Total number osdzdf student",
     "no_data_revbtrbfound": "No data revbtrbfound",
-    "amvfbvbbrtount": "Amvfbvbbrtount"
+    "amvfbvbbrtount": "Amvfbvbbrtount",
+    "login": "Login",
+    "e-mail": "E-mail",
+    "no_account_yet?_": "No account yet? ",
+    "register": "Register",
+    "next": "Next",
+    "required": "Required",
+    "picture": "Picture",
+    "repeat_password": "Repeat password",
+    "please_enter_a_valid_email_address": "Please enter a valid email address",
+    "email_already_in_use": "Email already in use",
+    "please_fill_in_the_required_fields": "Please fill in the required fields",
+    "please_choose_an_image": "Please choose an image",
+    "passwords_need_to_match": "Passwords need to match",
+    "please_fill_in_your_password": "Please fill in your password"
 }
