@@ -71,7 +71,8 @@
             <label class="col-md-3 col-form-label" for="example-textarea"><?php echo get_phrase('address'); ?></label>
             <div class="col-md-9">
                 <textarea class="form-control" id="example-textarea" rows="5" name = "address" placeholder="address"></textarea>
-            </div>
+            </div>+
+            
         </div>
 
         <div class="form-group row mb-3">
