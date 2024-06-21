@@ -107,7 +107,7 @@ if($user_type == 'parent'){
             <i class="<?php echo $main_menu['icon']; ?>"></i>
             <span><?php echo get_phrase($main_menu['displayed_name']); ?></span>
             <?php if($main_menu['unique_identifier'] == 'online_admission'): ?>
-              <span class="badge bg-danger float-end"><?php echo $this->db->get_where('students', array('status' => 0))->num_rows(); ?></span>
+              <span class="badge bg-danger float-end"><?php echo $this->db->get_where('students', array('status' => 0 ,'school_id' => school_id()))->num_rows(); ?></span>
             <?php endif; ?>
             <?php if($main_menu['unique_identifier'] == 'online_admission_school'): ?>
               <span class="badge bg-danger float-end"><?php echo $this->db->get_where('schools', array('status' => 0 , 'Etat' => 1))->num_rows(); ?></span>
