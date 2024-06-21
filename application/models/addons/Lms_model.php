@@ -70,7 +70,7 @@ class Lms_model extends CI_Model {
         // // $this->db->where('school_id', school_id());
 
         
-        $schools =  $this->db->select('*,course.thumbnail as thumbnail');
+        $schools =  $this->db->select('*,course.id as id,course.thumbnail as thumbnail');
         $this->db->from('course');
         $this->db->join('students', 'course.school_id = students.school_id', 'left');
         $this->db->join('schools', 'schools.id = course.school_id', 'left');
