@@ -1184,7 +1184,13 @@ class Admin extends CI_Controller
 
 		if ($param1 == 'assigned') {
 			$data['student_id'] = $this->input->post('student_id');
-		
+			$data['class_id'] = $this->input->post('class_id');
+			$data['section_id'] = $this->input->post('section_id');
+			$data['school_id'] = school_id();
+			$data['session'] = active_session();
+
+			$this->db->insert('enrols', $data);
+
 			$user_id = $this->db->get_where('students', array('id' => $data['student_id']))->row('user_id');
 
 			// $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
