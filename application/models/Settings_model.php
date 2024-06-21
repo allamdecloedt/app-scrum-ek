@@ -103,6 +103,8 @@ class Settings_model extends CI_Model {
 
   public function update_paypal_settings() {
     $paypal_info = array();
+    $CI = &get_instance();
+    $CI->load->database();
 
     $paypal['paypal_active'] = htmlspecialchars($this->input->post('paypal_active'));
     $paypal['paypal_mode'] = htmlspecialchars($this->input->post('paypal_mode'));
@@ -114,6 +116,7 @@ class Settings_model extends CI_Model {
 
     $data['value']    =   json_encode($paypal_info);
     $this->db->where('key', 'paypal_settings');
+    $this->db->where('school_id', $CI->session->userdata('school_id'));
     $this->db->update('payment_settings', $data);
 
     $response = array(
@@ -125,7 +128,8 @@ class Settings_model extends CI_Model {
 
   public function update_stripe_settings() {
     $stripe_info = array();
-
+    $CI = &get_instance();
+    $CI->load->database();
     $stripe['stripe_active'] = htmlspecialchars($this->input->post('stripe_active'));
     $stripe['stripe_mode'] = htmlspecialchars($this->input->post('stripe_mode'));
     $stripe['stripe_test_secret_key'] = htmlspecialchars($this->input->post('stripe_test_secret_key'));
@@ -138,6 +142,7 @@ class Settings_model extends CI_Model {
 
     $data['value']    =   json_encode($stripe_info);
     $this->db->where('key', 'stripe_settings');
+    $this->db->where('school_id',$CI->session->userdata('school_id'));
     $this->db->update('payment_settings', $data);
 
     $response = array(
