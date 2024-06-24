@@ -17,9 +17,10 @@
                   <option value=""><?php echo get_phrase('select_system_currency'); ?></option>
                   <?php
                   $currencies = $this->settings_model->get_currencies();
+                  $result = $this->db->get_where('settings_school', array('school_id' => school_id()))->row_array();
                   foreach ($currencies as $currency):?>
                   <option value="<?php echo $currency['code'];?>"
-                    <?php if (get_settings('system_currency') == $currency['code'])echo 'selected';?>> <?php echo $currency['code'];?>
+                    <?php if ($result['system_currency'] == $currency['code'])echo 'selected';?>> <?php echo $currency['code'] ;?>
                   </option>
                 <?php endforeach; ?>
               </select>
@@ -29,10 +30,10 @@
             <label class="col-md-3 col-form-label" for="currency_position"> <?php echo get_phrase('currency_position') ;?> </label>
             <div class="col-md-9">
               <select class="form-control select2" data-bs-toggle="select2" id = "currency_position" name="currency_position" required>
-                <option value="left" <?php if (get_settings('currency_position') == 'left') echo 'selected';?> ><?php echo get_phrase('left'); ?></option>
-                <option value="right" <?php if (get_settings('currency_position') == 'right') echo 'selected';?> ><?php echo get_phrase('right'); ?></option>
-                <option value="left-space" <?php if (get_settings('currency_position') == 'left-space') echo 'selected';?> ><?php echo get_phrase('left_with_a_space'); ?></option>
-                <option value="right-space" <?php if (get_settings('currency_position') == 'right-space') echo 'selected';?> ><?php echo get_phrase('right_with_a_space'); ?></option>
+                <option value="left" <?php if ($result['currency_position'] == 'left') echo 'selected';?> ><?php echo get_phrase('left'); ?></option>
+                <option value="right" <?php if ($result['currency_position'] == 'right') echo 'selected';?> ><?php echo get_phrase('right'); ?></option>
+                <option value="left-space" <?php if ($result['currency_position'] == 'left-space') echo 'selected';?> ><?php echo get_phrase('left_with_a_space'); ?></option>
+                <option value="right-space" <?php if ($result['currency_position'] == 'right-space') echo 'selected';?> ><?php echo get_phrase('right_with_a_space'); ?></option>
               </select>
             </div>
           </div>

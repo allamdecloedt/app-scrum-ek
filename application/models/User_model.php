@@ -128,20 +128,52 @@ class User_model extends CI_Model
 		// $data['watch_history'] = '[]';
 
 		// check email duplication
-		// $duplication_status = $this->check_duplication('on_create', $data['email']);
-		// if($duplication_status){
+		$duplication_status = $this->check_duplication('on_create', $data['name']);
+		if($duplication_status){
 		$this->db->insert('schools', $data);
+		$school_id = $this->db->insert_id();
+	    // Data to be inserted
+		$data = array(
+					array(
+						
+						'key' => 'stripe_settings',
+						'value' => '[{\"stripe_active\":\"yes\",\"stripe_mode\":\"on\",\"stripe_test_secret_key\":\"1234\",\"stripe_test_public_key\":\"1234\",\"stripe_live_secret_key\":\"1234\",\"stripe_live_public_key\":\"1234\",\"stripe_currency\":\"USD\"}]',
+						'school_id' => $school_id
+					),
+					array(
+						
+						'key' => 'paypal_settings',
+						'value' => '[{\"paypal_active\":\"yes\",\"paypal_mode\":\"sandbox\",\"paypal_client_id_sandbox\":\"1234\",\"paypal_client_id_production\":\"1234\",\"paypal_currency\":\"USD\"}]',
+						'school_id' => $school_id
+					)
+				);
+		
+				// Insert data into the `payment_settings` table
+				$this->db->insert_batch('payment_settings', $data);
+		
+		        // Data to be inserted
+				$data = array(
+					
+					'school_id' => $school_id,
+					'system_currency' => 'USD',
+					'currency_position' => 'left',
+					'language' => 'english',
+
+				);
+		
+				// Insert data into the `settings` table
+				$this->db->insert('settings_school', $data);		
 
 		$response = array(
 			'status' => true,
 			'notification' => get_phrase('school_added_successfully')
 		);
-		// }else{
-		// 	$response = array(
-		// 		'status' => false,
-		// 		'notification' => get_phrase('sorry_this_email_has_been_taken')
-		// 	);
-		// }
+		}else{
+			$response = array(
+				'status' => false,
+				'notification' => get_phrase('sorry_this_name_has_been_taken')
+			);
+		 }
 
 		return json_encode($response);
 	}
