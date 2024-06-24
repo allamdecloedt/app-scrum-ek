@@ -1385,6 +1385,622 @@ public function fetch_admins_by_name_get()
 }
 
 //END ADMIN PART////////
+ 
+
+//Teacher Part
+
+public function create_teacher_post() {
+    // Validate the input data
+    if (!$this->input->post('name') || !$this->input->post('email') || !$this->input->post('password') || !$this->input->post('address') || !$this->input->post('phone') || !$this->input->post('gender') || !$this->input->post('department_id')) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    $data = $this->input->post();
+
+    // Log the received department ID and the data array
+    log_message('debug', 'Department ID received: ' . $data['department_id']);
+    log_message('debug', 'Full data received: ' . json_encode($data));
+
+    // Fetch department details based on department ID, including school_id
+    $this->db->select('id, name, school_id');
+    $this->db->from('departments');
+    $this->db->where('id', $data['department_id']);
+    $department = $this->db->get()->row_array();
+    
+    if (!$department) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid department ID']));
+        return;
+    }
+
+    $department_id = $department['id'];
+    $school_id = $department['school_id'];
+
+    // Prepare social links as JSON
+    $social_links = json_encode([
+        'facebook' => $data['facebook'],
+        'linkedin' => $data['linkedin'],
+        'twitter' => $data['twitter'],
+    ]);
+
+    // Insert the user data into the 'users' table
+    $user_data = [
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => password_hash($data['password'], PASSWORD_BCRYPT), // Hash the password
+        'address' => $data['address'],
+        'phone' => $data['phone'],
+        'gender' => $data['gender'],
+        'school_id' => $school_id // Include school_id
+    ];
+    $this->db->insert('users', $user_data);
+    $user_id = $this->db->insert_id();
+
+    if (!$user_id) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['error' => 'Failed to create user']));
+        return;
+    }
+
+    // Insert the teacher data into the 'teachers' table
+    $teacher_data = [
+        'user_id' => $user_id,
+        'department_id' => $department_id,
+        'school_id' => $school_id, // Use school_id from department
+        'designation' => $data['designation'],
+        'about' => $data['about'],
+        'social_links' => $social_links,
+    ];
+    $this->db->insert('teachers', $teacher_data);
+    $teacher_id = $this->db->insert_id();
+
+    if (!$teacher_id) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['error' => 'Failed to create teacher']));
+        return;
+    }
+
+    // Handle image upload
+    if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+        $upload_path = './uploads/users/';
+        $image_path = $upload_path . $user_id . '.jpg'; // Save the image as 'user_id.jpg'
+
+        // Load the upload library
+        $config['upload_path'] = $upload_path;
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['file_name'] = $user_id . '.jpg';
+        $config['overwrite'] = true;
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('image')) {
+            $this->output
+                ->set_status_header(500)
+                ->set_output(json_encode(['error' => $this->upload->display_errors()]));
+            return;
+        }
+    }
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['success' => 'Teacher created successfully', 'teacher_id' => $teacher_id]));
+}
+
+public function edit_teacher_put($teacher_id) {
+    // Read the raw input
+    $raw_input = file_get_contents('php://input');
+    log_message('debug', 'Raw input data: ' . $raw_input);
+
+    // Decode the JSON input
+    $data = json_decode($raw_input, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid JSON input']));
+        return;
+    }
+
+    // Validate the input data
+    $required_fields = ['name', 'email', 'address', 'phone', 'gender', 'department_id', 'designation', 'about'];
+    foreach ($required_fields as $field) {
+        if (!isset($data[$field])) {
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(['error' => 'Invalid input data: Missing ' . $field]));
+            return;
+        }
+    }
+
+    // Log the received data
+    log_message('debug', 'Received data: ' . json_encode($data));
+
+    // Fetch department details based on department ID, including school_id
+    $this->db->select('id, name, school_id');
+    $this->db->from('departments');
+    $this->db->where('id', $data['department_id']);
+    $department = $this->db->get()->row_array();
+
+    if (!$department) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid department ID']));
+        return;
+    }
+
+    $department_id = $department['id'];
+    $school_id = $department['school_id'];
+
+    // Prepare social links as JSON
+    $social_links = json_encode([
+        'facebook' => $data['facebook'] ?? '',
+        'linkedin' => $data['linkedin'] ?? '',
+        'twitter' => $data['twitter'] ?? '',
+    ]);
+
+    // Fetch the existing teacher data
+    $this->db->select('user_id');
+    $this->db->from('teachers');
+    $this->db->where('id', $teacher_id);
+    $teacher = $this->db->get()->row_array();
+
+    if (!$teacher) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid teacher ID']));
+        return;
+    }
+
+    $user_id = $teacher['user_id'];
+
+    // Update the user data in the 'users' table
+    $user_data = [
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'address' => $data['address'],
+        'phone' => $data['phone'],
+        'gender' => $data['gender'],
+        'school_id' => $school_id // Include school_id
+    ];
+
+    $this->db->where('id', $user_id);
+    $this->db->update('users', $user_data);
+
+    // Update the teacher data in the 'teachers' table
+    $teacher_data = [
+        'department_id' => $department_id,
+        'school_id' => $school_id, // Use school_id from department
+        'designation' => $data['designation'],
+        'about' => $data['about'],
+        'social_links' => $social_links,
+    ];
+
+    $this->db->where('id', $teacher_id);
+    $this->db->update('teachers', $teacher_data);
+
+    // Handle image upload
+    if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
+        $upload_path = './uploads/users/';
+        $image_path = $upload_path . $user_id . '.jpg'; // Save the image as 'user_id.jpg'
+
+        // Load the upload library
+        $config['upload_path'] = $upload_path;
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['file_name'] = $user_id . '.jpg';
+        $config['overwrite'] = true;
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('image')) {
+            $this->output
+                ->set_status_header(500)
+                ->set_output(json_encode(['error' => $this->upload->display_errors()]));
+            return;
+        }
+    }
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['success' => 'Teacher updated successfully']));
+}
+
+
+public function all_teacher_get() {
+    // Fetch all teacher data along with user info and department name from the database
+    $school_id = $this->input->get('school_id');
+    if (!$school_id) {
+        $school_id = school_id(); // Assuming you have a function to get current school ID
+    }
+
+    // Join teachers table with users and departments table
+    $this->db->select('teachers.*, users.name, users.address, users.email, users.phone, users.gender, departments.name as department_name');
+    $this->db->from('teachers');
+    $this->db->join('users', 'teachers.user_id = users.id');
+    $this->db->join('departments', 'teachers.department_id = departments.id');
+    $this->db->where('teachers.school_id', $school_id);
+
+    $query = $this->db->get();
+    $teachers = $query->result_array();
+
+    // Add image URL to each teacher
+    foreach ($teachers as &$teacher) {
+        $image_path = 'uploads/users/' . $teacher['user_id'] . '.jpg'; // Assuming 'user_id' is the unique identifier for each user
+        if (file_exists($image_path)) {
+            $teacher['image_url'] = base_url($image_path); // Assuming you're using CodeIgniter and 'base_url' is configured
+        } else {
+            $teacher['image_url'] = base_url('uploads/users/default.jpg'); // Default image if user image doesn't exist
+        }
+    }
+
+    // Send the data as JSON
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($teachers));
+}
+
+public function teacher_by_id_get($teacher_id) {
+    // Validate the input data
+    if (!$teacher_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid teacher ID']));
+        return;
+    }
+
+    // Join teachers table with users and departments table
+    $this->db->select('teachers.*, users.name, users.address, users.email, users.phone, users.gender, departments.name as department_name');
+    $this->db->from('teachers');
+    $this->db->join('users', 'teachers.user_id = users.id');
+    $this->db->join('departments', 'teachers.department_id = departments.id');
+    $this->db->where('teachers.id', $teacher_id);
+
+    $query = $this->db->get();
+    $teacher = $query->row_array();
+
+    if (!$teacher) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['error' => 'Teacher not found']));
+        return;
+    }
+
+    // Add image URL to the teacher
+    $image_path = 'uploads/users/' . $teacher['user_id'] . '.jpg'; // Assuming 'user_id' is the unique identifier for each user
+    if (file_exists(FCPATH . $image_path)) { // Ensure the path check is accurate
+        $teacher['image_url'] = base_url($image_path); // Assuming you're using CodeIgniter and 'base_url' is configured
+    } else {
+        $teacher['image_url'] = base_url('uploads/users/default.jpg'); // Default image if user image doesn't exist
+    }
+
+    // Decode social links
+    $social_links = json_decode($teacher['social_links'], true);
+    if ($social_links) {
+        $teacher['facebook'] = $social_links['facebook'];
+        $teacher['linkedin'] = $social_links['linkedin'];
+        $teacher['twitter'] = $social_links['twitter'];
+    } else {
+        $teacher['facebook'] = null;
+        $teacher['linkedin'] = null;
+        $teacher['twitter'] = null;
+    }
+
+    // Remove the social_links field as it is now split into individual fields
+    unset($teacher['social_links']);
+
+    // Send the data as JSON
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($teacher));
+}
+
+
+public function department_get() {
+    // Fetch all department data from the database
+    $school_id = $this->input->get('school_id');
+    if ($school_id) {
+        $this->db->where('school_id', $school_id);
+    }
+
+    $query = $this->db->get('departments'); // Assuming your table name is 'departments'
+    $departments = $query->result_array();
+
+    // Send the data as JSON
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($departments));
+}
+public function search_get() {
+    $school_id = $this->input->get('school_id');
+    $name = $this->input->get('name');
+
+    if (!$school_id) {
+        $school_id = school_id(); // Assuming you have a function to get current school ID
+    }
+
+    if (!$name) {
+        // Return an error response if the name parameter is missing
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['error' => 'Name parameter is required']));
+        return;
+    }
+
+    // Join teachers table with users and departments table
+    $this->db->select('teachers.*, users.name, users.address, users.email, users.phone, users.gender, departments.name as department_name');
+    $this->db->from('teachers');
+    $this->db->join('users', 'teachers.user_id = users.id');
+    $this->db->join('departments', 'teachers.department_id = departments.id');
+    $this->db->where('teachers.school_id', $school_id);
+    $this->db->like('users.name', $name); // Perform a search using the name parameter
+
+    $query = $this->db->get();
+    $teachers = $query->result_array();
+
+    // Add image URL to each teacher
+    foreach ($teachers as &$teacher) {
+        $image_path = 'uploads/users/' . $teacher['user_id'] . '.jpg'; // Assuming 'user_id' is the unique identifier for each user
+        if (file_exists($image_path)) {
+            $teacher['image_url'] = base_url($image_path); // Assuming you're using CodeIgniter and 'base_url' is configured
+        } else {
+            $teacher['image_url'] = base_url('uploads/users/default.jpg'); // Default image if user image doesn't exist
+        }
+    }
+
+    // Send the data as JSON
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($teachers));
+}
+
+public function delete_teacher_delete($teacher_id) {
+    // Validate the input data
+    if (!$teacher_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid teacher ID']));
+        return;
+    }
+
+    // Fetch the existing teacher data
+    $this->db->select('user_id');
+    $this->db->from('teachers');
+    $this->db->where('id', $teacher_id);
+    $teacher = $this->db->get()->row_array();
+
+    if (!$teacher) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['error' => 'Teacher not found']));
+        return;
+    }
+
+    $user_id = $teacher['user_id'];
+
+    // Delete the teacher record
+    $this->db->where('id', $teacher_id);
+    $this->db->delete('teachers');
+
+    // Delete the user record
+    $this->db->where('id', $user_id);
+    $this->db->delete('users');
+
+    // Handle image deletionC:\xampp\htdocs\SchoolManagementWeb\application\config\hooks.php
+    $image_path = './uploads/users/' . $user_id . '.jpg'; // Save the image as 'user_id.jpg'
+    if (file_exists($image_path)) {
+        unlink($image_path); // Remove the image file
+    }
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['success' => 'Teacher deleted successfully']));
+}
+
+
+
+//End Part Teacher//
+
+
+//Teacher Permission//
+public function classes_get() {
+    // Fetch all class names from the 'classes' table
+    $this->db->select('name');
+    $query = $this->db->get('classes');
+    $classes = $query->result_array();
+
+    // Return the result as a JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($classes));
+}
+
+
+public function add_teacher_permission_post() {
+    // Validate the input data
+    if (!$this->input->post('teacher_id') || !$this->input->post('permission_type') || $this->input->post('value') === NULL) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    $data = [
+        'teacher_id' => $this->input->post('teacher_id'),
+        'permission_type' => $this->input->post('permission_type'),
+        'value' => (int)$this->input->post('value'),  // Cast the value to integer
+    ];
+
+    // Check if the permission already exists
+    $this->db->where('teacher_id', $data['teacher_id']);
+    $this->db->where('permission_type', $data['permission_type']);
+    $query = $this->db->get('permissions');
+
+    if ($query->num_rows() > 0) {
+        // Update the existing permission
+        $this->db->where('teacher_id', $data['teacher_id']);
+        $this->db->where('permission_type', $data['permission_type']);
+        $this->db->update('permissions', ['value' => $data['value']]);
+    } else {
+        // Insert a new permission
+        $this->db->insert('permissions', $data);
+    }
+
+    if ($this->db->affected_rows() > 0) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => 'Permission updated successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['error' => 'Failed to update permission']));
+    }
+}
+
+public function teachers_by_class_get($class_id) {
+    // Ensure $class_id is an integer to prevent SQL injection
+    $class_id = (int)$class_id;
+    
+    // Select the required fields from the 'users' table
+    $this->db->select('
+        users.id as user_id,
+        users.name,
+        users.email,
+        users.role,
+        users.address,
+        users.phone,
+        users.birthday,
+        users.gender,
+        users.school_id as user_school_id,
+        users.status
+    ');
+    $this->db->from('users');
+    
+    // Join the 'teachers' table on user_id
+    $this->db->join('teachers', 'teachers.user_id = users.id');
+    
+    // Join the 'teacher_permissions' table on teacher_id
+    $this->db->join('teacher_permissions', 'teacher_permissions.teacher_id = teachers.id');
+    
+    // Join the 'classes' table on class_id
+    $this->db->join('classes', 'teacher_permissions.class_id = classes.id');
+    
+    // Add a where clause to filter by class_id
+    $this->db->where('classes.id', $class_id);
+    
+    // Execute the query
+    $query = $this->db->get();
+    $users = $query->result_array();
+
+    // Append image URL to each user
+    foreach ($users as &$user) {
+        $image_path = 'uploads/users/' . $user['user_id'] . '.jpg'; // Assuming 'user_id' is the unique identifier for each user
+        if (file_exists(FCPATH . $image_path)) {
+            $user['image_url'] = base_url($image_path); // Assuming you're using CodeIgniter and 'base_url' is configured
+        } else {
+            $user['image_url'] = base_url('uploads/users/default.jpg'); // Default image if user image doesn't exist
+        }
+    }
+
+    // Return the result as a JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($users));
+}
+
+public function assign_teacher_permission_to_class_post() {
+    // Log the received POST data for debugging
+    log_message('debug', 'Received POST data: ' . json_encode($this->input->post()));
+
+
+    // Fetch class_id based on class_name
+    $this->db->select('id');
+    $this->db->from('classes');
+    $this->db->where('name', $this->input->post('class_name'));
+    $class_query = $this->db->get();
+
+
+    $class_id = $class_query->row()->id;
+
+    $data = [
+        'teacher_id' => $this->input->post('teacher_id'),
+        'class_id' => $class_id,
+        'section_id' => $this->input->post('section_id') ?? null,
+        'marks' => (int)$this->input->post('marks') ?? 0,
+        'assignment' => (int)$this->input->post('assignment') ?? 0,
+        'attendance' => (int)$this->input->post('attendance') ?? 0,
+        'online_exam' => (int)$this->input->post('online_exam') ?? 0
+    ];
+
+    // Log input data for debugging
+    log_message('debug', 'Assign Permission Data: ' . json_encode($data));
+
+    // Check if the teacher permission already exists for the class and section
+    $this->db->where('teacher_id', $data['teacher_id']);
+    $this->db->where('class_id', $data['class_id']);
+    if ($data['section_id']) {
+        $this->db->where('section_id', $data['section_id']);
+    } else {
+        $this->db->where('section_id', null);
+    }
+    $query = $this->db->get('teacher_permissions');
+
+    if ($query->num_rows() > 0) {
+        // Update the existing teacher permission
+        $this->db->where('teacher_id', $data['teacher_id']);
+        $this->db->where('class_id', $data['class_id']);
+        if ($data['section_id']) {
+            $this->db->where('section_id', $data['section_id']);
+        } else {
+            $this->db->where('section_id', null);
+        }
+        $this->db->update('teacher_permissions', $data);
+    } else {
+        // Insert a new teacher permission
+        $this->db->insert('teacher_permissions', $data);
+    }
+
+    if ($this->db->affected_rows() > 0) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => 'Permission assigned successfully']));
+    } else {
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['success' => 'Permission assigned successfully']));
+    }
+}
+public function get_class_id_by_name_get() {
+    $class_name = $this->input->get('name');
+
+    // Fetch class_id based on class_name
+    $this->db->select('id');
+    $this->db->from('classes');
+    $this->db->where('name', $class_name);
+    $class_query = $this->db->get();
+
+    if ($class_query->num_rows() === 0) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid class name']));
+        return;
+    }
+
+    $class_id = $class_query->row()->id;
+
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['class_id' => $class_id]));
+}
+
+
+
+/////////////////
+
 
 //Expense API CALL
 

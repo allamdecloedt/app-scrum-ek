@@ -99,3 +99,16 @@ $route['api/fetch_admins']= 'api/Admin/fetch_admins_by_name';
 $route['api/schoolsName']= 'api/Admin/all_school_names';
 $route['api/editAdmin/(:num)']= 'api/Admin/edit_admin/$1';
 $route['api/deleteAdmin/(:num)']= 'api/Admin/Deladmin/$1';
+
+$route['api/teachers']= 'api/Admin/all_teacher';
+$route['api/departments']= 'api/Admin/department';
+$route['api/teachers/search'] = 'api/Admin/search';
+$route['api/teachers/Create'] = 'api/Admin/create_teacher';
+$route['api/teachers/edit/(:num)'] = 'api/Admin/edit_teacher/$1';
+$route['api/teachers/delete/(:num)'] = 'api/Admin/delete_teacher/$1';
+$route['api/teachersById/(:num)'] = 'api/Admin/teacher_by_id/$1';
+$route['api/teacherPermission']= 'api/Admin/add_teacher_permission';
+$route['api/classes']= 'api/Admin/classes';
+$route['api/teachers_by_class/(:num)'] = 'api/Admin/teachers_by_class/$1';
+$route['api/assign_teacher_permission_to_class']= 'api/Admin/assign_teacher_permission_to_class';
+$route['api/get_class_id_by_name']= 'api/Admin/get_class_id_by_name';
