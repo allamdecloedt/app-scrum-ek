@@ -8,6 +8,24 @@
 *  http://support.creativeitem.com
 */
 
+
+//SCHOOL ID
+if (!function_exists('school_id')) {
+  function school_id()
+  {
+    $CI = &get_instance();
+    if ($CI->session->userdata('user_type') == 'superadmin') {
+      return get_settings('school_id');
+    } else {
+      if ($CI->session->userdata('school_id') > 0) {
+        return $CI->session->userdata('school_id');
+      } else {
+        return get_settings('school_id');
+      }
+    }
+  }
+}
+
 if (!function_exists('get_settings')) {
   function get_settings($type = '')
   {
@@ -37,6 +55,8 @@ if (!function_exists('get_payment_settings')) {
     $CI->load->database();
 
     $CI->db->where('key', $key);
+    $CI->db->where('school_id', $CI->session->userdata('school_id'));
+
     $result = $CI->db->get('payment_settings')->row('value');
     return $result;
   }
@@ -196,22 +216,7 @@ if (!function_exists('currency_code_and_symbol')) {
 }
 
 
-//SCHOOL ID
-if (!function_exists('school_id')) {
-  function school_id()
-  {
-    $CI = &get_instance();
-    if ($CI->session->userdata('user_type') == 'superadmin') {
-      return get_settings('school_id');
-    } else {
-      if ($CI->session->userdata('school_id') > 0) {
-        return $CI->session->userdata('school_id');
-      } else {
-        return get_settings('school_id');
-      }
-    }
-  }
-}
+
 
 //driver id
 if (!function_exists('driver_id')) {

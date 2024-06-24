@@ -567,6 +567,38 @@ class Frontend_model extends CI_Model
       $this->db->insert('schools', $school_data);
       $school_id = $this->db->insert_id();
 
+    // Data to be inserted
+		$data = array(
+      array(
+        
+        'key' => 'stripe_settings',
+        'value' => '[{\"stripe_active\":\"yes\",\"stripe_mode\":\"on\",\"stripe_test_secret_key\":\"1234\",\"stripe_test_public_key\":\"1234\",\"stripe_live_secret_key\":\"1234\",\"stripe_live_public_key\":\"1234\",\"stripe_currency\":\"USD\"}]',
+        'school_id' => $school_id
+      ),
+      array(
+        
+        'key' => 'paypal_settings',
+        'value' => '[{\"paypal_active\":\"yes\",\"paypal_mode\":\"sandbox\",\"paypal_client_id_sandbox\":\"1234\",\"paypal_client_id_production\":\"1234\",\"paypal_currency\":\"USD\"}]',
+        'school_id' => $school_id
+      )
+    );
+
+    // Insert data into the `payment_settings` table
+    $this->db->insert_batch('payment_settings', $data);
+
+    // Data to be inserted
+    $data = array(
+					
+          'school_id' => $school_id,
+          'system_currency' => 'USD',
+          'currency_position' => 'left',
+          'language' => 'english',
+        
+          );
+            
+    // Insert data into the `settings_school` table
+   $this->db->insert('settings_school', $data);
+
 
       $admin_data['name'] = htmlspecialchars($this->input->post('name'));
       $admin_data['email'] = htmlspecialchars($this->input->post('email'));

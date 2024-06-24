@@ -118,6 +118,33 @@ class Admin extends CI_Controller
 	}
 	//END CLASS section
 
+
+	  // PAYMENT SETTINGS MANAGER
+	  public function payment_settings($param1 = "", $param2 = "")
+	  {
+		if ($param1 == 'system') {
+		  $response = $this->settings_model->update_system_currency_settings();
+		  echo $response;
+		}
+		if ($param1 == 'paypal') {
+		  $response = $this->settings_model->update_paypal_settings();
+		  echo $response;
+		}
+		if ($param1 == 'stripe') {
+		  $response = $this->settings_model->update_stripe_settings();
+		  echo $response;
+		}
+	
+		// showing the Payment Settings file
+		if (empty($param1)) {
+		  $page_data['folder_name'] = 'settings';
+		  $page_data['page_title'] = 'payment_settings';
+		  $page_data['settings_type'] = 'payment_settings';
+		  $this->load->view('backend/index', $page_data);
+		}
+	  }
+
+	  
 	//	SECTION STARTED
 	public function section($action = "", $id = "")
 	{

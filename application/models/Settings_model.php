@@ -91,8 +91,15 @@ class Settings_model extends CI_Model {
   public function update_system_currency_settings() {
     $data['system_currency'] = htmlspecialchars($this->input->post('system_currency'));
     $data['currency_position'] = htmlspecialchars($this->input->post('currency_position'));
-    $this->db->where('id', 1);
-    $this->db->update('settings', $data);
+
+    $user_id =  $this->session->userdata('user_id');
+    if (strtolower($this->db->get_where('users', array('id' => $user_id))->row('role')) == 'admin'){
+          $this->db->where('school_id', school_id());
+          $this->db->update('settings_school', $data);
+    }else{
+          $this->db->where('id', 1);
+          $this->db->update('settings', $data);
+    }
 
     $response = array(
       'status' => true,
@@ -103,6 +110,8 @@ class Settings_model extends CI_Model {
 
   public function update_paypal_settings() {
     $paypal_info = array();
+    $CI = &get_instance();
+    $CI->load->database();
 
     $paypal['paypal_active'] = htmlspecialchars($this->input->post('paypal_active'));
     $paypal['paypal_mode'] = htmlspecialchars($this->input->post('paypal_mode'));
@@ -114,6 +123,7 @@ class Settings_model extends CI_Model {
 
     $data['value']    =   json_encode($paypal_info);
     $this->db->where('key', 'paypal_settings');
+    $this->db->where('school_id', $CI->session->userdata('school_id'));
     $this->db->update('payment_settings', $data);
 
     $response = array(
@@ -125,7 +135,8 @@ class Settings_model extends CI_Model {
 
   public function update_stripe_settings() {
     $stripe_info = array();
-
+    $CI = &get_instance();
+    $CI->load->database();
     $stripe['stripe_active'] = htmlspecialchars($this->input->post('stripe_active'));
     $stripe['stripe_mode'] = htmlspecialchars($this->input->post('stripe_mode'));
     $stripe['stripe_test_secret_key'] = htmlspecialchars($this->input->post('stripe_test_secret_key'));
@@ -138,6 +149,7 @@ class Settings_model extends CI_Model {
 
     $data['value']    =   json_encode($stripe_info);
     $this->db->where('key', 'stripe_settings');
+    $this->db->where('school_id',$CI->session->userdata('school_id'));
     $this->db->update('payment_settings', $data);
 
     $response = array(
