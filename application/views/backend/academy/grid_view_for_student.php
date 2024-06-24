@@ -155,7 +155,7 @@ if($check_data->num_rows() > 0): ?>
                                 <?php $progress_value = course_progress($course['id']); ?>
                                 <div class="row">
                                     <div class="col-sm-10 col-md-10">
-                                        <?php if($progress_value >= 100): ?>
+                                        <?php if($progress_value >= 100):  ?>
                                             <div class="progress mb-2 h-5px">
                                                 <div class="progress-bar bg-green-low" role="progressbar" style="width: <?php echo $progress_value; ?>%;" aria-valuenow="<?php echo $progress_value; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
