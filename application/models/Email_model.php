@@ -98,20 +98,397 @@ class Email_model extends CI_Model {
 		}
 		$this->send_mail_using_smtp($email_message, $email_sub, $email_to);
 	}
+	function Add_online_admission($email = "", $user_id = "",$name = ""){
 
-	function approved_online_admission($student_id = "", $user_id = "", $password = ""){
-		$student_details = $this->user_model->get_student_details_by_id('student', $student_id);
-		$student_email = $student_details['email'];
-		$student_name = $student_details['name'];
-		$student_code = $student_details['code'];
-		$email_message  = '<html><body><p> Your admission request has been accepted.'.'</p><br><p>Student Code : '.$student_code.'</p><p>Email : '.$student_email.'</p><p>Password : '.$password.'</p></body></html>';
-		$email_sub		= 'Admission approval';
-		$email_to = $student_email;
+		$school_data = $this->settings_model->get_current_school_data();
+		$image_url = "http://51.92.7.185/uploads/schools/".$school_data['id'].".jpg"; // URL de l'image à côté des informations
+
+		$email_message =  '
+		<html>
+		<head>
+		  <style>
+			body {
+			  font-family: Arial, sans-serif;
+			  background-color: #f6f6f6;
+			  margin: 0;
+			  padding: 0;
+			}
+			.email-container {
+			  max-width: 600px;
+			  margin: 20px auto;
+			  background-color: #ffffff;
+			  border-radius: 8px;
+			  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			  overflow: hidden;
+			}
+			.email-header {
+			  background-color: #27272d;
+			  color: #ffffff;
+			  padding: 20px;
+			  text-align: center;
+			  font-size: 24px;
+			  font-weight: bold;
+			}
+			.email-body {
+			  padding: 30px 20px;
+			  color: #333333;
+			}
+			.email-body p {
+			  line-height: 1.6;
+			  margin: 10px 0;
+			}
+			.email-body .btn {
+			  display: inline-block;
+			  padding: 10px 20px;
+			  margin: 20px 0;
+			  background-color: #be02e8;
+			  color: #ffffff;
+			  text-decoration: none;
+			  border-radius: 4px;
+			}
+			.email-footer {
+			  background-color: #f1f1f1;
+			  color: #777777;
+			  padding: 10px;
+			  text-align: center;
+			  font-size: 12px;
+			}
+			.info-image {
+				width: 100%;
+				max-width: 200px;
+				margin-right: 38px;
+			  }
+			  .info-container {
+				display: flex;
+				align-items: center;
+			  }
+		  </style>
+		</head>
+		<body>
+		  <div class="email-container">
+			<div class="email-header">
+				Registration Student
+			</div>
+			<div class="email-body">
+			<div class="info-container">
+			<div>
+			  <p>Your registration has been made.</p>
+			  <p><strong>Name:</strong> '.$name.'</p>
+			  <p><strong>Email:</strong> '.$email.'</p>
+			  <p><a href="http://51.92.7.185/home/courses" class="btn">Login to Your Account</a></p>
+			</div>
+		  </div>
+			</div>
+			<div class="email-footer">
+			  <p>&copy; '.date("Y").'  . All rights reserved.</p>
+			</div>
+		  </div>
+		</body>
+		</html>
+		';
+
+		$email_sub		= 'Registration ';
+		$email_to = $email;
 		
 
-		$this->send_mail_using_smtp($email_message, $email_sub, $email_to);
+		$this->send_mail_using_smtp($email_message, $email_sub, $email_to ,Null,$school_data['name']);
+
+	}
+	function School_online_admission($email = "", $school_name = "",$name = ""){
+		// $image_url = "http://51.92.7.185/uploads/images/decloedt/logo/white-logo.svg"; // URL de l'image à côté des informations
+		$image_url = base_url('uploads/images/decloedt/logo/white-logo.svg');
+
+		$email_message =  '
+		<html>
+		<head>
+		  <style>
+			body {
+			  font-family: Arial, sans-serif;
+			  background-color: #f6f6f6;
+			  margin: 0;
+			  padding: 0;
+			}
+			.email-container {
+			  max-width: 600px;
+			  margin: 20px auto;
+			  background-color: #ffffff;
+			  border-radius: 8px;
+			  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			  overflow: hidden;
+			}
+			.email-header {
+			  background-color: #4CAF50;
+			  color: #ffffff;
+			  padding: 20px;
+			  text-align: center;
+			  font-size: 24px;
+			  font-weight: bold;
+			}
+			.email-body {
+			  padding: 30px 20px;
+			  color: #333333;
+			}
+			.email-body p {
+			  line-height: 1.6;
+			  margin: 10px 0;
+			}
+			.email-body .btn {
+			  display: inline-block;
+			  padding: 10px 20px;
+			  margin: 20px 0;
+			  background-color: #4CAF50;
+			  color: #ffffff;
+			  text-decoration: none;
+			  border-radius: 4px;
+			}
+			.email-footer {
+			  background-color: #f1f1f1;
+			  color: #777777;
+			  padding: 10px;
+			  text-align: center;
+			  font-size: 12px;
+			}
+			.info-image {
+				width: 100%;
+				max-width: 200px;
+				margin-right: 38px;
+			  }
+			  .info-container {
+				display: flex;
+				align-items: center;
+			  }
+		  </style>
+		</head>
+		<body>
+		  <div class="email-container">
+			<div class="email-header">
+			Registration School
+			</div>
+			<div class="email-body">
+			<div class="info-container">
+			<img src="'.$image_url.'" alt="Image" class="info-image">
+			<div>
+			  <p>Your registration has been made.</p>
+			  <p>Hello '.$name.'</p>
+			  <p><strong>Name school:</strong> '.$school_name.'</p>
+			  <p><strong>Email:</strong> '.$email.'</p>
+			  <p><a href="http://51.92.7.185/login" class="btn">Login to Your Account</a></p>
+			</div>
+		  </div>
+			</div>
+			<div class="email-footer">
+			  <p>&copy; '.date("Y").' Decloedt  . All rights reserved.</p>
+			</div>
+		  </div>
+		</body>
+		</html>
+		';
+
+		$email_sub		= 'Registration ';
+		$email_to = $email;
+		$school_name = "Decloedt";
+		
+
+		$this->send_mail_using_smtp($email_message, $email_sub, $email_to ,Null,$school_name);
+
+
+	}
+	function approved_online_admission($student_id = "", $user_id = "")
+	{
+				$student_details = $this->user_model->get_student_details_by_id('student', $student_id);
+				$school_data = $this->settings_model->get_current_school_data();
+				$student_email = $student_details['email'];
+				$student_name = $student_details['name'];
+				$student_code = $student_details['code'];
+				$image_url = "http://51.92.7.185/uploads/schools/".$school_data['id'].".jpg"; // URL de l'image à côté des informations
+
+				$email_message =  '
+				<html>
+				<head>
+				<style>
+					body {
+					font-family: Arial, sans-serif;
+					background-color: #f6f6f6;
+					margin: 0;
+					padding: 0;
+					}
+					.email-container {
+					max-width: 600px;
+					margin: 20px auto;
+					background-color: #ffffff;
+					border-radius: 8px;
+					box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+					overflow: hidden;
+					}
+					.email-header {
+					background-color: #4CAF50;
+					color: #ffffff;
+					padding: 20px;
+					text-align: center;
+					font-size: 24px;
+					font-weight: bold;
+					}
+					.email-body {
+					padding: 30px 20px;
+					color: #333333;
+					}
+					.email-body p {
+					line-height: 1.6;
+					margin: 10px 0;
+					}
+					.email-body .btn {
+					display: inline-block;
+					padding: 10px 20px;
+					margin: 20px 0;
+					background-color: #4CAF50;
+					color: #ffffff;
+					text-decoration: none;
+					border-radius: 4px;
+					}
+					.email-footer {
+					background-color: #f1f1f1;
+					color: #777777;
+					padding: 10px;
+					text-align: center;
+					font-size: 12px;
+					}
+					.info-image {
+						width: 100%;
+						max-width: 200px;
+						margin-right: 38px;
+					}
+					.info-container {
+						display: flex;
+						align-items: center;
+					}
+				</style>
+				</head>
+				<body>
+				<div class="email-container">
+					<div class="email-header">
+					Admission Approved
+					</div>
+					<div class="email-body">
+					<div class="info-container">
+					<img src="'.$image_url.'" alt="Image" class="info-image">
+					<div>
+					<p>Your admission request has been accepted.</p>
+					<p><strong>Student Code:</strong> '.$student_code.'</p>
+					<p><strong>Email:</strong> '.$student_email.'</p>
+					<p><a href="http://51.92.7.185/home/course_details/'.$school_data['id'].'" class="btn">Login to Your Account</a></p>
+					</div>
+				</div>
+					</div>
+					<div class="email-footer">
+					<p>&copy; '.date("Y").' '.$school_data['name'].' . All rights reserved.</p>
+					</div>
+				</div>
+				</body>
+				</html>
+				';
+				// $email_message  = '<html><body><p> Your admission request has been accepted.'.'</p><br><p>Student Code : '.$student_code.'</p><p>Email : '.$student_email.'</p><p>Password : '.$password.'</p></body></html>';
+				$email_sub		= 'Admission approval';
+				$email_to = $student_email;
+				
+
+				$this->send_mail_using_smtp($email_message, $email_sub, $email_to,Null,$school_data['name']);
 	}
 
+
+	function join_student_email($email_student = "", $user_name ,$code_student = "", $name_school = "",$school_id ="")
+	{
+				$image_url = "http://51.92.7.185/uploads/schools/".$school_id.".jpg"; // URL de l'image à côté des informations
+
+				$email_message =  '
+				<html>
+				<head>
+				<style>
+					body {
+					font-family: Arial, sans-serif;
+					background-color: #f6f6f6;
+					margin: 0;
+					padding: 0;
+					}
+					.email-container {
+					max-width: 600px;
+					margin: 20px auto;
+					background-color: #ffffff;
+					border-radius: 8px;
+					box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+					overflow: hidden;
+					}
+					.email-header {
+					background-color: #27272d;
+					color: #ffffff;
+					padding: 20px;
+					text-align: center;
+					font-size: 24px;
+					font-weight: bold;
+					}
+					.email-body {
+					padding: 30px 20px;
+					color: #333333;
+					}
+					.email-body p {
+					line-height: 1.6;
+					margin: 10px 0;
+					}
+					.email-body .btn {
+					display: inline-block;
+					padding: 10px 20px;
+					margin: 20px 0;
+					background-color: #be02e8;
+					color: #ffffff;
+					text-decoration: none;
+					border-radius: 4px;
+					}
+					.email-footer {
+					background-color: #f1f1f1;
+					color: #777777;
+					padding: 10px;
+					text-align: center;
+					font-size: 12px;
+					}
+					.info-image {
+						width: 100%;
+						max-width: 200px;
+						margin-right: 38px;
+					}
+					.info-container {
+						display: flex;
+						align-items: center;
+					}
+				</style>
+				</head>
+				<body>
+				<div class="email-container">
+					<div class="email-header">
+					Join in '.$name_school.'
+					</div>
+					<div class="email-body">
+					<div class="info-container">
+					<img src="'.$image_url.'" alt="Image" class="info-image">
+					<div>
+					<p>Hello <strong> '.$user_name.'</strong>, Your join request has been made.</p>
+					<p><strong>Student Code:</strong> '.$code_student.'</p>
+					<p><strong>Email:</strong> '.$email_student.'</p>
+					<p><a href="http://51.92.7.185/home/course_details/'.$school_id.'" class="btn">Login to Your Account</a></p>
+					</div>
+				</div>
+					</div>
+					<div class="email-footer">
+					<p>&copy; '.date("Y").' '.$name_school.' . All rights reserved.</p>
+					</div>
+				</div>
+				</body>
+				</html>
+				';
+				$email_sub		= 'Admission approval';
+				$email_to = $email_student;
+				
+
+				$this->send_mail_using_smtp($email_message, $email_sub, $email_to,Null,$name_school);
+	}
 	function approved_online_admission_parent_access($user_id = "", $password = ""){
 		$parent_details = $this->db->get_where('users', array('id' => $user_id))->row_array();
 		$email = $parent_details['email'];
@@ -135,22 +512,23 @@ class Email_model extends CI_Model {
 		return true;
 	}
 	// more stable function
-	public function send_mail_using_smtp($msg=NULL, $sub=NULL, $to=NULL, $from=NULL) {
+	public function send_mail_using_smtp($msg=NULL, $sub=NULL, $to=NULL, $from=NULL ,$school_name =Null) {
 		//Load email library
 		$this->load->library('email');
 
 		if($from == NULL){
 			$from		=	get_settings('system_email');
 		}
-
-		//SMTP & mail configuration
+		$smtp_username = get_smtp('smtp_username');
+		$smtp_password = get_smtp('smtp_password');
+		//SMTP & mail configuration llcmpoajhkmglyf ghlirqnydynumjgy
 		$config = array(
 			'protocol'  => get_smtp('smtp_protocol'),
 			'smtp_host' => get_smtp('smtp_host'),
 			'smtp_port' => get_smtp('smtp_port'),
-			'smtp_user' => get_smtp('smtp_username'),
-			'smtp_pass' => get_smtp('smtp_password'),
-			'smtp_crypto' => get_settings('smtp_crypto'),
+			'smtp_user' => $smtp_username,
+			'smtp_pass' => $smtp_password,
+			'smtp_crypto' => 'ssl',
 			'mailtype'  => 'html',
 			'charset'   => 'utf-8',
 			'newline'   => "\r\n",
@@ -159,19 +537,28 @@ class Email_model extends CI_Model {
             'smtp_timeout' => '10', //in seconds
 			'wordwrap' => TRUE
 		);
+		//  print_r('smtp_username : '.get_smtp('smtp_username').' - smtp_username : '.get_smtp('smtp_password'));die;
 		$this->email->initialize($config);
 		$this->email->set_mailtype("html");
 		$this->email->set_newline("\r\n");
 
 		$htmlContent = $msg;
-
+		$school_data = $this->settings_model->get_current_school_data();
 		$this->email->to($to);
-		$this->email->from($from, get_smtp('smtp_set_from'));
+        $this->email->from($from,"Service Support"); // Remplacez 'Votre Nom' par le nom souhaité
 		$this->email->subject($sub);
 		$this->email->message($htmlContent);
 
 		//Send email
 		$this->email->send();
+		        // Envoyer l'email
+				// if ($this->email->send()) {
+				// 	echo "Email envoyé avec succès.";
+				// } else {
+				// 	echo "Échec de l'envoi de l'email.";
+				// 	echo $this->email->print_debugger();
+				// }
+				// die;
 	}
 
 	public function send_mail_using_php_mailer($message=NULL, $subject=NULL, $to=NULL, $from=NULL) {

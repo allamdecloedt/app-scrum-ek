@@ -1213,8 +1213,7 @@ class Admin extends CI_Controller
 			$data['student_id'] = $this->input->post('student_id');
 		
 			$user_id = $this->db->get_where('students', array('id' => $data['student_id']))->row('user_id');
-
-			// $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
+			 $this->email_model->approved_online_admission($data['student_id'], $user_id);
 
 			$this->db->where('user_id', $user_id);
 			$this->db->update('students', array('status' => 1));

@@ -912,7 +912,7 @@ class User_model extends CI_Model
 				'school_id' => $this->school_id
 			);
 			$enrol_data = $this->db->get_where('enrols', $checker)->row_array();
-			$student_details = $this->db->get_where('students', array('id' => $enrol_data['student_id']))->row_array();
+			$student_details = $this->db->get_where('students', array('id' => $id))->row_array();
 			$enrol_data['code'] = $student_details['code'];
 			$enrol_data['user_id'] = $student_details['user_id'];
 
@@ -1316,6 +1316,10 @@ class User_model extends CI_Model
 				}
 
 				$this->db->insert('students', $data);
+				$user_email = $this->db->get_where('users', array('id' => $user_id))->row('email');
+				$user_name = $this->db->get_where('users', array('id' => $user_id))->row('name');
+				$this->email_model->join_student_email($user_email,$user_name, $data['code'],$row ->name,$school_id);
+				
 
 				if (isset($_SERVER['HTTP_REFERER'])) {
 					redirect($_SERVER['HTTP_REFERER'], 'refresh');
@@ -1383,6 +1387,7 @@ class User_model extends CI_Model
             $upload_path = 'uploads/users/' . $user_id . '.jpg';
             move_uploaded_file($_FILES['student_image_upload']['tmp_name'], $upload_path);
         }
+		$this->email_model->Add_online_admission($data['email'], $user_id,$data['name']);
 
         $this->session->set_userdata('student_login', true);
         $this->session->set_userdata('user_id', $user_id);

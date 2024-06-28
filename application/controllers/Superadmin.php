@@ -1609,7 +1609,7 @@ class Superadmin extends CI_Controller
       $user_id = $this->db->get_where('students', array('id' => $data['student_id']))->row('user_id');
       $code = $this->db->get_where('students', array('id' => $data['student_id'], 'school_id' => $school_id))->row('code');
 
-      // $this->email_model->approved_online_admission($data['student_id'], $user_id, $password);
+       $this->email_model->approved_online_admission($data['student_id'], $user_id);
 
       $this->db->where('code', $code);
       $this->db->where('id', $data['student_id']);

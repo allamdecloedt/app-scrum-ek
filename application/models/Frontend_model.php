@@ -619,6 +619,7 @@ class Frontend_model extends CI_Model
       } else
         move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $school_id . '.jpg');
 
+        $this->email_model->School_online_admission($admin_data['email'],$school_data['name'],$admin_data['name']);
       return json_encode(array('status' => 1, 'message' => get_phrase('successfully_has_been_recoded_your_request') . '. ' . get_phrase('you_will_be_notified_by_email_address_about_this_request')));
     } else {
 
