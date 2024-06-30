@@ -376,9 +376,9 @@ class Settings_model extends CI_Model {
   // GET LIGHT LOGO
   public function get_logo_light($type = "") {
     if ($type == 'small') {
-      return base_url('uploads/system/logo/logo-light-sm.png');
+      return base_url('\uploads\images\decloedt\logo\white-logo.svg');
     }else{
-      return base_url('uploads/system/logo/logo-light.png');
+      return base_url('\uploads\images\decloedt\logo\white-logo.svg');
     }
   }
 

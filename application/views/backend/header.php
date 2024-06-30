@@ -1,5 +1,5 @@
 <!-- Topbar Start -->
-<div class="navbar-custom topnav-navbar topnav-navbar-dark">
+<div class="navbar-custom topnav-navbar navbar-color topnav-navbar-dark">
     <div class="container-fluid">
 
         <!-- LOGO -->
@@ -36,7 +36,7 @@
           <?php endif; ?>
 
             <li class="dropdown notification-list">
-                <a class="nav-link dropdown-toggle nav-user arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
+                <a class="nav-link dropdown-toggle nav-user  user-dropdown arrow-none me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false"
                 aria-expanded="false">
                     <span class="account-user-avatar">
                         <img src="<?php echo $this->user_model->get_user_image($this->session->userdata('user_id')); ?>" alt="user-image" class="rounded-circle">
@@ -90,8 +90,8 @@
 
         </ul>
         <div class="app-search dropdown pt-1 mt-2">
-            <h4 style="color: #fff; float: left;" class="d-none d-md-inline-block"> <?php echo get_settings('system_name'); ?></h4>
-            <a href="<?php echo site_url(); ?>" target="" class="btn btn-outline-light ms-2 d-none d-md-inline-block"><?php echo get_phrase('visit_website'); ?></a>
+            
+            <a href="<?php echo site_url(); ?>" target="" class="btn btn-outline-light website-button ms-2 d-none d-md-inline-block"><?php echo get_phrase('visit_website'); ?></a>
         </div>
         <a class="button-menu-mobile disable-btn">
             <div class="lines">
