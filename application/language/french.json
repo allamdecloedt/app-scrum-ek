@@ -1286,5 +1286,9 @@
     "please_fill_in_the_required_fields": "Please fill in the required fields",
     "please_choose_an_image": "Please choose an image",
     "passwords_need_to_match": "Passwords need to match",
-    "please_fill_in_your_password": "Please fill in your password"
+    "please_fill_in_your_password": "Please fill in your password",
+    "course_details": "Course details",
+    "discover_our_courses": "Discover our courses",
+    "public": "Public",
+    "enrolled": "Enrolled"
 }
