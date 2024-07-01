@@ -110,14 +110,6 @@ class Login extends CI_Controller
 				$this->session->set_userdata('user_type', 'student');
 				$this->session->set_flashdata('flash_message', get_phrase('welcome_back'));
 				redirect(site_url('student/dashboard'), 'refresh');
-			} elseif ($row->role == 'parent') {
-				$this->session->set_userdata('parent_login', true);
-				$this->session->set_userdata('user_id', $row->id);
-				$this->session->set_userdata('school_id', $row->school_id);
-				$this->session->set_userdata('user_name', $row->name);
-				$this->session->set_userdata('user_type', 'parent');
-				$this->session->set_flashdata('flash_message', get_phrase('welcome_back'));
-				redirect(site_url('parents/dashboard'), 'refresh');
 			} elseif ($row->role == 'librarian') {
 				$this->session->set_userdata('librarian_login', true);
 				$this->session->set_userdata('user_id', $row->id);

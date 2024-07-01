@@ -1388,7 +1388,7 @@ class User_model extends CI_Model
             move_uploaded_file($_FILES['student_image_upload']['tmp_name'], $upload_path);
         }
 		$this->email_model->Add_online_admission($data['email'], $user_id,$data['name']);
-
+		$this->session->set_userdata('user_login_type', true);
         $this->session->set_userdata('student_login', true);
         $this->session->set_userdata('user_id', $user_id);
         $this->session->set_userdata('school_id', 1);
