@@ -33,7 +33,7 @@
                                 <select name="access" id="access" class="form-control select2" data-toggle = "select2">
                                     <option value=""><?php echo get_phrase('select_a_access'); ?></option>
                                     <option <?php if ($school_data['access'] == 1): ?> selected <?php endif; ?> value="1"><?php echo get_phrase('public'); ?></option>
-                                    <option <?php if ($school_data['access'] == 2): ?> selected <?php endif; ?> value="2"><?php echo get_phrase('privé'); ?></option>
+                                    <option <?php if ($school_data['access'] == 0): ?> selected <?php endif; ?> value="0"><?php echo get_phrase('privé'); ?></option>
                                 
                                 </select>
                                 <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_access'); ?></small>
