@@ -2,6 +2,7 @@
 <link href="<?php echo base_url(); ?>assets/backend/css/icons.min.css" rel="stylesheet" type="text/css" />
 <link href="<?php echo base_url(); ?>assets/backend/css/app-modern.min.css" rel="stylesheet" type="text/css" id="light-style" />
 <link href="<?php echo base_url(); ?>assets/backend/css/app-modern-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" />
+<link href="<?php echo base_url(); ?>assets/backend/css/custom/navbar.css" rel="stylesheet" type="text/css" />
 <!-- App css End-->
 
 <!-- third party css -->
@@ -12,6 +13,8 @@
 <link href="<?php echo base_url(); ?>assets/backend/css/vendor/select.bootstrap5.css" rel="stylesheet" type="text/css" />
 <link href="<?php echo base_url(); ?>assets/backend/css/vendor/bootstrap-select.min.css" rel="stylesheet" type="text/css" />
 <link href="<?php echo base_url(); ?>assets/backend/css/vendor/summernote-bs4.css" rel="stylesheet" type="text/css" />
+
+
 <!-- third party css end -->
 
 

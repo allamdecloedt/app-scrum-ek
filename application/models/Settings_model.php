@@ -376,27 +376,51 @@ class Settings_model extends CI_Model {
     // GET SYSTEM DATA
 
   // GET DARK LOGO
-  public function get_logo_dark($type = "") {
+  public function get_logo_dark($type = "")
+  {
     if ($type == 'small') {
-      return base_url('uploads/system/logo/logo-dark-sm.png');
-    }else{
-      return base_url('uploads/system/logo/logo-dark.png');
+      if (file_exists('uploads/system/logo/logo-dark-sm.png')) {
+        return base_url('uploads/system/logo/logo-dark-sm.png');
+      } else {
+        return base_url('uploads/system/logo/logo-dark-sm.svg');
+      }
+    } else {
+      if (file_exists('uploads/system/logo/logo-dark.png')) {
+        return base_url('uploads/system/logo/logo-dark.png');
+      } else {
+        return base_url('uploads/system/logo/logo-dark.svg');
+      }
     }
 
   }
 
   // GET LIGHT LOGO
-  public function get_logo_light($type = "") {
+  public function get_logo_light($type = "")
+  {
     if ($type == 'small') {
-      return base_url('uploads/system/logo/logo-light-sm.png');
-    }else{
-      return base_url('uploads/system/logo/logo-light.png');
+      if (file_exists('uploads/system/logo/logo-light-sm.png')) {
+        return base_url('uploads/system/logo/logo-light-sm.png');
+      } else {
+        return base_url('uploads/system/logo/logo-light-sm.svg');
+      }
+
+    } else {
+      if (file_exists('uploads/system/logo/logo-light.png')) {
+        return base_url('uploads/system/logo/logo-light.png');
+      } else {
+        return base_url('uploads/system/logo/logo-light.svg');
+      }
     }
   }
 
   // GET FAVICON
-  public function get_favicon() {
-    return base_url('uploads/system/logo/favicon.png');
+  public function get_favicon()
+  {
+    if (file_exists('uploads/system/logo/favicon.png')) {
+      return base_url('uploads/system/logo/favicon.png');
+    } else {
+      return base_url('uploads/system/logo/favicon.svg');
+    }
   }
 
 
