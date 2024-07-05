@@ -47,7 +47,8 @@ class Settings_model extends CI_Model
     $this->db->update('settings', $data);
   }
 
-  public function update_system_logo()
+
+ public function update_system_logo()
   {
 
     $svg_type = 'image/svg+xml';
@@ -154,6 +155,7 @@ class Settings_model extends CI_Model
     );
     return json_encode($response);
   }
+
 
   // SCHOOL SETTINGS
   public function get_current_school_data()
@@ -482,7 +484,8 @@ class Settings_model extends CI_Model
   // GET SYSTEM DATA
 
   // GET DARK LOGO
-  public function get_logo_dark($type = "")
+   public function get_logo_dark($type = "")
+
   {
     if ($type == 'small') {
       if (file_exists('uploads/system/logo/logo-dark-sm.png')) {
@@ -528,8 +531,6 @@ class Settings_model extends CI_Model
       return base_url('uploads/system/logo/favicon.svg');
     }
   }
-
-
 }
 
 
