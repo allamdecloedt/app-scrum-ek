@@ -39,6 +39,7 @@ class Crud_model extends CI_Model {
 	public function class_create()
 	{
 		$data['name'] = html_escape($this->input->post('name'));
+		$data['price'] = html_escape($this->input->post('price'));
 		$data['school_id'] = $this->school_id;
 		$this->db->insert('classes', $data);
 
@@ -57,6 +58,7 @@ class Crud_model extends CI_Model {
 	public function class_update($param1 = '')
 	{
 		$data['name'] = html_escape($this->input->post('name'));
+		$data['price'] = html_escape($this->input->post('price'));
 		$this->db->where('id', $param1);
 		$this->db->update('classes', $data);
 
@@ -1115,6 +1117,17 @@ class Crud_model extends CI_Model {
 			);
 			$this->db->where('id', $data['invoice_id']);
 			$this->db->update('invoices', $updater);
+
+			        // Récupérer les données de la session
+					$enrolment_data = $this->session->userdata('enrolment_data');
+					// print_r($enrolment_data);die;
+					// Utiliser les données
+					$data_enrols['student_id'] = $enrolment_data['student_id'];
+					$data_enrols['class_id'] = $enrolment_data['class_id'];
+					$data_enrols['section_id'] = $enrolment_data['section_id'];
+					$data_enrols['school_id'] = $enrolment_data['school_id'];
+					$data_enrols['session'] = $enrolment_data['session'];
+					$this->db->insert('enrols', $data_enrols);
 		}
 	}
 

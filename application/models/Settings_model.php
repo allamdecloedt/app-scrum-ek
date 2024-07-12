@@ -98,7 +98,7 @@ class Settings_model extends CI_Model {
           $this->db->update('settings_school', $data);
     }else{
           $this->db->where('id', 1);
-          $this->db->update('settings', $data);
+          $this->db->update('settings_school', $data);
     }
 
     $response = array(
