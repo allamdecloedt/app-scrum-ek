@@ -1,22 +1,24 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
-*  @author   : Creativeitem
-*  date      : November, 2019
-*  Ekattor School Management System With Addons
-*  http://codecanyon.net/user/Creativeitem
-*  http://support.creativeitem.com
-*/
+ *  @author   : Creativeitem
+ *  date      : November, 2019
+ *  Ekattor School Management System With Addons
+ *  http://codecanyon.net/user/Creativeitem
+ *  http://support.creativeitem.com
+ */
 
-class Settings_model extends CI_Model {
+class Settings_model extends CI_Model
+{
 
   public function __construct()
   {
     parent::__construct();
   }
 
-  public function update_system_settings() {
+  public function update_system_settings()
+  {
     $data['system_name'] = htmlspecialchars($this->input->post('system_name'));
     $data['system_email'] = htmlspecialchars($this->input->post('system_email'));
     $data['system_title'] = htmlspecialchars($this->input->post('system_title'));
@@ -38,24 +40,113 @@ class Settings_model extends CI_Model {
     return json_encode($response);
   }
 
-  public function last_updated_attendance_data() {
+  public function last_updated_attendance_data()
+  {
     $data['date_of_last_updated_attendance'] = strtotime(date('d-m-Y H:i:s'));
     $this->db->where('id', 1);
     $this->db->update('settings', $data);
   }
 
-  public function update_system_logo() {
+
+ public function update_system_logo()
+  {
+
+    $svg_type = 'image/svg+xml';
+
     if ($_FILES['dark_logo']['name'] != "") {
-      move_uploaded_file($_FILES['dark_logo']['tmp_name'], 'uploads/system/logo/logo-dark.png');
+
+      $file_type = mime_content_type($_FILES['dark_logo']['tmp_name']);
+
+      if ($file_type === $svg_type) {
+        if (file_exists('uploads/system/logo/logo-dark.png')) {
+          unlink('uploads/system/logo/logo-dark.png');
+          move_uploaded_file($_FILES['dark_logo']['tmp_name'], 'uploads/system/logo/logo-dark.svg');
+        } else {
+          move_uploaded_file($_FILES['dark_logo']['tmp_name'], 'uploads/system/logo/logo-dark.png');
+        }
+      }
+
+      if ($file_type !== $svg_type) {
+        if (file_exists('uploads/system/logo/logo-dark.svg')) {
+          unlink('uploads/system/logo/logo-dark.svg');
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/logo-dark.png');
+        } else {
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/logo-dark.png');
+        }
+      }
+
     }
+
     if ($_FILES['light_logo']['name'] != "") {
-      move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/logo-light.png');
+
+      $file_type = mime_content_type($_FILES['light_logo']['tmp_name']);
+
+      if ($file_type === $svg_type) {
+        if (file_exists('uploads/system/logo/logo-light.png')) {
+          unlink('uploads/system/logo/logo-light.png');
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/logo-light.svg');
+        } else {
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/logo-light.svg');
+        }
+      }
+
+      if ($file_type !== $svg_type) {
+        if (file_exists('uploads/system/logo/logo-light.svg')) {
+          unlink('uploads/system/logo/logo-light.svg');
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/logo-light.png');
+        } else {
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/logo-light.png');
+        }
+      }
+
     }
-    if ($_FILES['small_logo']['name'] != "") {
-      move_uploaded_file($_FILES['small_logo']['tmp_name'], 'uploads/system/logo/logo-light-sm.png');
+
+    if ($_FILES['small_logo']['name'] != '') {
+
+      $file_type = mime_content_type($_FILES['small_logo']['tmp_name']);
+
+      if ($file_type === $svg_type) {
+        if (file_exists('uploads/system/logo/logo-light-sm.png')) {
+          unlink('uploads/system/logo/logo-light-sm.png');
+          move_uploaded_file($_FILES['small_logo']['tmp_name'], 'uploads/system/logo/logo-light-sm.svg');
+        } else {
+          move_uploaded_file($_FILES['small_logo']['tmp_name'], 'uploads/system/logo/logo-light-sm.svg');
+        }
+
+      }
+
+       if ($file_type !== $svg_type) {
+        if (file_exists('uploads/system/logo/logo-light-sm.svg')) {
+          unlink('uploads/system/logo/logo-light-sm.svg');
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/logo-light-sm.png');
+        } else {
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/logo-light-sm.png');
+        }
+      }
     }
+
     if ($_FILES['favicon']['name'] != "") {
-      move_uploaded_file($_FILES['favicon']['tmp_name'], 'uploads/system/logo/favicon.png');
+
+      $file_type = mime_content_type($_FILES['favicon']['tmp_name']);
+
+      if ($file_type === $svg_type) {
+        if (file_exists('uploads/system/logo/favicon.png')) {
+          unlink('uploads/system/logo/favicon.png');
+          move_uploaded_file($_FILES['favicon']['tmp_name'], 'uploads/system/logo/favicon.svg');
+        } else {
+          move_uploaded_file($_FILES['favicon']['tmp_name'], 'uploads/system/logo/favicon.svg');
+        }
+
+      }
+        if ($file_type !== $svg_type) {
+        if (file_exists('uploads/system/logo/favicon.svg')) {
+          unlink('uploads/system/logo/favicon.svg');
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/favicon.png');
+        } else {
+          move_uploaded_file($_FILES['light_logo']['tmp_name'], 'uploads/system/logo/favicon.png');
+        }
+      }
+
     }
 
     $response = array(
@@ -65,12 +156,15 @@ class Settings_model extends CI_Model {
     return json_encode($response);
   }
 
+
   // SCHOOL SETTINGS
-  public function get_current_school_data() {
+  public function get_current_school_data()
+  {
     return $this->db->get_where('schools', array('id' => school_id()))->row_array();
   }
 
-  public function update_current_school_settings() {
+  public function update_current_school_settings()
+  {
     $data['name'] = htmlspecialchars($this->input->post('school_name'));
     $data['phone'] = htmlspecialchars($this->input->post('phone'));
     $data['address'] = htmlspecialchars($this->input->post('address'));
@@ -79,7 +173,7 @@ class Settings_model extends CI_Model {
     $data['category'] = htmlspecialchars_decode($this->input->post('category'));
     $this->db->where('id', school_id());
     $this->db->update('schools', $data);
-    move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . school_id(). '.jpg');
+    move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . school_id() . '.jpg');
     $response = array(
       'status' => true,
       'notification' => get_phrase('school_settings_updated_successfully')
@@ -88,7 +182,8 @@ class Settings_model extends CI_Model {
   }
 
   // PAYMENT SETTINGS
-  public function update_system_currency_settings() {
+  public function update_system_currency_settings()
+  {
     $data['system_currency'] = htmlspecialchars($this->input->post('system_currency'));
     $data['currency_position'] = htmlspecialchars($this->input->post('currency_position'));
 
@@ -99,6 +194,7 @@ class Settings_model extends CI_Model {
     }else{
           $this->db->where('id', 1);
           $this->db->update('settings_school', $data);
+
     }
 
     $response = array(
@@ -108,7 +204,8 @@ class Settings_model extends CI_Model {
     return json_encode($response);
   }
 
-  public function update_paypal_settings() {
+  public function update_paypal_settings()
+  {
     $paypal_info = array();
     $CI = &get_instance();
     $CI->load->database();
@@ -118,10 +215,10 @@ class Settings_model extends CI_Model {
     $paypal['paypal_client_id_sandbox'] = htmlspecialchars($this->input->post('paypal_client_id_sandbox'));
     $paypal['paypal_client_id_production'] = htmlspecialchars($this->input->post('paypal_client_id_production'));
     $paypal['paypal_currency'] = htmlspecialchars($this->input->post('paypal_currency'));
-    
+
     array_push($paypal_info, $paypal);
 
-    $data['value']    =   json_encode($paypal_info);
+    $data['value'] = json_encode($paypal_info);
     $this->db->where('key', 'paypal_settings');
     $this->db->where('school_id', $CI->session->userdata('school_id'));
     $this->db->update('payment_settings', $data);
@@ -133,7 +230,8 @@ class Settings_model extends CI_Model {
     return json_encode($response);
   }
 
-  public function update_stripe_settings() {
+  public function update_stripe_settings()
+  {
     $stripe_info = array();
     $CI = &get_instance();
     $CI->load->database();
@@ -147,9 +245,9 @@ class Settings_model extends CI_Model {
 
     array_push($stripe_info, $stripe);
 
-    $data['value']    =   json_encode($stripe_info);
+    $data['value'] = json_encode($stripe_info);
     $this->db->where('key', 'stripe_settings');
-    $this->db->where('school_id',$CI->session->userdata('school_id'));
+    $this->db->where('school_id', $CI->session->userdata('school_id'));
     $this->db->update('payment_settings', $data);
 
     $response = array(
@@ -160,7 +258,8 @@ class Settings_model extends CI_Model {
   }
 
   // UPDATE SMTP CREDENTIALS
-  public function update_smtp_settings() {
+  public function update_smtp_settings()
+  {
     if ($this->input->post('mail_sender') == 'php_mailer') {
       if (empty($this->input->post('smtp_secure')) || empty($this->input->post('smtp_set_from')) || empty($this->input->post('smtp_show_error'))) {
         $response = array(
@@ -186,7 +285,7 @@ class Settings_model extends CI_Model {
     if ($this->db->get('smtp_settings')->num_rows() > 0) {
       $this->db->where('id', 1);
       $this->db->update('smtp_settings', $data);
-    }else{
+    } else {
       $this->db->insert('smtp_settings', $data);
     }
 
@@ -198,13 +297,14 @@ class Settings_model extends CI_Model {
   }
 
   // This function is responsible for retreving all the files and folder
-  function get_list_of_directories_and_files($dir = APPPATH, &$results = array()) {
+  function get_list_of_directories_and_files($dir = APPPATH, &$results = array())
+  {
     $files = scandir($dir);
-    foreach($files as $key => $value){
-      $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
-      if(!is_dir($path)) {
+    foreach ($files as $key => $value) {
+      $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+      if (!is_dir($path)) {
         $results[] = $path;
-      } else if($value != "." && $value != "..") {
+      } else if ($value != "." && $value != "..") {
         $this->get_list_of_directories_and_files($path, $results);
         $results[] = $path;
       }
@@ -213,13 +313,14 @@ class Settings_model extends CI_Model {
   }
 
   // This function is responsible for retreving all the language file from language folder
-  function get_list_of_language_files($dir = APPPATH.'/language', &$results = array()) {
+  function get_list_of_language_files($dir = APPPATH . '/language', &$results = array())
+  {
     $files = scandir($dir);
-    foreach($files as $key => $value){
-      $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
-      if(!is_dir($path)) {
+    foreach ($files as $key => $value) {
+      $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+      if (!is_dir($path)) {
         $results[] = $path;
-      } else if($value != "." && $value != "..") {
+      } else if ($value != "." && $value != "..") {
         $this->get_list_of_directories_and_files($path, $results);
         $results[] = $path;
       }
@@ -228,12 +329,13 @@ class Settings_model extends CI_Model {
   }
 
   // LANGUAGE SETTINGS
-  public function get_all_languages() {
+  public function get_all_languages()
+  {
     $language_files = array();
     $all_files = $this->get_list_of_language_files();
     foreach ($all_files as $file) {
       $info = pathinfo($file);
-      if( isset($info['extension']) && strtolower($info['extension']) == 'json') {
+      if (isset($info['extension']) && strtolower($info['extension']) == 'json') {
         $file_name = explode('.json', $info['basename']);
         array_push($language_files, $file_name[0]);
       }
@@ -247,7 +349,8 @@ class Settings_model extends CI_Model {
   //   return $this->db->get('language')->result_array();
   // }
 
-  public function create_language() {
+  public function create_language()
+  {
     saveDefaultJSONFile(trimmer($this->input->post('language')));
     $response = array(
       'status' => true,
@@ -256,9 +359,10 @@ class Settings_model extends CI_Model {
     return json_encode($response);
   }
 
-  public function update_language($param1 = "") {
-    if (file_exists('application/language/'.$param1.'.json')) {
-      unlink('application/language/'.$param1.'.json');
+  public function update_language($param1 = "")
+  {
+    if (file_exists('application/language/' . $param1 . '.json')) {
+      unlink('application/language/' . $param1 . '.json');
     }
     saveDefaultJSONFile(trimmer($this->input->post('language')));
     $response = array(
@@ -268,9 +372,10 @@ class Settings_model extends CI_Model {
     return json_encode($response);
   }
 
-  public function delete_language($param1 = "") {
-    if (file_exists('application/language/'.$param1.'.json')) {
-      unlink('application/language/'.$param1.'.json');
+  public function delete_language($param1 = "")
+  {
+    if (file_exists('application/language/' . $param1 . '.json')) {
+      unlink('application/language/' . $param1 . '.json');
     }
     $response = array(
       'status' => true,
@@ -279,127 +384,154 @@ class Settings_model extends CI_Model {
     return json_encode($response);
   }
 
-  public function update_system_language($selected_language = "") {
+  public function update_system_language($selected_language = "")
+  {
     $data['language'] = $selected_language;
 
     $this->db->where('id', 1);
     $this->db->update('settings', $data);
   }
 
-  function get_currencies() {
+  function get_currencies()
+  {
     return $this->db->get('currencies')->result_array();
   }
 
-  function get_paypal_supported_currencies() {
+  function get_paypal_supported_currencies()
+  {
     $this->db->where('paypal_supported', 1);
     return $this->db->get('currencies')->result_array();
   }
 
-  function get_stripe_supported_currencies() {
+  function get_stripe_supported_currencies()
+  {
     $this->db->where('stripe_supported', 1);
     return $this->db->get('currencies')->result_array();
   }
 
   // ABOUT APPLICATION INFORMATION
-  function get_application_details() {
+  function get_application_details()
+  {
     $purchase_code = get_settings('purchase_code');
     $returnable_array = array(
       'purchase_code_status' => get_phrase('not_found'),
-      'support_expiry_date'  => get_phrase('not_found'),
-      'customer_name'        => get_phrase('not_found')
+      'support_expiry_date' => get_phrase('not_found'),
+      'customer_name' => get_phrase('not_found')
     );
 
     $personal_token = "gC0J1ZpY53kRpynNe4g2rWT5s4MW56Zg";
-    $url = "https://api.envato.com/v3/market/author/sale?code=".$purchase_code;
+    $url = "https://api.envato.com/v3/market/author/sale?code=" . $purchase_code;
     $curl = curl_init($url);
 
     //setting the header for the rest of the api
-    $bearer   = 'bearer ' . $personal_token;
-    $header   = array();
+    $bearer = 'bearer ' . $personal_token;
+    $header = array();
     $header[] = 'Content-length: 0';
     $header[] = 'Content-type: application/json; charset=utf-8';
     $header[] = 'Authorization: ' . $bearer;
 
-    $verify_url = 'https://api.envato.com/v1/market/private/user/verify-purchase:'.$purchase_code.'.json';
-    $ch_verify = curl_init( $verify_url . '?code=' . $purchase_code );
+    $verify_url = 'https://api.envato.com/v1/market/private/user/verify-purchase:' . $purchase_code . '.json';
+    $ch_verify = curl_init($verify_url . '?code=' . $purchase_code);
 
-    curl_setopt( $ch_verify, CURLOPT_HTTPHEADER, $header );
-    curl_setopt( $ch_verify, CURLOPT_SSL_VERIFYPEER, false );
-    curl_setopt( $ch_verify, CURLOPT_RETURNTRANSFER, 1 );
-    curl_setopt( $ch_verify, CURLOPT_CONNECTTIMEOUT, 5 );
-    curl_setopt( $ch_verify, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+    curl_setopt($ch_verify, CURLOPT_HTTPHEADER, $header);
+    curl_setopt($ch_verify, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch_verify, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch_verify, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch_verify, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
 
-    $cinit_verify_data = curl_exec( $ch_verify );
-    curl_close( $ch_verify );
+    $cinit_verify_data = curl_exec($ch_verify);
+    curl_close($ch_verify);
 
     $response = json_decode($cinit_verify_data, true);
 
     if (count($response['verify-purchase']) > 0) {
 
       //print_r($response);
-      $item_name 				= $response['verify-purchase']['item_name'];
-      $purchase_time 			= $response['verify-purchase']['created_at'];
-      $customer 				= $response['verify-purchase']['buyer'];
-      $licence_type 			= $response['verify-purchase']['licence'];
-      $support_until			= $response['verify-purchase']['supported_until'];
-      $customer 				= $response['verify-purchase']['buyer'];
+      $item_name = $response['verify-purchase']['item_name'];
+      $purchase_time = $response['verify-purchase']['created_at'];
+      $customer = $response['verify-purchase']['buyer'];
+      $licence_type = $response['verify-purchase']['licence'];
+      $support_until = $response['verify-purchase']['supported_until'];
+      $customer = $response['verify-purchase']['buyer'];
 
-      $purchase_date			= date("d M, Y", strtotime($purchase_time));
+      $purchase_date = date("d M, Y", strtotime($purchase_time));
 
-      $todays_timestamp 		= strtotime(date("d M, Y"));
+      $todays_timestamp = strtotime(date("d M, Y"));
       $support_expiry_timestamp = strtotime($support_until);
 
-      $support_expiry_date	= date("d M, Y", $support_expiry_timestamp);
+      $support_expiry_date = date("d M, Y", $support_expiry_timestamp);
 
       if ($todays_timestamp > $support_expiry_timestamp)
-      $support_status		= get_phrase('expired');
+        $support_status = get_phrase('expired');
       else
-      $support_status		= get_phrase('valid');
+        $support_status = get_phrase('valid');
 
       $returnable_array = array(
         'purchase_code_status' => $support_status,
-        'support_expiry_date'  => $support_expiry_date,
-        'customer_name'        => $customer
+        'support_expiry_date' => $support_expiry_date,
+        'customer_name' => $customer
       );
-    }
-    else {
+    } else {
       $returnable_array = array(
         'purchase_code_status' => 'invalid',
-        'support_expiry_date'  => 'invalid',
-        'customer_name'        => 'invalid'
+        'support_expiry_date' => 'invalid',
+        'customer_name' => 'invalid'
       );
     }
 
     return $returnable_array;
   }
 
-    // GET SYSTEM DATA
+  // GET SYSTEM DATA
 
   // GET DARK LOGO
-  public function get_logo_dark($type = "") {
+   public function get_logo_dark($type = "")
+
+  {
     if ($type == 'small') {
-      return base_url('uploads/system/logo/logo-dark-sm.png');
-    }else{
-      return base_url('uploads/system/logo/logo-dark.png');
+      if (file_exists('uploads/system/logo/logo-dark-sm.png')) {
+        return base_url('uploads/system/logo/logo-dark-sm.png');
+      } else {
+        return base_url('uploads/system/logo/logo-dark-sm.svg');
+      }
+    } else {
+      if (file_exists('uploads/system/logo/logo-dark.png')) {
+        return base_url('uploads/system/logo/logo-dark.png');
+      } else {
+        return base_url('uploads/system/logo/logo-dark.svg');
+      }
     }
 
   }
 
   // GET LIGHT LOGO
-  public function get_logo_light($type = "") {
+  public function get_logo_light($type = "")
+  {
     if ($type == 'small') {
-      return base_url('uploads/system/logo/logo-light-sm.png');
-    }else{
-      return base_url('uploads/system/logo/logo-light.png');
+      if (file_exists('uploads/system/logo/logo-light-sm.png')) {
+        return base_url('uploads/system/logo/logo-light-sm.png');
+      } else {
+        return base_url('uploads/system/logo/logo-light-sm.svg');
+      }
+
+    } else {
+      if (file_exists('uploads/system/logo/logo-light.png')) {
+        return base_url('uploads/system/logo/logo-light.png');
+      } else {
+        return base_url('uploads/system/logo/logo-light.svg');
+      }
     }
   }
 
   // GET FAVICON
-  public function get_favicon() {
-    return base_url('uploads/system/logo/favicon.png');
+  public function get_favicon()
+  {
+    if (file_exists('uploads/system/logo/favicon.png')) {
+      return base_url('uploads/system/logo/favicon.png');
+    } else {
+      return base_url('uploads/system/logo/favicon.svg');
+    }
   }
-
-
 }
 
 
