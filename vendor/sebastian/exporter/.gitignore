@@ -1,9 +1,7 @@
-.idea
-phpunit.xml
-composer.lock
-composer.phar
-vendor/
-cache.properties
-build/LICENSE
-build/README.md
-build/*.tgz
+/.idea
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+/.phpunit.cache
+/.psalm/cache
+/composer.lock
+/vendor

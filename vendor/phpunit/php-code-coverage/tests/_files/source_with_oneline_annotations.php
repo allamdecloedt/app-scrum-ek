@@ -1,7 +1,7 @@
 <?php
 
 /** Docblock */
-interface Foo
+interface FooInterface
 {
     public function bar();
 }
@@ -33,4 +33,8 @@ function baz()
     print '*'; // @codeCoverageIgnoreEnd
 
     print '*';
+}
+
+function xyz()
+{
 }
