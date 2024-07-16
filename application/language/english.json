@@ -1329,5 +1329,7 @@
     "registration_successful": "Registration successful",
     "no_student_account": "No student account",
     "this_email_already_exist": "This email already exist",
-    "approve": "Approve"
+    "approve": "Approve",
+    "no_lesson_found": "No lesson found",
+    "choose_your_answer": "Choose your answer"
 }

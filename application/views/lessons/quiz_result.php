@@ -18,7 +18,7 @@
 <div class="row mb-2">
     <div class="col-lg-12">
         <div class="card text-left bg-as-important">
-            <div class="card-body">
+            <div class="card-body answers-body">
                 <h6 class="card-title"><img src="<?php echo $each['submitted_answer_status'] == 1 ? base_url('assets/frontend/default/img/green-tick.png') : base_url('assets/frontend/default/img/red-cross.png'); ?>" alt="" height="15px;"> <?php echo $question_details['title']; ?></h6>
                 <?php for ($i = 0; $i < count($correct_answers); $i++): ?>
                     <p class="card-text"> -
