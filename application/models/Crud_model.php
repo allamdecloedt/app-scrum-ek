@@ -816,11 +816,19 @@ class Crud_model extends CI_Model {
 		return $this->db->get('invoices');
 	}
 
-	public function get_invoice_by_student_id($student_id = "") {
-		$this->db->where('school_id', $this->school_id);
-		$this->db->where('session', $this->active_session);
-		$this->db->where('student_id', $student_id);
-		return $this->db->get('invoices');
+	public function get_invoice_by_student_id($user_id = "") {
+		
+		// $this->db->where('session', $this->active_session);
+		// $this->db->where('student_id', $student_id);
+		// return $this->db->get('invoices');
+		$this->db->select('invoices.*');
+		$this->db->from('invoices');
+		$this->db->join('students', 'students.id = invoices.student_id');
+		$this->db->where('students.code', $user_id);
+		
+		$query = $this->db->get();
+		
+		return $query;
 	}
 
 	// This function will be triggered if parent logs in
