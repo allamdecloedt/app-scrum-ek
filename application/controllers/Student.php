@@ -186,18 +186,37 @@ class Student extends CI_Controller {
   public function online_admission($param1 = "", $user_id = "")
   {
 
-
+	
     if ($param1 == 'assigned') {
-      $data['student_id'] = $this->input->post('student_id');
-      $data['class_id'] = $this->input->post('class_id');
-      $data['section_id'] = $this->input->post('section_id');
-	  $data['school_id'] = $this->input->post('school_id');
-      $data['session'] = active_session();
-    //   $data['school_id'] = school_id();
-      $this->db->insert('enrols', $data);
+		
+	 // Stocker les données de l'inscription dans la session pour un accès ultérieur
+		$data['student_id'] = htmlspecialchars($this->input->post('student_id'));
+		$data['class_id'] = htmlspecialchars($this->input->post('class_id'));
+		$data['section_id'] = htmlspecialchars($this->input->post('section_id'));
+		$data['school_id'] = htmlspecialchars($this->input->post('school_id'));
+		$data['price'] = htmlspecialchars($this->input->post('price'));
+		$data['currency'] = htmlspecialchars($this->input->post('currency'));
+		$data['session'] = active_session();
+	
+	  	$this->session->set_userdata('enrolment_data', $data);
 
-      $this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
-      redirect(site_url('addons/courses'), 'refresh');
+	  $name = $this->db->get_where('schools', array('id' => $data['school_id']))->row('name');
+	  $classe_name = $this->db->get_where('classes', array('id' => $data['class_id']))->row('name');
+	  $data_invoice['title'] = $name." - ".$classe_name ;
+	  $data_invoice['total_amount'] = $data['price'];
+	  $data_invoice['class_id'] = $data['class_id'] ;
+	  $data_invoice['student_id'] = $data['student_id'];
+	  $data_invoice['status'] = "unpaid";
+	  $data_invoice['school_id'] =$data['school_id'];
+	  $data_invoice['session'] = $data['session'];
+	  $data_invoice['created_at'] = strtotime(date('d-M-Y'));
+	  $this->db->insert('invoices', $data_invoice);
+	  $invoice_id = $this->db->insert_id();
+
+	  redirect(site_url('Student/payment/' . $invoice_id), 'refresh');
+
+    //   $this->session->set_flashdata('flash_message', get_phrase('admission_request_has_been_updated'));
+    //   redirect(site_url('addons/courses'), 'refresh');
     }
 
 
