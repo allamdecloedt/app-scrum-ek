@@ -52,7 +52,7 @@
 }
 
 body {
-  background-color: #525252 !important;
+  background-color: #6e6e6e !important;
 }
 .card {
   border-radius: 0px !important;
@@ -161,7 +161,7 @@ body {
   padding: 10px !important;
 }
 .bg-quiz-result-info {
-  background-color: #007791 !important;
+  background-color: #004214 !important;
   padding: 13px !important;
 }
 
@@ -263,8 +263,26 @@ body {
 }
 
 .answers-body{
-  background-color: #6a0081;
+  background-color: #525252 !important;
   color: #fff;
   border-radius: 6px;
   
+}
+
+.answer_status_image{
+  width: 25px;
+  height: 25px;
+}
+
+.green-circle-tick{
+  background-color: #00922c;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+}
+
+.review-card{
+  background-color: #212121 !important;
+  color: #fff;
+  border-radius: 6px !important;
 }
