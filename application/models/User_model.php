@@ -1299,10 +1299,12 @@ class User_model extends CI_Model
 					redirect($_SERVER['HTTP_REFERER'], 'refresh');
 				}
 			} else {
-
+				$student_row = $this->db->get_where('students', array('user_id' => $user_id))->row_array();
+				$student_code = !empty($student_row) ? $student_row['code'] : student_code();
+				
 				$data['school_id'] = $school_id;
 				$data['user_id'] = $user_id;
-				$data['code'] = student_code();
+				$data['code'] = $student_code;
 				$data['session'] = $this->active_session;
 
 				$query = $this->db->get_where('schools', array('id' => $school_id));

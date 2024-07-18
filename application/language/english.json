@@ -1333,4 +1333,14 @@
     "no_lesson_found": "No lesson found",
     "choose_your_answer": "Choose your answer",
     "correct_answers": "Correct answers"
+    "academy": "Academy",
+    "no_lesson_found": "No lesson found",
+    "provide_class_price": "Provide class price",
+    "class_price": "Class price",
+    "joinwith_90": "Joinwith 90",
+    "joinwith_": "Joinwith ",
+    "join_": "Join ",
+    "select_currency": "Select currency",
+    "currency": "Currency",
+    "phone_number_not_found": "Phone number not found"
 }
