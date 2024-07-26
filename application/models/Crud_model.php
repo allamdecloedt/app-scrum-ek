@@ -1128,7 +1128,7 @@ class Crud_model extends CI_Model {
 
 			        // Récupérer les données de la session
 					$enrolment_data = $this->session->userdata('enrolment_data');
-					// print_r($enrolment_data);die;
+					
 					// Utiliser les données
 					$data_enrols['student_id'] = $enrolment_data['student_id'];
 					$data_enrols['class_id'] = $enrolment_data['class_id'];

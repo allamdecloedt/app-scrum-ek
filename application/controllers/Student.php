@@ -200,18 +200,26 @@ class Student extends CI_Controller {
 	
 	  	$this->session->set_userdata('enrolment_data', $data);
 
-	  $name = $this->db->get_where('schools', array('id' => $data['school_id']))->row('name');
-	  $classe_name = $this->db->get_where('classes', array('id' => $data['class_id']))->row('name');
-	  $data_invoice['title'] = $name." - ".$classe_name ;
-	  $data_invoice['total_amount'] = $data['price'];
-	  $data_invoice['class_id'] = $data['class_id'] ;
-	  $data_invoice['student_id'] = $data['student_id'];
-	  $data_invoice['status'] = "unpaid";
-	  $data_invoice['school_id'] =$data['school_id'];
-	  $data_invoice['session'] = $data['session'];
-	  $data_invoice['created_at'] = strtotime(date('d-M-Y'));
-	  $this->db->insert('invoices', $data_invoice);
-	  $invoice_id = $this->db->insert_id();
+
+		$num_rows_invoices = $this->db->get_where('invoices', array('class_id' => $data['class_id'],'student_id' => $data['student_id']))->num_rows();
+		// print_r($num_rows_invoices);die;
+		if($num_rows_invoices == 0){
+			$name = $this->db->get_where('schools', array('id' => $data['school_id']))->row('name');
+			$classe_name = $this->db->get_where('classes', array('id' => $data['class_id']))->row('name');
+			$data_invoice['title'] = $name." - ".$classe_name ;
+			$data_invoice['total_amount'] = $data['price'];
+			$data_invoice['class_id'] = $data['class_id'] ;
+			$data_invoice['student_id'] = $data['student_id'];
+			$data_invoice['status'] = "unpaid";
+			$data_invoice['school_id'] =$data['school_id'];
+			$data_invoice['session'] = $data['session'];
+			$data_invoice['created_at'] = strtotime(date('d-M-Y'));
+			$this->db->insert('invoices', $data_invoice);
+			$invoice_id = $this->db->insert_id();
+		}else{
+			$invoice_id = $this->db->get_where('invoices', array('class_id' => $data['class_id'],'student_id' => $data['student_id']))->row('id');
+		}
+
 
 	  redirect(site_url('Student/payment/' . $invoice_id), 'refresh');
 
