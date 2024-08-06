@@ -1819,6 +1819,1461 @@ public function classes_get() {
         ->set_output(json_encode($classes));
 }
 
+public function delete_course_delete($course_id) {
+    // Ensure the request method is DELETE
+    if ($_SERVER['REQUEST_METHOD'] !== 'DELETE') {
+        $this->output
+            ->set_status_header(405)
+            ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    // Fetch the course from the database to check if it exists
+    $this->db->where('id', $course_id);
+    $query = $this->db->get('course');
+
+    if ($query->num_rows() > 0) {
+        // Begin transaction
+        $this->db->trans_begin();
+
+        // Delete the course
+        $this->db->where('id', $course_id);
+        $this->db->delete('course');
+
+        // Check if the course was deleted successfully
+        if ($this->db->affected_rows() > 0) {
+            // Commit transaction
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                $this->output
+                    ->set_status_header(500)
+                    ->set_output(json_encode(['message' => 'Transaction failed']));
+            } else {
+                $this->db->trans_commit();
+                $this->output
+                    ->set_status_header(200)
+                    ->set_output(json_encode(['message' => 'Course deleted successfully']));
+            }
+        } else {
+            $this->db->trans_rollback();
+            $this->output
+                ->set_status_header(500)
+                ->set_output(json_encode(['message' => 'Failed to delete course']));
+        }
+    } else {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['message' => 'Course not found']));
+    }
+}
+
+
+public function add_course_section_post($course_id) {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Retrieve input data
+        $input_data = $this->input->post();
+        $title = isset($input_data['title']) ? $input_data['title'] : null;
+
+        // Log received title for debugging
+        log_message('debug', 'Received title: ' . $title);
+        log_message('debug', 'Received course_id: ' . $course_id);
+
+        // Validate the input
+        if (empty($title)) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'Title is required']));
+            return;
+        }
+
+        // Prepare data for insertion
+        $data['title'] = $title;
+        $data['course_id'] = $course_id;
+
+        // Get the highest order value for the course and increment it
+ 
+        $this->db->where('course_id', $course_id);
+        $query = $this->db->get('course_section');
+        $row = $query->row();
+     
+        // Insert the new section
+        if ($this->db->insert('course_section', $data)) {
+            $section_id = $this->db->insert_id();
+            log_message('debug', 'Section inserted with ID: ' . $section_id);
+            
+            // Fetch course details
+            $this->db->where('id', $course_id);
+            $course_details = $this->db->get('course')->row_array();
+            log_message('debug', 'Course details: ' . print_r($course_details, true));
+
+            // Decode the section array or initialize it if empty
+            $previous_sections = isset($course_details['section']) ? json_decode($course_details['section'], true) : [];
+
+            if (is_array($previous_sections)) {
+                array_push($previous_sections, $section_id);
+            } else {
+                $previous_sections = array($section_id);
+            }
+
+            // Update the course with the new section list
+            $updater['section'] = json_encode($previous_sections);
+            $this->db->where('id', $course_id);
+            if ($this->db->update('course', $updater)) {
+                log_message('debug', 'Course updated successfully with new sections');
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode(['status' => 'success', 'message' => 'Section added successfully']));
+            } else {
+                log_message('error', 'Failed to update course sections');
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to update course sections']));
+            }
+        } else {
+            log_message('error', 'Failed to insert new section');
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to add section']));
+        }
+    } else {
+        // Return method not allowed error
+        log_message('error', 'Invalid request method');
+        $this->output
+             ->set_content_type('application/json')
+             ->set_status_header(405)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+public function sections_get($course_id) {
+    // Ensure the request is a GET request
+    if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        // Fetch sections based on the course ID
+        $this->db->select('*');
+        $this->db->from('course_section');
+        $this->db->where('course_id', $course_id);
+        
+        $query = $this->db->get();
+        $sections = $query->result_array();
+
+        // Check if sections are found
+        if ($sections) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'success', 'sections' => $sections]));
+        } else {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'No sections found']));
+        }
+    } else {
+        // Return method not allowed error
+        $this->output
+             ->set_content_type('application/json')
+             ->set_status_header(405)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+public function sections_title_post($course_id, $section_id) {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Get the new title from the POST data
+        $new_title = $this->input->post('title');
+
+        // Validate the input
+        if (empty($new_title)) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'Title cannot be empty']));
+            return;
+        }
+
+        // Update the section title in the database
+        $this->db->where('course_id', $course_id);
+        $this->db->where('id', $section_id);
+        $this->db->update('course_section', ['title' => $new_title]);
+
+        // Check if the update was successful
+        if ($this->db->affected_rows() > 0) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'success', 'message' => 'Section title updated successfully']));
+        } else {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to update section title']));
+        }
+    } else {
+        // Return method not allowed error
+        $this->output
+             ->set_content_type('application/json')
+             ->set_status_header(405)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+public function sections_del_delete($course_id, $section_id) {
+    // Ensure the request is a DELETE request
+    if ($this->input->server('REQUEST_METHOD') == 'DELETE') {
+        // Delete the section from the database
+        $this->db->where('course_id', $course_id);
+        $this->db->where('id', $section_id);
+        $this->db->delete('course_section');
+
+        // Check if the deletion was successful
+        if ($this->db->affected_rows() > 0) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'success', 'message' => 'Section deleted successfully']));
+        } else {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to delete section']));
+        }
+    } else {
+        // Return method not allowed error
+        $this->output
+             ->set_content_type('application/json')
+             ->set_status_header(405)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+public function quizzes_by_section_get($section_id) {
+    // Ensure the request is a GET request
+    if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        // Fetch quizzes based on the section ID
+        $this->db->select('*');
+        $this->db->from('lesson');
+        $this->db->where('section_id', $section_id);
+        $this->db->where('lesson_type', 'quiz'); // Assuming 'lesson_type' column marks a lesson as a quiz
+        $query = $this->db->get();
+        $quizzes = $query->result_array();
+
+        // Check if quizzes are found
+        if ($quizzes) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'success', 'quizzes' => $quizzes]));
+        } else {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'No quizzes found']));
+        }
+    } else {
+        // Return method not allowed error
+        $this->output
+             ->set_content_type('application/json')
+             ->set_status_header(405)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+public function quizzes_by_course_get($course_id) {
+    // Ensure the request is a GET request
+    if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        // Fetch quizzes based on the course ID
+        $this->db->select('*');
+        $this->db->from('lesson');
+        $this->db->where('course_id', $course_id);
+        $this->db->where('lesson_type', 'quiz'); // Assuming 'lesson_type' column marks a lesson as a quiz
+        $query = $this->db->get();
+        $quizzes = $query->result_array();
+
+        // Check if quizzes are found
+        if ($quizzes) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'success', 'quizzes' => $quizzes]));
+        } else {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'No quizzes found']));
+        }
+    } else {
+        // Return method not allowed error
+        $this->output
+             ->set_content_type('application/json')
+             ->set_status_header(405)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+public function quizzes_get($course_id = null, $section_id = null) {
+    // Ensure the request is a GET request
+    if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        $this->db->select('*');
+        $this->db->from('lesson');
+        
+        if ($section_id !== null) {
+            // Fetch quizzes based on the section ID
+            $this->db->where('section_id', $section_id);
+        } else if ($course_id !== null) {
+            // Fetch quizzes based on the course ID
+            $this->db->where('course_id', $course_id);
+        } else {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'No course_id or section_id provided']));
+            return;
+        }
+
+        $this->db->where('lesson_type', 'quiz'); // Assuming 'lesson_type' column marks a lesson as a quiz
+        $this->db->order_by('order', 'ASC'); // Order by the 'order' field in ascending order
+        $query = $this->db->get();
+        $quizzes = $query->result_array();
+
+        // Check if quizzes are found
+        if ($quizzes) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'success', 'quizzes' => $quizzes]));
+        } else {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'No quizzes found']));
+        }
+    } else {
+        // Return method not allowed error
+        $this->output
+             ->set_content_type('application/json')
+             ->set_status_header(405)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+public function update_quiz_order_post($section_id = null) {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Get the POST data
+        $input_data = $this->input->post();
+
+        // Check if section_id is provided
+        if ($section_id === null) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'No section_id provided']));
+            return;
+        }
+
+        // Check if the input data is an array of quizzes with their order
+        if (!isset($input_data['quizzes']) || !is_array($input_data['quizzes'])) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid input data']));
+            return;
+        }
+
+        // Start transaction
+        $this->db->trans_start();
+
+        // Update the order of each quiz
+        foreach ($input_data['quizzes'] as $quiz) {
+            if (isset($quiz['id']) && isset($quiz['order'])) {
+                $this->db->where('id', $quiz['id']);
+                $this->db->where('lesson_type', 'quiz'); // Ensure the lesson is a quiz
+                $this->db->where('section_id', $section_id); // Ensure the quiz belongs to the section
+                $this->db->update('lesson', ['order' => $quiz['order']]);
+            }
+        }
+
+        // Complete the transaction
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE) {
+            // Transaction failed, return error response
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to update quiz order']));
+        } else {
+            // Transaction succeeded, return success response
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'message' => 'Quiz order updated successfully']));
+        }
+    } else {
+        // Return method not allowed error
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+
+public function quiz_questions_get($quiz_id) {
+    // Ensure the request is a GET request
+    if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        // Fetch quiz questions based on the quiz ID
+        $this->db->order_by("order", "asc");
+        $this->db->where('quiz_id', $quiz_id);
+        $query = $this->db->get('question');
+        $questions = $query->result_array();
+
+        // Check if questions are found
+        if ($questions) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'success', 'questions' => $questions]));
+        } else {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'No questions found']));
+        }
+    } else {
+        // Return method not allowed error
+        $this->output
+             ->set_content_type('application/json')
+             ->set_status_header(405)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+public function add_quiz_post() {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Retrieve input data using $this->input->post
+        $title = $this->input->post('title');
+        $section_name = $this->input->post('section_name');
+        $summary = $this->input->post('instruction');  // Changed 'instruction' to 'summary'
+
+        // Log received data for debugging
+        log_message('debug', 'Received title: ' . $title);
+        log_message('debug', 'Received section_name: ' . $section_name);
+        log_message('debug', 'Received summary: ' . $summary);  // Log 'summary'
+
+        // Validate the input
+        if (empty($title) || empty($section_name)) {
+            log_message('error', 'Validation failed: Title and Section Name are required');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Title and Section Name are required']));
+            return;
+        }
+
+        // Fetch section ID from section name
+        $this->db->select('id');
+        $this->db->from('course_section');
+        $this->db->where('title', $section_name);
+        $query = $this->db->get();
+
+        if ($query->num_rows() == 0) {
+            log_message('error', 'Invalid Section Name: ' . $section_name);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid Section Name']));
+            return;
+        }
+
+        $section = $query->row();
+        $section_id = $section->id;
+
+        // Prepare data for insertion
+        $data = [
+            'title' => $title,
+            'section_id' => $section_id,
+            'summary' => $summary,  // Changed 'instruction' to 'summary'
+            'lesson_type' => 'quiz', // Assuming 'lesson_type' column marks a lesson as a quiz
+            // Removed 'created_at'
+        ];
+
+        // Log data to be inserted
+        log_message('debug', 'Data to be inserted: ' . json_encode($data));
+
+        // Insert the new quiz
+        if ($this->db->insert('lesson', $data)) {
+            $quiz_id = $this->db->insert_id();
+            log_message('debug', 'Quiz inserted with ID: ' . $quiz_id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'message' => 'Quiz added successfully', 'quiz_id' => $quiz_id]));
+        } else {
+            log_message('error', 'Failed to insert new quiz');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to add quiz']));
+        }
+    } else {
+        // Return method not allowed error
+        log_message('error', 'Invalid request method');
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+ public function update_quiz_post() {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Retrieve input data using $this->input->post
+        $quiz_id = $this->input->post('quiz_id');
+        $title = $this->input->post('title');
+        $section_name = $this->input->post('section_name');
+        $summary = $this->input->post('summary'); // Changed 'instruction' to 'summary'
+
+        // Log received data for debugging
+        log_message('debug', 'Received quiz_id: ' . $quiz_id);
+        log_message('debug', 'Received title: ' . $title);
+        log_message('debug', 'Received section_name: ' . $section_name);
+        log_message('debug', 'Received summary: ' . $summary);  // Log 'summary'
+
+        // Validate the input
+        if (empty($quiz_id) || empty($title) || empty($section_name)) {
+            log_message('error', 'Validation failed: Quiz ID, Title, and Section Name are required');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Quiz ID, Title, and Section Name are required']));
+            return;
+        }
+
+        // Fetch section ID from section name
+        $this->db->select('id');
+        $this->db->from('course_section');
+        $this->db->where('title', $section_name);
+        $query = $this->db->get();
+
+        if ($query->num_rows() == 0) {
+            log_message('error', 'Invalid Section Name: ' . $section_name);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid Section Name']));
+            return;
+        }
+
+        $section = $query->row();
+        $section_id = $section->id;
+
+        // Prepare data for updating
+        $data = [
+            'title' => $title,
+            'section_id' => $section_id,
+            'summary' => $summary,  // Changed 'instruction' to 'summary'
+            'lesson_type' => 'quiz', // Assuming 'lesson_type' column marks a lesson as a quiz
+        ];
+
+        // Log data to be updated
+        log_message('debug', 'Data to be updated: ' . json_encode($data));
+
+        // Update the quiz
+        $this->db->where('id', $quiz_id);
+        if ($this->db->update('lesson', $data)) {
+            log_message('debug', 'Quiz updated with ID: ' . $quiz_id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'message' => 'Quiz updated successfully', 'quiz_id' => $quiz_id]));
+        } else {
+            log_message('error', 'Failed to update quiz');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to update quiz']));
+        }
+    } else {
+        // Return method not allowed error
+        log_message('error', 'Invalid request method');
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+public function delete_quiz_post() {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Retrieve input data using $this->input->post
+        $quiz_id = $this->input->post('quiz_id');
+
+        // Log received data for debugging
+        log_message('debug', 'Received quiz_id: ' . $quiz_id);
+
+        // Validate the input
+        if (empty($quiz_id)) {
+            log_message('error', 'Validation failed: Quiz ID is required');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Quiz ID is required']));
+            return;
+        }
+
+        // Check if the quiz exists
+        $this->db->select('id');
+        $this->db->from('lesson');
+        $this->db->where('id', $quiz_id);
+        $query = $this->db->get();
+
+        if ($query->num_rows() == 0) {
+            log_message('error', 'Invalid Quiz ID: ' . $quiz_id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid Quiz ID']));
+            return;
+        }
+
+        // Delete the quiz
+        $this->db->where('id', $quiz_id);
+        if ($this->db->delete('lesson')) {
+            log_message('debug', 'Quiz deleted with ID: ' . $quiz_id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'message' => 'Quiz deleted successfully', 'quiz_id' => $quiz_id]));
+        } else {
+            log_message('error', 'Failed to delete quiz');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to delete quiz']));
+        }
+    } else {
+        // Return method not allowed error
+        log_message('error', 'Invalid request method');
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+public function add_question_post() {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Retrieve input data using $this->input->post
+        $quiz_id = $this->input->post('quiz_id');
+        $title = $this->input->post('title');
+        $type = $this->input->post('type');
+        $number_of_options = $this->input->post('number_of_options');
+        $options = $this->input->post('options'); // Expecting JSON format
+        $correct_answers = $this->input->post('correct_answers'); // Expecting JSON format
+        $order = $this->input->post('order');
+
+        // Log received data for debugging
+        log_message('debug', 'Received quiz_id: ' . $quiz_id);
+        log_message('debug', 'Received title: ' . $title);
+        log_message('debug', 'Received type: ' . $type);
+        log_message('debug', 'Received number_of_options: ' . $number_of_options);
+        log_message('debug', 'Received options: ' . $options);
+        log_message('debug', 'Received correct_answers: ' . $correct_answers);
+        log_message('debug', 'Received order: ' . $order);
+
+        // Validate the input
+        if (empty($quiz_id) || empty($title) || empty($type) || empty($number_of_options) || empty($options) || empty($correct_answers)) {
+            log_message('error', 'Validation failed: Quiz ID, Title, Type, Number of Options, Options, and Correct Answers are required');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Quiz ID, Title, Type, Number of Options, Options, and Correct Answers are required']));
+            return;
+        }
+
+        // Prepare data for insertion
+        $data = [
+            'quiz_id' => $quiz_id,
+            'title' => $title,
+            'type' => $type,
+            'number_of_options' => $number_of_options,
+            'options' => $options,
+            'correct_answers' => $correct_answers,
+            'order' => $order,
+        ];
+
+        // Log data to be inserted
+        log_message('debug', 'Data to be inserted: ' . json_encode($data));
+
+        // Insert the new question
+        if ($this->db->insert('question', $data)) {
+            $question_id = $this->db->insert_id();
+            log_message('debug', 'Question inserted with ID: ' . $question_id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'message' => 'Question added successfully', 'question_id' => $question_id]));
+        } else {
+            log_message('error', 'Failed to insert new question');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to add question']));
+        }
+    } else {
+        // Return method not allowed error
+        log_message('error', 'Invalid request method');
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+ public function get_quiz_questions_get($quiz_id) {
+    if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        $this->db->order_by("order", "asc");
+        $this->db->where('quiz_id', $quiz_id);
+        $query = $this->db->get('question');
+        $questions = $query->result_array();
+
+        if ($questions) {
+            // Decode options and add them to the response
+            foreach ($questions as &$question) {
+                $question['options'] = json_decode($question['options'], true);
+            }
+            
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'questions' => $questions]));
+        } else {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'No questions found']));
+        }
+    } else {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+public function edit_question_post() {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Retrieve input data using $this->input->post
+        $question_id = $this->input->post('question_id');
+        $quiz_id = $this->input->post('quiz_id');
+        $title = $this->input->post('title');
+        $type = $this->input->post('type');
+        $number_of_options = $this->input->post('number_of_options');
+        $options = $this->input->post('options'); // Expecting JSON format
+        $correct_answers = $this->input->post('correct_answers'); // Expecting JSON format
+        $order = $this->input->post('order');
+
+        // Log received data for debugging
+        log_message('debug', 'Received question_id: ' . $question_id);
+        log_message('debug', 'Received quiz_id: ' . $quiz_id);
+        log_message('debug', 'Received title: ' . $title);
+        log_message('debug', 'Received type: ' . $type);
+        log_message('debug', 'Received number_of_options: ' . $number_of_options);
+        log_message('debug', 'Received options: ' . $options);
+        log_message('debug', 'Received correct_answers: ' . $correct_answers);
+        log_message('debug', 'Received order: ' . $order);
+
+        // Validate the input
+        if (empty($question_id) || empty($quiz_id) || empty($title) || empty($type) || empty($number_of_options) || empty($options) || empty($correct_answers)) {
+            log_message('error', 'Validation failed: Question ID, Quiz ID, Title, Type, Number of Options, Options, and Correct Answers are required');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Question ID, Quiz ID, Title, Type, Number of Options, Options, and Correct Answers are required']));
+            return;
+        }
+
+        // Convert necessary fields to appropriate types
+        $number_of_options = (int)$number_of_options;
+        $order = (int)$order;
+
+        // Prepare data for update
+        $data = [
+            'quiz_id' => $quiz_id,
+            'title' => $title,
+            'type' => $type,
+            'number_of_options' => $number_of_options,
+            'options' => $options,
+            'correct_answers' => $correct_answers,
+            'order' => $order,
+        ];
+
+        // Log data to be updated
+        log_message('debug', 'Data to be updated: ' . json_encode($data));
+
+        // Update the question
+        $this->db->where('id', $question_id);
+        if ($this->db->update('question', $data)) {
+            log_message('debug', 'Question updated with ID: ' . $question_id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'message' => 'Question updated successfully']));
+        } else {
+            log_message('error', 'Failed to update question');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to update question']));
+        }
+    } else {
+        // Return method not allowed error
+        log_message('error', 'Invalid request method');
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+public function delete_question_post() {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Retrieve input data using $this->input->post
+        $question_id = $this->input->post('question_id');
+
+        // Log received data for debugging
+        log_message('debug', 'Received question_id: ' . $question_id);
+
+        // Validate the input
+        if (empty($question_id)) {
+            log_message('error', 'Validation failed: Question ID is required');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Question ID is required']));
+            return;
+        }
+
+        // Check if the question exists
+        $this->db->where('id', $question_id);
+        $query = $this->db->get('question');
+        if ($query->num_rows() == 0) {
+            log_message('error', 'Question not found with ID: ' . $question_id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Question not found']));
+            return;
+        }
+
+        // Delete the question
+        $this->db->where('id', $question_id);
+        if ($this->db->delete('question')) {
+            log_message('debug', 'Question deleted with ID: ' . $question_id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'message' => 'Question deleted successfully']));
+        } else {
+            log_message('error', 'Failed to delete question');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to delete question']));
+        }
+    } else {
+        // Return method not allowed error
+        log_message('error', 'Invalid request method');
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+
+
+public function add_lesson_post() {
+    $this->load->library('form_validation');
+
+    // Set validation rules
+    $this->form_validation->set_rules('course_id', 'Course ID', 'required');
+    $this->form_validation->set_rules('title', 'Title', 'required');
+    $this->form_validation->set_rules('section_id', 'Section ID', 'required');
+    $this->form_validation->set_rules('lesson_type', 'Lesson Type', 'required');
+
+    if ($this->form_validation->run() == FALSE) {
+        $response = [
+            'status' => 'error',
+            'message' => validation_errors()
+        ];
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
+        return;
+    }
+
+    $data['course_id'] = $this->input->post('course_id');
+    $data['title'] = $this->input->post('title');
+    $data['section_id'] = $this->input->post('section_id');
+    $data['summary'] = $this->input->post('summary');
+    $data['date_added'] = strtotime(date('D, d-M-Y'));
+
+    $lesson_type_array = explode('-', $this->input->post('lesson_type'));
+    $lesson_type = $lesson_type_array[0];
+    $data['lesson_type'] = $lesson_type;
+    $data['attachment_type'] = isset($lesson_type_array[1]) ? $lesson_type_array[1] : null;
+
+    if ($lesson_type == 'video') {
+        $lesson_provider = $this->input->post('lesson_provider');
+        if ($lesson_provider == 'youtube' || $lesson_provider == 'vimeo') {
+            $data['video_url'] = $this->input->post('video_url');
+            $duration_formatter = explode(':', $this->input->post('duration'));
+            $data['duration'] = sprintf('%02d:%02d:%02d', $duration_formatter[0], $duration_formatter[1], $duration_formatter[2]);
+            $data['video_type'] = $lesson_provider;
+        } elseif ($lesson_provider == 'html5') {
+            $data['video_url'] = $this->input->post('html5_video_url');
+            $duration_formatter = explode(':', $this->input->post('html5_duration'));
+            $data['duration'] = sprintf('%02d:%02d:%02d', $duration_formatter[0], $duration_formatter[1], $duration_formatter[2]);
+            $data['video_type'] = 'html5';
+            $this->upload_file('thumbnail', 'uploads/thumbnails/lesson_thumbnails/', $inserted_id . '.jpg');
+        } elseif ($lesson_provider == 'mydevice') {
+            $data['video_type'] = 'mydevice';
+            $data['video_upload'] = $this->upload_file('userfileMe', 'uploads/videos/');
+        } else {
+            $response = ['status' => 'error', 'message' => 'Invalid lesson provider'];
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($response));
+            return;
+        }
+    } else {
+        $data['duration'] = 0;
+        $data['attachment'] = $this->upload_file('attachment', 'uploads/lesson_files/');
+    }
+
+    $this->db->insert('lesson', $data);
+    $response = ['status' => 'success', 'message' => 'Lesson added successfully'];
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($response));
+}
+
+private function upload_file($field_name, $upload_path, $file_name = null) {
+    if (!file_exists($upload_path)) {
+        mkdir($upload_path, 0777, true);
+    }
+
+    if (isset($_FILES[$field_name]) && $_FILES[$field_name]['error'] == 0) {
+        $file_type = pathinfo($_FILES[$field_name]['name'], PATHINFO_EXTENSION);
+        $file_name = $file_name ?? md5(uniqid(rand(), true)) . '.' . $file_type;
+        $destination = $upload_path . $file_name;
+
+        if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $destination)) {
+            return $file_name;
+        } else {
+            $response = ['status' => 'error', 'message' => 'There was a problem moving the file.'];
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode($response));
+            exit;
+        }
+    } else {
+        $response = ['status' => 'error', 'message' => 'No file uploaded or there was an upload error.'];
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
+        exit;
+    }
+}
+
+
+public function all_lesson_types_get($section_id) {
+    // Ensure the request method is GET
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    // Validate the section_id
+    if (!is_numeric($section_id)) {
+        $this->output
+             ->set_status_header(400)
+             ->set_output(json_encode(['message' => 'Invalid section ID']));
+        return;
+    }
+
+    // Base URLs for attachments and video uploads
+    $base_attachment_url = 'http://10.0.2.2/SchoolManagementWeb/uploads/lesson_files/';
+    $base_video_url = 'http://10.0.2.2/SchoolManagementWeb/uploads/videos/';
+
+    // Fetch distinct lesson types, lesson titles, attachments, and video uploads from the 'lesson' table for the given section_id
+    $this->db->select("lesson.lesson_type, lesson.title as lesson_title, 
+                       CONCAT('$base_attachment_url', lesson.attachment) as attachment, 
+                       CONCAT('$base_video_url', lesson.video_upload) as video_upload");
+    $this->db->from('lesson');
+    $this->db->where('lesson.section_id', $section_id);
+    $query = $this->db->get();
+    $lessons = $query->result_array();
+
+    // Check if lessons are found
+    if (!empty($lessons)) {
+        $this->output
+             ->set_status_header(200)
+             ->set_content_type('application/json')
+             ->set_output(json_encode($lessons));
+    } else {
+        $this->output
+             ->set_status_header(404)
+             ->set_output(json_encode(['message' => 'No lessons found for the given section ID']));
+    }
+}
+
+
+public function associate_user_with_school_post() {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    // Log the entire $_POST array
+    log_message('debug', 'POST data: ' . json_encode($this->input->post()));
+
+    // Log the raw POST data
+    log_message('debug', 'Raw POST data: ' . file_get_contents('php://input'));
+
+    // Retrieve input data
+    $postData = json_decode(file_get_contents('php://input'), true);
+    $user_id = isset($postData['user_id']) ? $postData['user_id'] : null;
+    $school_id = isset($postData['school_id']) ? $postData['school_id'] : null;
+    $session = isset($postData['session']) ? $postData['session'] : 1; // Default to 1 if not provided
+
+    // Log received data for debugging
+    log_message('debug', 'Received user_id: ' . json_encode($user_id));
+    log_message('debug', 'Received school_id: ' . json_encode($school_id));
+    log_message('debug', 'Received session: ' . json_encode($session));
+
+    // Validate the input
+    if (empty($user_id) || empty($school_id)) {
+        log_message('error', 'Validation failed: User ID and School ID are required');
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['message' => 'User ID and School ID are required']));
+        return;
+    }
+
+    // Check if the user exists
+    $this->db->select('id as user_id');
+    $this->db->from('users');
+    $this->db->where('id', $user_id);
+    $user_query = $this->db->get();
+
+    if ($user_query->num_rows() == 0) {
+        log_message('error', 'Invalid User ID: ' . $user_id);
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['message' => 'Invalid User ID']));
+        return;
+    }
+
+    // Check if the school exists
+    $this->db->select('id as school_id');
+    $this->db->from('schools');
+    $this->db->where('id', $school_id);
+    $school_query = $this->db->get();
+
+    if ($school_query->num_rows() == 0) {
+        log_message('error', 'Invalid School ID: ' . $school_id);
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['message' => 'Invalid School ID']));
+        return;
+    }
+
+    // Prepare data for insertion
+    $data = [
+        'user_id' => $user_id,
+        'school_id' => $school_id,
+        'session' => $session, // Note the change here
+        'status' => 0 // Default status to 0
+    ];
+
+    // Log data to be inserted
+    log_message('debug', 'Data to be inserted: ' . json_encode($data));
+
+    // Insert data into the students table
+    if ($this->db->insert('students', $data)) {
+        log_message('debug', 'Student associated successfully with ID: ' . $this->db->insert_id());
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'success', 'message' => 'User associated with school successfully']));
+    } else {
+        log_message('error', 'Failed to associate user with school');
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to associate user with school']));
+    }
+}
+
+
+
+
+public function get_students_list_get() {
+    // Log the request for debugging purposes
+    log_message('debug', 'Received request for students list');
+
+    // Get school_id from the GET parameters
+    $school_id = $this->input->get('school_id');
+
+    // Check if school_id is provided
+    if (!$school_id) {
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'error', 'message' => 'School ID is required']));
+        return;
+    }
+
+    // Query the database for the list of students along with their user information
+    $this->db->select('students.id, students.code, students.user_id, students.session, students.school_id, students.status, users.name, users.email, users.role, users.address, users.phone, users.birthday, users.gender');
+    $this->db->from('students');
+    $this->db->join('users', 'students.user_id = users.id', 'left');
+    $this->db->where('students.school_id', $school_id);
+    $this->db->where('students.status', 0); // Add condition to filter by status = 0
+    $students_query = $this->db->get();
+
+    if ($students_query->num_rows() > 0) {
+        $students = $students_query->result_array();
+
+        // Add full image URL to each student
+        foreach ($students as &$student) {
+            $image_path = 'uploads/users/' . $student['user_id'] . '.jpg'; // Assuming 'user_id' is the unique identifier for each user
+            if (file_exists(FCPATH . $image_path)) {
+                $student['image_url'] = base_url($image_path); // Assuming you're using CodeIgniter and 'base_url' is configured
+            } else {
+                $student['image_url'] = base_url('uploads/users/default.jpg'); // Default image if user image doesn't exist
+            }
+        }
+
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'success', 'students' => $students]));
+    } else {
+        log_message('error', 'No students found');
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'error', 'message' => 'No students found']));
+    }
+}
+
+
+
+public function approve_student_post() {
+    // Validate the input data
+    if (!$this->input->post('students_id')) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    $student_id = $this->input->post('students_id');
+
+    // Update the student status to 1
+    $this->db->where('id', $student_id);
+    $this->db->update('students', ['status' => 1]);
+
+    if ($this->db->affected_rows() > 0) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => 'Student approved successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['error' => 'Failed to approve student']));
+    }
+}
+
+
+public function section_get() {
+    // Log the request for debugging purposes
+    log_message('debug', 'Received request for sections list');
+
+    // Query the database for the list of sections
+    $this->db->select('id, name, class_id');
+    $this->db->from('sections');
+    $sections_query = $this->db->get();
+
+    if ($sections_query->num_rows() > 0) {
+        $sections = $sections_query->result_array();
+
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'success', 'sections' => $sections]));
+    } else {
+        log_message('error', 'No sections found');
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'error', 'message' => 'No sections found']));
+    }
+}
+
+
+
+public function delete_student_post() {
+    // Validate the input data
+    if (!$this->input->post('students_id')) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    $student_id = $this->input->post('students_id');
+
+    // Delete the student
+    $this->db->where('id', $student_id);
+    $this->db->delete('students');
+
+    if ($this->db->affected_rows() > 0) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => 'Student deleted successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['error' => 'Failed to delete student']));
+    }
+}
+
+public function count_student_online_admission_get() {
+    // Log the request for debugging purposes
+    log_message('debug', 'Received request to count students for online admission');
+
+    // Get school_id from the GET parameters
+    $school_id = $this->input->get('school_id');
+
+    // Check if school_id is provided
+    if (!$school_id) {
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'error', 'message' => 'School ID is required']));
+        return;
+    }
+
+    // Query the database to count the number of students with status 0 for the given school_id
+    $this->db->where('school_id', $school_id);
+    $this->db->where('status', 0);
+    $this->db->from('students');
+    $count = $this->db->count_all_results();
+
+    // Return the count as a JSON response
+    $this->output
+         ->set_content_type('application/json')
+         ->set_output(json_encode(['status' => 'success', 'count' => $count]));
+}
+
+public function get_student_id_post() {
+    // Log the request for debugging purposes
+    log_message('debug', 'Received request to get student id');
+
+    // Validate the input data
+    $user_id = $this->input->post('user_id');
+    $school_id = $this->input->post('school_id');
+    if (!$user_id || !$school_id) {
+        log_message('error', 'Invalid input data: user_id or school_id is missing');
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    // Fetch the student's id based on user_id and school_id
+    $this->db->select('id');
+    $this->db->from('students');
+    $this->db->where('user_id', $user_id);
+    $this->db->where('school_id', $school_id);
+    $student_query = $this->db->get();
+
+    if ($student_query->num_rows() === 0) {
+        log_message('error', 'Student not found with user_id: ' . $user_id . ' and school_id: ' . $school_id);
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['error' => 'Student not found']));
+        return;
+    }
+
+    $student = $student_query->row();
+
+    // Return the student id as a JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => 'success', 'student_id' => (int) $student->id])); // Ensure student_id is an integer
+}
+
+
+public function get_appropriate_courses_post() {
+    // Log the request for debugging purposes
+    log_message('debug', 'Received request for appropriate courses');
+
+    // Validate the input data
+    $student_id = $this->input->post('students_id');
+    if (!$student_id) {
+        log_message('error', 'Invalid input data: students_id is missing');
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    // Fetch the student's school_id and status
+    $this->db->select('school_id, status');
+    $this->db->from('students');
+    $this->db->where('id', $student_id);
+    $student_query = $this->db->get();
+
+    if ($student_query->num_rows() === 0) {
+        log_message('error', 'Student not found with id: ' . $student_id);
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['error' => 'Student not found']));
+        return;
+    }
+
+    $student = $student_query->row();
+    
+    // Check if the student's status is 1
+    if ($student->status != 1) {
+        log_message('error', 'Student is not approved with id: ' . $student_id);
+        $this->output
+            ->set_status_header(403)
+            ->set_output(json_encode(['error' => 'Student is not approved']));
+        return;
+    }
+
+    // Fetch the active courses for the student's school_id with class prices
+    $this->db->select('course.*, classes.price, CONCAT("http://10.0.2.2/SchoolManagementWeb/uploads/course_thumbnail/", course.thumbnail) as thumbnail');
+    $this->db->from('course');
+    $this->db->join('classes', 'course.class_id = classes.id', 'left');
+    $this->db->where('course.school_id', $student->school_id);
+    $this->db->where('course.status', 'active');
+    $course_query = $this->db->get();
+    $courses = $course_query->result_array();
+
+    // Return the courses as a JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => 'success', 'courses' => $courses]));
+}
+
+
+public function student_enrollments_post() {
+    // Log the request for debugging purposes
+    log_message('debug', 'Received request for student enrollments');
+
+    // Validate the input data
+    $student_id = $this->input->post('student_id');
+    $course_id = $this->input->post('course_id');
+    $section_id = $this->input->post('section_id'); // Ensure this is provided in the request
+
+    if (!$student_id || !$course_id || !$section_id) {
+        log_message('error', 'Invalid input data: student_id, course_id, or section_id is missing');
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    // Fetch the course information
+    $this->db->select('course.*, classes.id as class_id, classes.school_id');
+    $this->db->from('course');
+    $this->db->join('classes', 'course.class_id = classes.id', 'left');
+    $this->db->where('course.id', $course_id);
+    $course_query = $this->db->get();
+
+    if ($course_query->num_rows() === 0) {
+        log_message('error', 'Course not found with id: ' . $course_id);
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['error' => 'Course not found']));
+        return;
+    }
+
+    $course = $course_query->row();
+
+    // Prepare the enrollment data
+    $enroll_data = [
+        'student_id' => $student_id,
+        'class_id' => $course->class_id,
+        'section_id' => $section_id,
+        'school_id' => $course->school_id,
+        'session' => $this->input->post('session') ?? 1 // Default value of 1 if session is not provided
+    ];
+
+    // Insert the enrollment data into the enrols table
+    $this->db->insert('enrols', $enroll_data);
+
+    if ($this->db->affected_rows() === 0) {
+        log_message('error', 'Failed to insert enrollment data for student with id: ' . $student_id);
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['error' => 'Failed to insert enrollment data']));
+        return;
+    }
+
+    // Fetch the student's updated enrollment information
+    $this->db->select('students.*, enrols.*, sections.name as section_name, classes.name as class_name, classes.price, schools.name as school_name');
+    $this->db->from('students');
+    $this->db->join('enrols', 'students.id = enrols.student_id', 'left');
+    $this->db->join('sections', 'enrols.section_id = sections.id', 'left');
+    $this->db->join('classes', 'sections.class_id = classes.id', 'left');
+    $this->db->join('schools', 'students.school_id = schools.id', 'left');
+    $this->db->where('students.id', $student_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() === 0) {
+        log_message('error', 'No enrollment found for student with id: ' . $student_id);
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['error' => 'No enrollment found for student']));
+        return;
+    }
+
+    $enrollments = $query->result_array();
+
+    // Return the enrollment information as a JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => 'success', 'enrollments' => $enrollments]));
+}
+
+public function sections_for_class_get() {
+    // Log the request for debugging purposes
+    log_message('debug', 'Received request for sections for class');
+
+    // Validate the input data
+    $class_id = $this->input->get('class_id');
+    if (!$class_id) {
+        log_message('error', 'Invalid input data: class_id is missing');
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    // Fetch the sections for the given class ID
+    $this->db->select('id, name');
+    $this->db->from('sections');
+    $this->db->where('class_id', $class_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() === 0) {
+        log_message('error', 'No sections found for class with id: ' . $class_id);
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['error' => 'No sections found for class']));
+        return;
+    }
+
+    $sections = $query->result_array();
+
+    // Return the sections as a JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => 'success', 'sections' => $sections]));
+}
+
+
+
+
+
+
+
+
+
+
+//End Online courses 
+
+
+//Teacher Permission//
+
 
 public function add_teacher_permission_post() {
     // Validate the input data
