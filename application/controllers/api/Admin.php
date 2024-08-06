@@ -2124,9 +2124,157 @@ public function delete_session_delete($id) {
 }
 
 
+
+//Grades
+public function grades_by_school_id_get($school_id, $page = 1)
+{
+    // Validate school_id
+    if (!$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid school_id']));
+        return;
+    }
+
+    // Set pagination parameters
+    if ($page < 1) {
+        $page = 1;
+    }
+    $limit = 3; // Number of grades per page
+    $offset = ($page - 1) * $limit;
+
+    // Fetch grades by school_id with pagination and optional search
+    $this->db->select('*');
+    $this->db->from('grades');
+    $this->db->where('school_id', $school_id);
+    if ($this->input->get('search')) {
+        $search = $this->input->get('search');
+        $this->db->like('name', $search);
+        $this->db->or_like('grade_point', $search);
+        $this->db->or_like('mark_from', $search);
+        $this->db->or_like('mark_upto', $search);
+        $this->db->or_like('comment', $search);
+    }
+    $this->db->limit($limit, $offset);
+    $query = $this->db->get();
+    $result = $query->result_array();
+
+    // Check if any grades found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No grades found']));
+        return;
+    }
+
+    // Fetch the total number of grades for the school
+    $this->db->where('school_id', $school_id);
+    if ($this->input->get('search')) {
+        $search = $this->input->get('search');
+        $this->db->like('name', $search);
+        $this->db->or_like('grade_point', $search);
+        $this->db->or_like('mark_from', $search);
+        $this->db->or_like('mark_upto', $search);
+        $this->db->or_like('comment', $search);
+    }
+    $this->db->from('grades');
+    $total_grades = $this->db->count_all_results();
+
+    // Return success response with grades and total count
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'grades' => $result, 'total' => $total_grades]));
+}
+
+public function create_grade_post()
+{
+    $data = $this->input->post();
+
+    if (!isset($data['school_id']) || !isset($data['name']) || !isset($data['grade_point']) || !isset($data['mark_from']) || !isset($data['mark_upto']) || !isset($data['comment'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete grade data']));
+        return;
+    }
+
+    // Set session to 2 and add current date and time
+    $data['session'] = 2;
+    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $this->db->insert('grades', $data);
+    $insert_id = $this->db->insert_id();
+
+    if ($insert_id) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Grade created successfully', 'grade_id' => $insert_id]));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create grade']));
+    }
+}
+
+public function edit_grade_post()
+{
+    $data = $this->input->post();
+
+    if (!isset($data['id']) || !isset($data['school_id']) || !isset($data['name']) || !isset($data['grade_point']) || !isset($data['mark_from']) || !isset($data['mark_upto']) || !isset($data['comment'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete grade data']));
+        return;
+    }
+
+    // Set updated_at to the current date and time
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $this->db->where('id', $data['id']);
+    $updated = $this->db->update('grades', $data);
+
+    if ($updated) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Grade updated successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update grade']));
+    }
+}
+
+
+public function delete_grade_delete($id)
+{
+    if (!$id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid grade id']));
+        return;
+    }
+
+    $this->db->where('id', $id);
+    $deleted = $this->db->delete('grades');
+
+    if ($deleted) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Grade deleted successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete grade']));
+    }
+}
+
+
+////End of grades
+
 //Departments Part
 
 ////End session manager
+
 
 
 public function create_department_post()
@@ -2298,6 +2446,7 @@ public function delete_department_post()
 
 
 //end of department
+  
 //Expense API CALL
 
 public function expense_get($school_id) {
