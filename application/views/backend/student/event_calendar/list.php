@@ -9,9 +9,18 @@
 	<div class="col-md-6">
 		<div class="card">
 			<div class="card-body">
-				<?php $school_id = school_id(); ?>
-				<?php $query = $this->db->get_where('event_calendars', array('school_id' => $school_id, 'session' => active_session())); ?>
-				<?php if($query->num_rows() > 0): ?>
+				<?php
+					$user_id = $this->session->userdata('user_id');
+					$student_datas = $this->db->get_where('students', array('user_id' => $user_id))->result_array();
+
+					$school_ids = array();		
+					foreach ($student_datas as $student_data) {
+						$school_ids[] = $student_data['school_id'];
+					}
+					$this->db->where_in('school_id', $school_ids);
+					$event_calendars = $this->db->get('event_calendars')->num_rows();
+				?>
+				<?php if($event_calendars > 0): ?>
 					<table id="basic-datatable" class="table table-striped dt-responsive nowrap" width="100%">
 						<thead>
 							<tr style="background-color: #313a46; color: #ababab;">
@@ -22,14 +31,21 @@
 						</thead>
 						<tbody>
 							<?php
-							$event_calendars = $this->db->get_where('event_calendars', array('school_id' => $school_id, 'session' => active_session()))->result_array();
-							foreach($event_calendars as $event_calendar){
+							foreach($student_datas as $student_data){
+								$enrols_datas = $this->db->get_where('enrols', array('student_id' => $student_data['id'],'school_id' => $student_data['school_id']))->num_rows();
+								$school_name = $this->db->get_where('schools', array('id' => $student_data['school_id']))->row('name');
+								if($enrols_datas > 0){
+								$event_calendars = $this->db->get_where('event_calendars', array('school_id' => $student_data['school_id'], 'session' => active_session()))->result_array();
+								
+								foreach($event_calendars as $event_calendar){
 								?>
 								<tr>
-									<td><?php echo $event_calendar['title']; ?></td>
+									<td><?php echo $event_calendar['title'] ." - ".$school_name; ?></td>
 									<td><?php echo date('D, d M Y', strtotime($event_calendar['starting_date'])); ?></td>
 									<td><?php echo date('D, d M Y', strtotime($event_calendar['ending_date'])); ?></td>
 								</tr>
+							<?php } ?>
+							<?php } ?>
 							<?php } ?>
 						</tbody>
 					</table>

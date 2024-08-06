@@ -398,10 +398,12 @@ class ApiRequestor
             $params,
             $hasFile
         );
-
-        if (array_key_exists('request-id', $rheaders)) {
+        if ($headers instanceof \Stripe\Util\CaseInsensitiveArray) {
+            $headers = $headers->toArray();
+        }
+        if (array_key_exists('request-id', $headers)) {
             self::$requestTelemetry = new RequestTelemetry(
-                $rheaders['request-id'],
+                $headers['request-id'],
                 Util\Util::currentTimeMillis() - $requestStartMs
             );
         }
