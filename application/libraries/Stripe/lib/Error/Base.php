@@ -6,12 +6,22 @@ use Exception;
 
 abstract class Base extends Exception
 {
+
+    protected $httpStatus;
+    protected $httpBody;
+    protected $jsonBody;
+    protected $httpHeaders;
+    protected $requestId;
+    protected $stripeCode;
+
     public function __construct(
         $message,
         $httpStatus = null,
         $httpBody = null,
         $jsonBody = null,
-        $httpHeaders = null
+        $httpHeaders = null,
+        $requestId = null,
+        $stripeCode = null
     ) {
         parent::__construct($message);
         $this->httpStatus = $httpStatus;
@@ -19,6 +29,7 @@ abstract class Base extends Exception
         $this->jsonBody = $jsonBody;
         $this->httpHeaders = $httpHeaders;
         $this->requestId = null;
+        $this->stripeCode = $stripeCode;
 
         // TODO: make this a proper constructor argument in the next major
         //       release.

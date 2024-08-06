@@ -3,13 +3,13 @@
 </div>
 <div class="col-lg-3  order-md-2 course_col" id = "lesson_list_area">
   <div class="text-center margin-ms">
-    <h5><?php echo get_phrase('course_content'); ?></h5>
+    <h5 class="text-white text-uppercase"><?php echo get_phrase('course_content'); ?></h5>
   </div>
   <div class="row m-10-1">
     <div class="col-12">
       <ul class="nav nav-tabs" id="lessonTab" role="tablist">
         <li class="nav-item">
-          <a class="nav-link active" id="section_and_lessons-tab" data-bs-toggle="tab" href="#section_and_lessons" role="tab" aria-controls="section_and_lessons" aria-selected="true"><?php echo get_phrase('Lessons') ?></a>
+          <a class="nav-link " id="section_and_lessons-tab" data-bs-toggle="tab" href="#section_and_lessons" role="tab" aria-controls="section_and_lessons" aria-selected="true"><?php echo get_phrase('Lessons') ?></a>
         </li>
       </ul>
       <div class="tab-content" id="lessonTabContent">
@@ -19,12 +19,12 @@
             <?php
             foreach ($sections as $key => $section):
               $lessons = $this->lms_model->get_lessons('section', $section['id'])->result_array();?>
-              <div class="card m-0" style="border-bottom: 1px solid #d8d8d8 !important;">
-                <div class="card-header bg-white ps-0" id="<?php echo 'heading-'.$section['id']; ?>">
+              <div class="card m-0">
+                <div class="card-header ps-0" id="<?php echo 'heading-'.$section['id']; ?>">
 
                   <h5 class="mb-0">
                     <a class="custom-accordion-title d-block py-1 button-stk " type="button" data-bs-toggle="collapse" data-bs-target="<?php echo '#collapse-'.$section['id']; ?>" <?php if($opened_section_id == $section['id']): ?> aria-expanded="true" <?php else: ?> aria-expanded="false" <?php endif; ?> aria-controls="<?php echo 'collapse-'.$section['id']; ?>" onclick = "toggleAccordionIcon(this, '<?php echo $section['id']; ?>')">
-                      <span class="badge bg-light text-secondary"><?php echo $key++; ?></span>
+                      <span class="badge  "><?php echo $key++; ?></span>
                       <?php echo $section['title']; ?>
                     </a>
                   </h5>
@@ -35,7 +35,7 @@
                     <table class="w-100">
                       <?php foreach ($lessons as $key => $lesson): ?>
 
-                        <tr class="course-sidebar-td" style="background-color: <?php if ($lesson_id == $lesson['id'])echo '#E6F2F5'; else echo '#fff';?>;">
+                        <tr class="course-sidebar-td" style="background-color: <?php if ($lesson_id == $lesson['id'])echo '#6b6a6a'; else echo '#585858';?>;">
                           <td class="course-sidebar-td px-2 py-1">
                             <?php
                             $lesson_progress = lesson_progress($lesson['id']);

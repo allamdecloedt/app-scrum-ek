@@ -39,6 +39,7 @@ class Crud_model extends CI_Model {
 	public function class_create()
 	{
 		$data['name'] = html_escape($this->input->post('name'));
+		$data['price'] = html_escape($this->input->post('price'));
 		$data['school_id'] = $this->school_id;
 		$this->db->insert('classes', $data);
 
@@ -57,6 +58,7 @@ class Crud_model extends CI_Model {
 	public function class_update($param1 = '')
 	{
 		$data['name'] = html_escape($this->input->post('name'));
+		$data['price'] = html_escape($this->input->post('price'));
 		$this->db->where('id', $param1);
 		$this->db->update('classes', $data);
 
@@ -529,9 +531,32 @@ class Crud_model extends CI_Model {
 	}
 
 	public function all_events(){
+		$user_id = $this->session->userdata('user_id');
+		$role = $this->db->get_where('users', array('id' => $user_id))->row('role');
+		if($role == "student"){
+			$student_datas = $this->db->get_where('students', array('user_id' => $user_id))->result_array();
+			$all_event_calendars = array();
+	
+			foreach ($student_datas as $student_data) {
+				$enrols_datas = $this->db->get_where('enrols', array('student_id' => $student_data['id'],'school_id' => $student_data['school_id']))->num_rows();
+				if($enrols_datas > 0){
+					$event_calendars = $this->db->get_where('event_calendars', array(
+						'school_id' => $student_data['school_id'], 
+						'session' => $this->active_session
+					))->result_array();
+					
+					$all_event_calendars = array_merge($all_event_calendars, $event_calendars);
+				}
+			}
+			return json_encode($all_event_calendars);
+		}else {
+			$school_id = $this->db->get_where('users', array('id' => $user_id))->row('school_id');
+			$event_calendars = $this->db->get_where('event_calendars', array('school_id' => $school_id, 'session' => $this->active_session))->result_array();
+			return json_encode($event_calendars);
+		}
 
-		$event_calendars = $this->db->get_where('event_calendars', array('school_id' => $this->school_id, 'session' => $this->active_session))->result_array();
-		return json_encode($event_calendars);
+
+
 	}
 
 	public function get_current_month_events() {
@@ -662,13 +687,13 @@ class Crud_model extends CI_Model {
 
 
 	//START MARKS section
-	public function get_marks($class_id = "", $section_id = "", $subject_id = "", $exam_id = "") {
+	public function get_marks($class_id = "", $section_id = "", $subject_id = "", $exam_id = "", $school_id = "") {
 		$checker = array(
 			'class_id' => $class_id,
 			'section_id' => $section_id,
 			'subject_id' => $subject_id,
 			'exam_id' => $exam_id,
-			'school_id' => $this->school_id,
+			'school_id' => $school_id,
 			'session' => $this->active_session
 		);
 		$this->db->where($checker);
@@ -814,11 +839,19 @@ class Crud_model extends CI_Model {
 		return $this->db->get('invoices');
 	}
 
-	public function get_invoice_by_student_id($student_id = "") {
-		$this->db->where('school_id', $this->school_id);
-		$this->db->where('session', $this->active_session);
-		$this->db->where('student_id', $student_id);
-		return $this->db->get('invoices');
+	public function get_invoice_by_student_id($user_id = "") {
+		
+		// $this->db->where('session', $this->active_session);
+		// $this->db->where('student_id', $student_id);
+		// return $this->db->get('invoices');
+		$this->db->select('invoices.*');
+		$this->db->from('invoices');
+		$this->db->join('students', 'students.id = invoices.student_id');
+		$this->db->where('students.code', $user_id);
+		
+		$query = $this->db->get();
+		
+		return $query;
 	}
 
 	// This function will be triggered if parent logs in
@@ -1115,6 +1148,17 @@ class Crud_model extends CI_Model {
 			);
 			$this->db->where('id', $data['invoice_id']);
 			$this->db->update('invoices', $updater);
+
+			        // Récupérer les données de la session
+					$enrolment_data = $this->session->userdata('enrolment_data');
+					
+					// Utiliser les données
+					$data_enrols['student_id'] = $enrolment_data['student_id'];
+					$data_enrols['class_id'] = $enrolment_data['class_id'];
+					$data_enrols['section_id'] = $enrolment_data['section_id'];
+					$data_enrols['school_id'] = $enrolment_data['school_id'];
+					$data_enrols['session'] = $enrolment_data['session'];
+					$this->db->insert('enrols', $data_enrols);
 		}
 	}
 

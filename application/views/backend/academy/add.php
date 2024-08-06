@@ -2,8 +2,10 @@
 <form method="POST" class="d-block responsive_media_query" action="<?php echo site_url('student/online_admission/assigned'); ?>">
 
     <input type="hidden" name="student_id" value="<?php echo $param1; ?>">
-    <input type="hidden" name="school_id" value="<?php echo $param3; ?>">
     <input type="hidden" name="class_id" id="class_id" value="<?php echo $param2; ?>">
+    <input type="hidden" name="school_id" value="<?php echo $param3; ?>">
+    <input type="hidden" name="price" id="price" value="<?php echo $param4; ?>">
+    <input type="hidden" name="currency" id="currency" value="<?php echo $param5; ?>">
     
 
 

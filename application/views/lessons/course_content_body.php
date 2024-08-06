@@ -1,4 +1,4 @@
-<div class="col-lg-9  order-md-1 course_col" id = "video_player_area">
+<div class="col-lg-7  order-md-1 course_col" id = "video_player_area">
     <div class="text-center">
         <?php
         $lesson_details = $this->lms_model->get_lessons('lesson', $lesson_id)->row_array();

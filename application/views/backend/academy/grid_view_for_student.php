@@ -101,7 +101,9 @@ if($check_data->num_rows() > 0): ?>
             <div class="row">
                 <?php foreach ($courses as $key => $course):
                     $teacher_details = $this->user_model->get_user_details($course['user_id']);
-                    $class_details = $this->crud_model->get_classes($course['class_id'])->row_array();
+                    // $class_details = $this->crud_model->get_classes($course['class_id'])->row_array();
+                    $this->db->where('id', $course['class_id']);
+                    $class_details = $this->db->get('classes')->row_array();
                     $sections = $this->lms_model->get_section('course', $course['id']);
                     $subject = $this->crud_model->get_subject_by_id($course['subject_id']);
                     $lessons = $this->lms_model->get_lessons('course', $course['id']); 
@@ -115,6 +117,8 @@ if($check_data->num_rows() > 0): ?>
                     $this->db->where('class_id', $course['class_id']);
                     $query = $this->db->get('enrols');
                     $count = $query->num_rows();
+
+                    $currencies = $this->db->get_where('settings_school', array('school_id' => $course['school_id']))->row('system_currency');
                     ?>  
                     <div class="col-md-6 col-lg-4 col-xl-3">
                         <div class="card d-block">
@@ -178,7 +182,7 @@ if($check_data->num_rows() > 0): ?>
                                 <?php else: ?>
                                 <div class="w-100 text-center">
 
-                                        <a href="javascript:;" onclick="rightModal('<?php echo site_url('modal/popup/academy/add/'.$check_student['id'].'/'.$course['class_id'].'/'.$course['school_id'])?>', '<?php echo get_phrase('join'); ?>');" class="btn btn-primary mw-50"><?php echo get_phrase('Join'); ?></a>
+                                        <a href="javascript:;" onclick="rightModal('<?php echo site_url('modal/popup/academy/add/'.$check_student['id'].'/'.$course['class_id'].'/'.$course['school_id'].'/'.$class_details['price'].'/'.$currencies)?>', '<?php echo get_phrase('join'); ?>');" class="btn btn-primary mw-50"><?php echo get_phrase('Join ').'with '.$class_details['price'].' '. $currencies; ?></a>
                                 
                                 </div>
                                 <?php endif; ?>
