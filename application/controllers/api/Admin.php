@@ -2124,12 +2124,12 @@ public function delete_session_delete($id) {
 }
 
 
+
 ////BOOKS
 
-////End session manager
 
-
-public function books_by_school_id_get($school_id, $page = 1)
+//Grades
+public function grades_by_school_id_get($school_id, $page = 1)
 {
     // Validate school_id
     if (!$school_id) {
@@ -2143,6 +2143,205 @@ public function books_by_school_id_get($school_id, $page = 1)
     if ($page < 1) {
         $page = 1;
     }
+    $limit = 3; // Number of grades per page
+    $offset = ($page - 1) * $limit;
+
+    // Fetch grades by school_id with pagination and optional search
+    $this->db->select('*');
+    $this->db->from('grades');
+    $this->db->where('school_id', $school_id);
+    if ($this->input->get('search')) {
+        $search = $this->input->get('search');
+        $this->db->like('name', $search);
+        $this->db->or_like('grade_point', $search);
+        $this->db->or_like('mark_from', $search);
+        $this->db->or_like('mark_upto', $search);
+        $this->db->or_like('comment', $search);
+    }
+    $this->db->limit($limit, $offset);
+    $query = $this->db->get();
+    $result = $query->result_array();
+
+    // Check if any grades found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No grades found']));
+        return;
+    }
+
+    // Fetch the total number of grades for the school
+    $this->db->where('school_id', $school_id);
+    if ($this->input->get('search')) {
+        $search = $this->input->get('search');
+        $this->db->like('name', $search);
+        $this->db->or_like('grade_point', $search);
+        $this->db->or_like('mark_from', $search);
+        $this->db->or_like('mark_upto', $search);
+        $this->db->or_like('comment', $search);
+    }
+    $this->db->from('grades');
+    $total_grades = $this->db->count_all_results();
+
+    // Return success response with grades and total count
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'grades' => $result, 'total' => $total_grades]));
+}
+
+public function create_grade_post()
+{
+    $data = $this->input->post();
+
+    if (!isset($data['school_id']) || !isset($data['name']) || !isset($data['grade_point']) || !isset($data['mark_from']) || !isset($data['mark_upto']) || !isset($data['comment'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete grade data']));
+        return;
+    }
+
+    // Set session to 2 and add current date and time
+    $data['session'] = 2;
+    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $this->db->insert('grades', $data);
+    $insert_id = $this->db->insert_id();
+
+    if ($insert_id) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Grade created successfully', 'grade_id' => $insert_id]));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create grade']));
+    }
+}
+
+public function edit_grade_post()
+{
+    $data = $this->input->post();
+
+    if (!isset($data['id']) || !isset($data['school_id']) || !isset($data['name']) || !isset($data['grade_point']) || !isset($data['mark_from']) || !isset($data['mark_upto']) || !isset($data['comment'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete grade data']));
+        return;
+    }
+
+    // Set updated_at to the current date and time
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $this->db->where('id', $data['id']);
+    $updated = $this->db->update('grades', $data);
+
+    if ($updated) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Grade updated successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update grade']));
+    }
+}
+
+
+public function delete_grade_delete($id)
+{
+    if (!$id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid grade id']));
+        return;
+    }
+
+    $this->db->where('id', $id);
+    $deleted = $this->db->delete('grades');
+
+    if ($deleted) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Grade deleted successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete grade']));
+    }
+}
+
+
+////End of grades
+
+//Departments Part
+
+
+////End session manager
+
+
+
+public function books_by_school_id_get($school_id, $page = 1)
+
+
+public function create_department_post()
+{
+        // Retrieve data from POST request
+        $name = $this->input->post('name');
+        $school_id = $this->input->post('school_id');
+
+        // Check if the required data is provided
+        if (!$name || !$school_id) {
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+            return;
+        }
+
+        // Prepare data to insert
+        $department_data = [
+            'name' => $name,
+            'school_id' => $school_id
+        ];
+
+        // Insert data into the departments table
+        $this->db->insert('departments', $department_data);
+
+        // Check if the insert was successful
+        if ($this->db->affected_rows() == 0) {
+            $this->output
+                ->set_status_header(500)
+                ->set_output(json_encode(['status' => false, 'message' => 'Failed to create department']));
+            return;
+        }
+
+        // Fetch the created department to return
+        $department_id = $this->db->insert_id();
+        $query = $this->db->get_where('departments', ['id' => $department_id]);
+        $department = $query->row_array();
+
+        // Return success response
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'department' => $department]));
+}
+
+public function departments_by_school_id_get($school_id)
+
+{
+    // Validate school_id
+    if (!$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid school_id']));
+        return;
+    }
+
+
+    // Set pagination parameters
+    if ($page < 1) {
+        $page = 1;
+    }
     $limit = 6; // Number of books per page
     $offset = ($page - 1) * $limit;
 
@@ -2150,9 +2349,22 @@ public function books_by_school_id_get($school_id, $page = 1)
     $this->db->select('*');
     $this->db->from('books');
     $this->db->where('school_id', $school_id);
+
+    // Get pagination parameters from GET request
+    $page = $this->input->get('page') ? (int)$this->input->get('page') : 1;
+    $limit = $this->input->get('limit') ? (int)$this->input->get('limit') : 4;
+    $offset = ($page - 1) * $limit;
+
+    // Fetch departments and school name by school_id with pagination
+    $this->db->select('departments.*, schools.name as school_name');
+    $this->db->from('departments');
+    $this->db->join('schools', 'schools.id = departments.school_id');
+    $this->db->where('departments.school_id', $school_id);
+
     $this->db->limit($limit, $offset);
     $query = $this->db->get();
     $result = $query->result_array();
+
 
     // Check if any books found
     if (empty($result)) {
@@ -2258,6 +2470,112 @@ public function delete_book_delete($id)
 
 
 ////
+
+    // Check if any departments found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No departments found']));
+        return;
+    }
+
+    // Get total count of departments
+    $this->db->from('departments');
+    $this->db->where('school_id', $school_id);
+    $total_departments = $this->db->count_all_results();
+
+    // Return success response with departments, school name, and pagination info
+    $response = [
+        'status' => true,
+        'departments' => $result,
+        'pagination' => [
+            'current_page' => $page,
+            'per_page' => $limit,
+            'total_pages' => ceil($total_departments / $limit),
+            'total_departments' => $total_departments
+        ]
+    ];
+
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($response));
+}
+
+public function update_department_post()
+{
+    // Retrieve data from POST request
+    $id = $this->input->post('id');
+    $name = $this->input->post('name');
+
+    // Check if the required data is provided
+    if (!$id || !$name) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare data to update
+    $department_data = ['name' => $name];
+
+    // Update data in the departments table
+    $this->db->where('id', $id);
+    $this->db->update('departments', $department_data);
+
+    // Check if the update was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update department']));
+        return;
+    }
+
+    // Fetch the updated department to return
+    $query = $this->db->get_where('departments', ['id' => $id]);
+    $department = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'department' => $department]));
+}
+
+public function delete_department_post()
+{
+    // Retrieve data from POST request
+    $id = $this->input->post('id');
+
+    // Check if the required data is provided
+    if (!$id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Delete data from the departments table
+    $this->db->where('id', $id);
+    $this->db->delete('departments');
+
+    // Check if the delete was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete department']));
+        return;
+    }
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'message' => 'Department deleted successfully']));
+}
+
+
+
+//end of department
+  
+
 //Expense API CALL
 
 public function expense_get($school_id) {
