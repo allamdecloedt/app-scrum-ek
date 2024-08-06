@@ -112,3 +112,10 @@ $route['api/classes']= 'api/Admin/classes';
 $route['api/teachers_by_class/(:num)'] = 'api/Admin/teachers_by_class/$1';
 $route['api/assign_teacher_permission_to_class']= 'api/Admin/assign_teacher_permission_to_class';
 $route['api/get_class_id_by_name']= 'api/Admin/get_class_id_by_name';
+
+
+
+$route['api/CreateEvent'] = 'api/Admin/create_event';
+$route['api/GetEvent/(:num)']= 'api/Admin/events_by_school_id/$1';
+$route['api/DeleteEvent/(:num)']= 'api/Admin/delete_event/$1';
+$route['api/EditEvent/(:num)']= 'api/Admin/edit_event/$1';

@@ -2001,6 +2001,188 @@ public function get_class_id_by_name_get() {
 
 /////////////////
 
+///Events
+
+public function create_event_post()
+{
+    // Retrieve data from POST request
+    $title = $this->input->post('title');
+    $starting_date = $this->input->post('starting_date');
+    $ending_date = $this->input->post('ending_date');
+    $school_id = $this->input->post('school_id');
+    $session = $this->input->post('session') ?? 2;
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($_POST));
+
+    // Check if the required data is provided
+    if (!$title || !$starting_date || !$ending_date || !$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare data to insert
+    $event_data = [
+        'title' => $title,
+        'starting_date' => $starting_date,
+        'ending_date' => $ending_date,
+        'school_id' => $school_id,
+        'session' => $session
+    ];
+
+    // Insert data into the event_calendars table
+    $this->db->insert('event_calendars', $event_data);
+
+    // Check if the insert was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create event']));
+        return;
+    }
+
+    // Fetch the created event to return
+    $event_id = $this->db->insert_id();
+    $query = $this->db->get_where('event_calendars', ['id' => $event_id]);
+    $event = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'event' => $event]));
+}
+
+public function edit_event_post($event_id)
+{
+    // Retrieve data from POST request
+    $title = $this->input->post('title');
+    $starting_date = $this->input->post('starting_date');
+    $ending_date = $this->input->post('ending_date');
+    $school_id = $this->input->post('school_id');
+    $session = $this->input->post('session') ?? 2;
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($_POST));
+
+    // Check if the required data is provided
+    if (!$title || !$starting_date || !$ending_date || !$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare data to update
+    $event_data = [
+        'title' => $title,
+        'starting_date' => $starting_date,
+        'ending_date' => $ending_date,
+        'school_id' => $school_id,
+        'session' => $session
+    ];
+
+    // Update the event in the event_calendars table
+    $this->db->where('id', $event_id);
+    $this->db->update('event_calendars', $event_data);
+
+    // Check if the update was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update event']));
+        return;
+    }
+
+    // Fetch the updated event to return
+    $query = $this->db->get_where('event_calendars', ['id' => $event_id]);
+    $event = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'event' => $event]));
+}
+
+
+
+
+public function events_by_school_id_get($school_id)
+{
+    // Validate school_id
+    if (!$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid school_id']));
+        return;
+    }
+
+    // Get the page number from the query string
+    $page = $this->input->get('page');
+    $limit = 3; // Number of events per page
+    $offset = ($page - 1) * $limit;
+
+    // Fetch events by school_id with pagination
+    $this->db->select('event_calendars.*, schools.name as school_name');
+    $this->db->from('event_calendars');
+    $this->db->join('schools', 'schools.id = event_calendars.school_id');
+    $this->db->where('event_calendars.school_id', $school_id);
+    $this->db->limit($limit, $offset);
+    $query = $this->db->get();
+    $result = $query->result_array();
+
+    // Check if any events found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No events found']));
+        return;
+    }
+
+    // Return success response with events
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'events' => $result]));
+}
+
+
+public function delete_event_delete($event_id)
+{
+    // Validate event_id
+    if (!$event_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid event_id']));
+        return;
+    }
+
+    // Delete the event
+    $this->db->where('id', $event_id);
+    $this->db->delete('event_calendars');
+
+    // Check if the delete was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'Event not found or already deleted']));
+        return;
+    }
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'message' => 'Event deleted successfully']));
+}
+
+
+
+
+
+
+
+//End of Events 
+
 
 //Expense API CALL
 
