@@ -117,6 +117,14 @@ $route['api/get_class_id_by_name']= 'api/Admin/get_class_id_by_name';
 
 
 
+
+$route['api/GetPaymentSettings/(:num)'] = 'api/Admin/payment_settings/$1';
+$route['api/CreateClass'] = 'api/Admin/class_create';
+$route['api/GetClass'] = 'api/Admin/class';
+$route['api/UpdateClass'] = 'api/Admin/class_update';
+$route['api/DeleteClass'] = 'api/Admin/class_del';
+$route['api/SubmitQuizResponse'] = 'api/Admin/submit_quiz_responses';
+
 $route['api/Instructor'] = 'api/Admin/all_teacher_names';
 $route['api/subjects'] = 'api/Admin/subjects_names';
 $route['api/CreateCourse']  = 'api/Admin/create_course';
@@ -157,10 +165,12 @@ $route['api/NumberStudentOnlineAdmission'] = 'api/Admin/count_student_online_adm
 
 
 
+
 $route['api/CreateSubject'] = 'api/Admin/create_subject';
 $route['api/GetClassBySchoolId/(:num)'] = 'api/Admin/get_classes_by_school_id/$1';
 $route['api/GetSubjectsBySchoolId/(:num)'] = 'api/Admin/get_subjects_by_school_id/$1';
 $route['api/GetCorrectAnswers/(:num)'] = 'api/Admin/all_quiz_responses/$1 ';
+
 
 
 $route['api/CreateEvent'] = 'api/Admin/create_event';
