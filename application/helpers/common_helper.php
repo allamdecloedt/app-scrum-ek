@@ -103,7 +103,9 @@ if (!function_exists('get_smtp')) {
   {
     $CI  = &get_instance();
     $CI->load->database();
-    $result = $CI->db->get_where('smtp_settings', array('id' => 1))->row_array();
+   $school_id =  $CI->session->userdata('school_id');
+  //  return $school_id;
+    $result = $CI->db->get_where('smtp_settings', array('school_id' => $school_id))->row_array();
     return $result[$type];
   }
 }
