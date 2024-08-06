@@ -84,6 +84,17 @@ class Student extends CI_Controller {
 	}
 	//	SECTION ENDED
 
+		//	SECTION STARTED
+		public function exam_class($action = "", $id = "") {
+
+			// PROVIDE A LIST OF SECTION ACCORDING TO CLASS ID
+			if ($action == 'list') {
+				$page_data['exam_id'] = $id;
+				$this->load->view('backend/student/exam/list_select', $page_data);
+			}
+		}
+		//	SECTION ENDED
+
 	//START SUBJECT section
 	public function subject($param1 = '', $param2 = ''){
 
