@@ -76,6 +76,7 @@ class Lms_model extends CI_Model {
         $this->db->join('schools', 'schools.id = course.school_id', 'left');
         $this->db->where('students.user_id', $this->session->userdata('user_id'));
         $this->db->where('course.status', 'active');
+        $this->db->where('students.status', 1);
 
 
         if ($user_id != "all") {

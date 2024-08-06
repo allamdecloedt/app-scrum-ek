@@ -1,4 +1,12 @@
-<?php $student_data = $this->user_model->get_logged_in_student_details(); ?>
+<?php 
+$student_data = $this->user_model->get_logged_in_student_details(); 
+$user_id = $this->session->userdata('user_id');
+$classe = $this->db->get_where('classes', array('id' => $class_id))->row_array();
+$school_id = $classe['school_id'];
+$student_data = $this->db->get_where('students', array('user_id' => $user_id,'school_id' => $classe['school_id']))->row_array();
+$user_details = $this->db->get_where('users', array('id' => $user_id))->row_array();
+
+?>
 <div class="row mb-3">
     <div class="col-md-4"></div>
     <div class="col-md-4 toll-free-box text-center text-white pb-2" style="background-color: #6c757d; border-radius: 10px;">
@@ -9,8 +17,8 @@
     </div>
 </div>
 <?php
-$school_id = school_id();
-$marks = $this->crud_model->get_marks($class_id, $section_id, $subject_id, $exam_id)->result_array();
+// $school_id = school_id();
+$marks = $this->crud_model->get_marks($class_id, $section_id, $subject_id, $exam_id, $school_id)->result_array();
 ?>
 <?php if (count($marks) > 0): ?>
     <table class="table table-bordered table-responsive-sm" width="100%">
@@ -25,7 +33,7 @@ $marks = $this->crud_model->get_marks($class_id, $section_id, $subject_id, $exam
                             <?php foreach($marks as $mark):?>
                                 <?php if ($mark['student_id'] == $student_data['id']): ?>
                                     <tr>
-                                        <td><?php echo $student_data['name']; ?></td>
+                                        <td><?php echo $user_details['name']; ?></td>
                                         <td><input class="form-control readonly" type="number" id="mark-<?php echo $mark['student_id']; ?>" name="mark" placeholder="mark" min="0" value="<?php echo $mark['mark_obtained']; ?>" required></td>
                                         <td><input class="form-control readonly" type="text" id="comment-<?php echo $mark['student_id']; ?>" name="comment" placeholder="comment" value="<?php echo $mark['comment']; ?>"></td>
                                     </tr>

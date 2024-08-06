@@ -1,4 +1,4 @@
-<?php $student_data = $this->user_model->get_logged_in_student_details(); ?>
+<?php $student_data = $this->user_model->get_logged_in_student_details();  ?>
 <!--title-->
 <div class="row ">
   <div class="col-xl-12">
@@ -16,28 +16,29 @@
             <div class="row mt-3">
                 <div class="col-md-1 mb-1"></div>
                 <div class="col-md-2 mb-1">
-                    <select name="exam" id="exam_id" class="form-control select2" data-toggle = "select2" required>
+                    <select name="exam" id="exam_id" class="form-control select2" data-toggle = "select2" required onchange="examsWiseClass(this.value)">
                         <option value=""><?php echo get_phrase('select_a_exam'); ?></option>
-                        <?php $school_id = school_id();
-                        $exams = $this->db->get_where('exams', array('school_id' => $school_id, 'session' => active_session()))->result_array();
-                        foreach($exams as $exam){ ?>
+                        <?php 
+                        // $school_id = school_id();
+                        $user_id = $this->session->userdata('user_id');
+                        $student_data = $this->db->get_where('students', array('user_id' => $user_id))->result_array();
+                        $school_ids = array();
+
+                        foreach ($student_data as $student_data) {
+                            $school_ids[] = $student_data['school_id'];
+                       
+                        $exams = $this->db->get_where('exams', array('school_id' => $student_data['school_id'], 'session' => active_session()))->result_array();
+                        foreach($exams as $exam){ 
+                            
+                            ?>
                             <option value="<?php echo $exam['id']; ?>"><?php echo $exam['name'];?></option>
+                        <?php } ?>
                         <?php } ?>
                     </select>
                 </div>
                 <div class="col-md-2 mb-1">
-                    <select name="class" id="class_id_mark" class="form-control select2" data-toggle = "select2" required onchange="classWiseSubject(this.value)">
-                        <?php 
-                        $school_id = school_id();
-                        $this->db->where('class_id', $student_data['class_id']);
-                        $this->db->where('school_id', $school_id);
-                        $total_student = $this->db->get('enrols');
-                        ?>
+                    <select name="class" id="class_id_mark" class="form-control select2" data-toggle = "select2" required onchange="classWiseSection(this.value)">
                         <option value=""><?php echo get_phrase('select_a_class'); ?></option>
-                        <option value="<?php echo $student_data['class_id']; ?>">
-                            <?php echo $student_data['class_name']; ?>
-                            <?php echo "(".$total_student->num_rows().")"; ?>
-                        </option>
                     </select>
                 </div>
                 <div class="col-md-2 mb-1">
@@ -71,7 +72,17 @@ $('document').ready(function(){
     $('select.select2:not(.normal)').each(function () { $(this).select2({ dropdownParent: '#right-modal' }); }); //initSelect2(['#class_id', '#exam_id', '#section_id', '#subject_id']);
 });
 
-function classWiseSection(classId) {
+function examsWiseClass(examId) {
+    console.log(examId);
+    $.ajax({
+        url: "<?php echo route('exam_class/list/'); ?>"+examId,
+        success: function(response){
+            $('#class_id_mark').html(response);
+      
+        }
+    });
+}
+function classWiseSection(classId) { 
     $.ajax({
         url: "<?php echo route('section/list/'); ?>"+classId,
         success: function(response){
