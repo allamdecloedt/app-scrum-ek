@@ -11,6 +11,7 @@ class Admin extends REST_Controller {
   public function __construct()
   {
     parent::__construct();
+    $this->load->library('form_validation');
     $this->load->database();
 		$this->load->library('session');
 
@@ -312,6 +313,7 @@ public function onlineadmissionListApprovedAndDesapproved_get($school_id) {
        ->set_content_type('application/json')
        ->set_output(json_encode($response));
 }
+
 public function approveOnlineAdmissions_put($id) {
   // Retrieve online admission with status 3 for the specified user ID
   $this->db->where('id', $id);
@@ -367,6 +369,7 @@ public function deactivate_put($id) {
       ->set_content_type('application/json')
       ->set_output(json_encode($response));
 }
+
 public function activate_put($id) {
   // Retrieve online admission with status 0 for the specified user ID
   $this->db->where('id', $id);
@@ -445,6 +448,7 @@ public function get_dashboard_data_get() {
 
   return $this->set_response($response, REST_Controller::HTTP_OK);
 }
+
 //CREATE SCHOOL API CALL
 public function categoriesByName_get() {
   $this->db->select('name');
@@ -465,100 +469,6 @@ public function categoriesByName_get() {
 
   echo json_encode($response);
 }
-/*  public function create_school_post() {
-  // Get post data for the school
-  $school_name = $this->post('name');
-  $school_phone = $this->post('phone');
-  $address = $this->post('address');
-  $description = $this->post('description');
-  $access = $this->post('access') === 'private' ? 0 : 1; // Convert 'private' to 0 and 'public' to 1
-  $category = $this->post('category');
-
-  // Get post data for the admin user
-  $admin_full_name = $this->post('admin_full_name');
-  $admin_email = $this->post('email');
-  $admin_password = $this->post('password');
-  $admin_gender = $this->post('gender');
-  $admin_phone = $this->post('phone');
-
-  // Check for duplicate email for admin
-  $email_exists = $this->db->get_where('users', array('email' => $admin_email))->row_array();
-  if ($email_exists) {
-      // Duplicate email found
-      $response = array(
-          'status' => false,
-          'message' => 'Admin email already exists'
-      );
-      $this->response($response, REST_Controller::HTTP_BAD_REQUEST);
-      return; 
-  }
-
-  // No duplicate email found for admin, proceed with inserting data for both school and admin user
-  $this->db->trans_start(); // Start transaction
-  $school_data = array(
-      'name' => $school_name,
-      'phone' => $school_phone,
-      'address' => $address,
-      'description' => $description,
-      'access' => $access,
-      'category' => $category
-  );
-
-  $this->db->insert('schools', $school_data);
-  $school_id = $this->db->insert_id();
-
-  // Insert admin user data
-  $hashed_password = password_hash($admin_password, PASSWORD_DEFAULT); // Hash the password
-  $admin_data = array(
-      'name' => $admin_full_name,
-      'email' => $admin_email,
-      'password' => $hashed_password,
-      'role' => 'admin',
-      'status' => 1,
-      'gender' => $admin_gender,
-      'phone' => $admin_phone,
-      'school_id' => $school_id,
-      'watch_history' => '[]' 
-  );
-
-  $this->db->insert('users', $admin_data);
-  $admin_id = $this->db->insert_id();
-
-  // Handle the image upload
-  if (!empty($_FILES['image_file']['name'])) {
-      $image_path = 'uploads/schools/' . $school_id . '.jpg';
-      if (!move_uploaded_file($_FILES['image_file']['tmp_name'], $image_path)) {
-          // Image upload failed, rollback transaction
-          $this->db->trans_rollback();
-          $response = array(
-              'status' => false,
-              'message' => 'Failed to upload school image'
-          );
-          $this->response($response, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-          return;
-      }
-  }
-
-  $this->db->trans_complete(); // Complete transaction
-
-  if ($this->db->trans_status() === false) {
-      // Transaction failed, rollback
-      $this->db->trans_rollback();
-      $response = array(
-          'status' => false,
-          'message' => 'Failed to create school and admin user'
-      );
-      $this->response($response, REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
-  } else {
-      // Transaction successful
-      $response = array(
-          'status' => true,
-          'message' => 'School and admin user added successfully'
-      );
-      $this->response($response, REST_Controller::HTTP_CREATED);
-  }
-}   */
-
 
 public function online_admission_school_post()
 {
@@ -644,6 +554,7 @@ public function online_admission_school_post()
         $this->response($response, REST_Controller::HTTP_CONFLICT);
     }
 }
+
 public function update_school_post()
 {
     // Begin transaction
@@ -767,10 +678,6 @@ public function update_school_post()
     log_message('debug', 'School updated successfully.');
     $this->response($response, REST_Controller::HTTP_OK);
 }
-
-
-
-
 
 
 
@@ -931,6 +838,7 @@ public function schools_by_category_get() {
     // Return the response
     $this->output->set_output(json_encode($response));
 }
+
 public function search_schools_post() {
     // Set response content type to JSON
     $this->output->set_content_type('application/json');
@@ -1714,6 +1622,7 @@ public function department_get() {
         ->set_content_type('application/json')
         ->set_output(json_encode($departments));
 }
+
 public function search_get() {
     $school_id = $this->input->get('school_id');
     $name = $this->input->get('name');
@@ -1804,10 +1713,710 @@ public function delete_teacher_delete($teacher_id) {
 
 
 //End Part Teacher//
+//Online Courses ///
+
+public function change_course_status_post($course_id) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    // Fetch the current status of the course
+    $this->db->select('status');
+    $this->db->from('course');
+    $this->db->where('id', $course_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        $current_status = $query->row()->status;
+
+        // Determine the new status
+        $new_status = ($current_status == 'active') ? 'inactive' : 'active';
+
+        // Update the status in the database
+        $this->db->where('id', $course_id);
+        $update = $this->db->update('course', ['status' => $new_status]);
+
+        if ($update) {
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode(['message' => 'Course status updated successfully', 'new_status' => $new_status]));
+        } else {
+            $this->output
+                 ->set_status_header(500)
+                 ->set_output(json_encode(['message' => 'Failed to update course status']));
+        }
+    } else {
+        $this->output
+             ->set_status_header(404)
+             ->set_output(json_encode(['message' => 'Course not found']));
+    }
+}
 
 
-//Teacher Permission//
-public function classes_get() {
+public function courses_by_class_get($class_name) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    if ($class_name === 'All') {
+        // Call a separate function to fetch all courses
+        $this->get_all_courses();
+    } else {
+        // Fetch class ID by class name
+        $this->db->select('id');
+        $this->db->from('classes');
+        $this->db->where('name', $class_name);
+        $class_query = $this->db->get();
+
+        if ($class_query->num_rows() > 0) {
+            $class_id = $class_query->row()->id;
+
+            // Fetch courses by class ID from the database
+            $this->db->select('course.*, classes.name as class_name, users.name as instructor_name, CONCAT("http://10.0.2.2/SchoolManagementWeb/uploads/course_thumbnail/", course.thumbnail) as thumbnail');
+            $this->db->from('course');
+            $this->db->join('classes', 'classes.id = course.class_id');
+            $this->db->join('users', 'users.id = course.user_id');
+            $this->db->where('course.class_id', $class_id);
+            $course_query = $this->db->get();
+
+            if ($course_query->num_rows() > 0) {
+                $courses = $course_query->result_array();
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode($courses));
+            } else {
+                $this->output
+                     ->set_status_header(404)
+                     ->set_output(json_encode(['message' => 'No courses found for this class']));
+            }
+        } else {
+            $this->output
+                 ->set_status_header(404)
+                 ->set_output(json_encode(['message' => 'Class not found']));
+        }
+    }
+}
+
+
+public function courses_by_user_get($username) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    if ($username === 'All') {
+        // Call a separate function to fetch all courses
+        $this->get_all_courses();
+    } else {
+        // Fetch user ID by username
+        $this->db->select('id');
+        $this->db->from('users');
+        $this->db->where('name', $username);
+        $user_query = $this->db->get();
+
+        if ($user_query->num_rows() > 0) {
+            $user_id = $user_query->row()->id;
+
+            // Fetch courses by user ID from the database
+            $this->db->select('course.*, classes.name as class_name, users.name as instructor_name, CONCAT("http://10.0.2.2/SchoolManagementWeb/uploads/course_thumbnail/", course.thumbnail) as thumbnail');
+            $this->db->from('course');
+            $this->db->join('classes', 'classes.id = course.class_id');
+            $this->db->join('users', 'users.id = course.user_id');
+            $this->db->where('course.user_id', $user_id);
+            $query = $this->db->get();
+
+            if ($query->num_rows() > 0) {
+                $courses = $query->result_array();
+                $this->output
+                     ->set_content_type('application/json')
+                     ->set_output(json_encode($courses));
+            } else {
+                $this->output
+                     ->set_status_header(404)
+                     ->set_output(json_encode(['message' => 'No courses found for this user']));
+            }
+        } else {
+            $this->output
+                 ->set_status_header(404)
+                 ->set_output(json_encode(['message' => 'User not found']));
+        }
+    }
+}
+
+
+
+public function courses_by_status_get($status) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    if ($status === 'All') {
+        // Call a separate function to fetch all courses
+        $this->get_all_courses();
+    } else {
+        // Fetch courses by status from the database
+        $this->db->select('course.*, classes.name as class_name, users.name as instructor_name, CONCAT("http://10.0.2.2/SchoolManagementWeb/uploads/course_thumbnail/", course.thumbnail) as thumbnail');
+        $this->db->from('course');
+        $this->db->join('classes', 'classes.id = course.class_id');
+        $this->db->join('users', 'users.id = course.user_id');
+        $this->db->where('course.status', $status);
+        $query = $this->db->get();
+
+        if ($query->num_rows() > 0) {
+            $courses = $query->result_array();
+            $this->output
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode($courses));
+        } else {
+            $this->output
+                 ->set_status_header(404)
+                 ->set_output(json_encode(['message' => 'No courses found with this status']));
+        }
+    }
+}
+
+
+
+public function all_courses_get() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    $this->db->select('course.*, classes.name as class_name, users.name as instructor_name, CONCAT("http://10.0.2.2/SchoolManagementWeb/uploads/course_thumbnail/", course.thumbnail) as thumbnail');
+    $this->db->from('course');
+    $this->db->join('classes', 'classes.id = course.class_id');
+    $this->db->join('users', 'users.id = course.user_id');
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        $courses = $query->result_array();
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode($courses));
+    } else {
+        $this->output
+             ->set_status_header(404)
+             ->set_output(json_encode(['message' => 'No courses found']));
+    }
+}
+
+
+public function get_all_courses() {
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    $this->db->select('course.*, classes.name as class_name, users.name as instructor_name');
+    $this->db->from('course');
+    $this->db->join('classes', 'classes.id = course.class_id');
+    $this->db->join('users', 'users.id = course.user_id');
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        $courses = $query->result_array();
+        $this->output
+             ->set_content_type('application/json')
+             ->set_output(json_encode($courses));
+    } else {
+        $this->output
+             ->set_status_header(404)
+             ->set_output(json_encode(['message' => 'No courses found']));
+    }
+}
+
+    
+public function lessons_and_sections_get($course_id)
+{
+    // Get total lessons
+    $this->db->where('course_id', $course_id);
+    $this->db->from('lesson');
+    $total_lessons = $this->db->count_all_results();
+    $this->db->reset_query();  // Reset query to ensure it doesn't affect the next one
+
+    // Get total sections
+    $this->db->where('course_id', $course_id);
+    $this->db->from('course_section');
+    $total_sections = $this->db->count_all_results();
+
+    // Prepare the result array
+    $result = array(
+        'total_lessons' => $total_lessons,
+        'total_sections' => $total_sections
+    );
+
+    // Output the result as JSON
+    $this->output
+         ->set_content_type('application/json')
+         ->set_output(json_encode($result));
+}
+
+
+
+public function all_teacher_names_get() {
+    // Ensure the request method is GET
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    // Fetch all teacher names from the 'users' table where the role is 'teacher'
+    $this->db->select('name');
+    $this->db->where('role', 'teacher');
+    $query = $this->db->get('users');
+    $teachers = $query->result_array();
+
+    if (!empty($teachers)) {
+        // Return the result as a JSON response
+        $this->output
+             ->set_status_header(200)
+             ->set_content_type('application/json')
+             ->set_output(json_encode($teachers));
+    } else {
+        // Return a 404 status if no teachers are found
+        $this->output
+             ->set_status_header(404)
+             ->set_output(json_encode(['message' => 'No teachers found']));
+    }
+}
+
+
+
+ public function course_details_get($course_id) {
+    // Ensure the request method is GET
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+        $this->output
+            ->set_status_header(405)
+            ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    // Fetch the course details from the database
+    $this->db->select('id, title, description, class_id, user_id, subject_id, outcomes, course_overview_provider, course_overview_url, CONCAT("http://10.0.2.2/SchoolManagementWeb/uploads/course_thumbnail/", thumbnail) as thumbnail');
+    $this->db->where('id', $course_id);
+    $query = $this->db->get('course'); // Assuming 'course' is your table name
+
+    if ($query->num_rows() > 0) {
+        $course = $query->row_array();
+
+        // Get class name
+        $class_id = $course['class_id'];
+        $this->db->select('name');
+        $this->db->where('id', $class_id);
+        $class_query = $this->db->get('classes');
+        $course['class_id'] = ($class_query->num_rows() > 0) ? $class_query->row()->name : 'Unknown Class';
+
+        // Get user name
+        $user_id = $course['user_id'];
+        $this->db->select('name');
+        $this->db->where('id', $user_id);
+        $user_query = $this->db->get('users');
+        $course['user_id'] = ($user_query->num_rows() > 0) ? $user_query->row()->name : 'Unknown User';
+
+        // Get subject name
+        $subject_id = $course['subject_id'];
+        $this->db->select('name');
+        $this->db->where('id', $subject_id);
+        $subject_query = $this->db->get('subjects');
+        $course['subject_id'] = ($subject_query->num_rows() > 0) ? $subject_query->row()->name : 'Unknown Subject';
+
+        $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode($course));
+    } else {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['message' => 'Course not found']));
+    }
+}
+
+public function edit_course_post($course_id) {
+    // Ensure the request method is POST
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $this->output
+            ->set_status_header(405)
+            ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    // Fetch input data from request
+    $input_data = $this->input->post();
+    log_message('debug', 'Input Data: ' . print_r($input_data, true));
+
+    if (empty($input_data)) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['message' => 'Invalid input data']));
+        return;
+    }
+
+    // Ensure all expected keys are present
+    $expected_keys = ['title', 'class_id', 'user_id', 'subject_id', 'description', 'outcomes', 'course_overview_provider', 'course_overview_url', 'school_id'];
+    foreach ($expected_keys as $key) {
+        if (!array_key_exists($key, $input_data)) {
+            log_message('error', "Missing field: $key");
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(['message' => "Missing field: $key"]));
+            return;
+        }
+    }
+
+    // Validate input data
+    $this->form_validation->set_data($input_data);
+    $this->form_validation->set_rules('title', 'Title', 'required');
+    $this->form_validation->set_rules('class_id', 'Class ID', 'required');
+    $this->form_validation->set_rules('user_id', 'User ID', 'required');
+    $this->form_validation->set_rules('subject_id', 'Subject ID', 'required');
+    $this->form_validation->set_rules('description', 'Description', 'required');
+    $this->form_validation->set_rules('outcomes', 'Outcomes', 'required');
+    $this->form_validation->set_rules('course_overview_provider', 'Course Overview Provider', 'required');
+    $this->form_validation->set_rules('course_overview_url', 'Course Overview URL', 'required|valid_url');
+    $this->form_validation->set_rules('school_id', 'School ID', 'required');
+
+    if ($this->form_validation->run() == FALSE) {
+        log_message('error', 'Validation Errors: ' . validation_errors());
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['message' => validation_errors()]));
+        return;
+    }
+
+    // Fetch the class_id, user_id, and subject_id from the database based on the names
+    $class_id = $this->get_class_id_by_name($input_data['class_id']);
+    $user_id = $this->get_user_id_by_name($input_data['user_id']);
+    $subject_id = $this->get_subject_id_by_name($input_data['subject_id']);
+    $school_id = $input_data['school_id'];
+
+    log_message('debug', 'Fetched class_id: ' . $class_id);
+    log_message('debug', 'Fetched user_id: ' . $user_id);
+    log_message('debug', 'Fetched subject_id: ' . $subject_id);
+    log_message('debug', 'School ID: ' . $school_id);
+
+    if (!$class_id || !$user_id || !$school_id || !$subject_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['message' => 'Invalid class, user, school, or subject name']));
+        return;
+    }
+
+    // Prepare data for updating
+    $data = [
+        'title' => $input_data['title'],
+        'class_id' => $class_id,
+        'user_id' => $user_id,
+        'subject_id' => $subject_id,
+        'description' => $input_data['description'],
+        'outcomes' => $input_data['outcomes'],
+        'course_overview_provider' => $input_data['course_overview_provider'],
+        'course_overview_url' => $input_data['course_overview_url'],
+        'school_id' => $school_id
+    ];
+
+    log_message('debug', 'Data to be updated: ' . print_r($data, true));
+
+    try {
+        // Start transaction
+        $this->db->trans_begin();
+
+        // Update data in the database
+        $this->db->where('id', $course_id);
+        $this->db->update('course', $data);
+
+        // Check if the course was updated successfully
+        if ($this->db->affected_rows() > 0) {
+            log_message('debug', 'Course updated in database');
+
+            // Handle file upload for thumbnail if provided
+            if (isset($_FILES['course_thumbnail']) && $_FILES['course_thumbnail']['error'] == UPLOAD_ERR_OK) {
+                $upload_path = 'uploads/course_thumbnail/' . $course_id . '.jpg';
+                if (!move_uploaded_file($_FILES['course_thumbnail']['tmp_name'], $upload_path)) {
+                    throw new Exception('File upload failed');
+                }
+                log_message('debug', 'File uploaded to: ' . $upload_path);
+            } else {
+                log_message('debug', 'No file uploaded or file upload error');
+            }
+
+            // Commit transaction
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                log_message('error', 'Transaction failed');
+                throw new Exception('Transaction failed');
+            } else {
+                $this->db->trans_commit();
+                log_message('debug', 'Transaction committed successfully');
+                $this->output
+                    ->set_status_header(200)
+                    ->set_output(json_encode(['message' => 'Course updated successfully', 'course_id' => $course_id]));
+            }
+        } else {
+            $this->db->trans_rollback();
+            log_message('error', 'Failed to update course');
+            throw new Exception('Failed to update course');
+        }
+    } catch (Exception $e) {
+        // Log the exception
+        log_message('error', 'Exception: ' . $e->getMessage());
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['message' => $e->getMessage()]));
+    }
+}
+
+
+
+
+ public function create_course_post() {
+    // Ensure the request method is POST
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $this->output
+            ->set_status_header(405)
+            ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    // Fetch input data from request
+    $input_data = $this->input->post();
+
+    if (empty($input_data)) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['message' => 'Invalid input data']));
+        return;
+    }
+
+    // Log the input data for debugging
+    log_message('debug', 'Input Data: ' . print_r($input_data, true));
+
+    // Validate input data
+    $this->form_validation->set_data($input_data);
+    $this->form_validation->set_rules('title', 'Title', 'required');
+    $this->form_validation->set_rules('class_id', 'Class ID', 'required');
+    $this->form_validation->set_rules('user_id', 'User ID', 'required');
+    $this->form_validation->set_rules('subject_id', 'Subject ID', 'required');
+    $this->form_validation->set_rules('description', 'Description', 'required');
+    $this->form_validation->set_rules('outcomes', 'Outcomes', 'required');
+    $this->form_validation->set_rules('course_overview_provider', 'Course Overview Provider', 'required');
+    $this->form_validation->set_rules('course_overview_url', 'Course Overview URL', 'required|valid_url');
+    $this->form_validation->set_rules('school_id', 'School ID', 'required');
+
+    if ($this->form_validation->run() == FALSE) {
+        // Log validation errors
+        log_message('error', 'Validation Errors: ' . validation_errors());
+
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['message' => validation_errors()]));
+        return;
+    }
+
+    // Fetch the class_id, user_id, and subject_id from the database based on the names
+    $class_id = $this->get_class_id_by_name($input_data['class_id']);
+    $user_id = $this->get_user_id_by_name($input_data['user_id']);
+    $subject_id = $this->get_subject_id_by_name($input_data['subject_id']);
+    $school_id = $input_data['school_id']; // Directly use school_id from input data
+
+    if (!$class_id || !$user_id || !$school_id || !$subject_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['message' => 'Invalid class, user, school, or subject name']));
+        return;
+    }
+
+    // Prepare data for insertion
+    $data = [
+        'title' => $input_data['title'],
+        'class_id' => $class_id,
+        'user_id' => $user_id,
+        'subject_id' => $subject_id,
+        'description' => $input_data['description'],
+        'outcomes' => $input_data['outcomes'],
+        'course_overview_provider' => $input_data['course_overview_provider'],
+        'course_overview_url' => $input_data['course_overview_url'],
+        'thumbnail' => rand() . '.jpg',
+        'status' => 'active',
+        'date_added' => strtotime(date('d M Y')),
+        'school_id' => $school_id
+    ];
+
+    try {
+        // Log the data to be inserted
+        log_message('debug', 'Data to be inserted: ' . print_r($data, true));
+
+        // Start transaction
+        $this->db->trans_begin();
+
+        // Insert data into the database
+        $this->db->insert('course', $data);
+        $insert_id = $this->db->insert_id();
+
+        // Check if the course was created successfully
+        if ($insert_id) {
+            // Handle file upload for thumbnail
+            if (isset($_FILES['course_thumbnail']['tmp_name'])) {
+                $upload_path = 'uploads/course_thumbnail/' . $data['thumbnail'];
+                if (!move_uploaded_file($_FILES['course_thumbnail']['tmp_name'], $upload_path)) {
+                    throw new Exception('File upload failed');
+                }
+            }
+
+            // Commit transaction
+            if ($this->db->trans_status() === FALSE) {
+                $this->db->trans_rollback();
+                throw new Exception('Transaction failed');
+            } else {
+                $this->db->trans_commit();
+                $this->output
+                    ->set_status_header(201)
+                    ->set_output(json_encode(['message' => 'Course created successfully', 'course_id' => $insert_id]));
+            }
+        } else {
+            $this->db->trans_rollback();
+            throw new Exception('Failed to create course');
+        }
+    } catch (Exception $e) {
+        // Log the exception
+        log_message('error', 'Exception: ' . $e->getMessage());
+
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['message' => $e->getMessage()]));
+    }
+}
+
+private function get_class_id_by_name($name) {
+    $this->db->select('id');
+    $this->db->from('classes');
+    $this->db->where('name', $name);
+    $query = $this->db->get();
+    if ($query->num_rows() > 0) {
+        return $query->row()->id;
+    }
+    return false;
+}
+
+private function get_user_id_by_name($name) {
+    $this->db->select('id');
+    $this->db->from('users');
+    $this->db->where('name', $name);
+    $query = $this->db->get();
+    if ($query->num_rows() > 0) {
+        return $query->row()->id;
+    }
+    return false;
+}
+
+private function get_subject_id_by_name($name) {
+    $this->db->select('id');
+    $this->db->from('subjects');
+    $this->db->where('name', $name);
+    $query = $this->db->get();
+    if ($query->num_rows() > 0) {
+        return $query->row()->id;
+    }
+    return false;
+}
+
+
+public function subjects_names_get() {
+    // Ensure the request method is GET
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+      $this->output
+           ->set_status_header(405)
+           ->set_output(json_encode(['message' => 'Method not allowed']));
+      return;
+    }
+
+    // Fetch all subject names from the 'subjects' table
+    $this->db->select('name');
+    $query = $this->db->get('subjects');
+    $subjects = $query->result_array();
+
+    if (!empty($subjects)) {
+      $this->output
+           ->set_status_header(200)
+           ->set_content_type('application/json')
+           ->set_output(json_encode($subjects));
+    } else {
+      $this->output
+           ->set_status_header(404)
+           ->set_output(json_encode(['message' => 'No subjects found']));
+    }
+  }
+
+  public function course_status_counts_get() {
+    // Vérifie que la méthode de requête est GET
+    if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
+      $this->output
+           ->set_status_header(405)
+           ->set_output(json_encode(['message' => 'Method not allowed']));
+      return;
+    }
+
+    // Compter les cours avec le statut "active"
+    $this->db->where('status', 'active');
+    $this->db->from('course');
+    $active_count = $this->db->count_all_results();
+
+    // Compter les cours avec le statut "inactive"
+    $this->db->where('status', 'inactive');
+    $this->db->from('course');
+    $inactive_count = $this->db->count_all_results();
+
+    // Retourner les résultats en JSON
+    $status_counts = [
+      'active' => $active_count,
+      'inactive' => $inactive_count
+    ];
+
+    $this->output
+         ->set_content_type('application/json')
+         ->set_output(json_encode($status_counts));
+  }
+
+
+
+
+  ////////
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  //Teacher Permission//
+
+
+  public function classes_get() {
     // Fetch all class names from the 'classes' table
     $this->db->select('name');
     $query = $this->db->get('classes');
@@ -2235,6 +2844,79 @@ public function quiz_questions_get($quiz_id) {
     }
 }
 
+/* public function add_quiz_post() {
+    // Ensure the request is a POST request
+    if ($this->input->server('REQUEST_METHOD') == 'POST') {
+        // Retrieve input data using $this->input->post
+        $title = $this->input->post('title');
+        $section_name = $this->input->post('section_name');
+        $summary = $this->input->post('instruction');  // Changed 'instruction' to 'summary'
+
+        // Log received data for debugging
+        log_message('debug', 'Received title: ' . $title);
+        log_message('debug', 'Received section_name: ' . $section_name);
+        log_message('debug', 'Received summary: ' . $summary);  // Log 'summary'
+
+        // Validate the input
+        if (empty($title) || empty($section_name)) {
+            log_message('error', 'Validation failed: Title and Section Name are required');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Title and Section Name are required']));
+            return;
+        }
+
+        // Fetch section ID from section name
+        $this->db->select('id');
+        $this->db->from('course_section');
+        $this->db->where('title', $section_name);
+        $query = $this->db->get();
+
+        if ($query->num_rows() == 0) {
+            log_message('error', 'Invalid Section Name: ' . $section_name);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid Section Name']));
+            return;
+        }
+
+        $section = $query->row();
+        $section_id = $section->id;
+
+        // Prepare data for insertion
+        $data = [
+            'title' => $title,
+            'section_id' => $section_id,
+            'summary' => $summary,  // Changed 'instruction' to 'summary'
+            'lesson_type' => 'quiz', // Assuming 'lesson_type' column marks a lesson as a quiz
+            // Removed 'created_at'
+        ];
+
+        // Log data to be inserted
+        log_message('debug', 'Data to be inserted: ' . json_encode($data));
+
+        // Insert the new quiz
+        if ($this->db->insert('lesson', $data)) {
+            $quiz_id = $this->db->insert_id();
+            log_message('debug', 'Quiz inserted with ID: ' . $quiz_id);
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'message' => 'Quiz added successfully', 'quiz_id' => $quiz_id]));
+        } else {
+            log_message('error', 'Failed to insert new quiz');
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to add quiz']));
+        }
+    } else {
+        // Return method not allowed error
+        log_message('error', 'Invalid request method');
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+} */
 
 public function add_quiz_post() {
     // Ensure the request is a POST request
@@ -2508,6 +3190,58 @@ public function add_question_post() {
     }
 }
 
+/* public function get_quiz_questions_get($quiz_id) {
+    // Ensure the request is a GET request
+    if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        // Fetch quiz questions based on the quiz ID
+        $this->db->order_by("order", "asc");
+        $this->db->where('quiz_id', $quiz_id);
+        $query = $this->db->get('question');
+        $questions = $query->result_array();
+
+        // Check if questions are found
+        if ($questions) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'questions' => $questions]));
+        } else {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'No questions found']));
+        }
+    } else {
+        // Return method not allowed error
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+} */
+
+/* public function get_quiz_questions_get($quiz_id) {
+    if ($this->input->server('REQUEST_METHOD') == 'GET') {
+        $this->db->order_by("order", "asc");
+        $this->db->where('quiz_id', $quiz_id);
+        $query = $this->db->get('question');
+        $questions = $query->result_array();
+
+        if ($questions) {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'success', 'questions' => $questions]));
+        } else {
+            $this->output
+                ->set_content_type('application/json')
+                ->set_output(json_encode(['status' => 'error', 'message' => 'No questions found']));
+        }
+    } else {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_status_header(405)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
+    }
+}
+ */
 
  public function get_quiz_questions_get($quiz_id) {
     if ($this->input->server('REQUEST_METHOD') == 'GET') {
@@ -3261,204 +3995,232 @@ public function sections_for_class_get() {
 }
 
 
+public function create_invoice_post() {
+    $student_id = $this->input->post('student_id');
+    $class_id = $this->input->post('class_id');
+    $total_amount = $this->input->post('total_amount');
+    $paid_amount = $this->input->post('paid_amount');
+    $session = $this->input->post('session');
+    $status = 'unpaid'; // Set status to 'unpaid'
+    $payment_method = $this->input->post('payment_method'); // Get payment method
+    $school_id = $this->input->post('school_id'); // Get school_id
+    $user_name = $this->input->post('user_name'); // Get user name
+    $created_at = $this->input->post('created_at'); // Get created_at
 
+    log_message('debug', 'createInvoice_post called with data: ' . json_encode($this->input->post()));
 
-
-
-
-
-
-
-//End Online courses 
-
-
-//Teacher Permission//
-
-
-public function add_teacher_permission_post() {
-    // Validate the input data
-    if (!$this->input->post('teacher_id') || !$this->input->post('permission_type') || $this->input->post('value') === NULL) {
+    if (!$student_id || !$class_id || !$total_amount || !$paid_amount || !$session || !$payment_method || !$school_id || !$user_name || !$created_at) {
+        log_message('error', 'Invalid input data: one or more fields are missing');
         $this->output
             ->set_status_header(400)
-            ->set_output(json_encode(['error' => 'Invalid input data']));
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
         return;
     }
 
-    $data = [
-        'teacher_id' => $this->input->post('teacher_id'),
-        'permission_type' => $this->input->post('permission_type'),
-        'value' => (int)$this->input->post('value'),  // Cast the value to integer
+    // Add logging to see the original created_at value
+    log_message('debug', 'Original created_at: ' . $created_at);
+
+    // Convert the date to the correct format
+    $created_at_formatted = DateTime::createFromFormat('d-m-Y H:i:s', $created_at);
+    if ($created_at_formatted === false) {
+        log_message('error', 'Invalid date format');
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid date format']));
+        return;
+    }
+    $created_at_formatted = $created_at_formatted->format('Y-m-d H:i:s');
+
+    // Add logging to see the formatted created_at value
+    log_message('debug', 'Formatted created_at: ' . $created_at_formatted);
+
+    $invoice_data = [
+        'title' => 'Invoice for ' . $user_name,
+        'total_amount' => $total_amount,
+        'class_id' => $class_id,
+        'student_id' => $student_id,
+        'paid_amount' => $paid_amount,
+        'status' => $status, // Use the 'unpaid' status
+        'payment_method' => $payment_method, // Add payment method
+        'school_id' => $school_id, // Use the provided school_id
+        'session' => $session,
+        'created_at' => $created_at_formatted, // Use the formatted date
+        'updated_at' => $created_at_formatted, // Use the formatted date
     ];
 
-    // Check if the permission already exists
-    $this->db->where('teacher_id', $data['teacher_id']);
-    $this->db->where('permission_type', $data['permission_type']);
-    $query = $this->db->get('permissions');
+    // Insert the invoice data into the database
+    $this->db->insert('invoices', $invoice_data);
 
-    if ($query->num_rows() > 0) {
-        // Update the existing permission
-        $this->db->where('teacher_id', $data['teacher_id']);
-        $this->db->where('permission_type', $data['permission_type']);
-        $this->db->update('permissions', ['value' => $data['value']]);
-    } else {
-        // Insert a new permission
-        $this->db->insert('permissions', $data);
-    }
-
-    if ($this->db->affected_rows() > 0) {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['success' => 'Permission updated successfully']));
-    } else {
+    if ($this->db->affected_rows() == 0) {
+        log_message('error', 'Failed to insert invoice data');
         $this->output
             ->set_status_header(500)
-            ->set_output(json_encode(['error' => 'Failed to update permission']));
-    }
-}
-
-public function teachers_by_class_get($class_id) {
-    // Ensure $class_id is an integer to prevent SQL injection
-    $class_id = (int)$class_id;
-    
-    // Select the required fields from the 'users' table
-    $this->db->select('
-        users.id as user_id,
-        users.name,
-        users.email,
-        users.role,
-        users.address,
-        users.phone,
-        users.birthday,
-        users.gender,
-        users.school_id as user_school_id,
-        users.status
-    ');
-    $this->db->from('users');
-    
-    // Join the 'teachers' table on user_id
-    $this->db->join('teachers', 'teachers.user_id = users.id');
-    
-    // Join the 'teacher_permissions' table on teacher_id
-    $this->db->join('teacher_permissions', 'teacher_permissions.teacher_id = teachers.id');
-    
-    // Join the 'classes' table on class_id
-    $this->db->join('classes', 'teacher_permissions.class_id = classes.id');
-    
-    // Add a where clause to filter by class_id
-    $this->db->where('classes.id', $class_id);
-    
-    // Execute the query
-    $query = $this->db->get();
-    $users = $query->result_array();
-
-    // Append image URL to each user
-    foreach ($users as &$user) {
-        $image_path = 'uploads/users/' . $user['user_id'] . '.jpg'; // Assuming 'user_id' is the unique identifier for each user
-        if (file_exists(FCPATH . $image_path)) {
-            $user['image_url'] = base_url($image_path); // Assuming you're using CodeIgniter and 'base_url' is configured
-        } else {
-            $user['image_url'] = base_url('uploads/users/default.jpg'); // Default image if user image doesn't exist
-        }
-    }
-
-    // Return the result as a JSON response
-    $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($users));
-}
-
-public function assign_teacher_permission_to_class_post() {
-    // Log the received POST data for debugging
-    log_message('debug', 'Received POST data: ' . json_encode($this->input->post()));
-
-
-    // Fetch class_id based on class_name
-    $this->db->select('id');
-    $this->db->from('classes');
-    $this->db->where('name', $this->input->post('class_name'));
-    $class_query = $this->db->get();
-
-
-    $class_id = $class_query->row()->id;
-
-    $data = [
-        'teacher_id' => $this->input->post('teacher_id'),
-        'class_id' => $class_id,
-        'section_id' => $this->input->post('section_id') ?? null,
-        'marks' => (int)$this->input->post('marks') ?? 0,
-        'assignment' => (int)$this->input->post('assignment') ?? 0,
-        'attendance' => (int)$this->input->post('attendance') ?? 0,
-        'online_exam' => (int)$this->input->post('online_exam') ?? 0
-    ];
-
-    // Log input data for debugging
-    log_message('debug', 'Assign Permission Data: ' . json_encode($data));
-
-    // Check if the teacher permission already exists for the class and section
-    $this->db->where('teacher_id', $data['teacher_id']);
-    $this->db->where('class_id', $data['class_id']);
-    if ($data['section_id']) {
-        $this->db->where('section_id', $data['section_id']);
-    } else {
-        $this->db->where('section_id', null);
-    }
-    $query = $this->db->get('teacher_permissions');
-
-    if ($query->num_rows() > 0) {
-        // Update the existing teacher permission
-        $this->db->where('teacher_id', $data['teacher_id']);
-        $this->db->where('class_id', $data['class_id']);
-        if ($data['section_id']) {
-            $this->db->where('section_id', $data['section_id']);
-        } else {
-            $this->db->where('section_id', null);
-        }
-        $this->db->update('teacher_permissions', $data);
-    } else {
-        // Insert a new teacher permission
-        $this->db->insert('teacher_permissions', $data);
-    }
-
-    if ($this->db->affected_rows() > 0) {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['success' => 'Permission assigned successfully']));
-    } else {
-        $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode(['success' => 'Permission assigned successfully']));
-    }
-}
-public function get_class_id_by_name_get() {
-    $class_name = $this->input->get('name');
-
-    // Fetch class_id based on class_name
-    $this->db->select('id');
-    $this->db->from('classes');
-    $this->db->where('name', $class_name);
-    $class_query = $this->db->get();
-
-    if ($class_query->num_rows() === 0) {
-        $this->output
-            ->set_status_header(400)
-            ->set_output(json_encode(['error' => 'Invalid class name']));
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to insert invoice data']));
         return;
     }
 
-    $class_id = $class_query->row()->id;
+    // Get the newly inserted invoice ID
+    $invoice_id = $this->db->insert_id();
+
+    log_message('debug', 'Invoice created successfully with ID: ' . $invoice_id);
 
     $this->output
         ->set_content_type('application/json')
-        ->set_output(json_encode(['class_id' => $class_id]));
+        ->set_output(json_encode(['status' => true, 'invoice_id' => $invoice_id]));
+}
+
+public function paid_invoice_post() {
+    // Retrieve POST data
+    $input_data = json_decode(file_get_contents('php://input'), true);
+    $invoice_id = isset($input_data['invoice_id']) ? $input_data['invoice_id'] : null;
+    $payment_method = isset($input_data['payment_method']) ? $input_data['payment_method'] : null;
+
+    // Log the received data for debugging purposes
+    log_message('debug', 'paid_invoice_post called with data: ' . json_encode($input_data));
+
+    // Validate the input data
+    if (empty($invoice_id) || empty($payment_method)) {
+        log_message('error', 'Invalid input data: one or more fields are missing');
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare the update data
+    $update_data = [
+        'payment_method' => $payment_method,
+        'status' => 'paid',
+        'updated_at' => date('Y-m-d H:i:s')
+    ];
+
+    // Log the update data for debugging
+    log_message('debug', 'Update data: ' . json_encode($update_data));
+
+    // Update the invoice data in the database
+    $this->db->where('id', $invoice_id);
+    $this->db->update('invoices', $update_data);
+
+    // Log the database query
+    log_message('debug', 'Executed query: ' . $this->db->last_query());
+
+    // Check if the update was successful
+    if ($this->db->affected_rows() == 0) {
+        log_message('error', 'Failed to update invoice data');
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update invoice data']));
+        return;
+    }
+
+    // Fetch the updated invoice to return
+    $this->db->select('invoices.*, users.name as student_name, classes.name as class_name');
+    $this->db->from('invoices');
+    $this->db->join('students', 'invoices.student_id = students.id', 'left');
+    $this->db->join('users', 'students.user_id = users.id', 'left');
+    $this->db->join('classes', 'invoices.class_id = classes.id', 'left');
+    $this->db->where('invoices.id', $invoice_id);
+    $query = $this->db->get();
+
+    // Log the database query for fetching the updated invoice
+    log_message('debug', 'Fetch updated invoice query: ' . $this->db->last_query());
+
+    // Get the invoice data
+    $invoice = $query->row_array();
+
+    // Log the updated invoice data
+    log_message('debug', 'Updated invoice: ' . json_encode($invoice));
+
+    // Return the response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'invoice' => $invoice]));
 }
 
 
+public function user_name_by_student_id_get($student_id) {
+    if (!$student_id) {
+        log_message('error', 'Invalid input data: student_id is missing');
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid student ID']));
+        return;
+    }
 
-/////////////////
+    $this->db->select('users.name as user_name');
+    $this->db->from('students');
+    $this->db->join('users', 'students.user_id = users.id', 'left');
+    $this->db->where('students.id', $student_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        $result = $query->row_array();
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'user_name' => $result['user_name']]));
+    } else {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'User not found']));
+    }
+} 
 
 
+public function invoice_status_get() {
+    $student_id = $this->input->get('student_id');
+    $class_id = $this->input->get('class_id');
 
-//Create Class
+    if (!$student_id || !$class_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Query to get the status of invoices
+    $this->db->select('status');
+    $this->db->from('invoices');
+    $this->db->where('student_id', $student_id);
+    $this->db->where('class_id', $class_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        $invoices = $query->result_array();
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'invoices' => $invoices]));
+    } else {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No invoices found']));
+    }
+}
+
+public function payment_settings_get($school_id)
+{
+    // Fetch payment settings
+    $this->db->where('school_id', $school_id);
+    $payment_query = $this->db->get('payment_settings');
+    $payment_settings = $payment_query->result_array();
+
+    // Fetch system currency settings
+    $this->db->select('system_currency, currency_position');
+    $this->db->where('school_id', $school_id);
+    $currency_query = $this->db->get('settings');
+    $system_currency = $currency_query->row_array();
+
+    // Combine the results
+    $response = array(
+        'status' => true,
+        'data' => array(
+            'payment_settings' => $payment_settings,
+            'system_currency' => $system_currency
+        )
+    );
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
 
 public function class_create_post() {
     // Get input data
@@ -3468,40 +4230,10 @@ public function class_create_post() {
     if (!isset($data['name']) || !isset($data['school_id'])) {
         $response = array('status' => false, 'message' => 'Missing required fields: name or school_id');
         echo json_encode($response);
-
-    }
-}
-//Subjects
-
-
-
-public function create_subject_post() {
-    // Ensure the request method is POST
-    if ($this->input->server('REQUEST_METHOD') !== 'POST') {
-        $this->output
-             ->set_status_header(405)
-             ->set_output(json_encode(['message' => 'Method not allowed']));
-        return;
-    }
-
-    // Retrieve input data
-    $input = json_decode(trim(file_get_contents('php://input')), true);
-
-    $name = $input['name'] ?? null;
-    $class_id = $input['class_id'] ?? null;
-    $school_id = $input['school_id'] ?? null;
-
-    // Validate the input
-    if (empty($name) || empty($class_id) || empty($school_id)) {
-        $this->output
-             ->set_status_header(400)
-             ->set_output(json_encode(['message' => 'Name, Class ID, and School ID are required']));
-
         return;
     }
 
     // Prepare data for insertion
-
     $class_data = array(
         'name' => $data['name'],
         'school_id' => $data['school_id'],
@@ -3621,32 +4353,130 @@ public function class_get() {
     echo json_encode($response);
 }
 
+public function submit_quiz_responses_post() {
+    // Get input data
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    if (!isset($data['quiz_id']) || !isset($data['responses'])) {
+        echo json_encode(array('status' => false, 'message' => 'Missing required fields: quiz_id or responses'));
+        return;
+    }
+
+    $quiz_id = $data['quiz_id'];
+    $responses = $data['responses'];
+
+    // Get correct answers for the given quiz_id
+    $this->db->where('quiz_id', $quiz_id);
+    $query = $this->db->get('question');
+    $questions = $query->result_array();
+
+    $correct_answers = array();
+    foreach ($questions as $question) {
+        $correct_answers[$question['id']] = json_decode($question['correct_answers']);
+    }
+
+    // Calculate result
+    $total_questions = count($questions);
+    $correct_responses = 0;
+
+    foreach ($responses as $question_id => $response) {
+        if (isset($correct_answers[$question_id])) {
+            $correct_answer = $correct_answers[$question_id];
+            // Convert both to strings for comparison
+            if (json_encode($correct_answer) === json_encode($response)) {
+                $correct_responses++;
+            }
+        }
+    }
+
+    $result = array(
+        'total_questions' => $total_questions,
+        'correct_responses' => $correct_responses,
+        'score' => ($correct_responses / $total_questions) * 100
+    );
+
+    // Output response
+    echo json_encode(array('status' => true, 'result' => $result));
+}
+
+public function all_quiz_responses_get($quiz_id) {
+    if (empty($quiz_id)) {
+        echo json_encode(array('status' => false, 'message' => 'Missing required field: quiz_id'));
+        return;
+    }
+
+    // Get all questions and their correct answers for the given quiz_id
+    $this->db->where('quiz_id', $quiz_id);
+    $query = $this->db->get('question');
+    $questions = $query->result_array();
+
+    if (empty($questions)) {
+        echo json_encode(array('status' => false, 'message' => 'No questions found for the given quiz_id'));
+        return;
+    }
+
+    // Prepare responses array
+    $responses = array();
+    foreach ($questions as $question) {
+        $responses[] = array(
+            'question_id' => $question['id'],
+            'question' => $question['title'],
+            'correct_answers' => json_decode($question['correct_answers'], true)
+        );
+    }
+
+    // Output response
+    echo json_encode(array('status' => true, 'responses' => $responses));
+}
 
 
-//////
-// =======
-//     $data = [
-//         'name' => $name,
-//         'class_id' => $class_id,
-//         'school_id' => $school_id,
-//         'session' => 1 // Default session
-//     ];
+public function create_subject_post() {
+    // Ensure the request method is POST
+    if ($this->input->server('REQUEST_METHOD') !== 'POST') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
 
-//     // Insert the new subject
-//     $this->db->insert('subjects', $data);
+    // Retrieve input data
+    $input = json_decode(trim(file_get_contents('php://input')), true);
 
-//     if ($this->db->affected_rows() > 0) {
-//         $this->output
-//              ->set_status_header(201)
-//              ->set_content_type('application/json')
-//              ->set_output(json_encode(['status' => 'success', 'message' => 'Subject created successfully']));
-//     } else {
-//         $this->output
-//              ->set_status_header(500)
-//              ->set_content_type('application/json')
-//              ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to create subject']));
-//     }
-// }
+    $name = $input['name'] ?? null;
+    $class_id = $input['class_id'] ?? null;
+    $school_id = $input['school_id'] ?? null;
+
+    // Validate the input
+    if (empty($name) || empty($class_id) || empty($school_id)) {
+        $this->output
+             ->set_status_header(400)
+             ->set_output(json_encode(['message' => 'Name, Class ID, and School ID are required']));
+        return;
+    }
+
+    // Prepare data for insertion
+    $data = [
+        'name' => $name,
+        'class_id' => $class_id,
+        'school_id' => $school_id,
+        'session' => 1 // Default session
+    ];
+
+    // Insert the new subject
+    $this->db->insert('subjects', $data);
+
+    if ($this->db->affected_rows() > 0) {
+        $this->output
+             ->set_status_header(201)
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'success', 'message' => 'Subject created successfully']));
+    } else {
+        $this->output
+             ->set_status_header(500)
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to create subject']));
+    }
+}
 
 public function subjects_by_class_id_get($class_id) {
     // Validate class_id
@@ -3769,218 +4599,100 @@ public function get_subjects_by_school_id_get($school_id) {
 }
 
 
+//dropdowns//
+public function schools_for_students_get() {
+    // Fetch all schools
+    $this->db->select('id, name, address, phone, status');
+    $this->db->from('schools');
+    $query = $this->db->get();
+    $schools = $query->result_array();
 
+    $this->output
+         ->set_content_type('application/json')
+         ->set_output(json_encode(['status' => 'success', 'schools' => $schools]));
+}
 
+public function classes_for_students_get() {
+    // Fetch all classes
+    $this->db->select('id, name, school_id, price');
+    $this->db->from('classes');
+    $query = $this->db->get();
+    $classes = $query->result_array();
 
-///End of subjects 
+    $this->output
+         ->set_content_type('application/json')
+         ->set_output(json_encode(['status' => 'success', 'classes' => $classes]));
+}
 
-//Expense API CALL
+public function instructors_for_students_get() {
+    // Fetch all instructors
+    $this->db->select('id, name, email, phone');
+    $this->db->from('instructors');
+    $query = $this->db->get();
+    $instructors = $query->result_array();
 
-//Exams Part
+    $this->output
+         ->set_content_type('application/json')
+         ->set_output(json_encode(['status' => 'success', 'instructors' => $instructors]));
+}
 
+public function subjects_for_students_get() {
+    // Fetch all subjects
+    $this->db->select('id, name, class_id, school_id, session');
+    $this->db->from('subjects');
+    $query = $this->db->get();
+    $subjects = $query->result_array();
 
+    $this->output
+         ->set_content_type('application/json')
+         ->set_output(json_encode(['status' => 'success', 'subjects' => $subjects]));
+}
 
+//dropdowns//
 
-
-
-
-public function create_exam_post()
+ public function create_department_post()
 {
-    // Retrieve data from POST request
-    $name = $this->input->post('name');
-    $starting_date = $this->input->post('starting_date');
-    $ending_date = $this->input->post('ending_date');
-    $school_id = $this->input->post('school_id');
-    $session = $this->input->post('session') ?? 2;
+        // Retrieve data from POST request
+        $name = $this->input->post('name');
+        $school_id = $this->input->post('school_id');
 
-    // Log the received data for debugging
-    log_message('debug', 'Received data: ' . json_encode($_POST));
+        // Check if the required data is provided
+        if (!$name || !$school_id) {
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+            return;
+        }
 
-    // Check if the required data is provided
-    if (!$name || !$starting_date || !$ending_date || !$school_id) {
+        // Prepare data to insert
+        $department_data = [
+            'name' => $name,
+            'school_id' => $school_id
+        ];
+
+        // Insert data into the departments table
+        $this->db->insert('departments', $department_data);
+
+        // Check if the insert was successful
+        if ($this->db->affected_rows() == 0) {
+            $this->output
+                ->set_status_header(500)
+                ->set_output(json_encode(['status' => false, 'message' => 'Failed to create department']));
+            return;
+        }
+
+        // Fetch the created department to return
+        $department_id = $this->db->insert_id();
+        $query = $this->db->get_where('departments', ['id' => $department_id]);
+        $department = $query->row_array();
+
+        // Return success response
         $this->output
-            ->set_status_header(400)
-            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
-        return;
-    }
-
-    // Prepare data to insert
-    $exam_data = [
-        'name' => $name,
-        'starting_date' => $starting_date,
-        'ending_date' => $ending_date,
-        'school_id' => $school_id,
-        'session' => $session
-    ];
-
-    // Insert data into the exams table
-    $this->db->insert('exams', $exam_data);
-
-    // Check if the insert was successful
-    if ($this->db->affected_rows() == 0) {
-        $this->output
-            ->set_status_header(500)
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create exam']));
-        return;
-    }
-
-    // Fetch the created exam to return
-    $exam_id = $this->db->insert_id();
-    $query = $this->db->get_where('exams', ['id' => $exam_id]);
-    $exam = $query->row_array();
-
-    // Return success response
-    $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode(['status' => true, 'exam' => $exam]));
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'department' => $department]));
 }
 
-// public function edit_exam_post()
-// {
-//     // Retrieve data from POST request
-//     $exam_id = $this->input->post('id');
-//     $name = $this->input->post('name');
-//     $starting_date = $this->input->post('starting_date');
-//     $ending_date = $this->input->post('ending_date');
-//     $school_id = $this->input->post('school_id');
-//     $session = $this->input->post('session') ?? 1;
-
-//     // Log the received data for debugging
-//     log_message('debug', 'Received data: ' . json_encode($_POST));
-
-//     // Check if the required data is provided
-//     if (!$exam_id || !$name || !$starting_date || !$ending_date || !$school_id) {
-
-////Sesion Manager
-public function sessions_get() {
-    $this->load->database();
-
-    // Fetch all sessions from the database
-    $query = $this->db->get('sessions');
-    $result = $query->result_array();
-
-    // Check if any sessions found
-    if (empty($result)) {
-        $this->output
-            ->set_status_header(404)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => false, 'message' => 'No sessions found']));
-        return;
-    }
-
-    // Return success response with sessions data
-    $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode(['status' => true, 'sessions' => $result]));
-}
-
-public function create_session_post() {
-    // Load the database
-    $this->load->database();
-    
-    // Get the session name from the POST request
-    $data = $this->input->post();
-
-    if (!isset($data['name'])) {
-        $this->output
-            ->set_status_header(400)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => false, 'message' => 'Session name is required']));
-        return;
-    }
-
-    // Set the status to 0
-    $data['status'] = 0;
-
-    // Insert the new session into the database
-    $this->db->insert('sessions', $data);
-    $insert_id = $this->db->insert_id();
-
-    if ($insert_id) {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => true, 'message' => 'Session created successfully', 'session_id' => $insert_id]));
-    } else {
-        $this->output
-            ->set_status_header(500)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create session']));
-    }
-}
-
-
-public function edit_session_post() {
-    // Load the database
-    $this->load->database();
-
-    // Get the session data from the POST request
-    $data = $this->input->post();
-
-    // Validation: Ensure 'id', 'name', and 'status' are provided
-    if (!isset($data['id']) || !isset($data['name']) || !isset($data['status'])) {
-        $this->output
-            ->set_status_header(400)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => false, 'message' => 'Session ID, name, and status are required']));
-        return;
-    }
-
-    // Set updated_at to the current date and time
-    $data['updated_at'] = date('Y-m-d H:i:s');
-
-    // Update the session in the database
-    $this->db->where('id', $data['id']);
-    $updated = $this->db->update('sessions', $data);
-
-    if ($updated) {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => true, 'message' => 'Session updated successfully']));
-    } else {
-        $this->output
-            ->set_status_header(500)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update session']));
-    }
-}
-
-
-public function delete_session_delete($id) {
-    // Load the database
-    $this->load->database();
-
-    // Validation: Ensure 'id' is provided
-    if (!$id) {
-        $this->output
-            ->set_status_header(400)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => false, 'message' => 'Invalid session ID']));
-        return;
-    }
-
-    // Delete the session from the database
-    $this->db->where('id', $id);
-    $deleted = $this->db->delete('sessions');
-
-    if ($deleted) {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => true, 'message' => 'Session deleted successfully']));
-    } else {
-        $this->output
-            ->set_status_header(500)
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete session']));
-    }
-}
-
-
-
-////BOOKS
-
-
-//Grades
-public function grades_by_school_id_get($school_id, $page = 1)
+public function departments_by_school_id_get($school_id)
 {
     // Validate school_id
     if (!$school_id) {
@@ -3990,151 +4702,119 @@ public function grades_by_school_id_get($school_id, $page = 1)
         return;
     }
 
-    // Set pagination parameters
-    if ($page < 1) {
-        $page = 1;
-    }
-    $limit = 3; // Number of grades per page
+    // Get pagination parameters from GET request
+    $page = $this->input->get('page') ? (int)$this->input->get('page') : 1;
+    $limit = $this->input->get('limit') ? (int)$this->input->get('limit') : 4;
     $offset = ($page - 1) * $limit;
 
-    // Fetch grades by school_id with pagination and optional search
-    $this->db->select('*');
-    $this->db->from('grades');
-    $this->db->where('school_id', $school_id);
-    if ($this->input->get('search')) {
-        $search = $this->input->get('search');
-        $this->db->like('name', $search);
-        $this->db->or_like('grade_point', $search);
-        $this->db->or_like('mark_from', $search);
-        $this->db->or_like('mark_upto', $search);
-        $this->db->or_like('comment', $search);
-    }
+    // Fetch departments and school name by school_id with pagination
+    $this->db->select('departments.*, schools.name as school_name');
+    $this->db->from('departments');
+    $this->db->join('schools', 'schools.id = departments.school_id');
+    $this->db->where('departments.school_id', $school_id);
     $this->db->limit($limit, $offset);
     $query = $this->db->get();
     $result = $query->result_array();
 
-    // Check if any grades found
+    // Check if any departments found
     if (empty($result)) {
         $this->output
             ->set_status_header(404)
-            ->set_output(json_encode(['status' => false, 'message' => 'No grades found']));
+            ->set_output(json_encode(['status' => false, 'message' => 'No departments found']));
         return;
     }
 
-    // Fetch the total number of grades for the school
+    // Get total count of departments
+    $this->db->from('departments');
     $this->db->where('school_id', $school_id);
-    if ($this->input->get('search')) {
-        $search = $this->input->get('search');
-        $this->db->like('name', $search);
-        $this->db->or_like('grade_point', $search);
-        $this->db->or_like('mark_from', $search);
-        $this->db->or_like('mark_upto', $search);
-        $this->db->or_like('comment', $search);
-    }
-    $this->db->from('grades');
-    $total_grades = $this->db->count_all_results();
+    $total_departments = $this->db->count_all_results();
 
-    // Return success response with grades and total count
+    // Return success response with departments, school name, and pagination info
+    $response = [
+        'status' => true,
+        'departments' => $result,
+        'pagination' => [
+            'current_page' => $page,
+            'per_page' => $limit,
+            'total_pages' => ceil($total_departments / $limit),
+            'total_departments' => $total_departments
+        ]
+    ];
+
     $this->output
         ->set_content_type('application/json')
-        ->set_output(json_encode(['status' => true, 'grades' => $result, 'total' => $total_grades]));
+        ->set_output(json_encode($response));
 }
 
-public function create_grade_post()
+public function update_department_post()
 {
-    $data = $this->input->post();
+    // Retrieve data from POST request
+    $id = $this->input->post('id');
+    $name = $this->input->post('name');
 
-    if (!isset($data['school_id']) || !isset($data['name']) || !isset($data['grade_point']) || !isset($data['mark_from']) || !isset($data['mark_upto']) || !isset($data['comment'])) {
+    // Check if the required data is provided
+    if (!$id || !$name) {
         $this->output
             ->set_status_header(400)
-            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete grade data']));
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
         return;
     }
 
-    // Set session to 2 and add current date and time
-    $data['session'] = 2;
-    $data['created_at'] = date('Y-m-d H:i:s');
-    $data['updated_at'] = date('Y-m-d H:i:s');
+    // Prepare data to update
+    $department_data = ['name' => $name];
 
-    $this->db->insert('grades', $data);
-    $insert_id = $this->db->insert_id();
+    // Update data in the departments table
+    $this->db->where('id', $id);
+    $this->db->update('departments', $department_data);
 
-    if ($insert_id) {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => true, 'message' => 'Grade created successfully', 'grade_id' => $insert_id]));
-    } else {
+    // Check if the update was successful
+    if ($this->db->affected_rows() == 0) {
         $this->output
             ->set_status_header(500)
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create grade']));
-    }
-}
-
-public function edit_grade_post()
-{
-    $data = $this->input->post();
-
-    if (!isset($data['id']) || !isset($data['school_id']) || !isset($data['name']) || !isset($data['grade_point']) || !isset($data['mark_from']) || !isset($data['mark_upto']) || !isset($data['comment'])) {
-        $this->output
-            ->set_status_header(400)
-            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete grade data']));
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update department']));
         return;
     }
 
-    // Set updated_at to the current date and time
-    $data['updated_at'] = date('Y-m-d H:i:s');
+    // Fetch the updated department to return
+    $query = $this->db->get_where('departments', ['id' => $id]);
+    $department = $query->row_array();
 
-    $this->db->where('id', $data['id']);
-    $updated = $this->db->update('grades', $data);
-
-    if ($updated) {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => true, 'message' => 'Grade updated successfully']));
-    } else {
-        $this->output
-            ->set_status_header(500)
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update grade']));
-    }
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'department' => $department]));
 }
 
-
-public function delete_grade_delete($id)
+public function delete_department_post()
 {
+    // Retrieve data from POST request
+    $id = $this->input->post('id');
+
+    // Check if the required data is provided
     if (!$id) {
         $this->output
             ->set_status_header(400)
-            ->set_output(json_encode(['status' => false, 'message' => 'Invalid grade id']));
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
         return;
     }
 
+    // Delete data from the departments table
     $this->db->where('id', $id);
-    $deleted = $this->db->delete('grades');
+    $this->db->delete('departments');
 
-    if ($deleted) {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => true, 'message' => 'Grade deleted successfully']));
-    } else {
+    // Check if the delete was successful
+    if ($this->db->affected_rows() == 0) {
         $this->output
             ->set_status_header(500)
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete grade']));
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete department']));
+        return;
     }
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'message' => 'Department deleted successfully']));
 }
-
-
-////End of grades
-
-//Departments Part
-
-
-////End session manager
-
-
-
-// public function books_by_school_id_get($school_id, $page = 1)
-
-///Events
 
 public function create_event_post()
 {
@@ -4308,59 +4988,7 @@ public function delete_event_delete($event_id)
         ->set_output(json_encode(['status' => true, 'message' => 'Event deleted successfully']));
 }
 
-
-
-
-
-
-
-//End of Events 
-
-
-public function create_department_post()
-{
-        // Retrieve data from POST request
-        $name = $this->input->post('name');
-        $school_id = $this->input->post('school_id');
-
-        // Check if the required data is provided
-        if (!$name || !$school_id) {
-            $this->output
-                ->set_status_header(400)
-                ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
-            return;
-        }
-
-        // Prepare data to insert
-        $department_data = [
-            'name' => $name,
-            'school_id' => $school_id
-        ];
-
-        // Insert data into the departments table
-        $this->db->insert('departments', $department_data);
-
-        // Check if the insert was successful
-        if ($this->db->affected_rows() == 0) {
-            $this->output
-                ->set_status_header(500)
-                ->set_output(json_encode(['status' => false, 'message' => 'Failed to create department']));
-            return;
-        }
-
-        // Fetch the created department to return
-        $department_id = $this->db->insert_id();
-        $query = $this->db->get_where('departments', ['id' => $department_id]);
-        $department = $query->row_array();
-
-        // Return success response
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => true, 'department' => $department]));
-}
-
-public function departments_by_school_id_get($school_id)
-
+public function exams_by_school_id_get($school_id, $page = 1)
 {
     // Validate school_id
     if (!$school_id) {
@@ -4370,6 +4998,331 @@ public function departments_by_school_id_get($school_id)
         return;
     }
 
+    // Set pagination parameters
+    if ($page < 1) {
+        $page = 1;
+    }
+    $limit = 4; // Number of exams per page
+    $offset = ($page - 1) * $limit;
+
+    // Fetch exams by school_id with pagination and include school name
+    $this->db->select('exams.*, schools.name as school_name');
+    $this->db->from('exams');
+    $this->db->join('schools', 'schools.id = exams.school_id');
+    $this->db->where('exams.school_id', $school_id);
+    $this->db->limit($limit, $offset);
+    $query = $this->db->get();
+    $result = $query->result_array();
+
+    // Get the total count of exams
+    $this->db->where('school_id', $school_id);
+    $this->db->from('exams');
+    $total = $this->db->count_all_results();
+
+    // Check if any exams found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No exams found']));
+        return;
+    }
+
+    // Return success response with exams and total count
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'exams' => $result, 'total' => $total]));
+}
+
+
+
+public function create_exam_post()
+{
+    // Retrieve data from POST request
+    $name = $this->input->post('name');
+    $starting_date = $this->input->post('starting_date');
+    $ending_date = $this->input->post('ending_date');
+    $school_id = $this->input->post('school_id');
+    $session = $this->input->post('session') ?? 2;
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($_POST));
+
+    // Check if the required data is provided
+    if (!$name || !$starting_date || !$ending_date || !$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare data to insert
+    $exam_data = [
+        'name' => $name,
+        'starting_date' => $starting_date,
+        'ending_date' => $ending_date,
+        'school_id' => $school_id,
+        'session' => $session
+    ];
+
+    // Insert data into the exams table
+    $this->db->insert('exams', $exam_data);
+
+    // Check if the insert was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create exam']));
+        return;
+    }
+
+    // Fetch the created exam to return
+    $exam_id = $this->db->insert_id();
+    $query = $this->db->get_where('exams', ['id' => $exam_id]);
+    $exam = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'exam' => $exam]));
+}
+
+public function edit_exam_post()
+{
+    // Retrieve data from POST request
+    $exam_id = $this->input->post('id');
+    $name = $this->input->post('name');
+    $starting_date = $this->input->post('starting_date');
+    $ending_date = $this->input->post('ending_date');
+    $school_id = $this->input->post('school_id');
+    $session = $this->input->post('session') ?? 1;
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($_POST));
+
+    // Check if the required data is provided
+    if (!$exam_id || !$name || !$starting_date || !$ending_date || !$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare data to update
+    $exam_data = [
+        'name' => $name,
+        'starting_date' => $starting_date,
+        'ending_date' => $ending_date,
+        'school_id' => $school_id,
+        'session' => $session
+    ];
+
+    // Update data in the exams table
+    $this->db->where('id', $exam_id);
+    $this->db->update('exams', $exam_data);
+
+    // Check if the update was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update exam']));
+        return;
+    }
+
+    // Fetch the updated exam to return
+    $query = $this->db->get_where('exams', ['id' => $exam_id]);
+    $exam = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'exam' => $exam]));
+}
+
+
+public function delete_exam_delete($exam_id)
+{
+    // Validate exam_id
+    if (!$exam_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid exam_id']));
+        return;
+    }
+
+    // Delete the exam
+    $this->db->where('id', $exam_id);
+    $this->db->delete('exams');
+
+    // Check if the delete was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete exam']));
+        return;
+    }
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'message' => 'Exam deleted successfully']));
+}
+
+//Grades
+public function grades_by_school_id_get($school_id, $page = 1)
+{
+    // Validate school_id
+    if (!$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid school_id']));
+        return;
+    }
+
+    // Set pagination parameters
+    if ($page < 1) {
+        $page = 1;
+    }
+    $limit = 3; // Number of grades per page
+    $offset = ($page - 1) * $limit;
+
+    // Fetch grades by school_id with pagination and optional search
+    $this->db->select('*');
+    $this->db->from('grades');
+    $this->db->where('school_id', $school_id);
+    if ($this->input->get('search')) {
+        $search = $this->input->get('search');
+        $this->db->like('name', $search);
+        $this->db->or_like('grade_point', $search);
+        $this->db->or_like('mark_from', $search);
+        $this->db->or_like('mark_upto', $search);
+        $this->db->or_like('comment', $search);
+    }
+    $this->db->limit($limit, $offset);
+    $query = $this->db->get();
+    $result = $query->result_array();
+
+    // Check if any grades found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No grades found']));
+        return;
+    }
+
+    // Fetch the total number of grades for the school
+    $this->db->where('school_id', $school_id);
+    if ($this->input->get('search')) {
+        $search = $this->input->get('search');
+        $this->db->like('name', $search);
+        $this->db->or_like('grade_point', $search);
+        $this->db->or_like('mark_from', $search);
+        $this->db->or_like('mark_upto', $search);
+        $this->db->or_like('comment', $search);
+    }
+    $this->db->from('grades');
+    $total_grades = $this->db->count_all_results();
+
+    // Return success response with grades and total count
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'grades' => $result, 'total' => $total_grades]));
+}
+
+public function create_grade_post()
+{
+    $data = $this->input->post();
+
+    if (!isset($data['school_id']) || !isset($data['name']) || !isset($data['grade_point']) || !isset($data['mark_from']) || !isset($data['mark_upto']) || !isset($data['comment'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete grade data']));
+        return;
+    }
+
+    // Set session to 2 and add current date and time
+    $data['session'] = 2;
+    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $this->db->insert('grades', $data);
+    $insert_id = $this->db->insert_id();
+
+    if ($insert_id) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Grade created successfully', 'grade_id' => $insert_id]));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create grade']));
+    }
+}
+
+public function edit_grade_post()
+{
+    $data = $this->input->post();
+
+    if (!isset($data['id']) || !isset($data['school_id']) || !isset($data['name']) || !isset($data['grade_point']) || !isset($data['mark_from']) || !isset($data['mark_upto']) || !isset($data['comment'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete grade data']));
+        return;
+    }
+
+    // Set updated_at to the current date and time
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $this->db->where('id', $data['id']);
+    $updated = $this->db->update('grades', $data);
+
+    if ($updated) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Grade updated successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update grade']));
+    }
+}
+
+
+public function delete_grade_delete($id)
+{
+    if (!$id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid grade id']));
+        return;
+    }
+
+    $this->db->where('id', $id);
+    $deleted = $this->db->delete('grades');
+
+    if ($deleted) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Grade deleted successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete grade']));
+    }
+}
+
+
+////
+////BOOKS
+
+public function books_by_school_id_get($school_id, $page = 1)
+{
+    // Validate school_id
+    if (!$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid school_id']));
+        return;
+    }
 
     // Set pagination parameters
     if ($page < 1) {
@@ -4382,22 +5335,9 @@ public function departments_by_school_id_get($school_id)
     $this->db->select('*');
     $this->db->from('books');
     $this->db->where('school_id', $school_id);
-
-    // Get pagination parameters from GET request
-    $page = $this->input->get('page') ? (int)$this->input->get('page') : 1;
-    $limit = $this->input->get('limit') ? (int)$this->input->get('limit') : 4;
-    $offset = ($page - 1) * $limit;
-
-    // Fetch departments and school name by school_id with pagination
-    $this->db->select('departments.*, schools.name as school_name');
-    $this->db->from('departments');
-    $this->db->join('schools', 'schools.id = departments.school_id');
-    $this->db->where('departments.school_id', $school_id);
-
     $this->db->limit($limit, $offset);
     $query = $this->db->get();
     $result = $query->result_array();
-
 
     // Check if any books found
     if (empty($result)) {
@@ -4503,46 +5443,472 @@ public function delete_book_delete($id)
 
 
 ////
+////Sesion Manager
+public function sessions_get() {
+    $this->load->database();
 
-    // Check if any departments found
-//     if (empty($result)) {
-//         $this->output
-//             ->set_status_header(404)
-//             ->set_output(json_encode(['status' => false, 'message' => 'No departments found']));
-//         return;
-//     }
+    // Fetch all sessions from the database
+    $query = $this->db->get('sessions');
+    $result = $query->result_array();
 
-//     // Get total count of departments
-//     $this->db->from('departments');
-//     $this->db->where('school_id', $school_id);
-//     $total_departments = $this->db->count_all_results();
+    // Check if any sessions found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'No sessions found']));
+        return;
+    }
 
-//     // Return success response with departments, school name, and pagination info
-//     $response = [
-//         'status' => true,
-//         'departments' => $result,
-//         'pagination' => [
-//             'current_page' => $page,
-//             'per_page' => $limit,
-//             'total_pages' => ceil($total_departments / $limit),
-//             'total_departments' => $total_departments
-//         ]
-//     ];
+    // Return success response with sessions data
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'sessions' => $result]));
+}
 
-//     $this->output
-//         ->set_content_type('application/json')
-//         ->set_output(json_encode($response));
-// }
+public function create_session_post() {
+    // Load the database
+    $this->load->database();
+    
+    // Get the session name from the POST request
+    $data = $this->input->post();
 
-public function update_department_post()
-{
+    if (!isset($data['name'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Session name is required']));
+        return;
+    }
+
+    // Set the status to 0
+    $data['status'] = 0;
+
+    // Insert the new session into the database
+    $this->db->insert('sessions', $data);
+    $insert_id = $this->db->insert_id();
+
+    if ($insert_id) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Session created successfully', 'session_id' => $insert_id]));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create session']));
+    }
+}
+
+
+public function edit_session_post() {
+    // Load the database
+    $this->load->database();
+
+    // Get the session data from the POST request
+    $data = $this->input->post();
+
+    // Validation: Ensure 'id', 'name', and 'status' are provided
+    if (!isset($data['id']) || !isset($data['name']) || !isset($data['status'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Session ID, name, and status are required']));
+        return;
+    }
+
+    // Set updated_at to the current date and time
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    // Update the session in the database
+    $this->db->where('id', $data['id']);
+    $updated = $this->db->update('sessions', $data);
+
+    if ($updated) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Session updated successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update session']));
+    }
+}
+
+
+public function delete_session_delete($id) {
+    // Load the database
+    $this->load->database();
+
+    // Validation: Ensure 'id' is provided
+    if (!$id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid session ID']));
+        return;
+    }
+
+    // Delete the session from the database
+    $this->db->where('id', $id);
+    $deleted = $this->db->delete('sessions');
+
+    if ($deleted) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Session deleted successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete session']));
+    }
+}
+
+////
+/////Book issue
+
+
+
+/////////////////////////////////
+//TeAcher Permission//
+public function add_teacher_permission_post() {
+    // Validate the input data
+    if (!$this->input->post('teacher_id') || !$this->input->post('permission_type') || $this->input->post('value') === NULL) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    $data = [
+        'teacher_id' => $this->input->post('teacher_id'),
+        'permission_type' => $this->input->post('permission_type'),
+        'value' => (int)$this->input->post('value'),  // Cast the value to integer
+    ];
+
+    // Check if the permission already exists
+    $this->db->where('teacher_id', $data['teacher_id']);
+    $this->db->where('permission_type', $data['permission_type']);
+    $query = $this->db->get('permissions');
+
+    if ($query->num_rows() > 0) {
+        // Update the existing permission
+        $this->db->where('teacher_id', $data['teacher_id']);
+        $this->db->where('permission_type', $data['permission_type']);
+        $this->db->update('permissions', ['value' => $data['value']]);
+    } else {
+        // Insert a new permission
+        $this->db->insert('permissions', $data);
+    }
+
+    if ($this->db->affected_rows() > 0) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => 'Permission updated successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['error' => 'Failed to update permission']));
+    }
+}
+
+public function teachers_by_class_get($class_id) {
+    // Ensure $class_id is an integer to prevent SQL injection
+    $class_id = (int)$class_id;
+    
+    // Select the required fields from the 'users' table
+    $this->db->select('
+        users.id as user_id,
+        users.name,
+        users.email,
+        users.role,
+        users.address,
+        users.phone,
+        users.birthday,
+        users.gender,
+        users.school_id as user_school_id,
+        users.status
+    ');
+    $this->db->from('users');
+    
+    // Join the 'teachers' table on user_id
+    $this->db->join('teachers', 'teachers.user_id = users.id');
+    
+    // Join the 'teacher_permissions' table on teacher_id
+    $this->db->join('teacher_permissions', 'teacher_permissions.teacher_id = teachers.id');
+    
+    // Join the 'classes' table on class_id
+    $this->db->join('classes', 'teacher_permissions.class_id = classes.id');
+    
+    // Add a where clause to filter by class_id
+    $this->db->where('classes.id', $class_id);
+    
+    // Execute the query
+    $query = $this->db->get();
+    $users = $query->result_array();
+
+    // Append image URL to each user
+    foreach ($users as &$user) {
+        $image_path = 'uploads/users/' . $user['user_id'] . '.jpg'; // Assuming 'user_id' is the unique identifier for each user
+        if (file_exists(FCPATH . $image_path)) {
+            $user['image_url'] = base_url($image_path); // Assuming you're using CodeIgniter and 'base_url' is configured
+        } else {
+            $user['image_url'] = base_url('uploads/users/default.jpg'); // Default image if user image doesn't exist
+        }
+    }
+
+    // Return the result as a JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($users));
+}
+
+public function assign_teacher_permission_to_class_post() {
+    // Log the received POST data for debugging
+    log_message('debug', 'Received POST data: ' . json_encode($this->input->post()));
+
+
+    // Fetch class_id based on class_name
+    $this->db->select('id');
+    $this->db->from('classes');
+    $this->db->where('name', $this->input->post('class_name'));
+    $class_query = $this->db->get();
+
+
+    $class_id = $class_query->row()->id;
+
+    $data = [
+        'teacher_id' => $this->input->post('teacher_id'),
+        'class_id' => $class_id,
+        'section_id' => $this->input->post('section_id') ?? null,
+        'marks' => (int)$this->input->post('marks') ?? 0,
+        'assignment' => (int)$this->input->post('assignment') ?? 0,
+        'attendance' => (int)$this->input->post('attendance') ?? 0,
+        'online_exam' => (int)$this->input->post('online_exam') ?? 0
+    ];
+
+    // Log input data for debugging
+    log_message('debug', 'Assign Permission Data: ' . json_encode($data));
+
+    // Check if the teacher permission already exists for the class and section
+    $this->db->where('teacher_id', $data['teacher_id']);
+    $this->db->where('class_id', $data['class_id']);
+    if ($data['section_id']) {
+        $this->db->where('section_id', $data['section_id']);
+    } else {
+        $this->db->where('section_id', null);
+    }
+    $query = $this->db->get('teacher_permissions');
+
+    if ($query->num_rows() > 0) {
+        // Update the existing teacher permission
+        $this->db->where('teacher_id', $data['teacher_id']);
+        $this->db->where('class_id', $data['class_id']);
+        if ($data['section_id']) {
+            $this->db->where('section_id', $data['section_id']);
+        } else {
+            $this->db->where('section_id', null);
+        }
+        $this->db->update('teacher_permissions', $data);
+    } else {
+        // Insert a new teacher permission
+        $this->db->insert('teacher_permissions', $data);
+    }
+
+    if ($this->db->affected_rows() > 0) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['success' => 'Permission assigned successfully']));
+    } else {
+        $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['success' => 'Permission assigned successfully']));
+    }
+}
+
+public function get_class_id_by_name_get() {
+    $class_name = $this->input->get('name');
+
+    // Fetch class_id based on class_name
+    $this->db->select('id');
+    $this->db->from('classes');
+    $this->db->where('name', $class_name);
+    $class_query = $this->db->get();
+
+    if ($class_query->num_rows() === 0) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid class name']));
+        return;
+    }
+
+    $class_id = $class_query->row()->id;
+
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['class_id' => $class_id]));
+}
+
+
+
+/////////////////
+
+
+//Expense API CALL
+
+public function expense_get($school_id) {
+  $expenses = $this->get_expenses_by_school($school_id);
+
+  if ($expenses === null) {
+      $this->response([
+          'status' => false,
+          'message' => 'No expenses data found for the specified school_id'
+      ], REST_Controller::HTTP_NOT_FOUND);
+  } else {
+      $formatted_expenses = array();
+      foreach ($expenses as $expense) {
+        
+          $category_name = $this->get_category_name($expense['expense_category_id']);
+          
+          $formatted_expenses[] = array(
+              'id' => $expense['id'],
+              'category_id' => $expense['expense_category_id'],
+              'name' => $category_name,
+              'date' => date('Y-m-d', $expense['date']), 
+              'amount' => $expense['amount'],
+              'school_id' => $expense['school_id'],
+              'session' => $expense['session'],
+              'created_at' => date('Y-m-d H:i:s', $expense['created_at']), 
+              'updated_at' => date('Y-m-d H:i:s', $expense['updated_at']), 
+          );
+      }
+      $this->response([
+          'status' => true,
+          'expenses' => $formatted_expenses
+      ], REST_Controller::HTTP_OK);
+  }
+}
+
+public function get_category_name($category_id) {
+  $sql = "SELECT name FROM expense_categories WHERE id = ?";
+  $query = $this->db->query($sql, array($category_id));
+  if ($query->num_rows() > 0) {
+      $row = $query->row();
+      return $row->name;
+  } else {
+      return null;
+  }
+}
+
+public function get_expenses_by_school($school_id) {
+  $sql = "SELECT * FROM expenses WHERE school_id = ?";
+
+  $query = $this->db->query($sql, array($school_id));
+  if ($query->num_rows() > 0) {
+      $expenses = $query->result_array();
+      return $expenses;
+  } else {
+      return null;
+  }
+}
+
+public function expense_categories_get($school_id, $page = 1, $items_per_page = 10) {
+    $offset = ($page - 1) * $items_per_page;
+
+    // Retrieve data from the expense_categories table with pagination
+    $this->db->where('school_id', $school_id);
+    $this->db->limit($items_per_page, $offset);
+    $query = $this->db->get('expense_categories');
+
+    if ($query->num_rows() > 0) {
+        $categories = $query->result_array();
+
+        // Count total items for pagination
+        $this->db->where('school_id', $school_id);
+        $total_items = $this->db->count_all_results('expense_categories');
+
+        // Return response with data and pagination info
+        $response = [
+            'status' => true,
+            'categories' => $categories,
+            'pagination' => [
+                'current_page' => $page,
+                'items_per_page' => $items_per_page,
+                'total_items' => $total_items,
+                'total_pages' => ceil($total_items / $items_per_page)
+            ]
+        ];
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode($response));
+    } else {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No expense categories found']));
+    }
+}
+
+
+public function create_expense_category_post() {
+    // Retrieve data from POST request
+    $name = $this->input->post('name');
+    $school_id = $this->input->post('school_id');
+    $session = $this->input->post('session') ? $this->input->post('session') : 1;
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($this->input->post()));
+
+    // Check if the required data is provided
+    if (!$name || !$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare data to insert
+    $expense_data = [
+        'name' => $name,
+        'school_id' => $school_id,
+        'session' => $session
+    ];
+
+    // Insert data into the expense_categories table
+    $this->db->insert('expense_categories', $expense_data);
+
+    // Check if the insert was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create expense category']));
+        return;
+    }
+
+    // Fetch the created expense category to return
+    $expense_id = $this->db->insert_id();
+    $query = $this->db->get_where('expense_categories', ['id' => $expense_id]);
+    $expense = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'expense_category' => $expense]));
+}
+
+public function edit_expense_category_post() {
     // Retrieve data from POST request
     $id = $this->input->post('id');
     $name = $this->input->post('name');
+    $school_id = $this->input->post('school_id');
+    $session = $this->input->post('session') ? $this->input->post('session') : 1;
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($this->input->post()));
 
     // Check if the required data is provided
-    if (!$id || !$name) {
-
+    if (!$id || !$name || !$school_id) {
         $this->output
             ->set_status_header(400)
             ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
@@ -4550,74 +5916,40 @@ public function update_department_post()
     }
 
     // Prepare data to update
-
-    $exam_data = [
+    $expense_data = [
         'name' => $name,
-        'starting_date' => $starting_date,
-        'ending_date' => $ending_date,
         'school_id' => $school_id,
         'session' => $session
     ];
 
-    // Update data in the exams table
-    $this->db->where('id', $exam_id);
-    $this->db->update('exams', $exam_data);
-
-    $department_data = ['name' => $name];
-
-    // Update data in the departments table
+    // Update data in the expense_categories table
     $this->db->where('id', $id);
-    $this->db->update('departments', $department_data);
-
+    $this->db->update('expense_categories', $expense_data);
 
     // Check if the update was successful
     if ($this->db->affected_rows() == 0) {
-        $this->output ->set_status_header(500)->set_output(json_encode(['status' => false, 'message' => 'Failed to update exam']));
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update expense category']));
         return;
     }
 
-    // Fetch the updated exam to return
-    $query = $this->db->get_where('exams', ['id' => $exam_id]);
-    $exam = $query->row_array();
-
-            // ->set_output(json_encode(['status' => false, 'message' => 'Failed to update department']));
-        // return;
-    // }
-
-    // Fetch the updated department to return
-    $query = $this->db->get_where('departments', ['id' => $id]);
-    $department = $query->row_array();
-
+    // Fetch the updated expense category to return
+    $query = $this->db->get_where('expense_categories', ['id' => $id]);
+    $expense = $query->row_array();
 
     // Return success response
     $this->output
         ->set_content_type('application/json')
-
-        ->set_output(json_encode(['status' => true, 'exam' => $exam]));
+        ->set_output(json_encode(['status' => true, 'expense_category' => $expense]));
 }
 
-
-public function delete_exam_delete($exam_id)
-{
-    // Validate exam_id
-    if (!$exam_id) {
-        $this->output
-            ->set_status_header(400)
-            ->set_output(json_encode(['status' => false, 'message' => 'Invalid exam_id']));
-        return;
-    }
-
-    // Delete the exam
-    $this->db->where('id', $exam_id);
-    $this->db->delete('exams');
-
-        // ->set_output(json_encode(['status' => true, 'department' => $department]));
-}
-
-public function delete_department_post()
-{
+public function delete_expense_category_post() {
     // Retrieve data from POST request
     $id = $this->input->post('id');
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($this->input->post()));
 
     // Check if the required data is provided
     if (!$id) {
@@ -4627,428 +5959,183 @@ public function delete_department_post()
         return;
     }
 
-    // Delete data from the departments table
-    $this->db->where('id', $id);
-    $this->db->delete('departments');
-
+    // Delete the expense category from the expense_categories table
+    $this->db->delete('expense_categories', ['id' => $id]);
 
     // Check if the delete was successful
     if ($this->db->affected_rows() == 0) {
         $this->output
             ->set_status_header(500)
-
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete exam']));
-
-            // ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete department']));
-
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete expense category']));
         return;
     }
 
     // Return success response
     $this->output
         ->set_content_type('application/json')
-
-        ->set_output(json_encode(['status' => true, 'message' => 'Exam deleted successfully']));
+        ->set_output(json_encode(['status' => true, 'message' => 'Expense category deleted successfully']));
 }
 
+public function create_expense_post() {
+    // Retrieve and decode JSON data from POST request
+    $input_data = json_decode(file_get_contents('php://input'), true);
 
+    $expense_category_id = isset($input_data['expense_category_id']) ? $input_data['expense_category_id'] : null;
+    $date = isset($input_data['date']) ? $input_data['date'] : null;
+    $amount = isset($input_data['amount']) ? $input_data['amount'] : null;
+    $school_id = isset($input_data['school_id']) ? $input_data['school_id'] : null;
+    $session = isset($input_data['session']) ? $input_data['session'] : null;
+    $created_at = isset($input_data['created_at']) ? $input_data['created_at'] : null;
+    $updated_at = isset($input_data['updated_at']) ? $input_data['updated_at'] : null;
 
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($input_data));
 
-
-
-//end of Exams
-
-        // ->set_output(json_encode(['status' => true, 'message' => 'Department deleted successfully']));
-// }
-
-
-
-//end of department
-  
-
-
-//Expense API CALL
-
-public function expense_get($school_id) {
-    $expenses = $this->get_expenses_by_school($school_id);
-  
-    if ($expenses === null) {
-        $this->response([
-            'status' => false,
-            'message' => 'No expenses data found for the specified school_id'
-        ], REST_Controller::HTTP_NOT_FOUND);
-    } else {
-        $formatted_expenses = array();
-        foreach ($expenses as $expense) {
-          
-            $category_name = $this->get_category_name($expense['expense_category_id']);
-            
-            $formatted_expenses[] = array(
-                'id' => $expense['id'],
-                'category_id' => $expense['expense_category_id'],
-                'name' => $category_name,
-                'date' => date('Y-m-d', $expense['date']), 
-                'amount' => $expense['amount'],
-                'school_id' => $expense['school_id'],
-                'session' => $expense['session'],
-                'created_at' => date('Y-m-d H:i:s', $expense['created_at']), 
-                'updated_at' => date('Y-m-d H:i:s', $expense['updated_at']), 
-            );
-        }
-        $this->response([
-            'status' => true,
-            'expenses' => $formatted_expenses
-        ], REST_Controller::HTTP_OK);
+    // Check if the required data is provided
+    if (!$expense_category_id || !$date || !$amount || !$school_id || !$session) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
     }
-  }
-  
-  public function get_category_name($category_id) {
-    $sql = "SELECT name FROM expense_categories WHERE id = ?";
-    $query = $this->db->query($sql, array($category_id));
-    if ($query->num_rows() > 0) {
-        $row = $query->row();
-        return $row->name;
-    } else {
-        return null;
+
+    // Prepare data to insert
+    $expense_data = [
+        'expense_category_id' => $expense_category_id,
+        'date' => $date,
+        'amount' => $amount,
+        'school_id' => $school_id,
+        'session' => $session,
+        'created_at' => $created_at ? $created_at : date('Y-m-d H:i:s'),
+        'updated_at' => $updated_at ? $updated_at : null
+    ];
+
+    // Insert data into the expenses table
+    $this->db->insert('expenses', $expense_data);
+
+    // Check if the insert was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create expense']));
+        return;
     }
-  }
-  public function get_expenses_by_school($school_id) {
-    $sql = "SELECT * FROM expenses WHERE school_id = ?";
-  
-    $query = $this->db->query($sql, array($school_id));
+
+    // Fetch the created expense to return
+    $expense_id = $this->db->insert_id();
+    $query = $this->db->get_where('expenses', ['id' => $expense_id]);
+    $expense = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'expense' => $expense]));
+}
+
+public function get_expenses_get($school_id) {
+    // Retrieve data from the expenses table based on school_id
+    $query = $this->db->get_where('expenses', ['school_id' => $school_id]);
+
     if ($query->num_rows() > 0) {
         $expenses = $query->result_array();
-        return $expenses;
+
+        // Return success response with the expenses data
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'expenses' => $expenses]));
     } else {
-        return null;
+        // Return response indicating no expenses found
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No expenses found']));
     }
-  }
-  
-  public function expense_categories_get($school_id, $page = 1, $items_per_page = 10) {
-      $offset = ($page - 1) * $items_per_page;
-  
-      // Retrieve data from the expense_categories table with pagination
-      $this->db->where('school_id', $school_id);
-      $this->db->limit($items_per_page, $offset);
-      $query = $this->db->get('expense_categories');
-  
-      if ($query->num_rows() > 0) {
-          $categories = $query->result_array();
-  
-          // Count total items for pagination
-          $this->db->where('school_id', $school_id);
-          $total_items = $this->db->count_all_results('expense_categories');
-  
-          // Return response with data and pagination info
-          $response = [
-              'status' => true,
-              'categories' => $categories,
-              'pagination' => [
-                  'current_page' => $page,
-                  'items_per_page' => $items_per_page,
-                  'total_items' => $total_items,
-                  'total_pages' => ceil($total_items / $items_per_page)
-              ]
-          ];
-          $this->output
-              ->set_content_type('application/json')
-              ->set_output(json_encode($response));
-      } else {
-          $this->output
-              ->set_status_header(404)
-              ->set_output(json_encode(['status' => false, 'message' => 'No expense categories found']));
-      }
-  }
-  
-  
-  public function create_expense_category_post() {
-      // Retrieve data from POST request
-      $name = $this->input->post('name');
-      $school_id = $this->input->post('school_id');
-      $session = $this->input->post('session') ? $this->input->post('session') : 1;
-  
-      // Log the received data for debugging
-      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
-  
-      // Check if the required data is provided
-      if (!$name || !$school_id) {
-          $this->output
-              ->set_status_header(400)
-              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
-          return;
-      }
-  
-      // Prepare data to insert
-      $expense_data = [
-          'name' => $name,
-          'school_id' => $school_id,
-          'session' => $session
-      ];
-  
-      // Insert data into the expense_categories table
-      $this->db->insert('expense_categories', $expense_data);
-  
-      // Check if the insert was successful
-      if ($this->db->affected_rows() == 0) {
-          $this->output
-              ->set_status_header(500)
-              ->set_output(json_encode(['status' => false, 'message' => 'Failed to create expense category']));
-          return;
-      }
-  
-      // Fetch the created expense category to return
-      $expense_id = $this->db->insert_id();
-      $query = $this->db->get_where('expense_categories', ['id' => $expense_id]);
-      $expense = $query->row_array();
-  
-      // Return success response
-      $this->output
-          ->set_content_type('application/json')
-          ->set_output(json_encode(['status' => true, 'expense_category' => $expense]));
-  }
-  
-  public function edit_expense_category_post() {
-      // Retrieve data from POST request
-      $id = $this->input->post('id');
-      $name = $this->input->post('name');
-      $school_id = $this->input->post('school_id');
-      $session = $this->input->post('session') ? $this->input->post('session') : 1;
-  
-      // Log the received data for debugging
-      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
-  
-      // Check if the required data is provided
-      if (!$id || !$name || !$school_id) {
-          $this->output
-              ->set_status_header(400)
-              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
-          return;
-      }
-  
-      // Prepare data to update
-      $expense_data = [
-          'name' => $name,
-          'school_id' => $school_id,
-          'session' => $session
-      ];
-  
-      // Update data in the expense_categories table
-      $this->db->where('id', $id);
-      $this->db->update('expense_categories', $expense_data);
-  
-      // Check if the update was successful
-      if ($this->db->affected_rows() == 0) {
-          $this->output
-              ->set_status_header(500)
-              ->set_output(json_encode(['status' => false, 'message' => 'Failed to update expense category']));
-          return;
-      }
-  
-      // Fetch the updated expense category to return
-      $query = $this->db->get_where('expense_categories', ['id' => $id]);
-      $expense = $query->row_array();
-  
-      // Return success response
-      $this->output
-          ->set_content_type('application/json')
-          ->set_output(json_encode(['status' => true, 'expense_category' => $expense]));
-  }
-  
-  public function delete_expense_category_post() {
-      // Retrieve data from POST request
-      $id = $this->input->post('id');
-  
-      // Log the received data for debugging
-      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
-  
-      // Check if the required data is provided
-      if (!$id) {
-          $this->output
-              ->set_status_header(400)
-              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
-          return;
-      }
-  
-      // Delete the expense category from the expense_categories table
-      $this->db->delete('expense_categories', ['id' => $id]);
-  
-      // Check if the delete was successful
-      if ($this->db->affected_rows() == 0) {
-          $this->output
-              ->set_status_header(500)
-              ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete expense category']));
-          return;
-      }
-  
-      // Return success response
-      $this->output
-          ->set_content_type('application/json')
-          ->set_output(json_encode(['status' => true, 'message' => 'Expense category deleted successfully']));
-  }
-  
-  public function create_expense_post() {
-      // Retrieve and decode JSON data from POST request
-      $input_data = json_decode(file_get_contents('php://input'), true);
-  
-      $expense_category_id = isset($input_data['expense_category_id']) ? $input_data['expense_category_id'] : null;
-      $date = isset($input_data['date']) ? $input_data['date'] : null;
-      $amount = isset($input_data['amount']) ? $input_data['amount'] : null;
-      $school_id = isset($input_data['school_id']) ? $input_data['school_id'] : null;
-      $session = isset($input_data['session']) ? $input_data['session'] : null;
-      $created_at = isset($input_data['created_at']) ? $input_data['created_at'] : null;
-      $updated_at = isset($input_data['updated_at']) ? $input_data['updated_at'] : null;
-  
-      // Log the received data for debugging
-      log_message('debug', 'Received data: ' . json_encode($input_data));
-  
-      // Check if the required data is provided
-      if (!$expense_category_id || !$date || !$amount || !$school_id || !$session) {
-          $this->output
-              ->set_status_header(400)
-              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
-          return;
-      }
-  
-      // Prepare data to insert
-      $expense_data = [
-          'expense_category_id' => $expense_category_id,
-          'date' => $date,
-          'amount' => $amount,
-          'school_id' => $school_id,
-          'session' => $session,
-          'created_at' => $created_at ? $created_at : date('Y-m-d H:i:s'),
-          'updated_at' => $updated_at ? $updated_at : null
-      ];
-  
-      // Insert data into the expenses table
-      $this->db->insert('expenses', $expense_data);
-  
-      // Check if the insert was successful
-      if ($this->db->affected_rows() == 0) {
-          $this->output
-              ->set_status_header(500)
-              ->set_output(json_encode(['status' => false, 'message' => 'Failed to create expense']));
-          return;
-      }
-  
-      // Fetch the created expense to return
-      $expense_id = $this->db->insert_id();
-      $query = $this->db->get_where('expenses', ['id' => $expense_id]);
-      $expense = $query->row_array();
-  
-      // Return success response
-      $this->output
-          ->set_content_type('application/json')
-          ->set_output(json_encode(['status' => true, 'expense' => $expense]));
-  }
-  
-  public function get_expenses_get($school_id) {
-      // Retrieve data from the expenses table based on school_id
-      $query = $this->db->get_where('expenses', ['school_id' => $school_id]);
-  
-      if ($query->num_rows() > 0) {
-          $expenses = $query->result_array();
-  
-          // Return success response with the expenses data
-          $this->output
-              ->set_content_type('application/json')
-              ->set_output(json_encode(['status' => true, 'expenses' => $expenses]));
-      } else {
-          // Return response indicating no expenses found
-          $this->output
-              ->set_status_header(404)
-              ->set_output(json_encode(['status' => false, 'message' => 'No expenses found']));
-      }
-  }
-  
-  public function edit_expense_post() {
-      // Retrieve data from POST request
-      $id = $this->input->post('id');
-      $expense_category_id = $this->input->post('expense_category_id');
-      $date = $this->input->post('date');
-      $amount = $this->input->post('amount');
-      $school_id = $this->input->post('school_id');
-      $session = $this->input->post('session');
-      $updated_at = $this->input->post('updated_at');
-  
-      // Log the received data for debugging
-      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
-  
-      // Check if the required data is provided
-      if (!$id || !$expense_category_id || !$date || !$amount || !$school_id || !$session) {
-          $this->output
-              ->set_status_header(400)
-              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
-          return;
-      }
-  
-      // Prepare data to update
-      $expense_data = [
-          'expense_category_id' => $expense_category_id,
-          'date' => $date,
-          'amount' => $amount,
-          'school_id' => $school_id,
-          'session' => $session,
-          'updated_at' => $updated_at ? $updated_at : date('Y-m-d H:i:s')
-      ];
-  
-      // Update data in the expenses table
-      $this->db->where('id', $id);
-      $this->db->update('expenses', $expense_data);
-  
-      // Check if the update was successful
-      if ($this->db->affected_rows() == 0) {
-          $this->output
-              ->set_status_header(500)
-              ->set_output(json_encode(['status' => false, 'message' => 'Failed to update expense']));
-          return;
-      }
-  
-      // Fetch the updated expense to return
-      $query = $this->db->get_where('expenses', ['id' => $id]);
-      $expense = $query->row_array();
-  
-      // Return success response
-      $this->output
-          ->set_content_type('application/json')
-          ->set_output(json_encode(['status' => true, 'expense' => $expense]));
-  }
-  
-  public function delete_expense_post() {
-      // Retrieve data from POST request
-      $id = $this->input->post('id');
-  
-      // Log the received data for debugging
-      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
-  
-      // Check if the required data is provided
-      if (!$id) {
-          $this->output
-              ->set_status_header(400)
-              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
-          return;
-      }
-  
-      // Delete the expense from the expenses table
-      $this->db->delete('expenses', ['id' => $id]);
-  
-      // Check if the delete was successful
-      if ($this->db->affected_rows() == 0) {
-          $this->output
-              ->set_status_header(500)
-              ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete expense']));
-          return;
-      }
-  
-      // Return success response
-      $this->output
-          ->set_content_type('application/json')
-          ->set_output(json_encode(['status' => true, 'message' => 'Expense deleted successfully']));
-  }
-  
+}
 
+public function edit_expense_post() {
+    // Retrieve data from POST request
+    $id = $this->input->post('id');
+    $expense_category_id = $this->input->post('expense_category_id');
+    $date = $this->input->post('date');
+    $amount = $this->input->post('amount');
+    $school_id = $this->input->post('school_id');
+    $session = $this->input->post('session');
+    $updated_at = $this->input->post('updated_at');
 
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($this->input->post()));
 
+    // Check if the required data is provided
+    if (!$id || !$expense_category_id || !$date || !$amount || !$school_id || !$session) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare data to update
+    $expense_data = [
+        'expense_category_id' => $expense_category_id,
+        'date' => $date,
+        'amount' => $amount,
+        'school_id' => $school_id,
+        'session' => $session,
+        'updated_at' => $updated_at ? $updated_at : date('Y-m-d H:i:s')
+    ];
+
+    // Update data in the expenses table
+    $this->db->where('id', $id);
+    $this->db->update('expenses', $expense_data);
+
+    // Check if the update was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update expense']));
+        return;
+    }
+
+    // Fetch the updated expense to return
+    $query = $this->db->get_where('expenses', ['id' => $id]);
+    $expense = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'expense' => $expense]));
+}
+
+public function delete_expense_post() {
+    // Retrieve data from POST request
+    $id = $this->input->post('id');
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($this->input->post()));
+
+    // Check if the required data is provided
+    if (!$id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Delete the expense from the expenses table
+    $this->db->delete('expenses', ['id' => $id]);
+
+    // Check if the delete was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete expense']));
+        return;
+    }
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'message' => 'Expense deleted successfully']));
+}
+//End of Expense
 
 //iNVOICES API CALL
 
@@ -5090,6 +6177,7 @@ public function invoices_get($school_id) {
       ], REST_Controller::HTTP_OK);
   }
 }
+
 public function get_invoices_by_school($school_id) {
   $sql = "SELECT invoices.*, users.name AS student_name, classes.name AS class_name
           FROM invoices 
