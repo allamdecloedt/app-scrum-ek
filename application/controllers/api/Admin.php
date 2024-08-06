@@ -2579,61 +2579,383 @@ public function delete_department_post()
 //Expense API CALL
 
 public function expense_get($school_id) {
-  $expenses = $this->get_expenses_by_school($school_id);
-
-  if ($expenses === null) {
-      $this->response([
-          'status' => false,
-          'message' => 'No expenses data found for the specified school_id'
-      ], REST_Controller::HTTP_NOT_FOUND);
-  } else {
-      $formatted_expenses = array();
-      foreach ($expenses as $expense) {
-        
-          $category_name = $this->get_category_name($expense['expense_category_id']);
+    $expenses = $this->get_expenses_by_school($school_id);
+  
+    if ($expenses === null) {
+        $this->response([
+            'status' => false,
+            'message' => 'No expenses data found for the specified school_id'
+        ], REST_Controller::HTTP_NOT_FOUND);
+    } else {
+        $formatted_expenses = array();
+        foreach ($expenses as $expense) {
           
-          $formatted_expenses[] = array(
-              'id' => $expense['id'],
-              'category_id' => $expense['expense_category_id'],
-              'name' => $category_name,
-              'date' => date('Y-m-d', $expense['date']), 
-              'amount' => $expense['amount'],
-              'school_id' => $expense['school_id'],
-              'session' => $expense['session'],
-              'created_at' => date('Y-m-d H:i:s', $expense['created_at']), 
-              'updated_at' => date('Y-m-d H:i:s', $expense['updated_at']), 
-          );
+            $category_name = $this->get_category_name($expense['expense_category_id']);
+            
+            $formatted_expenses[] = array(
+                'id' => $expense['id'],
+                'category_id' => $expense['expense_category_id'],
+                'name' => $category_name,
+                'date' => date('Y-m-d', $expense['date']), 
+                'amount' => $expense['amount'],
+                'school_id' => $expense['school_id'],
+                'session' => $expense['session'],
+                'created_at' => date('Y-m-d H:i:s', $expense['created_at']), 
+                'updated_at' => date('Y-m-d H:i:s', $expense['updated_at']), 
+            );
+        }
+        $this->response([
+            'status' => true,
+            'expenses' => $formatted_expenses
+        ], REST_Controller::HTTP_OK);
+    }
+  }
+  
+  public function get_category_name($category_id) {
+    $sql = "SELECT name FROM expense_categories WHERE id = ?";
+    $query = $this->db->query($sql, array($category_id));
+    if ($query->num_rows() > 0) {
+        $row = $query->row();
+        return $row->name;
+    } else {
+        return null;
+    }
+  }
+  
+  public function get_expenses_by_school($school_id) {
+    $sql = "SELECT * FROM expenses WHERE school_id = ?";
+  
+    $query = $this->db->query($sql, array($school_id));
+    if ($query->num_rows() > 0) {
+        $expenses = $query->result_array();
+        return $expenses;
+    } else {
+        return null;
+    }
+  }
+  
+  public function expense_categories_get($school_id, $page = 1, $items_per_page = 10) {
+      $offset = ($page - 1) * $items_per_page;
+  
+      // Retrieve data from the expense_categories table with pagination
+      $this->db->where('school_id', $school_id);
+      $this->db->limit($items_per_page, $offset);
+      $query = $this->db->get('expense_categories');
+  
+      if ($query->num_rows() > 0) {
+          $categories = $query->result_array();
+  
+          // Count total items for pagination
+          $this->db->where('school_id', $school_id);
+          $total_items = $this->db->count_all_results('expense_categories');
+  
+          // Return response with data and pagination info
+          $response = [
+              'status' => true,
+              'categories' => $categories,
+              'pagination' => [
+                  'current_page' => $page,
+                  'items_per_page' => $items_per_page,
+                  'total_items' => $total_items,
+                  'total_pages' => ceil($total_items / $items_per_page)
+              ]
+          ];
+          $this->output
+              ->set_content_type('application/json')
+              ->set_output(json_encode($response));
+      } else {
+          $this->output
+              ->set_status_header(404)
+              ->set_output(json_encode(['status' => false, 'message' => 'No expense categories found']));
       }
-      $this->response([
-          'status' => true,
-          'expenses' => $formatted_expenses
-      ], REST_Controller::HTTP_OK);
   }
-}
-
-public function get_category_name($category_id) {
-  $sql = "SELECT name FROM expense_categories WHERE id = ?";
-  $query = $this->db->query($sql, array($category_id));
-  if ($query->num_rows() > 0) {
-      $row = $query->row();
-      return $row->name;
-  } else {
-      return null;
+  
+  
+  public function create_expense_category_post() {
+      // Retrieve data from POST request
+      $name = $this->input->post('name');
+      $school_id = $this->input->post('school_id');
+      $session = $this->input->post('session') ? $this->input->post('session') : 1;
+  
+      // Log the received data for debugging
+      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
+  
+      // Check if the required data is provided
+      if (!$name || !$school_id) {
+          $this->output
+              ->set_status_header(400)
+              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+          return;
+      }
+  
+      // Prepare data to insert
+      $expense_data = [
+          'name' => $name,
+          'school_id' => $school_id,
+          'session' => $session
+      ];
+  
+      // Insert data into the expense_categories table
+      $this->db->insert('expense_categories', $expense_data);
+  
+      // Check if the insert was successful
+      if ($this->db->affected_rows() == 0) {
+          $this->output
+              ->set_status_header(500)
+              ->set_output(json_encode(['status' => false, 'message' => 'Failed to create expense category']));
+          return;
+      }
+  
+      // Fetch the created expense category to return
+      $expense_id = $this->db->insert_id();
+      $query = $this->db->get_where('expense_categories', ['id' => $expense_id]);
+      $expense = $query->row_array();
+  
+      // Return success response
+      $this->output
+          ->set_content_type('application/json')
+          ->set_output(json_encode(['status' => true, 'expense_category' => $expense]));
   }
-}
-
-public function get_expenses_by_school($school_id) {
-  $sql = "SELECT * FROM expenses WHERE school_id = ?";
-
-  $query = $this->db->query($sql, array($school_id));
-  if ($query->num_rows() > 0) {
-      $expenses = $query->result_array();
-      return $expenses;
-  } else {
-      return null;
+  
+  public function edit_expense_category_post() {
+      // Retrieve data from POST request
+      $id = $this->input->post('id');
+      $name = $this->input->post('name');
+      $school_id = $this->input->post('school_id');
+      $session = $this->input->post('session') ? $this->input->post('session') : 1;
+  
+      // Log the received data for debugging
+      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
+  
+      // Check if the required data is provided
+      if (!$id || !$name || !$school_id) {
+          $this->output
+              ->set_status_header(400)
+              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+          return;
+      }
+  
+      // Prepare data to update
+      $expense_data = [
+          'name' => $name,
+          'school_id' => $school_id,
+          'session' => $session
+      ];
+  
+      // Update data in the expense_categories table
+      $this->db->where('id', $id);
+      $this->db->update('expense_categories', $expense_data);
+  
+      // Check if the update was successful
+      if ($this->db->affected_rows() == 0) {
+          $this->output
+              ->set_status_header(500)
+              ->set_output(json_encode(['status' => false, 'message' => 'Failed to update expense category']));
+          return;
+      }
+  
+      // Fetch the updated expense category to return
+      $query = $this->db->get_where('expense_categories', ['id' => $id]);
+      $expense = $query->row_array();
+  
+      // Return success response
+      $this->output
+          ->set_content_type('application/json')
+          ->set_output(json_encode(['status' => true, 'expense_category' => $expense]));
   }
-}
-
+  
+  public function delete_expense_category_post() {
+      // Retrieve data from POST request
+      $id = $this->input->post('id');
+  
+      // Log the received data for debugging
+      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
+  
+      // Check if the required data is provided
+      if (!$id) {
+          $this->output
+              ->set_status_header(400)
+              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+          return;
+      }
+  
+      // Delete the expense category from the expense_categories table
+      $this->db->delete('expense_categories', ['id' => $id]);
+  
+      // Check if the delete was successful
+      if ($this->db->affected_rows() == 0) {
+          $this->output
+              ->set_status_header(500)
+              ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete expense category']));
+          return;
+      }
+  
+      // Return success response
+      $this->output
+          ->set_content_type('application/json')
+          ->set_output(json_encode(['status' => true, 'message' => 'Expense category deleted successfully']));
+  }
+  
+  public function create_expense_post() {
+      // Retrieve and decode JSON data from POST request
+      $input_data = json_decode(file_get_contents('php://input'), true);
+  
+      $expense_category_id = isset($input_data['expense_category_id']) ? $input_data['expense_category_id'] : null;
+      $date = isset($input_data['date']) ? $input_data['date'] : null;
+      $amount = isset($input_data['amount']) ? $input_data['amount'] : null;
+      $school_id = isset($input_data['school_id']) ? $input_data['school_id'] : null;
+      $session = isset($input_data['session']) ? $input_data['session'] : null;
+      $created_at = isset($input_data['created_at']) ? $input_data['created_at'] : null;
+      $updated_at = isset($input_data['updated_at']) ? $input_data['updated_at'] : null;
+  
+      // Log the received data for debugging
+      log_message('debug', 'Received data: ' . json_encode($input_data));
+  
+      // Check if the required data is provided
+      if (!$expense_category_id || !$date || !$amount || !$school_id || !$session) {
+          $this->output
+              ->set_status_header(400)
+              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+          return;
+      }
+  
+      // Prepare data to insert
+      $expense_data = [
+          'expense_category_id' => $expense_category_id,
+          'date' => $date,
+          'amount' => $amount,
+          'school_id' => $school_id,
+          'session' => $session,
+          'created_at' => $created_at ? $created_at : date('Y-m-d H:i:s'),
+          'updated_at' => $updated_at ? $updated_at : null
+      ];
+  
+      // Insert data into the expenses table
+      $this->db->insert('expenses', $expense_data);
+  
+      // Check if the insert was successful
+      if ($this->db->affected_rows() == 0) {
+          $this->output
+              ->set_status_header(500)
+              ->set_output(json_encode(['status' => false, 'message' => 'Failed to create expense']));
+          return;
+      }
+  
+      // Fetch the created expense to return
+      $expense_id = $this->db->insert_id();
+      $query = $this->db->get_where('expenses', ['id' => $expense_id]);
+      $expense = $query->row_array();
+  
+      // Return success response
+      $this->output
+          ->set_content_type('application/json')
+          ->set_output(json_encode(['status' => true, 'expense' => $expense]));
+  }
+  
+  public function get_expenses_get($school_id) {
+      // Retrieve data from the expenses table based on school_id
+      $query = $this->db->get_where('expenses', ['school_id' => $school_id]);
+  
+      if ($query->num_rows() > 0) {
+          $expenses = $query->result_array();
+  
+          // Return success response with the expenses data
+          $this->output
+              ->set_content_type('application/json')
+              ->set_output(json_encode(['status' => true, 'expenses' => $expenses]));
+      } else {
+          // Return response indicating no expenses found
+          $this->output
+              ->set_status_header(404)
+              ->set_output(json_encode(['status' => false, 'message' => 'No expenses found']));
+      }
+  }
+  
+  public function edit_expense_post() {
+      // Retrieve data from POST request
+      $id = $this->input->post('id');
+      $expense_category_id = $this->input->post('expense_category_id');
+      $date = $this->input->post('date');
+      $amount = $this->input->post('amount');
+      $school_id = $this->input->post('school_id');
+      $session = $this->input->post('session');
+      $updated_at = $this->input->post('updated_at');
+  
+      // Log the received data for debugging
+      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
+  
+      // Check if the required data is provided
+      if (!$id || !$expense_category_id || !$date || !$amount || !$school_id || !$session) {
+          $this->output
+              ->set_status_header(400)
+              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+          return;
+      }
+  
+      // Prepare data to update
+      $expense_data = [
+          'expense_category_id' => $expense_category_id,
+          'date' => $date,
+          'amount' => $amount,
+          'school_id' => $school_id,
+          'session' => $session,
+          'updated_at' => $updated_at ? $updated_at : date('Y-m-d H:i:s')
+      ];
+  
+      // Update data in the expenses table
+      $this->db->where('id', $id);
+      $this->db->update('expenses', $expense_data);
+  
+      // Check if the update was successful
+      if ($this->db->affected_rows() == 0) {
+          $this->output
+              ->set_status_header(500)
+              ->set_output(json_encode(['status' => false, 'message' => 'Failed to update expense']));
+          return;
+      }
+  
+      // Fetch the updated expense to return
+      $query = $this->db->get_where('expenses', ['id' => $id]);
+      $expense = $query->row_array();
+  
+      // Return success response
+      $this->output
+          ->set_content_type('application/json')
+          ->set_output(json_encode(['status' => true, 'expense' => $expense]));
+  }
+  
+  public function delete_expense_post() {
+      // Retrieve data from POST request
+      $id = $this->input->post('id');
+  
+      // Log the received data for debugging
+      log_message('debug', 'Received data: ' . json_encode($this->input->post()));
+  
+      // Check if the required data is provided
+      if (!$id) {
+          $this->output
+              ->set_status_header(400)
+              ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+          return;
+      }
+  
+      // Delete the expense from the expenses table
+      $this->db->delete('expenses', ['id' => $id]);
+  
+      // Check if the delete was successful
+      if ($this->db->affected_rows() == 0) {
+          $this->output
+              ->set_status_header(500)
+              ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete expense']));
+          return;
+      }
+  
+      // Return success response
+      $this->output
+          ->set_content_type('application/json')
+          ->set_output(json_encode(['status' => true, 'message' => 'Expense deleted successfully']));
+  }
+  
 
 
 

@@ -134,6 +134,17 @@ $route['api/UpdateDepartment'] = 'api/Admin/update_department';
 $route['api/DeleteDepartment'] = 'api/Admin/delete_department';
 
 
+$route['api/getexpenses/(:num)'] = 'api/Admin/expense/$1';
+$route['api/CreateExpenseCategory'] = 'api/Admin/create_expense_category';
+$route['api/EditExpenseCategory'] = 'api/Admin/edit_expense_category';
+$route['api/DeleteExpenseCategory'] = 'api/Admin/delete_expense_category';
+$route['api/GetExpenseCategories/(:num)/(:num)/(:num)'] = 'api/Admin/expense_categories/$1/$2/$3';
+$route['api/GetExpenses/(:num)'] = 'api/Admin/get_expenses/$1';
+$route['api/CreateExpense'] = 'api/Admin/create_expense';
+$route['api/EditExpense'] = 'api/Admin/edit_expense';
+$route['api/DeleteExpense'] = 'api/Admin/delete_expense';
+
+
 $route['api/GetSessions'] = 'api/Admin/sessions';
 $route['api/CreateSession'] = 'api/Admin/create_session';
 $route['api/EditSession'] = 'api/Admin/edit_session';
