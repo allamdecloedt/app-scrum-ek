@@ -2001,7 +2001,142 @@ public function get_class_id_by_name_get() {
 
 /////////////////
 
+//Create Class
 
+public function class_create_post() {
+    // Get input data
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate input data
+    if (!isset($data['name']) || !isset($data['school_id'])) {
+        $response = array('status' => false, 'message' => 'Missing required fields: name or school_id');
+        echo json_encode($response);
+        return;
+    }
+
+    // Prepare data for insertion
+    $class_data = array(
+        'name' => $data['name'],
+        'school_id' => $data['school_id'],
+        'price' => isset($data['price']) ? $data['price'] : NULL
+    );
+
+    // Insert data directly in the controller
+    $this->db->insert('classes', $class_data);
+    $insert_id = $this->db->insert_id();
+
+    // Prepare response
+    if ($insert_id) {
+        $response = array('status' => true, 'message' => 'Class created successfully', 'class_id' => $insert_id);
+    } else {
+        $response = array('status' => false, 'message' => 'Failed to create class');
+    }
+
+    // Output response
+    echo json_encode($response);
+}
+
+public function class_update_put() {
+    // Get input data
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate input data
+    if (!isset($data['id']) || !isset($data['name']) || !isset($data['school_id'])) {
+        $response = array('status' => false, 'message' => 'Missing required fields: id, name or school_id');
+        echo json_encode($response);
+        return;
+    }
+
+    // Prepare data for update
+    $class_data = array(
+        'name' => $data['name'],
+        'school_id' => $data['school_id'],
+        'price' => isset($data['price']) ? $data['price'] : NULL
+    );
+
+    // Update class
+    $this->db->where('id', $data['id']);
+    $update = $this->db->update('classes', $class_data);
+
+    // Prepare response
+    if ($update) {
+        $response = array('status' => true, 'message' => 'Class updated successfully');
+    } else {
+        $response = array('status' => false, 'message' => 'Failed to update class');
+    }
+
+    // Output response
+    echo json_encode($response);
+}
+
+public function class_del_delete() {
+    // Get input data
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate input data
+    if (!isset($data['id'])) {
+        $response = array('status' => false, 'message' => 'Missing required field: id');
+        echo json_encode($response);
+        return;
+    }
+
+    // Delete class
+    $this->db->where('id', $data['id']);
+    $delete = $this->db->delete('classes');
+
+    // Prepare response
+    if ($delete) {
+        $response = array('status' => true, 'message' => 'Class deleted successfully');
+    } else {
+        $response = array('status' => false, 'message' => 'Failed to delete class');
+    }
+
+    // Output response
+    echo json_encode($response);
+}
+
+
+public function class_get() {
+    // Get pagination parameters from the request
+    $limit = $this->input->get('limit') ? intval($this->input->get('limit')) : 8;
+    $offset = $this->input->get('offset') ? intval($this->input->get('offset')) : 0;
+
+    // Get all classes with the corresponding school name, applying limit and offset for pagination
+    $this->db->select('classes.*, schools.name as school_name');
+    $this->db->from('classes');
+    $this->db->join('schools', 'schools.id = classes.school_id');
+    $this->db->limit($limit, $offset);
+    $query = $this->db->get();
+    $classes = $query->result_array();
+
+    // Get sections assigned to each class
+    foreach ($classes as &$class) {
+        $this->db->where('class_id', $class['id']);
+        $section_query = $this->db->get('sections');
+        $sections = $section_query->result_array();
+        $class['sections'] = $sections;
+    }
+
+    // Get the total number of classes for pagination purposes
+    $this->db->from('classes');
+    $total_classes = $this->db->count_all_results();
+
+    // Prepare response
+    $response = array(
+        'status' => true,
+        'data' => $classes,
+        'total' => $total_classes,
+        'limit' => $limit,
+        'offset' => $offset
+    );
+
+    // Output response
+    echo json_encode($response);
+}
+
+
+
+//////
 //Expense API CALL
 
 public function expense_get($school_id) {
