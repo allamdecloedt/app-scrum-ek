@@ -2001,7 +2001,137 @@ public function get_class_id_by_name_get() {
 
 /////////////////
 
+////BOOKS
 
+public function books_by_school_id_get($school_id, $page = 1)
+{
+    // Validate school_id
+    if (!$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid school_id']));
+        return;
+    }
+
+    // Set pagination parameters
+    if ($page < 1) {
+        $page = 1;
+    }
+    $limit = 6; // Number of books per page
+    $offset = ($page - 1) * $limit;
+
+    // Fetch books by school_id with pagination
+    $this->db->select('*');
+    $this->db->from('books');
+    $this->db->where('school_id', $school_id);
+    $this->db->limit($limit, $offset);
+    $query = $this->db->get();
+    $result = $query->result_array();
+
+    // Check if any books found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No books found']));
+        return;
+    }
+
+    // Fetch the total number of books for the school
+    $this->db->where('school_id', $school_id);
+    $this->db->from('books');
+    $total_books = $this->db->count_all_results();
+
+    // Return success response with books and total count
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'books' => $result, 'total' => $total_books]));
+}
+
+public function create_book_post()
+{
+    $data = $this->input->post();
+
+    if (!isset($data['school_id']) || !isset($data['name']) || !isset($data['author']) || !isset($data['copies'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete book data']));
+        return;
+    }
+
+    // Set session to 2 and add current date and time
+    $data['session'] = 2;
+    $data['created_at'] = date('Y-m-d H:i:s');
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $this->db->insert('books', $data);
+    $insert_id = $this->db->insert_id();
+
+    if ($insert_id) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Book created successfully', 'book_id' => $insert_id]));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create book']));
+    }
+}
+
+
+public function edit_book_post()
+{
+    $data = $this->input->post();
+
+    if (!isset($data['id']) || !isset($data['school_id']) || !isset($data['name']) || !isset($data['author']) || !isset($data['copies'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Incomplete book data']));
+        return;
+    }
+
+    // Set updated_at to the current date and time
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    $this->db->where('id', $data['id']);
+    $updated = $this->db->update('books', $data);
+
+    if ($updated) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Book updated successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update book']));
+    }
+}
+
+
+public function delete_book_delete($id)
+{
+    if (!$id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid book ID']));
+        return;
+    }
+
+    $this->db->where('id', $id);
+    $deleted = $this->db->delete('books');
+
+    if ($deleted) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Book deleted successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete book']));
+    }
+}
+
+
+////
 //Expense API CALL
 
 public function expense_get($school_id) {
