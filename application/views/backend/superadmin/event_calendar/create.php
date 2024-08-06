@@ -1,4 +1,6 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('event_calendar/create'); ?>">
+
+    <input type="hidden" name="school_id" id="school_id" value="<?php echo $this->session->userdata('school_id'); ?>">
   <div class="form-row">
     <div class="form-group mb-1">
       <label for="title"><?php echo get_phrase('event_title'); ?></label>

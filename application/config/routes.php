@@ -118,3 +118,10 @@ $route['api/GetBooks/(:num)/(:num)'] = 'api/Admin/books_by_school_id/$1/$2';
 $route['api/CreateBook'] = 'api/Admin/create_book';
 $route['api/EditBook'] = 'api/Admin/edit_book';
 $route['api/DeleteBook/(:num)'] = 'api/Admin/delete_book/$1';
+
+
+$route['api/GetSessions'] = 'api/Admin/sessions';
+$route['api/CreateSession'] = 'api/Admin/create_session';
+$route['api/EditSession'] = 'api/Admin/edit_session';
+$route['api/DeleteSession/(:num)'] = 'api/Admin/delete_session/$1';
+

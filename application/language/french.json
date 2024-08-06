@@ -1291,5 +1291,20 @@
     "discover_our_courses": "Discover our courses",
     "public": "Public",
     "enrolled": "Enrolled",
-    "online_admission_school": "Online admission school"
+    "online_admission_school": "Online admission school",
+    "start_your_journey": "Start your journey",
+    "school_admission": "School admission",
+    "school_information": "School information",
+    "adress": "Adress",
+    "private": "Private",
+    "loading_image": "Loading image",
+    "school_image": "School image",
+    "choose_a_file": "Choose a file",
+    "personal_information": "Personal information",
+    "full_name": "Full name",
+    "apply": "Apply",
+    "schools": "Schools",
+    "join_": "Join ",
+    "class_price": "Class price",
+    "provide_class_price": "Provide class price"
 }

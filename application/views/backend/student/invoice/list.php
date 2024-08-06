@@ -14,7 +14,7 @@
     </tr>
   </thead>
   <tbody>
-    <?php $invoices = $this->crud_model->get_invoice_by_student_id($student_data['id'])->result_array();
+    <?php $invoices = $this->crud_model->get_invoice_by_student_id($student_data['code'])->result_array();
     foreach ($invoices as $invoice):
       $class_details = $this->crud_model->get_class_details_by_id($invoice['class_id'])->row_array(); ?>
       <tr>
