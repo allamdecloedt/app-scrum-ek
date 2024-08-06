@@ -221,7 +221,7 @@
 										<?php
 											$total_amount_in_this_invoice = $invoice_details['total_amount'] - $invoice_details['paid_amount'];
 										?>
-										<?php echo currency($total_amount_in_this_invoice); ?>
+										<?php echo currency_payment($total_amount_in_this_invoice,$invoice_details['school_id']); ?>
 									</span>
 								</span>
 								<span class="by-owner">
@@ -230,7 +230,7 @@
 							</p>
 						</div>
 						<div class="w-100 float-start mt-4 indicated-price">
-							<div class="float-end total-price"><?php echo currency($total_amount_in_this_invoice); ?></div>
+							<div class="float-end total-price"><?php echo currency_payment($total_amount_in_this_invoice,$invoice_details['school_id']); ?></div>
 							<div class="float-end total">
 								<?php if($invoice_details['paid_amount'] > 0): ?>
 									<?php echo get_phrase('due'); ?>
