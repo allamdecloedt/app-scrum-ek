@@ -114,6 +114,11 @@ $route['api/assign_teacher_permission_to_class']= 'api/Admin/assign_teacher_perm
 $route['api/get_class_id_by_name']= 'api/Admin/get_class_id_by_name';
 
 
+$route['api/GetBooks/(:num)/(:num)'] = 'api/Admin/books_by_school_id/$1/$2';
+$route['api/CreateBook'] = 'api/Admin/create_book';
+$route['api/EditBook'] = 'api/Admin/edit_book';
+$route['api/DeleteBook/(:num)'] = 'api/Admin/delete_book/$1';
+
 
 
 $route['api/GetGrades/(:num)/(:num)'] = 'api/Admin/grades_by_school_id/$1/$2';
