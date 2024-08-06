@@ -16,12 +16,14 @@
             <div class="row mt-3">
                 <div class="col-md-1 mb-1"></div>
                 <div class="col-md-2 mb-1">
-                    <select name="exam" id="exam_id" class="form-control select2" data-toggle = "select2" required>
+                   <select name="exam" id="exam_id" class="form-control select2" data-toggle = "select2" required>
                         <option value=""><?php echo get_phrase('select_a_exam'); ?></option>
-                        <?php $school_id = school_id();
+                        <?php 
+                        $user_id = $this->session->userdata('user_id');
+                        $school_id = $this->db->get_where('users', array('id' => $user_id))->row('school_id');
                         $exams = $this->db->get_where('exams', array('school_id' => $school_id, 'session' => active_session()))->result_array();
                         foreach($exams as $exam){ ?>
-                            <option value="<?php echo $exam['id']; ?>"><?php echo $exam['name'];?></option>
+                            <option value="<?php echo $exam['id']; ?>"><?php echo $exam['name'];?>fff</option>
                         <?php } ?>
                     </select>
                 </div>
@@ -29,8 +31,8 @@
                     <select name="class" id="class_id_mark" class="form-control select2" data-toggle = "select2" required onchange="classWiseSection(this.value)">
                         <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                         <?php
-                        $classes = $this->db->get_where('classes', array('school_id' => school_id()))->result_array();
-                        $school_id = school_id();
+                        $classes = $this->db->get_where('classes', array('school_id' =>  $school_id))->result_array();
+                        // $school_id = school_id();
                         foreach($classes as $class){
                             $this->db->where('class_id', $class['id']);
                             $this->db->where('school_id', $school_id);
