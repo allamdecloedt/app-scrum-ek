@@ -9,7 +9,7 @@
 </div>
 <?php
 $school_id = school_id();
-$marks = $this->crud_model->get_marks($class_id, $section_id, $subject_id, $exam_id)->result_array();
+$marks = $this->crud_model->get_marks($class_id, $section_id, $subject_id, $exam_id, $school_id )->result_array();
 $check_permission = has_permission($class_id, $section_id, 'marks');
 ?>
 <?php if ($check_permission): ?>

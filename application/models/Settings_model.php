@@ -187,13 +187,14 @@ class Settings_model extends CI_Model
     $data['system_currency'] = htmlspecialchars($this->input->post('system_currency'));
     $data['currency_position'] = htmlspecialchars($this->input->post('currency_position'));
 
-    $user_id = $this->session->userdata('user_id');
-    if (strtolower($this->db->get_where('users', array('id' => $user_id))->row('role')) == 'admin') {
-      $this->db->where('school_id', school_id());
-      $this->db->update('settings_school', $data);
-    } else {
-      $this->db->where('id', 1);
-      $this->db->update('settings', $data);
+    $user_id =  $this->session->userdata('user_id');
+    if (strtolower($this->db->get_where('users', array('id' => $user_id))->row('role')) == 'admin'){
+          $this->db->where('school_id', school_id());
+          $this->db->update('settings_school', $data);
+    }else{
+          $this->db->where('id', 1);
+          $this->db->update('settings_school', $data);
+
     }
 
     $response = array(

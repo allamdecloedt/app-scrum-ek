@@ -119,3 +119,31 @@ $route['api/CreateEvent'] = 'api/Admin/create_event';
 $route['api/GetEvent/(:num)']= 'api/Admin/events_by_school_id/$1';
 $route['api/DeleteEvent/(:num)']= 'api/Admin/delete_event/$1';
 $route['api/EditEvent/(:num)']= 'api/Admin/edit_event/$1';
+
+
+$route['api/GetBooks/(:num)/(:num)'] = 'api/Admin/books_by_school_id/$1/$2';
+$route['api/CreateBook'] = 'api/Admin/create_book';
+$route['api/EditBook'] = 'api/Admin/edit_book';
+$route['api/DeleteBook/(:num)'] = 'api/Admin/delete_book/$1';
+
+
+
+$route['api/GetGrades/(:num)/(:num)'] = 'api/Admin/grades_by_school_id/$1/$2';
+$route['api/CreateGrade'] = 'api/Admin/create_grade';
+$route['api/EditGrade'] = 'api/Admin/edit_grade';
+$route['api/DeleteGrade/(:num)'] = 'api/Admin/delete_grade/$1';
+
+
+
+$route['api/CreateDepartment'] = 'api/Admin/create_department';
+$route['api/GetDepartments/(:num)']= 'api/Admin/departments_by_school_id/$1';
+$route['api/UpdateDepartment'] = 'api/Admin/update_department';
+$route['api/DeleteDepartment'] = 'api/Admin/delete_department';
+
+
+$route['api/GetSessions'] = 'api/Admin/sessions';
+$route['api/CreateSession'] = 'api/Admin/create_session';
+$route['api/EditSession'] = 'api/Admin/edit_session';
+$route['api/DeleteSession/(:num)'] = 'api/Admin/delete_session/$1';
+
+
