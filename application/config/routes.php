@@ -116,16 +116,25 @@ $route['api/get_class_id_by_name']= 'api/Admin/get_class_id_by_name';
 
 
 
+
 $route['api/CreateSubject'] = 'api/Admin/create_subject';
 $route['api/GetClassBySchoolId/(:num)'] = 'api/Admin/get_classes_by_school_id/$1';
 $route['api/GetSubjectsBySchoolId/(:num)'] = 'api/Admin/get_subjects_by_school_id/$1';
 $route['api/GetCorrectAnswers/(:num)'] = 'api/Admin/all_quiz_responses/$1 ';
 
 
+$route['api/CreateEvent'] = 'api/Admin/create_event';
+$route['api/GetEvent/(:num)']= 'api/Admin/events_by_school_id/$1';
+$route['api/DeleteEvent/(:num)']= 'api/Admin/delete_event/$1';
+$route['api/EditEvent/(:num)']= 'api/Admin/edit_event/$1';
+
+
+
 $route['api/GetExams/(:num)/(:num)'] = 'api/Admin/exams_by_school_id/$1/$2';
 $route['api/CreateExams'] = 'api/Admin/create_exam';
 $route['api/EditExams'] = 'api/Admin/edit_exam';
 $route['api/DeleteExams/(:num)'] = 'api/Admin/delete_exam/$1';
+
 
 
 $route['api/GetBooks/(:num)/(:num)'] = 'api/Admin/books_by_school_id/$1/$2';
