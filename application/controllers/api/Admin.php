@@ -2000,7 +2000,148 @@ public function get_class_id_by_name_get() {
 
 
 /////////////////
+//Exams Part
 
+
+
+public function create_exam_post()
+{
+    // Retrieve data from POST request
+    $name = $this->input->post('name');
+    $starting_date = $this->input->post('starting_date');
+    $ending_date = $this->input->post('ending_date');
+    $school_id = $this->input->post('school_id');
+    $session = $this->input->post('session') ?? 2;
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($_POST));
+
+    // Check if the required data is provided
+    if (!$name || !$starting_date || !$ending_date || !$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare data to insert
+    $exam_data = [
+        'name' => $name,
+        'starting_date' => $starting_date,
+        'ending_date' => $ending_date,
+        'school_id' => $school_id,
+        'session' => $session
+    ];
+
+    // Insert data into the exams table
+    $this->db->insert('exams', $exam_data);
+
+    // Check if the insert was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create exam']));
+        return;
+    }
+
+    // Fetch the created exam to return
+    $exam_id = $this->db->insert_id();
+    $query = $this->db->get_where('exams', ['id' => $exam_id]);
+    $exam = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'exam' => $exam]));
+}
+
+public function edit_exam_post()
+{
+    // Retrieve data from POST request
+    $exam_id = $this->input->post('id');
+    $name = $this->input->post('name');
+    $starting_date = $this->input->post('starting_date');
+    $ending_date = $this->input->post('ending_date');
+    $school_id = $this->input->post('school_id');
+    $session = $this->input->post('session') ?? 1;
+
+    // Log the received data for debugging
+    log_message('debug', 'Received data: ' . json_encode($_POST));
+
+    // Check if the required data is provided
+    if (!$exam_id || !$name || !$starting_date || !$ending_date || !$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid input data']));
+        return;
+    }
+
+    // Prepare data to update
+    $exam_data = [
+        'name' => $name,
+        'starting_date' => $starting_date,
+        'ending_date' => $ending_date,
+        'school_id' => $school_id,
+        'session' => $session
+    ];
+
+    // Update data in the exams table
+    $this->db->where('id', $exam_id);
+    $this->db->update('exams', $exam_data);
+
+    // Check if the update was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update exam']));
+        return;
+    }
+
+    // Fetch the updated exam to return
+    $query = $this->db->get_where('exams', ['id' => $exam_id]);
+    $exam = $query->row_array();
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'exam' => $exam]));
+}
+
+
+public function delete_exam_delete($exam_id)
+{
+    // Validate exam_id
+    if (!$exam_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid exam_id']));
+        return;
+    }
+
+    // Delete the exam
+    $this->db->where('id', $exam_id);
+    $this->db->delete('exams');
+
+    // Check if the delete was successful
+    if ($this->db->affected_rows() == 0) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete exam']));
+        return;
+    }
+
+    // Return success response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'message' => 'Exam deleted successfully']));
+}
+
+
+
+
+
+
+//end of Exams
 
 //Expense API CALL
 
