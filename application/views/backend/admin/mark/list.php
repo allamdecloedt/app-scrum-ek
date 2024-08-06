@@ -9,7 +9,7 @@
 </div>
 <?php
 $school_id = school_id();
-$marks = $this->crud_model->get_marks($class_id, $section_id, $subject_id, $exam_id)->result_array();
+$marks = $this->crud_model->get_marks($class_id, $section_id, $subject_id, $exam_id, $school_id )->result_array();
 ?>
 <?php if (count($marks) > 0): ?>
     <table class="table table-bordered table-responsive-sm" width="100%">
