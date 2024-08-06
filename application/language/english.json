@@ -1341,5 +1341,7 @@
     "join_": "Join ",
     "select_currency": "Select currency",
     "currency": "Currency",
-    "phone_number_not_found": "Phone number not found"
+    "phone_number_not_found": "Phone number not found",
+    "update_exam_info": "Update exam info",
+    "delete_exam": "Delete exam"
 }

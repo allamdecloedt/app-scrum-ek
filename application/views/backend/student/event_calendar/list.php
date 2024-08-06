@@ -33,14 +33,14 @@
 							<?php
 							foreach($student_datas as $student_data){
 								$enrols_datas = $this->db->get_where('enrols', array('student_id' => $student_data['id'],'school_id' => $student_data['school_id']))->num_rows();
-
+								$school_name = $this->db->get_where('schools', array('id' => $student_data['school_id']))->row('name');
 								if($enrols_datas > 0){
 								$event_calendars = $this->db->get_where('event_calendars', array('school_id' => $student_data['school_id'], 'session' => active_session()))->result_array();
 								
 								foreach($event_calendars as $event_calendar){
 								?>
 								<tr>
-									<td><?php echo $event_calendar['title']; ?></td>
+									<td><?php echo $event_calendar['title'] ." - ".$school_name; ?></td>
 									<td><?php echo date('D, d M Y', strtotime($event_calendar['starting_date'])); ?></td>
 									<td><?php echo date('D, d M Y', strtotime($event_calendar['ending_date'])); ?></td>
 								</tr>
