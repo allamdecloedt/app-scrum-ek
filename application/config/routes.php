@@ -121,6 +121,13 @@ $route['api/DeleteEvent/(:num)']= 'api/Admin/delete_event/$1';
 $route['api/EditEvent/(:num)']= 'api/Admin/edit_event/$1';
 
 
+$route['api/GetExams/(:num)/(:num)'] = 'api/Admin/exams_by_school_id/$1/$2';
+$route['api/CreateExams'] = 'api/Admin/create_exam';
+$route['api/EditExams'] = 'api/Admin/edit_exam';
+$route['api/DeleteExams/(:num)'] = 'api/Admin/delete_exam/$1';
+
+
+
 $route['api/GetBooks/(:num)/(:num)'] = 'api/Admin/books_by_school_id/$1/$2';
 $route['api/CreateBook'] = 'api/Admin/create_book';
 $route['api/EditBook'] = 'api/Admin/edit_book';
@@ -139,6 +146,17 @@ $route['api/CreateDepartment'] = 'api/Admin/create_department';
 $route['api/GetDepartments/(:num)']= 'api/Admin/departments_by_school_id/$1';
 $route['api/UpdateDepartment'] = 'api/Admin/update_department';
 $route['api/DeleteDepartment'] = 'api/Admin/delete_department';
+
+
+$route['api/getexpenses/(:num)'] = 'api/Admin/expense/$1';
+$route['api/CreateExpenseCategory'] = 'api/Admin/create_expense_category';
+$route['api/EditExpenseCategory'] = 'api/Admin/edit_expense_category';
+$route['api/DeleteExpenseCategory'] = 'api/Admin/delete_expense_category';
+$route['api/GetExpenseCategories/(:num)/(:num)/(:num)'] = 'api/Admin/expense_categories/$1/$2/$3';
+$route['api/GetExpenses/(:num)'] = 'api/Admin/get_expenses/$1';
+$route['api/CreateExpense'] = 'api/Admin/create_expense';
+$route['api/EditExpense'] = 'api/Admin/edit_expense';
+$route['api/DeleteExpense'] = 'api/Admin/delete_expense';
 
 
 $route['api/GetSessions'] = 'api/Admin/sessions';
