@@ -2000,7 +2000,130 @@ public function get_class_id_by_name_get() {
 
 
 /////////////////
+////Sesion Manager
+public function sessions_get() {
+    $this->load->database();
 
+    // Fetch all sessions from the database
+    $query = $this->db->get('sessions');
+    $result = $query->result_array();
+
+    // Check if any sessions found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'No sessions found']));
+        return;
+    }
+
+    // Return success response with sessions data
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'sessions' => $result]));
+}
+
+public function create_session_post() {
+    // Load the database
+    $this->load->database();
+    
+    // Get the session name from the POST request
+    $data = $this->input->post();
+
+    if (!isset($data['name'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Session name is required']));
+        return;
+    }
+
+    // Set the status to 0
+    $data['status'] = 0;
+
+    // Insert the new session into the database
+    $this->db->insert('sessions', $data);
+    $insert_id = $this->db->insert_id();
+
+    if ($insert_id) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Session created successfully', 'session_id' => $insert_id]));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to create session']));
+    }
+}
+
+
+public function edit_session_post() {
+    // Load the database
+    $this->load->database();
+
+    // Get the session data from the POST request
+    $data = $this->input->post();
+
+    // Validation: Ensure 'id', 'name', and 'status' are provided
+    if (!isset($data['id']) || !isset($data['name']) || !isset($data['status'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Session ID, name, and status are required']));
+        return;
+    }
+
+    // Set updated_at to the current date and time
+    $data['updated_at'] = date('Y-m-d H:i:s');
+
+    // Update the session in the database
+    $this->db->where('id', $data['id']);
+    $updated = $this->db->update('sessions', $data);
+
+    if ($updated) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Session updated successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update session']));
+    }
+}
+
+
+public function delete_session_delete($id) {
+    // Load the database
+    $this->load->database();
+
+    // Validation: Ensure 'id' is provided
+    if (!$id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid session ID']));
+        return;
+    }
+
+    // Delete the session from the database
+    $this->db->where('id', $id);
+    $deleted = $this->db->delete('sessions');
+
+    if ($deleted) {
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'message' => 'Session deleted successfully']));
+    } else {
+        $this->output
+            ->set_status_header(500)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete session']));
+    }
+}
+
+////End session manager
 
 //Expense API CALL
 

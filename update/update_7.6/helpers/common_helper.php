@@ -156,7 +156,8 @@ if (!function_exists('currency')) {
   {
     $CI  = &get_instance();
     $CI->load->database();
-    $settings_data = $CI->db->get_where('settings', array('id' => 1))->row_array();
+    // return $CI->session->userdata('school_id') ;
+    $settings_data = $CI->db->get_where('settings_school', array('school_id' => $CI->session->userdata('school_id') ))->row_array();
     $currency_code = $settings_data['system_currency'];
 
     $CI->db->where('code', $currency_code);

@@ -196,6 +196,32 @@ if (!function_exists('currency')) {
   }
 }
 
+// Currency helpers
+if (!function_exists('currency_payment')) {
+  function currency_payment($price = "",$school_id= "" )
+  {
+    $CI  = &get_instance();
+    $CI->load->database();
+    $settings_data = $CI->db->get_where('settings_school', array('school_id ' => $school_id ))->row_array();
+    $currency_code = $settings_data['system_currency'];
+
+    $CI->db->where('code', $currency_code);
+    $symbol = $CI->db->get('currencies')->row()->symbol;
+
+    $position = $settings_data['currency_position'];
+
+    if ($position == 'right') {
+      return $price . $symbol;
+    } elseif ($position == 'right-space') {
+      return $price . ' ' . $symbol;
+    } elseif ($position == 'left') {
+      return $symbol . $price;
+    } elseif ($position == 'left-space') {
+      return $symbol . ' ' . $price;
+    }
+  }
+}
+
 if (!function_exists('currency_code_and_symbol')) {
   function currency_code_and_symbol($type = "")
   {

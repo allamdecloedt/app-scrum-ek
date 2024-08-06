@@ -114,6 +114,7 @@ $route['api/assign_teacher_permission_to_class']= 'api/Admin/assign_teacher_perm
 $route['api/get_class_id_by_name']= 'api/Admin/get_class_id_by_name';
 
 
+
 $route['api/getexpenses/(:num)'] = 'api/Admin/expense/$1';
 $route['api/CreateExpenseCategory'] = 'api/Admin/create_expense_category';
 $route['api/EditExpenseCategory'] = 'api/Admin/edit_expense_category';
@@ -123,3 +124,10 @@ $route['api/GetExpenses/(:num)'] = 'api/Admin/get_expenses/$1';
 $route['api/CreateExpense'] = 'api/Admin/create_expense';
 $route['api/EditExpense'] = 'api/Admin/edit_expense';
 $route['api/DeleteExpense'] = 'api/Admin/delete_expense';
+
+
+$route['api/GetSessions'] = 'api/Admin/sessions';
+$route['api/CreateSession'] = 'api/Admin/create_session';
+$route['api/EditSession'] = 'api/Admin/edit_session';
+$route['api/DeleteSession/(:num)'] = 'api/Admin/delete_session/$1';
+
