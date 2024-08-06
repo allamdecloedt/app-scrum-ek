@@ -3469,7 +3469,8 @@ public function class_create_post() {
         $response = array('status' => false, 'message' => 'Missing required fields: name or school_id');
         echo json_encode($response);
 
-      
+    }
+}
 //Subjects
 
 
@@ -3623,29 +3624,29 @@ public function class_get() {
 
 
 //////
-=======
-    $data = [
-        'name' => $name,
-        'class_id' => $class_id,
-        'school_id' => $school_id,
-        'session' => 1 // Default session
-    ];
+// =======
+//     $data = [
+//         'name' => $name,
+//         'class_id' => $class_id,
+//         'school_id' => $school_id,
+//         'session' => 1 // Default session
+//     ];
 
-    // Insert the new subject
-    $this->db->insert('subjects', $data);
+//     // Insert the new subject
+//     $this->db->insert('subjects', $data);
 
-    if ($this->db->affected_rows() > 0) {
-        $this->output
-             ->set_status_header(201)
-             ->set_content_type('application/json')
-             ->set_output(json_encode(['status' => 'success', 'message' => 'Subject created successfully']));
-    } else {
-        $this->output
-             ->set_status_header(500)
-             ->set_content_type('application/json')
-             ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to create subject']));
-    }
-}
+//     if ($this->db->affected_rows() > 0) {
+//         $this->output
+//              ->set_status_header(201)
+//              ->set_content_type('application/json')
+//              ->set_output(json_encode(['status' => 'success', 'message' => 'Subject created successfully']));
+//     } else {
+//         $this->output
+//              ->set_status_header(500)
+//              ->set_content_type('application/json')
+//              ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to create subject']));
+//     }
+// }
 
 public function subjects_by_class_id_get($class_id) {
     // Validate class_id
@@ -3834,21 +3835,21 @@ public function create_exam_post()
         ->set_output(json_encode(['status' => true, 'exam' => $exam]));
 }
 
-public function edit_exam_post()
-{
-    // Retrieve data from POST request
-    $exam_id = $this->input->post('id');
-    $name = $this->input->post('name');
-    $starting_date = $this->input->post('starting_date');
-    $ending_date = $this->input->post('ending_date');
-    $school_id = $this->input->post('school_id');
-    $session = $this->input->post('session') ?? 1;
+// public function edit_exam_post()
+// {
+//     // Retrieve data from POST request
+//     $exam_id = $this->input->post('id');
+//     $name = $this->input->post('name');
+//     $starting_date = $this->input->post('starting_date');
+//     $ending_date = $this->input->post('ending_date');
+//     $school_id = $this->input->post('school_id');
+//     $session = $this->input->post('session') ?? 1;
 
-    // Log the received data for debugging
-    log_message('debug', 'Received data: ' . json_encode($_POST));
+//     // Log the received data for debugging
+//     log_message('debug', 'Received data: ' . json_encode($_POST));
 
-    // Check if the required data is provided
-    if (!$exam_id || !$name || !$starting_date || !$ending_date || !$school_id) {
+//     // Check if the required data is provided
+//     if (!$exam_id || !$name || !$starting_date || !$ending_date || !$school_id) {
 
 ////Sesion Manager
 public function sessions_get() {
@@ -4131,7 +4132,7 @@ public function delete_grade_delete($id)
 
 
 
-public function books_by_school_id_get($school_id, $page = 1)
+// public function books_by_school_id_get($school_id, $page = 1)
 
 ///Events
 
@@ -4504,34 +4505,34 @@ public function delete_book_delete($id)
 ////
 
     // Check if any departments found
-    if (empty($result)) {
-        $this->output
-            ->set_status_header(404)
-            ->set_output(json_encode(['status' => false, 'message' => 'No departments found']));
-        return;
-    }
+//     if (empty($result)) {
+//         $this->output
+//             ->set_status_header(404)
+//             ->set_output(json_encode(['status' => false, 'message' => 'No departments found']));
+//         return;
+//     }
 
-    // Get total count of departments
-    $this->db->from('departments');
-    $this->db->where('school_id', $school_id);
-    $total_departments = $this->db->count_all_results();
+//     // Get total count of departments
+//     $this->db->from('departments');
+//     $this->db->where('school_id', $school_id);
+//     $total_departments = $this->db->count_all_results();
 
-    // Return success response with departments, school name, and pagination info
-    $response = [
-        'status' => true,
-        'departments' => $result,
-        'pagination' => [
-            'current_page' => $page,
-            'per_page' => $limit,
-            'total_pages' => ceil($total_departments / $limit),
-            'total_departments' => $total_departments
-        ]
-    ];
+//     // Return success response with departments, school name, and pagination info
+//     $response = [
+//         'status' => true,
+//         'departments' => $result,
+//         'pagination' => [
+//             'current_page' => $page,
+//             'per_page' => $limit,
+//             'total_pages' => ceil($total_departments / $limit),
+//             'total_departments' => $total_departments
+//         ]
+//     ];
 
-    $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($response));
-}
+//     $this->output
+//         ->set_content_type('application/json')
+//         ->set_output(json_encode($response));
+// }
 
 public function update_department_post()
 {
@@ -4571,10 +4572,7 @@ public function update_department_post()
 
     // Check if the update was successful
     if ($this->db->affected_rows() == 0) {
-        $this->output
-            ->set_status_header(500)
-
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update exam']));
+        $this->output ->set_status_header(500)->set_output(json_encode(['status' => false, 'message' => 'Failed to update exam']));
         return;
     }
 
@@ -4582,9 +4580,9 @@ public function update_department_post()
     $query = $this->db->get_where('exams', ['id' => $exam_id]);
     $exam = $query->row_array();
 
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update department']));
-        return;
-    }
+            // ->set_output(json_encode(['status' => false, 'message' => 'Failed to update department']));
+        // return;
+    // }
 
     // Fetch the updated department to return
     $query = $this->db->get_where('departments', ['id' => $id]);
@@ -4613,7 +4611,7 @@ public function delete_exam_delete($exam_id)
     $this->db->where('id', $exam_id);
     $this->db->delete('exams');
 
-        ->set_output(json_encode(['status' => true, 'department' => $department]));
+        // ->set_output(json_encode(['status' => true, 'department' => $department]));
 }
 
 public function delete_department_post()
@@ -4641,7 +4639,7 @@ public function delete_department_post()
 
             ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete exam']));
 
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete department']));
+            // ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete department']));
 
         return;
     }
@@ -4660,8 +4658,8 @@ public function delete_department_post()
 
 //end of Exams
 
-        ->set_output(json_encode(['status' => true, 'message' => 'Department deleted successfully']));
-}
+        // ->set_output(json_encode(['status' => true, 'message' => 'Department deleted successfully']));
+// }
 
 
 
