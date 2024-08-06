@@ -117,6 +117,46 @@ $route['api/get_class_id_by_name']= 'api/Admin/get_class_id_by_name';
 
 
 
+$route['api/Instructor'] = 'api/Admin/all_teacher_names';
+$route['api/subjects'] = 'api/Admin/subjects_names';
+$route['api/CreateCourse']  = 'api/Admin/create_course';
+$route['api/StatusCourse'] = 'api/Admin/course_status_counts';
+$route['api/courses_by_class/(:any)'] = 'api/Admin/courses_by_class/$1';
+$route['api/coursesByTeacher/(:any)'] = 'api/Admin/courses_by_user/$1';
+$route['api/CoursesByStatus/(:any)'] = 'api/Admin/courses_by_status/$1';
+$route['api/AllCourses'] = 'api/Admin/all_courses';
+$route['api/LessonsAndSections/(:num)'] = 'api/Admin/lessons_and_sections/$1';
+$route['api/Course/ChangeStatus/(:num)'] = 'api/Admin/change_course_status/$1';
+$route['api/EditCourse/(:num)']  = 'api/Admin/edit_course/$1';
+$route['api/GetCourse/(:num)']  = 'api/Admin/course_details/$1';
+$route['api/DeleteCourse/(:num)']  = 'api/Admin/delete_course/$1';
+$route['api/course/(:num)/add_section'] = 'api/Admin/add_course_section/$1';
+$route['api/course/(:num)/sections'] = 'api/Admin/sections/$1';
+$route['api/section/(:num)/quizzes'] = 'api/Admin/quizzes_by_section/$1';
+$route['api/course/(:num)/quizzes'] = 'api/Admin/quizzes_by_course/$1';
+$route['api/quizzes/course/(:num)'] = 'api/Admin/quizzes/$1';
+$route['api/quizzes/section/(:num)'] = 'api/Admin/quizzes/null/$1';
+$route['api/course/(:num)/section/(:num)/edit'] = 'api/Admin/sections_title/$1/$2';
+$route['api/course/(:num)/section/(:num)/delete'] = 'api/Admin/sections_del/$1/$2';
+$route['api/update_quiz_order/(:num)'] = 'api/Admin/update_quiz_order/$1';
+$route['api/quizzes/AddQuiz'] = 'api/Admin/add_quiz';
+$route['api/quizzes/UpdateQuiz'] = 'api/Admin/update_quiz';
+$route['api/quizzes/delete'] = 'api/Admin/delete_quiz';
+$route['api/quizzes/AddQuestion'] = 'api/Admin/add_question';
+$route['api/quizzes/GetQuestions/(:num)'] = 'api/Admin/get_quiz_questions/$1';
+$route['api/quizzes/EditQuestions'] = 'api/Admin/edit_question';
+$route['api/quizzes/DeleteQuestions'] = 'api/Admin/delete_question';
+$route['api/lesson/create'] = 'api/Admin/add_lesson';
+$route['api/AllLessons/(:num)'] = 'api/Admin/all_lesson_types/$1';
+$route['api/AffectUserToSchool']='api/Admin/associate_user_with_school';
+$route['api/GetStudentsList']='api/Admin/get_students_list';
+$route['api/ApproveStudent']='api/Admin/approve_student';
+$route['api/GetSectionsList'] = 'api/Admin/section';
+$route['api/DeleteStudent'] = 'api/Admin/delete_student';
+$route['api/NumberStudentOnlineAdmission'] = 'api/Admin/count_student_online_admission';
+
+
+
 $route['api/CreateSubject'] = 'api/Admin/create_subject';
 $route['api/GetClassBySchoolId/(:num)'] = 'api/Admin/get_classes_by_school_id/$1';
 $route['api/GetSubjectsBySchoolId/(:num)'] = 'api/Admin/get_subjects_by_school_id/$1';
@@ -127,6 +167,7 @@ $route['api/CreateEvent'] = 'api/Admin/create_event';
 $route['api/GetEvent/(:num)']= 'api/Admin/events_by_school_id/$1';
 $route['api/DeleteEvent/(:num)']= 'api/Admin/delete_event/$1';
 $route['api/EditEvent/(:num)']= 'api/Admin/edit_event/$1';
+
 
 
 
