@@ -12,7 +12,12 @@
 		</div>
 		<div class="card">
 			<div class="card-body">
-				<?php $school_id = school_id(); ?>
+				<?php
+				
+				$user_id = $this->session->userdata('user_id');
+				$school_id = $this->db->get_where('users', array('id' => $user_id))->row('school_id');
+				
+				?>
 				<?php $query = $this->db->get_where('event_calendars', array('school_id' => $school_id, 'session' => active_session())); ?>
 				<?php if($query->num_rows() > 0): ?>
 					<table id="basic-datatable" class="table table-striped dt-responsive nowrap" width="100%">

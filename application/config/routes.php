@@ -115,6 +115,7 @@ $route['api/get_class_id_by_name']= 'api/Admin/get_class_id_by_name';
 
 
 
+
 $route['api/Instructor'] = 'api/Admin/all_teacher_names';
 $route['api/subjects'] = 'api/Admin/subjects_names';
 $route['api/CreateCourse']  = 'api/Admin/create_course';
@@ -152,3 +153,48 @@ $route['api/ApproveStudent']='api/Admin/approve_student';
 $route['api/GetSectionsList'] = 'api/Admin/section';
 $route['api/DeleteStudent'] = 'api/Admin/delete_student';
 $route['api/NumberStudentOnlineAdmission'] = 'api/Admin/count_student_online_admission';
+=======
+$route['api/GetExams/(:num)/(:num)'] = 'api/Admin/exams_by_school_id/$1/$2';
+$route['api/CreateExams'] = 'api/Admin/create_exam';
+$route['api/EditExams'] = 'api/Admin/edit_exam';
+$route['api/DeleteExams/(:num)'] = 'api/Admin/delete_exam/$1';
+
+
+$route['api/GetBooks/(:num)/(:num)'] = 'api/Admin/books_by_school_id/$1/$2';
+$route['api/CreateBook'] = 'api/Admin/create_book';
+$route['api/EditBook'] = 'api/Admin/edit_book';
+$route['api/DeleteBook/(:num)'] = 'api/Admin/delete_book/$1';
+
+
+
+$route['api/GetGrades/(:num)/(:num)'] = 'api/Admin/grades_by_school_id/$1/$2';
+$route['api/CreateGrade'] = 'api/Admin/create_grade';
+$route['api/EditGrade'] = 'api/Admin/edit_grade';
+$route['api/DeleteGrade/(:num)'] = 'api/Admin/delete_grade/$1';
+
+
+
+$route['api/CreateDepartment'] = 'api/Admin/create_department';
+$route['api/GetDepartments/(:num)']= 'api/Admin/departments_by_school_id/$1';
+$route['api/UpdateDepartment'] = 'api/Admin/update_department';
+$route['api/DeleteDepartment'] = 'api/Admin/delete_department';
+
+
+$route['api/getexpenses/(:num)'] = 'api/Admin/expense/$1';
+$route['api/CreateExpenseCategory'] = 'api/Admin/create_expense_category';
+$route['api/EditExpenseCategory'] = 'api/Admin/edit_expense_category';
+$route['api/DeleteExpenseCategory'] = 'api/Admin/delete_expense_category';
+$route['api/GetExpenseCategories/(:num)/(:num)/(:num)'] = 'api/Admin/expense_categories/$1/$2/$3';
+$route['api/GetExpenses/(:num)'] = 'api/Admin/get_expenses/$1';
+$route['api/CreateExpense'] = 'api/Admin/create_expense';
+$route['api/EditExpense'] = 'api/Admin/edit_expense';
+$route['api/DeleteExpense'] = 'api/Admin/delete_expense';
+
+
+$route['api/GetSessions'] = 'api/Admin/sessions';
+$route['api/CreateSession'] = 'api/Admin/create_session';
+$route['api/EditSession'] = 'api/Admin/edit_session';
+$route['api/DeleteSession/(:num)'] = 'api/Admin/delete_session/$1';
+
+
+

@@ -34,11 +34,13 @@ class Modal extends CI_Controller {
 		
 	}
 
-	function popup($folder_name = '', $page_name = '' , $param1 = '' , $param2 = '', $param3 = '')
+	function popup($folder_name = '', $page_name = '' , $param1 = '' , $param2 = '', $param3 = '' , $param4 = '' , $param5 = '')
 	{
 		$page_data['param1']		=	$param1;
 		$page_data['param2']		=	$param2;
 		$page_data['param3']		=	$param3;
+		$page_data['param4']		=	$param4;
+		$page_data['param5']		=	$param5;
 		if($folder_name == 'academy'){
 			$this->load->view( 'backend/'.$folder_name.'/'.$page_name.'.php' ,$page_data);
 		}else{
