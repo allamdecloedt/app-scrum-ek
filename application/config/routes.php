@@ -112,3 +112,10 @@ $route['api/classes']= 'api/Admin/classes';
 $route['api/teachers_by_class/(:num)'] = 'api/Admin/teachers_by_class/$1';
 $route['api/assign_teacher_permission_to_class']= 'api/Admin/assign_teacher_permission_to_class';
 $route['api/get_class_id_by_name']= 'api/Admin/get_class_id_by_name';
+
+
+
+$route['api/GetGrades/(:num)/(:num)'] = 'api/Admin/grades_by_school_id/$1/$2';
+$route['api/CreateGrade'] = 'api/Admin/create_grade';
+$route['api/EditGrade'] = 'api/Admin/edit_grade';
+$route['api/DeleteGrade/(:num)'] = 'api/Admin/delete_grade/$1';
