@@ -121,6 +121,14 @@ $route['api/CreateGrade'] = 'api/Admin/create_grade';
 $route['api/EditGrade'] = 'api/Admin/edit_grade';
 $route['api/DeleteGrade/(:num)'] = 'api/Admin/delete_grade/$1';
 
+
+
+$route['api/CreateDepartment'] = 'api/Admin/create_department';
+$route['api/GetDepartments/(:num)']= 'api/Admin/departments_by_school_id/$1';
+$route['api/UpdateDepartment'] = 'api/Admin/update_department';
+$route['api/DeleteDepartment'] = 'api/Admin/delete_department';
+
+
 $route['api/GetSessions'] = 'api/Admin/sessions';
 $route['api/CreateSession'] = 'api/Admin/create_session';
 $route['api/EditSession'] = 'api/Admin/edit_session';
