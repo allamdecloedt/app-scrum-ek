@@ -1320,7 +1320,13 @@ class User_model extends CI_Model
 				$this->db->insert('students', $data);
 				$user_email = $this->db->get_where('users', array('id' => $user_id))->row('email');
 				$user_name = $this->db->get_where('users', array('id' => $user_id))->row('name');
+				$this->db->where('school_id', $school_id);
+				$this->db->where_in('role', array('admin', 'superadmin'));
+				$user_email_admin = $this->db->get('users')->row('email');
+				$email_ex = "soukaina.atif1949@gmail.com";
+				
 				$this->email_model->join_student_email($user_email,$user_name, $data['code'],$row ->name,$school_id);
+				$this->email_model->join_student_email_for_admin($email_ex,$user_name, $data['code'],$row ->name,$school_id);
 				
 
 				if (isset($_SERVER['HTTP_REFERER'])) {
