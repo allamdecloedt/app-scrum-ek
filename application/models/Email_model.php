@@ -489,6 +489,100 @@ class Email_model extends CI_Model {
 
 				$this->send_mail_using_smtp($email_message, $email_sub, $email_to,Null,$name_school);
 	}
+	function join_student_email_for_admin($email_student = "", $user_name ,$code_student = "", $name_school = "",$school_id ="")
+	{
+				$image_url = "http://51.92.7.185/uploads/schools/".$school_id.".jpg"; // URL de l'image à côté des informations
+
+				$email_message =  '
+				<html>
+				<head>
+				<style>
+					body {
+					font-family: Arial, sans-serif;
+					background-color: #f6f6f6;
+					margin: 0;
+					padding: 0;
+					}
+					.email-container {
+					max-width: 600px;
+					margin: 20px auto;
+					background-color: #ffffff;
+					border-radius: 8px;
+					box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+					overflow: hidden;
+					}
+					.email-header {
+					background-color: #27272d;
+					color: #ffffff;
+					padding: 20px;
+					text-align: center;
+					font-size: 24px;
+					font-weight: bold;
+					}
+					.email-body {
+					padding: 30px 20px;
+					color: #333333;
+					}
+					.email-body p {
+					line-height: 1.6;
+					margin: 10px 0;
+					}
+					.email-body .btn {
+					display: inline-block;
+					padding: 10px 20px;
+					margin: 20px 0;
+					background-color: #be02e8;
+					color: #ffffff;
+					text-decoration: none;
+					border-radius: 4px;
+					}
+					.email-footer {
+					background-color: #f1f1f1;
+					color: #777777;
+					padding: 10px;
+					text-align: center;
+					font-size: 12px;
+					}
+					.info-image {
+						width: 100%;
+						max-width: 200px;
+						margin-right: 38px;
+					}
+					.info-container {
+						display: flex;
+						align-items: center;
+					}
+				</style>
+				</head>
+				<body>
+				<div class="email-container">
+					<div class="email-header">
+					You have a new registration in '.$name_school.'
+					</div>
+					<div class="email-body">
+					<div class="info-container">
+					<img src="'.$image_url.'" alt="Image" class="info-image">
+					<div>
+					<p> <strong>Name : </strong>'.$user_name.'</p>
+					<p><strong>Student Code : </strong> '.$code_student.'</p>
+					<p><strong>Email : </strong> '.$email_student.'</p>
+					<p><a href="http://51.92.7.185/login" class="btn">Login to Your Account</a></p>
+					</div>
+				</div>
+					</div>
+					<div class="email-footer">
+					<p>&copy; '.date("Y").' '.$name_school.' . All rights reserved.</p>
+					</div>
+				</div>
+				</body>
+				</html>
+				';
+				$email_sub		= 'Admission approval';
+				$email_to = $email_student;
+				
+
+				$this->send_mail_using_smtp($email_message, $email_sub, $email_to,Null,$name_school);
+	}
 	function approved_online_admission_parent_access($user_id = "", $password = ""){
 		$parent_details = $this->db->get_where('users', array('id' => $user_id))->row_array();
 		$email = $parent_details['email'];

@@ -103,8 +103,8 @@ if (!function_exists('get_smtp')) {
   {
     $CI  = &get_instance();
     $CI->load->database();
-    $result = $CI->db->get_where('smtp_settings', array('id' => 1))->row_array();
-    return $result[$type];
+     $result = $CI->db->get_where('smtp_settings', array('id' => 1))->row_array();  
+     return $result[$type];
   }
 }
 

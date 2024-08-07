@@ -1343,5 +1343,6 @@
     "currency": "Currency",
     "phone_number_not_found": "Phone number not found",
     "update_exam_info": "Update exam info",
-    "delete_exam": "Delete exam"
+    "delete_exam": "Delete exam",
+    "already_joined_school": "Already joined school"
 }
