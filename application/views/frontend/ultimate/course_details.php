@@ -263,31 +263,14 @@
                     </div>
 
 
+
                     <div class="row justify-content-center">
-                        <?php if ($this->session->userdata("user_type") != "student" && $this->session->userdata('user_id')) { ?>
-                            <button id="join-button" disabled
-                                class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("no_student_account")); ?></button>
-                        <?php } ?>
-
-                        <?php if ($this->session->userdata('user_id') && $this->session->userdata('user_type') == "student") { ?>
-                            <?php if ($this->user_model->check_student_status($school_id) == 1) { ?>
-                                <button id="join-button" disabled
-                                    class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("enrolled")); ?></button>
-                            <?php } elseif ($this->user_model->check_student_status($school_id) == 0) { ?>
-                                <button id="join-button" disabled
-                                    class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("pending")); ?></button>
-                            <?php } else { ?>
-                                <form action="<?php echo base_url('home/join_school/' . $school_id); ?>" method="post">
-                                    <button id="join-button" type="submit"
-                                        class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("join")); ?></button>
-                                </form>
-                            <?php } ?>
-                        <?php } ?>
-
-                        <?php if (!$this->session->userdata('user_id')) { ?>
-                            <button id="login-join-button"
-                                class="join-button text-uppercase"><?php echo htmlspecialchars(get_phrase("login")); ?></button>
-                        <?php } ?>
+                        <form action="<?php echo base_url('home/join_school/' . $school_id); ?>" method="post">
+                            <button id="join-button" type="submit" class="join-button text-uppercase"
+                                style="display:none"><?php echo htmlspecialchars(get_phrase("join")); ?></button>
+                        </form>
+                        <button id="login-join-button" class="join-button text-uppercase"
+                            style="display: none;"><?php echo htmlspecialchars(get_phrase("login")); ?></button>
                     </div>
                 </div>
             </div>
@@ -327,15 +310,57 @@
 
         const descs = document.querySelectorAll(".course-slider-description")
         descs.forEach(desc => {
-           const pars = desc.getElementsByTagName("p");
-           Array.from(pars).forEach(par => {
-               par.classList.add("text-white")
-               par.classList.add("text-center")
-           })
-            
+            const pars = desc.getElementsByTagName("p");
+            Array.from(pars).forEach(par => {
+                par.classList.add("text-white")
+                par.classList.add("text-center")
+            })
+
         });
     });
 
+
+
+</script>
+
+<script>
+    $(document).ready(function () {
+        function updateButton() {
+            $.ajax({
+                url: "<?php echo base_url('home/check_student_status_ajax/' . $school_id); ?>",
+                method: "GET",
+                dataType: "json",
+                success: function (response) {
+                    var button = $("#join-button");
+                    var loginButton = $("#login-join-button");
+
+                    if (response.status === null) {
+                        loginButton.show();
+                        button.hide();
+                    } else {
+                        loginButton.hide();
+                        button.show();
+                        if (response.status == 1) {
+                            button.prop("disabled", true).text("<?php echo htmlspecialchars(get_phrase('enrolled')); ?>");
+                        } else if (response.status == 0) {
+                            button.prop("disabled", true).text("<?php echo htmlspecialchars(get_phrase('pending')); ?>");
+                        } else if (response.status == 2) {
+                            button.prop("disabled", true).text("<?php echo htmlspecialchars(get_phrase('no_student_account')); ?>");
+                        } else {
+                            button.prop("disabled", false).text("<?php echo htmlspecialchars(get_phrase('join')); ?>");
+                        }
+                    }
+                }
+            });
+        }
+
+        // Check status immediately on page load
+        updateButton();
+
+
+        // Optionally, you can refresh the status every few seconds
+        setInterval(updateButton, 5000); // 5000 milliseconds = 5 seconds
+    });
 
 
 </script>
