@@ -1344,5 +1344,7 @@
     "phone_number_not_found": "Phone number not found",
     "update_exam_info": "Update exam info",
     "delete_exam": "Delete exam",
-    "already_joined_school": "Already joined school"
+    "already_joined_school": "Already joined school",
+    "total_number_of_school": "Total number of school",
+    "total_number_of_class": "Total number of class"
 }
