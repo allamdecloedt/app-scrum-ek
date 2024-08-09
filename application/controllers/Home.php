@@ -455,7 +455,7 @@ class Home extends CI_Controller
 
 	function course_details($school_id = '')
 	{
-		$page_data['school'] = $this->user_model->get_school_details( urldecode($school_id));
+		$page_data['school'] = $this->user_model->get_school_details(urldecode($school_id));
 		$page_data['school_id'] = $page_data['school']["id"];
 		$page_data['course_students_count'] = $this->user_model->get_school_students_count($page_data['school']["id"]);
 
@@ -464,7 +464,8 @@ class Home extends CI_Controller
 		$this->load->view('frontend/' . $this->theme . '/index', $page_data);
 	}
 
-	function join_school($school_id){
+	function join_school($school_id)
+	{
 		$this->user_model->join_school($school_id);
 	}
 
@@ -482,6 +483,25 @@ class Home extends CI_Controller
 		} else {
 			$active_school_id = get_settings('school_id');
 			$this->session->set_userdata('active_school_id', $active_school_id);
+		}
+	}
+
+
+
+	public function check_student_status_ajax($school_id)
+	{
+		$user_id = $this->session->userdata('user_id');
+		$user_type = $this->session->userdata('user_type');
+
+		if ($user_id && $user_type == "student") {
+			$status = $this->user_model->check_student_status($school_id);
+			echo json_encode(array('status' => $status));
+		}
+		else if ($user_id && $user_type !== "student") {
+
+			echo json_encode(array('status' => 2));
+		} else {
+			echo json_encode(array('status' => null));
 		}
 	}
 }
