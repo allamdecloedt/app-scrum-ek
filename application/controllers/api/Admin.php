@@ -3995,7 +3995,7 @@ public function sections_for_class_get() {
 }
 
 
-public function create_invoice_post() {
+  public function create_invoice_post() {
     $student_id = $this->input->post('student_id');
     $class_id = $this->input->post('class_id');
     $total_amount = $this->input->post('total_amount');
@@ -4068,7 +4068,7 @@ public function create_invoice_post() {
         ->set_content_type('application/json')
         ->set_output(json_encode(['status' => true, 'invoice_id' => $invoice_id]));
 }
-
+  
 public function paid_invoice_post() {
     // Retrieve POST data
     $input_data = json_decode(file_get_contents('php://input'), true);
@@ -5312,6 +5312,267 @@ public function delete_grade_delete($id)
 
 
 ////
+
+///Marks Part
+
+public function add_marks_post() {
+    // Retrieve and decode input data
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate input data
+    if (!isset($data['student_id']) || !isset($data['subject_id']) || !isset($data['class_id']) || !isset($data['section_id']) || !isset($data['exam_id']) || !isset($data['mark_obtained']) || !isset($data['comment']) || !isset($data['school_id'])) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Missing required fields']));
+        return;
+    }
+
+    // Prepare data for insertion
+    $data['session'] = 1; // Example session id, replace with your logic
+
+    // Log the data for debugging
+    log_message('debug', 'Input data: ' . json_encode($data));
+
+    // Attempt to insert marks
+    $this->db->insert('marks', $data);
+
+    if ($this->db->affected_rows() > 0) {
+        $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'message' => 'Marks added successfully']));
+    } else {
+        // Log the database error for debugging
+        $error = $this->db->error();
+        log_message('error', 'Database insert error: ' . $error['message']);
+        
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to add marks']));
+    }
+}
+
+
+public function update_marks_put() {
+    // Retrieve and decode input data
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate input data
+    if (!isset($data['student_id']) || !isset($data['subject_id']) || !isset($data['class_id']) || !isset($data['section_id']) || !isset($data['exam_id']) || !isset($data['mark_obtained']) || !isset($data['comment']) || !isset($data['school_id'])) {
+        return $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Missing required fields']));
+    }
+
+    // Log the data for debugging
+    log_message('debug', 'Input data: ' . json_encode($data));
+
+    // Prepare the data for the checker
+    $checker = array(
+        'student_id' => $data['student_id'],
+        'class_id' => $data['class_id'],
+        'section_id' => $data['section_id'],
+        'subject_id' => $data['subject_id'],
+        'exam_id' => $data['exam_id'],
+        'school_id' => $data['school_id'],
+        'session' => isset($data['session']) ? $data['session'] : 1 // Example session id, replace with your logic
+    );
+
+    // Prepare the update data
+    $update_data = array(
+        'mark_obtained' => $data['mark_obtained'],
+        'comment' => $data['comment']
+    );
+
+    // Begin transaction
+    $this->db->trans_start();
+
+    // Check if the record exists
+    $query = $this->db->get_where('marks', $checker);
+
+    if ($query->num_rows() > 0) {
+        // Record found, proceed with update
+        $row = $query->row();
+        $this->db->where('id', $row->id);
+        $this->db->update('marks', $update_data);
+    } else {
+        // Record not found
+        $this->db->trans_complete();
+        return $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'Record not found']));
+    }
+
+    // Complete transaction
+    $this->db->trans_complete();
+
+    // Check transaction status
+    if ($this->db->trans_status() === FALSE) {
+        // Log the database error for debugging
+        $error = $this->db->error();
+        log_message('error', 'Database update error: ' . $error['message']);
+
+        return $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update marks']));
+    } else {
+        return $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'message' => 'Marks updated successfully']));
+    }
+}
+
+
+
+public function filter_exams_by_school_id_get($school_id)
+{
+    // Validate school_id
+    if (!$school_id) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid school_id']));
+        return;
+    }
+
+    // Fetch exams by school_id and include school name
+    $this->db->select('exams.*, schools.name as school_name');
+    $this->db->from('exams');
+    $this->db->join('schools', 'schools.id = exams.school_id');
+    $this->db->where('exams.school_id', $school_id);
+    $query = $this->db->get();
+    $result = $query->result_array();
+
+    // Check if any exams found
+    if (empty($result)) {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'No exams found']));
+        return;
+    }
+
+    // Return success response with exams
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode(['status' => true, 'exams' => $result]));
+}
+
+public function filter_student_get() {
+    // Retrieve and validate input data
+    $exam_id = $this->input->get('exam_id');
+    $class_id = $this->input->get('class_id');
+    $section_id = $this->input->get('section_id');
+    $subject_id = $this->input->get('subject_id');
+    $school_id = $this->input->get('school_id');
+    $session = $this->input->get('session');
+
+    // Validate required parameters
+    if (empty($exam_id) || empty($class_id) || empty($section_id) || empty($subject_id) || empty($school_id) || empty($session)) {
+        $this->output
+             ->set_status_header(400)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Missing required fields']));
+        return;
+    }
+
+    // Build the query to filter students and join with the students table to get student names
+    $this->db->select('marks.*, users.name as student_name');
+    $this->db->from('marks');
+    $this->db->join('students', 'students.id = marks.student_id');
+    $this->db->join('users', 'users.id = students.user_id'); // Assuming there's a users table and a user_id in the students table
+    $this->db->where('marks.exam_id', $exam_id);
+    $this->db->where('marks.class_id', $class_id);
+    $this->db->where('marks.section_id', $section_id);
+    $this->db->where('marks.subject_id', $subject_id);
+    $this->db->where('marks.school_id', $school_id);
+    $this->db->where('marks.session', $session);
+
+    $query = $this->db->get();
+    $result = $query->result_array();
+
+    // Check if any students found
+    if (empty($result)) {
+        $this->output
+             ->set_status_header(404)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'No students found']));
+        return;
+    }
+
+    // Return success response with students data
+    $this->output
+         ->set_content_type('application/json')
+         ->set_output(json_encode(['status' => 'success', 'students' => $result]));
+}
+
+
+public function get_sections_by_class_id_get($class_id) {
+    // Ensure the request method is GET
+    if ($this->input->server('REQUEST_METHOD') !== 'GET') {
+        $this->output
+             ->set_status_header(405)
+             ->set_output(json_encode(['message' => 'Method not allowed']));
+        return;
+    }
+
+    // Validate the input
+    if (empty($class_id)) {
+        $this->output
+             ->set_status_header(400)
+             ->set_output(json_encode(['message' => 'Class ID is required']));
+        return;
+    }
+
+    // Fetch sections by class_id
+    $this->db->where('class_id', $class_id);
+    $query = $this->db->get('sections');
+    $sections = $query->result_array();
+
+    // Check if any sections are found
+    if (!empty($sections)) {
+        $this->output
+             ->set_status_header(200)
+             ->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'success', 'sections' => $sections]));
+    } else {
+        $this->output
+             ->set_status_header(404)
+             ->set_output(json_encode(['status' => 'error', 'message' => 'No sections found for the given class ID']));
+    }
+}
+
+public function get_subject_id_by_name_get($subject_name = "")
+{
+    // Validate input
+    if (empty($subject_name)) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Subject name is required']));
+        return;
+    }
+
+    // Sanitize input
+    $subject_name = urldecode($subject_name);
+
+    // Query to get subject ID by name
+    $this->db->select('id');
+    $this->db->from('subjects');
+    $this->db->where('name', $subject_name);
+    $query = $this->db->get();
+    $result = $query->row_array();
+
+    // Check if any subject found
+    if ($result) {
+        $this->output
+            ->set_status_header(200)
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => 'success', 'subject_id' => $result['id']]));
+    } else {
+        $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => 'error', 'message' => 'Subject not found']));
+    }
+}
+
+
+//End Marks
+
 ////BOOKS
 
 public function books_by_school_id_get($school_id, $page = 1)
