@@ -229,4 +229,15 @@ $route['api/UpdateClassRoom/(:num)'] = 'api/Admin/update_class_room/$1';
 $route['api/DeleteClassRoom/(:num)'] = 'api/Admin/delete_class_room/$1';
 $route['api/GetClassRoom/(:num)'] = 'api/Admin/get_class_room/$1';
 
+$route['api/AddMarks'] = 'api/Admin/add_marks';
+$route['api/FilterExams/(:num)'] = 'api/Admin/filter_exams_by_school_id/$1';
+$route['api/FilterStudents'] = 'api/Admin/filter_student';
+$route['api/GetSectionsByClassId/(:num)'] = 'api/Admin/get_sections_by_class_id/$1';
+$route['api/GetSubjectIdByName/(:any)'] = 'api/Admin/get_subject_id_by_name/$1';
+$route['api/UpdateMarks'] = 'api/Admin/update_marks';
+
+
+
+
+
 
