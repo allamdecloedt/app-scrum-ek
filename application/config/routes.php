@@ -224,6 +224,10 @@ $route['api/CreateSession'] = 'api/Admin/create_session';
 $route['api/EditSession'] = 'api/Admin/edit_session';
 $route['api/DeleteSession/(:num)'] = 'api/Admin/delete_session/$1';
 
+$route['api/CreateClassRoom'] = 'api/Admin/add_class_room';
+$route['api/UpdateClassRoom/(:num)'] = 'api/Admin/update_class_room/$1';
+$route['api/DeleteClassRoom/(:num)'] = 'api/Admin/delete_class_room/$1';
+$route['api/GetClassRoom/(:num)'] = 'api/Admin/get_class_room/$1';
 
 $route['api/AddMarks'] = 'api/Admin/add_marks';
 $route['api/FilterExams/(:num)'] = 'api/Admin/filter_exams_by_school_id/$1';

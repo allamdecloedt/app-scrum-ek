@@ -5313,6 +5313,7 @@ public function delete_grade_delete($id)
 
 ////
 
+
 ///Marks Part
 
 public function add_marks_post() {
@@ -5358,10 +5359,41 @@ public function update_marks_put() {
 
     // Validate input data
     if (!isset($data['student_id']) || !isset($data['subject_id']) || !isset($data['class_id']) || !isset($data['section_id']) || !isset($data['exam_id']) || !isset($data['mark_obtained']) || !isset($data['comment']) || !isset($data['school_id'])) {
+=======
+//Class Room Part
+
+public function add_class_room_post() {
+    $data = json_decode($this->input->raw_input_stream, true);
+    if (!isset($data['name']) || !isset($data['school_id'])) {
         return $this->output
             ->set_status_header(400)
             ->set_output(json_encode(['status' => false, 'message' => 'Missing required fields']));
     }
+    log_message('debug', 'Input data: ' . json_encode($data));
+    $this->load->database();
+    $this->db->insert('class_rooms', $data);
+    if ($this->db->affected_rows() > 0) {
+        return $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'message' => 'Class room added successfully']));
+    } else {
+        $error = $this->db->error();
+        log_message('error', 'Database insert error: ' . $error['message']);
+        return $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to add class room', 'error' => $error['message']]));
+    }
+}
+
+public function update_class_room_put($id) {
+    $data = json_decode($this->input->raw_input_stream, true);
+    if (!isset($data['name']) || !isset($data['school_id'])) {
+
+        return $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Missing required fields']));
+    }
+
 
     // Log the data for debugging
     log_message('debug', 'Input data: ' . json_encode($data));
@@ -5572,6 +5604,68 @@ public function get_subject_id_by_name_get($subject_name = "")
 
 
 //End Marks
+
+
+    log_message('debug', 'Input data: ' . json_encode($data));
+    $this->load->database();
+    $this->db->where('id', $id);
+    $this->db->update('class_rooms', $data);
+    if ($this->db->affected_rows() > 0) {
+        return $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'message' => 'Class room updated successfully']));
+    } else {
+        $error = $this->db->error();
+        log_message('error', 'Database update error: ' . $error['message']);
+        return $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update class room', 'error' => $error['message']]));
+    }
+}
+
+public function delete_class_room_delete($id) {
+    $this->load->database();
+    $this->db->where('id', $id);
+    $this->db->delete('class_rooms');
+    if ($this->db->affected_rows() > 0) {
+        return $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'message' => 'Class room deleted successfully']));
+    } else {
+        $error = $this->db->error();
+        log_message('error', 'Database delete error: ' . $error['message']);
+        return $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete class room', 'error' => $error['message']]));
+    }
+}
+
+
+public function get_class_room_get($school_id) {
+    $this->load->database();
+    $this->db->select('class_rooms.*, schools.name as school_name');
+    $this->db->from('class_rooms');
+    $this->db->join('schools', 'schools.id = class_rooms.school_id');
+    $this->db->where('class_rooms.school_id', $school_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        return $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'data' => $query->result()]));
+    } else {
+        return $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'Class rooms not found']));
+    }
+}
+
+
+
+
+
+
+//End of ClassRoom Part
 
 ////BOOKS
 

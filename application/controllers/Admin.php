@@ -697,6 +697,22 @@ class Admin extends CI_Controller
 		}
 	}
 	//END EXAM section
+  // SMTP SETTINGS MANAGER
+  public function smtp_settings($param1 = "", $param2 = "")
+  {
+    if ($param1 == 'update') {
+      $response = $this->settings_model->update_smtp_settings();
+      echo $response;
+    }
+
+    // showing the Smtp Settings file
+    if (empty($param1)) {
+      $page_data['folder_name'] = 'settings';
+      $page_data['page_title'] = 'smtp_settings';
+      $page_data['settings_type'] = 'smtp_settings';
+      $this->load->view('backend/index', $page_data);
+    }
+  }
 
 	//START MARKS section
 	public function mark($param1 = '', $param2 = '')
