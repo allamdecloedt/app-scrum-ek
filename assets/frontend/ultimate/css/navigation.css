@@ -219,6 +219,20 @@ label div:last-child {
   backdrop-filter: blur(10px);
   border: #ffffffcf solid 1px;
 }
+.forget-dropdown {
+  position: absolute;
+  height: 300px !important;
+  width: 400px;
+  top: 60px;
+  right: 0;
+  padding-left: 50px;
+  padding-right: 20px;
+  background-color: #dadada91;
+  border-radius: 6px;
+  transition: all 0.3s ease-in-out;
+  backdrop-filter: blur(10px);
+  border: #ffffffcf solid 1px;
+}
 
 .login-input-label {
   color: #3a3a3a;
@@ -269,6 +283,20 @@ label div:last-child {
   color: #3a3a3a;
 }
 
+.forget-phrase {
+  color: #3a3a3a !important;
+  text-decoration: none;
+  font-size: 11px !important;
+  display: flex;
+  margin-bottom: 20px;
+  cursor: default;
+  pointer-events: none;
+}
+
+.forget-phrase:hover {
+  color: #3a3a3a;
+}
+
 .register-link {
   color: #ffffff;
   text-decoration: none;
@@ -279,6 +307,20 @@ label div:last-child {
 }
 
 .register-link:hover {
+  color: #8f00af;
+  transition: all 0.3s;
+}
+
+.forget-link {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 11px !important;
+  transition: all 0.3s;
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.forget-link:hover {
   color: #8f00af;
   transition: all 0.3s;
 }
@@ -419,7 +461,24 @@ label div:last-child {
   pointer-events: all;
 }
 
-.login-link:hover {
+.loginforge-link:hover {
+  color: #8f00af !important;
+  transition: all 0.3s;
+}
+.loginforge-link {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: #1c1c1c !important;
+  text-decoration: underline;
+  font-size: 11px !important;
+  transition: all 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+  pointer-events: all;
+}
+
+.loginforge-link:hover {
   color: #8f00af !important;
   transition: all 0.3s;
 }
@@ -535,6 +594,10 @@ Responsive Styling
     width: 95vw;
   }
 
+  .forget-dropdown {
+    width: 95vw;
+  }
+
   .small-nav {
     height: 80px;
   }
@@ -573,6 +636,10 @@ Responsive Styling
     .register-dropdown {
       top: 0px;
     }
+
+    .forget-dropdown {
+      top: 0px;
+    }
   }
 
   .user-dropdown {
@@ -585,6 +652,11 @@ Responsive Styling
   }
 
   .register-dropdown {
+    top: 0;
+    left: 0;
+  }
+
+  .forget-dropdown {
     top: 0;
     left: 0;
   }

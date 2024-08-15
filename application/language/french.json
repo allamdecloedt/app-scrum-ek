@@ -1307,5 +1307,11 @@
     "join_": "Join ",
     "class_price": "Class price",
     "provide_class_price": "Provide class price",
-    "exams": "Exams"
+    "exams": "Exams",
+    "forget_password": "Forget password",
+    "search": "Search",
+    "less": "Less",
+    "no_student_account": "No student account",
+    "forgot_your_account?_": "Forgot your account? ",
+    "forgot_account?": "Forgot account?"
 }
