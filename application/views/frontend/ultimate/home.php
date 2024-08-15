@@ -10,8 +10,9 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
   <div class=" intro-section">
     <div id="intro-container" class="intro-container" >
-
-  
+    <!-- Contenu de votre page -->
+    <?php $this->load->view('frontend/alert_view'); ?>
+    <!-- Autres contenus de la page -->
       <div class="container pt-5 section-height">
         <div class="row">
           <div class="col-lg-6 mb-7 mb-lg-0 align-content-center intro-container-content-front">

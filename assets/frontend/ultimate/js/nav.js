@@ -34,6 +34,10 @@ $(document).ready(function () {
         registerDropdown.classList.toggle("show");
         registerDropdown.classList.toggle("display-none");
       }
+      if (forgetDropdown.classList.contains("show")) {
+        forgetDropdown.classList.toggle("show");
+        forgetDropdown.classList.toggle("display-none");
+      }
 
       if (loginDropdown.classList.contains("display-none")) {
         loginDropdown.classList.toggle("display-none");
@@ -70,6 +74,29 @@ $(document).ready(function () {
     });
   }
 
+  const forgetToggle = document.querySelector(".forget-link");
+  const forgetDropdown = document.querySelector(".forget-dropdown");
+
+  if (document.querySelector(".forget-link")) {
+    forgetToggle.addEventListener("click", function () {
+     
+      if (forgetDropdown.classList.contains("display-none")) {
+       
+        loginDropdown.classList.toggle("show");
+        loginDropdown.classList.toggle("display-none");
+        forgetDropdown.classList.toggle("display-none");
+
+        setTimeout(() => {
+          forgetDropdown.classList.toggle("show");
+        }, 100);
+      } else {
+       
+        forgetDropdown.classList.toggle("show");
+        forgetDropdown.classList.toggle("display-none");
+      }
+    });
+  }
+
   if (document.querySelector(".login-dropdown")) {
     const loginExitSvg = document.querySelector(".login-exit-svg");
 
@@ -99,6 +126,29 @@ $(document).ready(function () {
       if (loginDropdown.classList.contains("display-none")) {
         registerDropdown.classList.toggle("show");
         registerDropdown.classList.toggle("display-none");
+        loginDropdown.classList.toggle("display-none");
+
+        setTimeout(() => {
+          loginDropdown.classList.toggle("show");
+        }, 100);
+      } else {
+        
+        loginDropdown.classList.toggle("show");
+        loginDropdown.classList.toggle("display-none");
+      }
+    });
+  }
+
+  const loginforgetLink = document.querySelector(".loginforge-link");
+
+  if (document.querySelector(".loginforge-link")) {
+    loginforgetLink.addEventListener("click", function () {
+   
+      if (loginDropdown.classList.contains("display-none")) {
+
+        forgetDropdown.classList.toggle("show");
+        forgetDropdown.classList.toggle("display-none");
+
         loginDropdown.classList.toggle("display-none");
 
         setTimeout(() => {
