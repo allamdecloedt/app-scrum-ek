@@ -10,8 +10,9 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
   <div class=" intro-section">
     <div id="intro-container" class="intro-container" >
-
-  
+    <!-- Contenu de votre page -->
+    <?php $this->load->view('frontend/alert_view'); ?>
+    <!-- Autres contenus de la page -->
       <div class="container pt-5 section-height">
         <div class="row">
           <div class="col-lg-6 mb-7 mb-lg-0 align-content-center intro-container-content-front">
@@ -25,7 +26,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
                 <p class="h6 text-center text-break intro-container-content-back">
                   <!--<?php echo htmlspecialchars_decode(get_frontend_settings('homepage_note_description')); ?>-->
-                  <span class="intro-container-content-back">des competence pour aujourd'hui (et demain). nous vous
+                  <span class="intro-container-content-back">des compétences pour aujourd'hui (et demain). nous vous
                     accompagnons dans vos premiere pas.</span>
                 </p>
               </div>

@@ -1308,6 +1308,10 @@
     "class_price": "Class price",
     "provide_class_price": "Provide class price",
     "exams": "Exams",
-    "student_admission": "Student admission",
-    "loading_photo": "Loading photo"
+    "forget_password": "Forget password",
+    "search": "Search",
+    "less": "Less",
+    "no_student_account": "No student account",
+    "forgot_your_account?_": "Forgot your account? ",
+    "forgot_account?": "Forgot account?"
 }

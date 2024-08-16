@@ -1,26 +1,5 @@
-#schoolFormSelector,
-#studentFormSelector {
-  position: relative;
-  background-color: #2e2e2e;
-  border: none;
-  min-width: 100px !important;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 0px;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 0px;
-  cursor: grab;
-  color: #b0b0b0;
-  font-weight: 700;
-  height: 30px;
-  bottom: -10px;
-  transition: background-color 0.5s ease-in-out !important;
-}
 
 #schoolform {
-  display: none;
-}
-
-#studentform {
   display: block;
 }
 
@@ -30,114 +9,6 @@
   background-color: #2a2a2a;
 }
 
-.side-line-left {
-  position: absolute;
-  min-height: 200px;
-  background: linear-gradient(
-    to top,
-    #212121 0%,
-    #2e2e2e 30%,
-    #2e2e2e 50%,
-    #2e2e2e 70%
-  ) !important;
-  width: 2px;
-  top: 40px;
-  left: 12px;
-  transition: all 0.5s ease-in-out;
-}
-
-.side-line-right {
-  position: absolute;
-  min-height: 200px;
-  background: linear-gradient(
-    to top,
-    #212121 0%,
-    #2e2e2e 30%,
-    #2e2e2e 50%,
-    #2e2e2e 70%
-  ) !important;
-  width: 2px;
-  top: 40px;
-  right: 12px;
-  transition: all 0.5s ease-in-out;
-}
-
-.side-line-left[data-selected="true"] {
-  position: absolute;
-  min-height: 400px;
-  background: linear-gradient(
-    to top,
-    #212121 0%,
-    #2e2e2e 30%,
-    #6f0088 50%,
-    #8f00af 70%
-  ) !important;
-  width: 2px;
-  top: 40px;
-  left: 12px;
-  transition: all 0.5s ease-in-out;
-}
-
-.side-line-right[data-selected="true"] {
-  position: absolute;
-  min-height: 400px;
-  background: linear-gradient(
-    to top,
-    #212121 0%,
-    #2e2e2e 30%,
-    #6f0088 50%,
-    #8f00af 70%
-  ) !important;
-  width: 2px;
-  top: 40px;
-  right: 12px;
-  transition: all 0.5s ease-in-out;
-}
-
-.active-form {
-  box-shadow: rgba(0, 0, 0, 0.35) 0px -2px 15px;
-  color: #fff !important;
-  background: #8f00af !important ;
-  height: 40px !important;
-  bottom: 0px !important;
-  transition: all 0.5s ease-in-out;
-}
-
-.selector-underline {
-  position: absolute;
-  bottom: 0;
-  height: 2px;
-  width: 100%;
-  background: #8f00af;
-}
-
-.underline-right {
-  background: linear-gradient(
-    to left,
-    #2e2e2e 0%,
-    #2e2e2e 70%,
-    #6f0088 80%,
-    #8f00af 100%
-  ) !important;
-  position: absolute;
-  height: 2px;
-  bottom: 0;
-  width: 100%;
-}
-
-.underline-left {
-  background: linear-gradient(
-    to right,
-    #2e2e2e 0%,
-    #2e2e2e 70%,
-    #6f0088 80%,
-    #8f00af 100%
-  ) !important;
-  position: absolute;
-  height: 2px;
-  bottom: 0;
-  width: 100%;
-}
 
 .inputfile {
   width: 0.1px;
@@ -164,17 +35,9 @@
 .button-label svg {
   position: absolute;
   top: 4px;
-  left: 10px;
+  left: 20%;
 }
 
-.file-spacer {
-  background-color: #ffffff !important;
-  position: absolute;
-  width: 1px !important;
-  height: 100%;
-  bottom: -6px;
-  left: 50px;
-}
 
 .file-name {
   position: relative;
