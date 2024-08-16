@@ -1347,6 +1347,5 @@
     "already_joined_school": "Already joined school",
     "total_number_of_school": "Total number of school",
     "total_number_of_class": "Total number of class",
-    "forget_password": "Forget password",
-    "invalid_your_email": "Invalid your email"
+    "validation_error": "Validation error"
 }

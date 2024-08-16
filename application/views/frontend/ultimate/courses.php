@@ -18,9 +18,7 @@
         <div class="general-container-ol"></div>
     </div>
     <!-- End Header Section -->
-  <!-- Contenu de votre page -->
-  <?php $this->load->view('frontend/alert_view'); ?>
-      <!-- Autres contenus de la page -->
+
     <div class="container g-0 courses-section ">
 
         <div class="row justify-content-center pt-5">

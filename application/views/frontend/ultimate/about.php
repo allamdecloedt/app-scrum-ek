@@ -12,7 +12,6 @@
     </div>
   </div>
   <div class=" g-0 about-image-container ">
-
     <img class="rellax" data-rellax-speed="3" alt="About Us"
       src="<?php echo base_url('uploads/images/about_us/gros-plan-personnes-travaillant-au-bureau-min.jpg') ?>">
 
@@ -27,11 +26,8 @@
           fill="#212121"></path>
       </svg>
       <!-- About Section Content-->
-   <!-- Contenu de votre page -->
-   <?php $this->load->view('frontend/alert_view'); ?>
-      <!-- Autres contenus de la page -->
+
       <div class="container about-section-content">
-   
 
         <h1>About Our Schools</h1>
         <p class="h6">It is a long established fact that a reader will be distracted by the readable content of a page
