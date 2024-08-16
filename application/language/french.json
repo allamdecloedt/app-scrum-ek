@@ -1307,5 +1307,7 @@
     "join_": "Join ",
     "class_price": "Class price",
     "provide_class_price": "Provide class price",
-    "exams": "Exams"
+    "exams": "Exams",
+    "student_admission": "Student admission",
+    "loading_photo": "Loading photo"
 }

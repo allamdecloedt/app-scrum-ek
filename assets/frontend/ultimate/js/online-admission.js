@@ -1,6 +1,46 @@
 
+var studentForm = document.getElementById("studentform");
+
+var schoolForm = document.getElementById("schoolform");
+
+var studentFormLine = document.getElementById("left-line");
+
+var schoolFormLine = document.getElementById("right-line");
+
+var studentFormSelector = document.getElementById("studentFormSelector");
+
+var schoolFormSelector = document.getElementById("schoolFormSelector");
 
 // Listen for file input change for educational qualifications
+studentFormSelector.addEventListener("click", function () {
+  document.getElementById("studentform").style.display = "block";
+  document.getElementById("schoolform").style.display = "none";
+  studentFormLine.classList.remove("underline-left");
+  schoolFormLine.classList.add("underline-right");
+  studentFormSelector.classList.add("active-form");
+  schoolFormSelector.classList.remove("active-form");
+  document
+    .querySelector(".side-line-left")
+    .setAttribute("data-selected", "true");
+  document
+    .querySelector(".side-line-right")
+    .setAttribute("data-selected", "false");
+});
+
+schoolFormSelector.addEventListener("click", function () {
+  document.getElementById("schoolform").style.display = "block";
+  document.getElementById("studentform").style.display = "none";
+  schoolFormLine.classList.remove("underline-right");
+  studentFormLine.classList.add("underline-left");
+  schoolFormSelector.classList.add("active-form");
+  studentFormSelector.classList.remove("active-form");
+  document
+    .querySelector(".side-line-left")
+    .setAttribute("data-selected", "false");
+  document
+    .querySelector(".side-line-right")
+    .setAttribute("data-selected", "true");
+});
 
 
 
@@ -88,4 +128,45 @@ document.getElementById("schoolform").addEventListener("submit", function(event)
         // Show error message
         document.getElementById("errorMessage").style.display = "block";
     }
+});
+
+
+
+
+
+
+
+
+
+var rpps = document.getElementById("repeat-password-student");
+var ps = document.getElementById("password-student");
+
+ps.addEventListener("input", function() {
+
+    if (ps.value !== rpps.value) {
+        // Show error message
+        document.getElementById("errorMessage").style.display = "block";
+    }
+
+    if (rpps.value === this.value || rpps.value === "") {
+        // Hide error message
+        document.getElementById("errorMessage").style.display = "none";
+    }
+
+});
+
+
+rpps.addEventListener("input", function() {
+    var passwordstudent = document.getElementById("password-student").value;
+
+    if (passwordstudent !== this.value) {
+        // Show error message
+        document.getElementById("errorMessage").style.display = "block";
+    }
+
+    if (passwordstudent === this.value || this.value === "") {
+        // Hide error message
+        document.getElementById("errorMessage").style.display = "none";
+    }
+
 });
