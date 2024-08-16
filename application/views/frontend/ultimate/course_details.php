@@ -18,6 +18,9 @@
         <div class="general-container-ol"></div>
     </div>
     <!-- End Header Section -->
+       <!-- Contenu de votre page -->
+   <?php $this->load->view('frontend/alert_view'); ?>
+      <!-- Autres contenus de la page -->
     <div class="container">
 
 
