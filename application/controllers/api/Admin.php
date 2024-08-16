@@ -3995,7 +3995,7 @@ public function sections_for_class_get() {
 }
 
 
-  public function create_invoice_post() {
+/*  public function create_invoice_post() {
     $student_id = $this->input->post('student_id');
     $class_id = $this->input->post('class_id');
     $total_amount = $this->input->post('total_amount');
@@ -4068,7 +4068,82 @@ public function sections_for_class_get() {
         ->set_content_type('application/json')
         ->set_output(json_encode(['status' => true, 'invoice_id' => $invoice_id]));
 }
-  
+  */
+
+  public function create_invoice_post() {
+    // Get raw POST data
+    $input_data = json_decode($this->input->raw_input_stream, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        log_message('error', 'JSON decode error: ' . json_last_error_msg());
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid JSON input']));
+        return;
+    }
+
+    // Log the input data for verification
+    log_message('debug', 'Input data: ' . json_encode($input_data));
+
+    // Validate and log the 'created_at' date
+    $created_at = isset($input_data['created_at']) ? $input_data['created_at'] : null;
+    if (empty($created_at)) {
+        log_message('error', 'Missing created_at');
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Missing created_at']));
+        return;
+    }
+
+    // Try parsing the date
+    $date_format = 'Y/m/d H:i:s';
+    $created_at_datetime = DateTime::createFromFormat($date_format, $created_at);
+
+    if ($created_at_datetime === false) {
+        $errors = DateTime::getLastErrors();
+        log_message('error', 'Date parsing error: ' . $created_at . ' Errors: ' . print_r($errors, true));
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid date format. Expected format: ' . $date_format]));
+        return;
+    }
+
+    $created_at_timestamp = $created_at_datetime->getTimestamp();
+    log_message('debug', 'Parsed timestamp: ' . $created_at_timestamp);
+
+    // Prepare invoice data and insert
+    $invoice_data = [
+        'title' => 'Invoice for ' . (isset($input_data['user_name']) ? $input_data['user_name'] : 'Unknown'),
+        'total_amount' => isset($input_data['total_amount']) ? $input_data['total_amount'] : 0,
+        'class_id' => isset($input_data['class_id']) ? $input_data['class_id'] : null,
+        'student_id' => isset($input_data['student_id']) ? $input_data['student_id'] : null,
+        'paid_amount' => isset($input_data['paid_amount']) ? $input_data['paid_amount'] : 0,
+        'status' => 'unpaid',
+        'payment_method' => isset($input_data['payment_method']) ? $input_data['payment_method'] : 'unknown',
+        'school_id' => isset($input_data['school_id']) ? $input_data['school_id'] : null,
+        'session' => isset($input_data['session']) ? $input_data['session'] : null,
+        'created_at' => $created_at_timestamp,
+        'updated_at' => $created_at_timestamp,
+    ];
+
+    $this->db->insert('invoices', $invoice_data);
+    if ($this->db->affected_rows() > 0) {
+        $invoice_id = $this->db->insert_id();
+        log_message('debug', 'Invoice created successfully with ID: ' . $invoice_id);
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'invoice_id' => $invoice_id, 'message' => 'Invoice created successfully']));
+    } else {
+        log_message('error', 'Database insert error: ' . $this->db->error()['message']);
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to insert invoice data']));
+    }
+}
+
+
+
 public function paid_invoice_post() {
     // Retrieve POST data
     $input_data = json_decode(file_get_contents('php://input'), true);
@@ -5312,8 +5387,540 @@ public function delete_grade_delete($id)
 
 
 ////
+///Routines Part
+public function create_routine_post()
+{
+    // Get the raw POST data
+    $postData = json_decode(file_get_contents('php://input'), true);
+
+    // Debug: Log the received data
+    log_message('debug', 'Received raw POST data: ' . print_r($postData, TRUE));
+
+    // Fetch data from the decoded JSON
+    $data = array(
+        'class_id' => isset($postData['class_id']) ? $postData['class_id'] : null,
+        'section_id' => isset($postData['section_id']) ? $postData['section_id'] : null,
+        'subject_id' => isset($postData['subject_id']) ? $postData['subject_id'] : null,
+        'starting_hour' => isset($postData['starting_hour']) ? $postData['starting_hour'] : null,
+        'ending_hour' => isset($postData['ending_hour']) ? $postData['ending_hour'] : null,
+        'starting_minute' => isset($postData['starting_minute']) ? $postData['starting_minute'] : null,
+        'ending_minute' => isset($postData['ending_minute']) ? $postData['ending_minute'] : null,
+        'day' => isset($postData['day']) ? $postData['day'] : null,
+        'teacher_id' => isset($postData['teacher_id']) ? $postData['teacher_id'] : null,
+        'room_id' => isset($postData['room_id']) ? $postData['room_id'] : null,
+        'school_id' => isset($postData['school_id']) ? $postData['school_id'] : null,
+        'session_id' => isset($postData['session_id']) ? $postData['session_id'] : null
+    );
+
+    // Debug: Log the parsed data
+    log_message('debug', 'Parsed data: ' . print_r($data, TRUE));
+
+    // Insert data into the database
+    $inserted = $this->db->insert('routines', $data);
+
+    // Debug: Log the insert status
+    log_message('debug', 'Insert status: ' . ($inserted ? 'Success' : 'Failed'));
+
+    // Return response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+            'status' => $inserted,
+            'notification' => $inserted ? get_phrase('class_routine_added_successfully') : get_phrase('failed_to_add_class_routine')
+        ]));
+}
+
+public function update_routine_put($id)
+{
+    // Get the raw PUT data
+    $putData = json_decode(file_get_contents('php://input'), true);
+
+    // Debug: Log the received data
+    log_message('debug', 'Received raw PUT data: ' . print_r($putData, TRUE));
+
+    // Fetch data from the decoded JSON
+    $data = array(
+        'class_id' => isset($putData['class_id']) ? $putData['class_id'] : null,
+        'section_id' => isset($putData['section_id']) ? $putData['section_id'] : null,
+        'subject_id' => isset($putData['subject_id']) ? $putData['subject_id'] : null,
+        'starting_hour' => isset($putData['starting_hour']) ? $putData['starting_hour'] : null,
+        'ending_hour' => isset($putData['ending_hour']) ? $putData['ending_hour'] : null,
+        'starting_minute' => isset($putData['starting_minute']) ? $putData['starting_minute'] : null,
+        'ending_minute' => isset($putData['ending_minute']) ? $putData['ending_minute'] : null,
+        'day' => isset($putData['day']) ? $putData['day'] : null,
+        'teacher_id' => isset($putData['teacher_id']) ? $putData['teacher_id'] : null,
+        'room_id' => isset($putData['room_id']) ? $putData['room_id'] : null
+    );
+
+    // Debug: Log the parsed data
+    log_message('debug', 'Parsed data: ' . print_r($data, TRUE));
+
+    // Remove any null values from the $data array
+    $data = array_filter($data, function($value) {
+        return $value !== null;
+    });
+
+    // Ensure there is data to update
+    if (empty($data)) {
+        log_message('debug', 'No data to update.');
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode([
+                'status' => false,
+                'notification' => get_phrase('no_data_provided_for_update')
+            ]));
+        return;
+    }
+
+    // Update data in the database
+    $this->db->where('id', $id);
+    $updated = $this->db->update('routines', $data);
+
+    // Debug: Log the SQL query and any errors
+    log_message('debug', 'SQL Query: ' . $this->db->last_query());
+    if (!$updated) {
+        $error = $this->db->error();
+        log_message('debug', 'DB Error: ' . $error['message']);
+    }
+
+    // Debug: Log the update status
+    log_message('debug', 'Update status: ' . ($updated ? 'Success' : 'Failed'));
+
+    // Return response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+            'status' => $updated,
+            'notification' => $updated ? get_phrase('class_routine_updated_successfully') : get_phrase('failed_to_update_class_routine')
+        ]));
+}
 
 
+public function delete_routine_delete($id)
+{
+    // No need to fetch data for deletion, just use the ID
+
+    // Debug: Log the ID to be deleted
+    log_message('debug', 'Deleting routine with ID: ' . $id);
+
+    // Delete the routine from the database
+    $this->db->where('id', $id);
+    $deleted = $this->db->delete('routines');
+
+    // Debug: Log the delete status
+    log_message('debug', 'Delete status: ' . ($deleted ? 'Success' : 'Failed'));
+
+    // Return response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+            'status' => $deleted,
+            'notification' => $deleted ? get_phrase('class_routine_deleted_successfully') : get_phrase('failed_to_delete_class_routine')
+        ]));
+}
+
+
+public function routines_by_school_id_get($school_id)
+{
+    // Debug: Log the received school_id
+    log_message('debug', 'Fetching routines for school_id: ' . $school_id);
+
+    // Fetch routines from the database
+    $this->db->where('school_id', $school_id);
+    $query = $this->db->get('routines');
+    $routines = $query->result_array();
+
+    // Debug: Log the fetched data
+    log_message('debug', 'Fetched routines: ' . print_r($routines, TRUE));
+
+    // Return response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+            'status' => true,
+            'data' => $routines,
+            'notification' => get_phrase('routines_fetched_successfully')
+        ]));
+}
+
+
+
+public function routines_by_class_and_section_get($class_id, $section_id)
+{
+    // Debug: Log the received class_id and section_id
+    log_message('debug', 'Fetching routines for class_id: ' . $class_id . ' and section_id: ' . $section_id);
+
+    // Fetch routines from the database
+    $this->db->where('class_id', $class_id);
+    $this->db->where('section_id', $section_id);
+    $query = $this->db->get('routines');
+    $routines = $query->result_array();
+
+    // Debug: Log the fetched data
+    log_message('debug', 'Fetched routines: ' . print_r($routines, TRUE));
+
+    // Return response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+            'status' => true,
+            'data' => $routines,
+            'notification' => get_phrase('routines_fetched_successfully')
+        ]));
+}
+
+
+//End Routines
+//Student Free Manager
+
+public function invoice_by_date_range_post() {
+    $this->load->database();
+
+    // Retrieve and log posted data
+    $date_from = $this->input->post('date_from');
+    $date_to = $this->input->post('date_to');
+    $selected_class = $this->input->post('selected_class');
+    $selected_status = $this->input->post('selected_status');
+
+    log_message('debug', 'Received: date_from=' . $date_from . ', date_to=' . $date_to . ', selected_class=' . $selected_class . ', selected_status=' . $selected_status);
+
+    // Start building the query
+    $this->db->from('invoices');
+
+    // Apply class_id filter
+    if (!empty($selected_class) && $selected_class != "all") {
+        $this->db->where('class_id', $selected_class);
+        log_message('debug', 'Applied class_id filter: ' . $selected_class);
+    }
+
+    // Apply status filter
+    if (!empty($selected_status) && $selected_status != "all") {
+        $this->db->where('status', $selected_status);
+        log_message('debug', 'Applied status filter: ' . $selected_status);
+    }
+
+    // Apply date range filter
+    if (!empty($date_from) && !empty($date_to)) {
+        $this->db->where('DATE(created_at) >=', $date_from);
+        $this->db->where('DATE(created_at) <=', $date_to);
+        log_message('debug', 'Applied date range filter: ' . $date_from . ' to ' . $date_to);
+    }
+
+    // Execute the query
+    $query = $this->db->get();
+
+    // Log the executed SQL query for debugging
+    log_message('debug', 'Executed SQL Query: ' . $this->db->last_query());
+
+    // Return the results as a JSON response
+    if ($query->num_rows() > 0) {
+        $response = array('status' => 'success', 'data' => $query->result_array());
+    } else {
+        $response = array('status' => 'error', 'message' => 'No invoices found for the given criteria');
+    }
+
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+
+protected function get_class_name($class_id) {
+    // Query the database to get the class name based on the class_id
+    $this->load->database();
+    $this->db->select('name');
+    $this->db->from('classes');
+    $this->db->where('id', $class_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        $result = $query->row();
+        return $result->name;
+    } else {
+        return null; // or return a default value
+    }
+}
+
+public function get_invoice_by_parent_id() {
+    $parent_user_id = $this->session->userdata('user_id');
+    $parent_data = $this->db->get_where('parents', array('user_id' => $parent_user_id))->row_array();
+    $student_list = $this->user_model->get_student_list_of_logged_in_parent();
+    $student_ids = array();
+
+    foreach ($student_list as $student) {
+        if (!in_array($student['student_id'], $student_ids)) {
+            array_push($student_ids, $student['student_id']);
+        }
+    }
+
+    if (count($student_ids) > 0) {
+        $this->db->where_in('student_id', $student_ids);
+        $this->db->where('school_id', $this->school_id);
+        $this->db->where('session', $this->active_session);
+        $invoices = $this->db->get('invoices')->result_array();
+
+        $response = array('status' => true, 'data' => $invoices);
+    } else {
+        $response = array('status' => false, 'notification' => 'No invoices found');
+    }
+
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function create_single_invoice_post() {
+    // Get raw POST data
+    $input_data = json_decode($this->input->raw_input_stream, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        log_message('error', 'JSON decode error: ' . json_last_error_msg());
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid JSON input']));
+        return;
+    }
+
+    // Log the input data for verification
+    log_message('debug', 'Input data: ' . json_encode($input_data));
+
+    // Validate and log the 'created_at' date
+    $created_at = isset($input_data['created_at']) ? $input_data['created_at'] : date('Y-m-d H:i:s');
+    $created_at_datetime = DateTime::createFromFormat('Y-m-d H:i:s', $created_at);
+
+    if ($created_at_datetime === false) {
+        $errors = DateTime::getLastErrors();
+        log_message('error', 'Date parsing error: ' . $created_at . ' Errors: ' . print_r($errors, true));
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid date format. Expected format: Y-m-d H:i:s']));
+        return;
+    }
+
+    $created_at_timestamp = $created_at_datetime->getTimestamp();
+    log_message('debug', 'Parsed timestamp: ' . $created_at_timestamp);
+
+    // Prepare invoice data
+    $invoice_data = [
+        'title' => isset($input_data['title']) ? $input_data['title'] : null,
+        'total_amount' => isset($input_data['total_amount']) ? $input_data['total_amount'] : 0,
+        'class_id' => isset($input_data['class_id']) ? $input_data['class_id'] : null,
+        'student_id' => isset($input_data['student_id']) ? $input_data['student_id'] : null,
+        'paid_amount' => isset($input_data['paid_amount']) ? $input_data['paid_amount'] : 0,
+        'status' => isset($input_data['status']) ? $input_data['status'] : 'unpaid',
+        'payment_method' => isset($input_data['payment_method']) ? $input_data['payment_method'] : null,
+        'school_id' => isset($input_data['school_id']) ? $input_data['school_id'] : null,
+        'session' => isset($input_data['session']) ? $input_data['session'] : null,
+        'created_at' => $created_at_timestamp,
+        'updated_at' => ($input_data['paid_amount'] > 0) ? $created_at_timestamp : null,
+    ];
+
+    // Check for required fields
+    $required_fields = ['title', 'class_id', 'student_id', 'school_id', 'session'];
+    foreach ($required_fields as $field) {
+        if (empty($invoice_data[$field])) {
+            log_message('error', ucfirst($field) . ' is required');
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(['status' => false, 'message' => ucfirst($field) . ' is required']));
+            return;
+        }
+    }
+
+    // Insert the data into the database
+    $this->db->insert('invoices', $invoice_data);
+    if ($this->db->affected_rows() > 0) {
+        $invoice_id = $this->db->insert_id();
+        log_message('debug', 'Invoice created successfully with ID: ' . $invoice_id);
+
+        $this->output
+            ->set_content_type('application/json')
+            ->set_output(json_encode(['status' => true, 'invoice_id' => $invoice_id, 'message' => 'Invoice created successfully']));
+    } else {
+        log_message('error', 'Database insert error: ' . $this->db->error()['message']);
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to insert invoice data']));
+    }
+}
+
+
+
+
+public function create_mass_invoice() {
+    $data['total_amount'] = $this->input->post('total_amount');
+    $data['paid_amount'] = $this->input->post('paid_amount');
+    $data['status'] = $this->input->post('status');
+
+    if ($data['paid_amount'] > $data['total_amount']) {
+        $response = array('status' => false, 'notification' => 'Paid amount cannot be greater than total amount');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    if ($data['status'] == 'paid' && $data['total_amount'] != $data['paid_amount']) {
+        $response = array('status' => false, 'notification' => 'Paid amount is not equal to total amount');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    $data['title'] = $this->input->post('title');
+    $data['class_id'] = $this->input->post('class_id');
+    $data['school_id'] = $this->school_id;
+    $data['session'] = $this->active_session;
+    $data['created_at'] = strtotime(date('d-M-Y'));
+
+    if ($this->input->post('paid_amount') > 0) {
+        $data['updated_at'] = strtotime(date('d-M-Y'));
+    }
+
+    $enrolments = $this->user_model->get_student_details_by_id('section', $this->input->post('section_id'));
+    foreach ($enrolments as $enrolment) {
+        $data['student_id'] = $enrolment['student_id'];
+        $this->db->insert('invoices', $data);
+    }
+
+    if (sizeof($enrolments) > 0) {
+        $response = array('status' => true, 'notification' => 'Invoices added successfully');
+    } else {
+        $response = array('status' => false, 'notification' => 'No students found');
+    }
+
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function update_invoice($id = "") {
+    $previous_invoice_data = $this->db->get_where('invoices', array('id' => $id))->row_array();
+
+    $data['title'] = $this->input->post('title');
+    $data['total_amount'] = $this->input->post('total_amount');
+    $data['class_id'] = $this->input->post('class_id');
+    $data['student_id'] = $this->input->post('student_id');
+    $data['paid_amount'] = $this->input->post('paid_amount');
+    $data['status'] = $this->input->post('status');
+
+    if ($data['paid_amount'] > $data['total_amount']) {
+        $response = array('status' => false, 'notification' => 'Paid amount cannot be greater than total amount');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+    if ($data['status'] == 'paid' && $data['total_amount'] != $data['paid_amount']) {
+        $response = array('status' => false, 'notification' => 'Paid amount is not equal to total amount');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    if ($data['total_amount'] == $data['paid_amount']) {
+        $data['status'] = 'paid';
+    }
+
+    if ($this->input->post('paid_amount') != $previous_invoice_data['paid_amount'] && $this->input->post('paid_amount') > 0) {
+        $data['updated_at'] = strtotime(date('d-M-Y'));
+    } elseif ($this->input->post('paid_amount') == 0 || $this->input->post('paid_amount') == "") {
+        $data['updated_at'] = 0;
+    }
+
+    $this->db->where('id', $id);
+    $this->db->update('invoices', $data);
+
+    $response = array('status' => true, 'notification' => 'Invoice updated successfully');
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function delete_invoice($id = "") {
+    $this->db->where('id', $id);
+    $this->db->delete('invoices');
+
+    $response = array('status' => true, 'notification' => 'Invoice deleted successfully');
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+
+//End Student Free Manager
+//Class Room Part
+
+public function add_class_room_post() {
+    $data = json_decode($this->input->raw_input_stream, true);
+    if (!isset($data['name']) || !isset($data['school_id'])) {
+        return $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Missing required fields']));
+    }
+    log_message('debug', 'Input data: ' . json_encode($data));
+    $this->load->database();
+    $this->db->insert('class_rooms', $data);
+    if ($this->db->affected_rows() > 0) {
+        return $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'message' => 'Class room added successfully']));
+    } else {
+        $error = $this->db->error();
+        log_message('error', 'Database insert error: ' . $error['message']);
+        return $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to add class room', 'error' => $error['message']]));
+    }
+}
+
+public function update_class_room_put($id) {
+    $data = json_decode($this->input->raw_input_stream, true);
+    if (!isset($data['name']) || !isset($data['school_id'])) {
+        return $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['status' => false, 'message' => 'Missing required fields']));
+    }
+    log_message('debug', 'Input data: ' . json_encode($data));
+    $this->load->database();
+    $this->db->where('id', $id);
+    $this->db->update('class_rooms', $data);
+    if ($this->db->affected_rows() > 0) {
+        return $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'message' => 'Class room updated successfully']));
+    } else {
+        $error = $this->db->error();
+        log_message('error', 'Database update error: ' . $error['message']);
+        return $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update class room', 'error' => $error['message']]));
+    }
+}
+
+public function delete_class_room_delete($id) {
+    $this->load->database();
+    $this->db->where('id', $id);
+    $this->db->delete('class_rooms');
+    if ($this->db->affected_rows() > 0) {
+        return $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'message' => 'Class room deleted successfully']));
+    } else {
+        $error = $this->db->error();
+        log_message('error', 'Database delete error: ' . $error['message']);
+        return $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete class room', 'error' => $error['message']]));
+    }
+}
+
+
+public function get_class_room_get($school_id) {
+    $this->load->database();
+    $this->db->select('class_rooms.*, schools.name as school_name');
+    $this->db->from('class_rooms');
+    $this->db->join('schools', 'schools.id = class_rooms.school_id');
+    $this->db->where('class_rooms.school_id', $school_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        return $this->output
+            ->set_status_header(200)
+            ->set_output(json_encode(['status' => true, 'data' => $query->result()]));
+    } else {
+        return $this->output
+            ->set_status_header(404)
+            ->set_output(json_encode(['status' => false, 'message' => 'Class rooms not found']));
+    }
+}
+
+
+
+
+
+
+//End of ClassRoom Part
 ///Marks Part
 
 public function add_marks_post() {
@@ -5359,41 +5966,10 @@ public function update_marks_put() {
 
     // Validate input data
     if (!isset($data['student_id']) || !isset($data['subject_id']) || !isset($data['class_id']) || !isset($data['section_id']) || !isset($data['exam_id']) || !isset($data['mark_obtained']) || !isset($data['comment']) || !isset($data['school_id'])) {
-=======
-//Class Room Part
-
-public function add_class_room_post() {
-    $data = json_decode($this->input->raw_input_stream, true);
-    if (!isset($data['name']) || !isset($data['school_id'])) {
         return $this->output
             ->set_status_header(400)
             ->set_output(json_encode(['status' => false, 'message' => 'Missing required fields']));
     }
-    log_message('debug', 'Input data: ' . json_encode($data));
-    $this->load->database();
-    $this->db->insert('class_rooms', $data);
-    if ($this->db->affected_rows() > 0) {
-        return $this->output
-            ->set_status_header(200)
-            ->set_output(json_encode(['status' => true, 'message' => 'Class room added successfully']));
-    } else {
-        $error = $this->db->error();
-        log_message('error', 'Database insert error: ' . $error['message']);
-        return $this->output
-            ->set_status_header(500)
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to add class room', 'error' => $error['message']]));
-    }
-}
-
-public function update_class_room_put($id) {
-    $data = json_decode($this->input->raw_input_stream, true);
-    if (!isset($data['name']) || !isset($data['school_id'])) {
-
-        return $this->output
-            ->set_status_header(400)
-            ->set_output(json_encode(['status' => false, 'message' => 'Missing required fields']));
-    }
-
 
     // Log the data for debugging
     log_message('debug', 'Input data: ' . json_encode($data));
@@ -5604,68 +6180,6 @@ public function get_subject_id_by_name_get($subject_name = "")
 
 
 //End Marks
-
-
-    log_message('debug', 'Input data: ' . json_encode($data));
-    $this->load->database();
-    $this->db->where('id', $id);
-    $this->db->update('class_rooms', $data);
-    if ($this->db->affected_rows() > 0) {
-        return $this->output
-            ->set_status_header(200)
-            ->set_output(json_encode(['status' => true, 'message' => 'Class room updated successfully']));
-    } else {
-        $error = $this->db->error();
-        log_message('error', 'Database update error: ' . $error['message']);
-        return $this->output
-            ->set_status_header(500)
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to update class room', 'error' => $error['message']]));
-    }
-}
-
-public function delete_class_room_delete($id) {
-    $this->load->database();
-    $this->db->where('id', $id);
-    $this->db->delete('class_rooms');
-    if ($this->db->affected_rows() > 0) {
-        return $this->output
-            ->set_status_header(200)
-            ->set_output(json_encode(['status' => true, 'message' => 'Class room deleted successfully']));
-    } else {
-        $error = $this->db->error();
-        log_message('error', 'Database delete error: ' . $error['message']);
-        return $this->output
-            ->set_status_header(500)
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to delete class room', 'error' => $error['message']]));
-    }
-}
-
-
-public function get_class_room_get($school_id) {
-    $this->load->database();
-    $this->db->select('class_rooms.*, schools.name as school_name');
-    $this->db->from('class_rooms');
-    $this->db->join('schools', 'schools.id = class_rooms.school_id');
-    $this->db->where('class_rooms.school_id', $school_id);
-    $query = $this->db->get();
-
-    if ($query->num_rows() > 0) {
-        return $this->output
-            ->set_status_header(200)
-            ->set_output(json_encode(['status' => true, 'data' => $query->result()]));
-    } else {
-        return $this->output
-            ->set_status_header(404)
-            ->set_output(json_encode(['status' => false, 'message' => 'Class rooms not found']));
-    }
-}
-
-
-
-
-
-
-//End of ClassRoom Part
 
 ////BOOKS
 
@@ -6599,13 +7113,23 @@ public function get_invoices_by_student($student_id) {
 
     // Login API CALL
     public function login_post() {
-
-      $userdata = $this->admin_model->login();
-      if ($userdata['validity'] == 1) {
-        $userdata['token'] = $this->tokenHandler->GenerateToken($userdata);
-      }
-      return $this->set_response($userdata, REST_Controller::HTTP_OK);
+        try {
+            $userdata = $this->admin_model->login();
+    
+            if ($userdata['validity'] == 1) {
+                $userdata['token'] = $this->tokenHandler->GenerateToken($userdata);
+            }
+    
+            return $this->set_response($userdata, REST_Controller::HTTP_OK);
+        } catch (Exception $e) {
+            log_message('error', 'Error occurred in login_post: ' . $e->getMessage());
+            return $this->set_response([
+                'status' => 500,
+                'message' => 'An error occurred. Please try again later.'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
+    
   // FORGOT PASSWORD API CALL
   public function forgot_password_post() {
     $response = $this->admin_model->forgot_password();
