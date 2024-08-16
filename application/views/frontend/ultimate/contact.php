@@ -19,9 +19,7 @@
 
   </div>
   <!-- End Header Section -->
-  <!-- Contenu de votre page -->
-  <?php $this->load->view('frontend/alert_view'); ?>
-      <!-- Autres contenus de la page -->
+
 
   <!-- Contact Content Section -->
   <div class="fluid-container card-main-container">

@@ -285,38 +285,4 @@ class Login extends CI_Controller
 			redirect(site_url('login'), 'refresh');
 		}
 	}
-
-		// RETREIVE PASSWORD
-		public function retrieve_password_site()
-		{
-			$email = $this->input->post('email');
-			$query = $this->db->get_where('users', array('email' => $email));
-			if ($query->num_rows() > 0) {
-				$query = $query->row_array();
-				$new_password = substr(md5(rand(100000000, 20000000000)), 0, 7);
-	
-				// updating the database
-				$updater = array(
-					'password' => sha1($new_password)
-				);
-				$this->db->where('id', $query['id']);
-				$this->db->update('users', $updater);
-	
-				// sending mail to user
-				$this->email_model->password_reset_email($new_password, $query['id']);
-
-				$this->session->set_flashdata('message', get_phrase('please_check_your_mail_inbox'));
-				$this->session->set_flashdata('message_type', 'success');
-			      
-            		redirect($_SERVER['HTTP_REFERER'], 'refresh');
-       				 
-			} else {
-
-				$this->session->set_flashdata('message', get_phrase('invalid_your_email'));
-				$this->session->set_flashdata('message_type', 'danger');
-
-						redirect($_SERVER['HTTP_REFERER'], 'refresh');
-			
-			}
-		}
 }
