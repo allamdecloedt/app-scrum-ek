@@ -83,7 +83,7 @@
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label" for="class_id"><?php echo get_phrase('class'); ?><span class="required">*</span></label>
                                                     <div class="col-md-10">
-                                                        <select class="form-control select2" data-bs-toggle="select2" onchange="get_subject()" name="class_id" id="class_id_add_cours" required>
+                                                        <select class="form-control select2" data-bs-toggle="select2"  name="class_id" id="class_id_add_cours" required>
                                                             <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                                                             <?php foreach ($classes->result_array() as $class): ?>
                                                                 <option value="<?php echo $class['id']; ?>"><?php echo $class['name']; ?></option>
@@ -91,7 +91,7 @@
                                                         </select>
                                                     </div>
                                                 </div>
-
+<!-- 
                                                 <div class="form-group row mb-3">
                                                     <label class="col-md-2 col-form-label" for="subject_id"><?php echo get_phrase('subject'); ?><span class="required">*</span></label>
                                                     <div class="col-md-10">
@@ -99,7 +99,7 @@
                                                             <option value=""><?php echo get_phrase('first_select_a_class'); ?></option>
                                                         </select>
                                                     </div>
-                                                </div>
+                                                </div> -->
 
                                                 <?php if($this->session->userdata('teacher_login') == 1): ?>
                                                     <input type="hidden" name="user_id" value="<?php echo $this->session->userdata('user_id'); ?>">

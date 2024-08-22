@@ -9,7 +9,7 @@
 </div>
 <?php
 $school_id = school_id();
-$marks = $this->crud_model->get_marks($class_id, $section_id, $subject_id, $exam_id, $school_id )->result_array();
+$marks = $this->crud_model->get_marks($class_id, $section_id, $exam_id, $school_id )->result_array();
 ?>
 <?php if (count($marks) > 0): ?>
     <table class="table table-bordered table-responsive-sm" width="100%">
@@ -42,23 +42,22 @@ $marks = $this->crud_model->get_marks($class_id, $section_id, $subject_id, $exam
 <script>
     function mark_update(student_id){
         var class_id = '<?php echo $class_id; ?>';
-        var section_id = '<?php echo $section_id; ?>';
-        var subject_id = '<?php echo $subject_id; ?>';
+        var section_id = '<?php echo $section_id; ?>';       
         var exam_id = '<?php echo $exam_id; ?>';
         var mark = $('#mark-' + student_id).val();
         var comment = $('#comment-' + student_id).val();
-        if(subject_id != ""){
+        // if(subject_id != ""){
             $.ajax({
                 type : 'POST',
                 url : '<?php echo route('mark/mark_update'); ?>',
-                data : {student_id : student_id, class_id : class_id, section_id : section_id, subject_id : subject_id, exam_id : exam_id, mark : mark, comment : comment},
+                data : {student_id : student_id, class_id : class_id, section_id : section_id, exam_id : exam_id, mark : mark, comment : comment},
                 success : function(response){
                     success_notify('<?php echo get_phrase('mark_hass_been_updated_successfully'); ?>');
                 }
             });
-        }else{
-            toastr.error('<?php echo get_phrase('required_mark_field'); ?>');
-        }
+        // }else{
+        //     toastr.error('<?php echo get_phrase('required_mark_field'); ?>');
+        // }
     }
 
     function get_grade(exam_mark, id){

@@ -68,11 +68,11 @@ if($check_data->num_rows() > 0): ?>
                                 </div>
 
                             <!-- Course subject -->
-                                <div class="col-md-2"<?php if($this->session->userdata('student_login') != 1) echo 'hidden'; ?>>
+                                <!-- <div class="col-md-2"<?php if($this->session->userdata('student_login') != 1) echo 'hidden'; ?>>
                                     <div class="form-group">
                                         <?php $class_id = $this->lms_model->get_class_id_by_user($this->session->userdata('user_id'));; ?>
                                             <?php $subjects = $this->lms_model->get_subject_by_class_id($class_id); ?>
-                                        <label for="subject_id"><?php echo get_phrase('subject'); ?></label>
+                                        <label for="subject_id"><?php echo get_phrase('subject'); ?>dddddd</label>
                                         <select class="form-control select2" data-toggle="select2" name="subject" id = 'subject_id'>
                                             <option value="all" <?php if($selected_subject == 'all') echo 'selected'; ?>><?php echo get_phrase('all'); ?></option>
                                             
@@ -82,7 +82,7 @@ if($check_data->num_rows() > 0): ?>
                                             
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
 
                             <div class="col-md-4">
                                 <div class="form-group">

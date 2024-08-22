@@ -18,7 +18,7 @@ class Lms_model extends CI_Model {
         return $this->db->get_where('course', array('id' => $course_id))->row_array();
     }
 
-    public function filter_course_for_backend($class_id ="", $user_id="", $status="", $subject_id="",$school_id=""){
+    public function filter_course_for_backend($class_id ="", $user_id="", $status="", $school_id=""){
         $superadmin_login = $this->session->userdata('superadmin_login');
         $admin_login = $this->session->userdata('admin_login');
         $teacher_login = $this->session->userdata('teacher_login');
@@ -33,7 +33,7 @@ class Lms_model extends CI_Model {
         endif;
         
         if($student_login == 1):
-            return $this->filter_course_for_student($class_id, $user_id, $status, $subject_id,$school_id);
+            return $this->filter_course_for_student($class_id, $user_id, $status, $school_id);
         endif;
     }
     public function filter_course_for_admin($class_id, $user_id, $status){
@@ -65,7 +65,7 @@ class Lms_model extends CI_Model {
         }
         return $this->db->get('course')->result_array();
     }
-    public function filter_course_for_student($class_id, $user_id, $status, $subject_id,$school_id){
+    public function filter_course_for_student($class_id, $user_id, $status, $school_id){
         // $class_id = $this->get_class_id_by_user($this->session->userdata('user_id'));
         // // $this->db->where('school_id', school_id());
 
@@ -82,9 +82,9 @@ class Lms_model extends CI_Model {
         if ($user_id != "all") {
             $this->db->where('course.user_id', $user_id);
         }
-        if ($subject_id != "all") {
-            $this->db->where('course.subject_id', $subject_id);
-        }
+        // if ($subject_id != "all") {
+        //     $this->db->where('course.subject_id', $subject_id);
+        // }
         if ($school_id != "all") {
             $this->db->where('course.school_id', $school_id);
         }
@@ -195,7 +195,7 @@ class Lms_model extends CI_Model {
         $data['title'] = $this->input->post('title');
         $data['class_id'] = $this->input->post('class_id');
         $data['user_id'] = $this->input->post('user_id');
-        $data['subject_id'] = $this->input->post('subject_id');
+        // $data['subject_id'] = $this->input->post('subject_id');
         $data['description'] = $this->input->post('description');
         $data['outcomes'] = $this->input->post('outcomes');
         $data['course_overview_provider'] = $this->input->post('course_overview_provider');
@@ -215,7 +215,7 @@ class Lms_model extends CI_Model {
         $data['title'] = $this->input->post('title');
         $data['class_id'] = $this->input->post('class_id');
         $data['user_id'] = $this->input->post('user_id');
-        $data['subject_id'] = $this->input->post('subject_id');
+        // $data['subject_id'] = $this->input->post('subject_id');
         $data['description'] = $this->input->post('description');
         $data['outcomes'] = $this->input->post('outcomes');
         $data['course_overview_provider'] = $this->input->post('course_overview_provider');

@@ -9,10 +9,10 @@
         var class_id    = $('#class_id_course').val();
         var user_id     = $('#user_id').val();
         var status      = $('#course_status').val();
-        var subject_id  = $('#subject_id').val();
+        // var subject_id  = $('#subject_id').val();
         var school_id  = $('#school_id').val();
         $.ajax({
-            url: url+"?class_id="+class_id+"&user_id="+user_id+"&status="+status+"&subject_id="+subject_id+"&school_id="+school_id+"&only_list=true",
+            url: url+"?class_id="+class_id+"&user_id="+user_id+"&status="+status+"&school_id="+school_id+"&only_list=true",
             success : function(response) {
                 $('.academy_content').html(response);
                 initDataTable('basic-datatable');
