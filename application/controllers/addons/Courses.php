@@ -70,12 +70,12 @@ class Courses extends CI_Controller {
       $page_data['selected_class_id']   = isset($_GET['class_id']) ? $_GET['class_id'] : "all";
       $page_data['selected_user_id'] = isset($_GET['user_id']) ? $_GET['user_id'] : "all";
       $page_data['selected_status']     = isset($_GET['status']) ? $_GET['status'] : "all";
-      $page_data['selected_subject']     = isset($_GET['subject_id']) ? $_GET['subject_id'] : "all";
+      // $page_data['selected_subject']     = isset($_GET['subject_id']) ? $_GET['subject_id'] : "all";
       $page_data['selected_school_id']     = isset($_GET['school_id']) ? $_GET['school_id'] : "all";
       $only_list = isset($_GET['only_list']) ? $_GET['only_list'] : "false";
 
       // Courses query is used for deciding if there is any course or not. Check the view you will get it
-      $page_data['courses']                = $this->lms_model->filter_course_for_backend($page_data['selected_class_id'], $page_data['selected_user_id'], $page_data['selected_status'], $page_data['selected_subject'], $page_data['selected_school_id']);
+      $page_data['courses']                = $this->lms_model->filter_course_for_backend($page_data['selected_class_id'], $page_data['selected_user_id'], $page_data['selected_status'], $page_data['selected_school_id']);
 
       $page_data['status_wise_courses']    = $this->lms_model->get_status_wise_courses();
       $page_data['all_teachers']           = $this->user_model->get_all_teachers();

@@ -687,11 +687,10 @@ class Crud_model extends CI_Model {
 
 
 	//START MARKS section
-	public function get_marks($class_id = "", $section_id = "", $subject_id = "", $exam_id = "", $school_id = "") {
+	public function get_marks($class_id = "", $section_id = "", $exam_id = "", $school_id = "") {
 		$checker = array(
 			'class_id' => $class_id,
-			'section_id' => $section_id,
-			'subject_id' => $subject_id,
+			'section_id' => $section_id,			
 			'exam_id' => $exam_id,
 			'school_id' => $school_id,
 			'session' => $this->active_session
@@ -699,14 +698,13 @@ class Crud_model extends CI_Model {
 		$this->db->where($checker);
 		return $this->db->get('marks');
 	}
-	public function mark_insert($class_id = "", $section_id = "", $subject_id = "", $exam_id = "") {
+	public function mark_insert($class_id = "", $section_id = "", $exam_id = "") {
 		$student_enrolments = $this->user_model->student_enrolment($section_id)->result_array();
 		foreach ($student_enrolments as $student_enrolment) {
 			$checker = array(
 				'student_id' => $student_enrolment['student_id'],
 				'class_id' => $class_id,
-				'section_id' => $section_id,
-				'subject_id' => $subject_id,
+				'section_id' => $section_id,				
 				'exam_id' => $exam_id,
 				'school_id' => $this->school_id,
 				'session' => $this->active_session
@@ -723,13 +721,13 @@ class Crud_model extends CI_Model {
 		$data['student_id'] = html_escape($this->input->post('student_id'));
 		$data['class_id'] = html_escape($this->input->post('class_id'));
 		$data['section_id'] = html_escape($this->input->post('section_id'));
-		$data['subject_id'] = html_escape($this->input->post('subject_id'));
+		// $data['subject_id'] = html_escape($this->input->post('subject_id'));
 		$data['exam_id'] = html_escape($this->input->post('exam_id'));
 		$data['mark_obtained'] = html_escape($this->input->post('mark'));
 		$data['comment'] = html_escape($this->input->post('comment'));
 		$data['school_id'] = $this->school_id;
 		$data['session'] = $this->active_session;
-		$query = $this->db->get_where('marks', array('student_id' => $data['student_id'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'subject_id' => $data['subject_id'], 'exam_id' => $data['exam_id'], 'session' => $data['session'], 'school_id' => $data['school_id']));
+		$query = $this->db->get_where('marks', array('student_id' => $data['student_id'], 'class_id' => $data['class_id'], 'section_id' => $data['section_id'], 'exam_id' => $data['exam_id'], 'session' => $data['session'], 'school_id' => $data['school_id']));
 		if($query->num_rows() > 0){
 			$update_data['mark_obtained'] = html_escape($this->input->post('mark'));
 			$update_data['comment'] = html_escape($this->input->post('comment'));

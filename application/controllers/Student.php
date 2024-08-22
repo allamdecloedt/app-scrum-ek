@@ -289,7 +289,7 @@ class Student extends CI_Controller {
 		if($param1 == 'list'){
 			$page_data['class_id'] = htmlspecialchars($this->input->post('class_id'));
 			$page_data['section_id'] = htmlspecialchars($this->input->post('section_id'));
-			$page_data['subject_id'] = htmlspecialchars($this->input->post('subject'));
+			// $page_data['subject_id'] = htmlspecialchars($this->input->post('subject'));
 			$page_data['exam_id'] = htmlspecialchars($this->input->post('exam'));
 			// $this->crud_model->mark_insert($page_data['class_id'], $page_data['section_id'], $page_data['subject_id'], $page_data['exam_id']);
 			$this->load->view('backend/student/mark/list', $page_data);

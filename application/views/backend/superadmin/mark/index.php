@@ -50,11 +50,11 @@
                         <option value=""><?php echo get_phrase('select_section'); ?></option>
                     </select>
                 </div>
-                <div class="col-md-2 mb-1">
+                <!-- <div class="col-md-2 mb-1">
                     <select name="subject" id="subject_id" class="form-control select2" data-toggle = "select2" required>
                         <option value=""><?php echo get_phrase('select_subject'); ?></option>
                     </select>
-                </div>
+                </div> -->
                 <div class="col-md-2">
                     <button class="btn btn-block btn-secondary" onclick="filter_attendance()" ><?php echo get_phrase('filter'); ?></button>
                 </div>
@@ -79,31 +79,23 @@ function classWiseSection(classId) {
     $.ajax({
         url: "<?php echo route('section/list/'); ?>"+classId,
         success: function(response){
-            $('#section_id').html(response);
-            classWiseSubject(classId);
+            $('#section_id').html(response); 
         }
     });
 }
 
-function classWiseSubject(classId) {
-    $.ajax({
-        url: "<?php echo route('class_wise_subject/'); ?>"+classId,
-        success: function(response){
-            $('#subject_id').html(response);
-        }
-    });
-}
+
 
 function filter_attendance(){
     var exam = $('#exam_id').val();
     var class_id = $('#class_id_marks').val();
     var section_id = $('#section_id').val();
-    var subject = $('#subject_id').val();
-    if(class_id != "" && section_id != "" && exam != "" && subject != ""){
+    // var subject = $('#subject_id').val();
+    if(class_id != "" && section_id != "" && exam != "" ){
         $.ajax({
             type: 'POST',
             url: '<?php echo route('mark/list') ?>',
-            data: {class_id : class_id, section_id : section_id, subject : subject, exam : exam},
+            data: {class_id : class_id, section_id : section_id, exam : exam},
             success: function(response){
                 $('.mark_content').html(response);
             }
