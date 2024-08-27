@@ -179,7 +179,7 @@
 
         
             <form class="forget-form mt-10" id="forget-form" method="post" enctype="multipart/form-data"
-                action="<?php echo site_url('login/retrieve_password_site'); ?>">
+                action="<?php echo site_url('login/send_reset_link'); ?>">
 
                 <!-- First forget Form Section -->
                 <!-- <div class="tab"> -->
