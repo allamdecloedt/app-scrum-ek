@@ -279,6 +279,7 @@
     "please_fill_all_the_fields": "Please fill all the fields",
     "sign_in": "Sign in",
     "enter_your_email_address_and_password_to_access_account": "Enter your email address and password to access account",
+    "enter_your_new_password_to_access_account": "Enter your new password to access account",
     "forgot_your_password": "Forgot your password",
     "log_in": "Log in",
     "back_to_login": "Back to login",
@@ -1348,5 +1349,7 @@
     "total_number_of_school": "Total number of school",
     "total_number_of_class": "Total number of class",
     "forget_password": "Forget password",
-    "invalid_your_email": "Invalid your email"
+    "invalid_your_email": "Invalid your email",
+    "forgot_account?": "Forgot account?",
+    "invalid_reset_link": "Invalid reset link"
 }

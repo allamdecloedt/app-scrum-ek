@@ -319,4 +319,100 @@ class Login extends CI_Controller
 			
 			}
 		}
+		public function send_reset_link()
+		{
+			
+			$email = $this->input->post('email');
+			$query = $this->db->get_where('users', array('email' => $email));
+
+			if ($query->num_rows() > 0) {
+				$user = $query->row_array();
+				
+				// Generate a secure token
+				$token = bin2hex(random_bytes(50));
+				
+				// Set the expiration date (1 hour from now)
+				$expires_at = date("Y-m-d H:i:s", strtotime('+1 hour'));
+
+				// Update the database with the token and expiration
+				$this->db->where('id', $user['id']);
+				$this->db->update('users', array(
+					'reset_token' => $token,
+					'reset_expires_at' => $expires_at
+				));
+
+				// Create the reset link
+				$reset_link = base_url("login/new_password?token=" . $token);
+				// print_r($reset_link);
+				// die;
+				// Send the email
+				$this->email_model->password_reset_email_link($reset_link,$user['id']);
+
+				// Vérifier si l'alerte a déjà été affichée
+				// if (!$this->session->userdata('alert_shown')) {
+					$this->session->set_flashdata('message', get_phrase('please_check_your_mail_inbox'));
+					$this->session->set_flashdata('message_type', 'success');
+					
+				// }
+
+            		redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			
+			} else {
+				// If the email is not found
+				$this->session->set_flashdata('message', get_phrase('invalid_email_address'));
+				$this->session->set_flashdata('message_type', 'danger');
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+			}
+		}
+		public function new_password(){
+			$this->load->view('reset_password');
+		}
+		public function reset_password()
+		{
+			$token = $this->input->get('token');
+			$query = $this->db->get_where('users', array('reset_token' => $token));
+
+			if ($query->num_rows() > 0) {
+				$user = $query->row_array();
+				// Vérifier si le jeton n'a pas expiré
+				if (strtotime($user['reset_expires_at']) > time()) {
+					$new_password = $this->input->post('new_password');
+					$confirm_password = $this->input->post('confirm_password');
+
+					if ($new_password === $confirm_password) {
+
+						// Mettre à jour le mot de passe
+						$this->db->where('id', $user['id']);
+						$this->db->update('users', array(
+							'password' => sha1($new_password),
+							'reset_token' => NULL,
+							'reset_expires_at' => NULL
+						));
+
+						// Message de succès
+						$this->session->set_flashdata('message', get_phrase('password_reset_successful'));
+						$this->session->set_flashdata('message_type', 'success');
+						redirect('login');
+					} else {
+						// Les mots de passe ne correspondent pas
+						$this->session->set_flashdata('message', get_phrase('passwords_do_not_match'));
+						$this->session->set_flashdata('message_type', 'danger');
+						redirect($_SERVER['HTTP_REFERER'], 'refresh');
+					}
+				} else {
+					// Jeton expiré
+					$this->session->set_flashdata('message', get_phrase('reset_link_expired'));
+					$this->session->set_flashdata('message_type', 'danger');
+					redirect('login/new_password');
+				}
+			} else {
+				// Jeton invalide
+				$this->session->set_flashdata('message', get_phrase('invalid_reset_link'));
+				$this->session->set_flashdata('message_type', 'danger');
+				redirect('login/new_password');
+			}
+		}
+
+
 }

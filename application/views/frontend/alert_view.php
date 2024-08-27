@@ -1,8 +1,9 @@
-<?php if ($this->session->flashdata('message')): ?>
+    <?php if ($this->session->flashdata('message')): ?>
       <div id="alert-message" class="alert alert-<?php echo $this->session->flashdata('message_type'); ?>">
           <?php echo $this->session->flashdata('message'); ?> 
           <span id="seconds-counter">0</span>s.
       </div>
+      <?php  $this->session->set_userdata('alert_shown', false); ?>
 
         <script>
             // Initialisation des variables

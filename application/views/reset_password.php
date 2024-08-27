@@ -19,7 +19,7 @@
 </head>
 
 <body class="auth-fluid-pages pb-0">
-<?php $this->load->view('frontend/alert_view'); ?>
+
     <div class="auth-fluid">
         <!--Auth fluid left content -->
         <div class="auth-fluid-form-box">
@@ -32,34 +32,28 @@
                         </a>
                     </div>
                     <!-- title-->
-                    <h4 class="mt-0"><?php echo get_phrase('sign_in'); ?></h4>
-                    <p class="text-muted mb-4"><?php echo get_phrase('enter_your_email_address_and_password_to_access_account'); ?>.</p>
+                    <h4 class="mt-0"><?php echo get_phrase('change_password'); ?></h4>
+                    <p class="text-muted mb-4"><?php echo get_phrase('enter_your_new_password_to_access_account'); ?>.</p>
 
-                    <!-- form -->
-                    <form action="<?php echo site_url('login/validate_login'); ?>" method="post" id="loginForm">
+
+
+                    <form action="<?php echo base_url('login/reset_password?token=' . $this->input->get('token')); ?>" method="POST">
+
                         <div class="form-group mb-3">
-                            <label for="emailaddress"><?php echo get_phrase('email'); ?></label>
-                            <input class="form-control" type="email" name="email" id="emailaddress" required="" placeholder="Enter your email">
-                        </div>
-                        <div class="form-group mb-3">
-                            <a href="javascript: void(0);" class="text-muted float-end" onclick="forgotPass();"><small><?php echo get_phrase('forgot_your_password'); ?>?</small></a>
-                            <label for="password"><?php echo get_phrase('password'); ?></label>
-                            <input class="form-control" type="password" name="password" required="" id="password" placeholder="Enter your password">
+                            <label for="password"><?php echo get_phrase('new_password'); ?></label>
+                            <input class="form-control" type="password" name="new_password" required="" id="new_password" placeholder="Enter your password">
                             <span class="text-danger" id="error_message"></span>
                         </div>
-                        <div class="form-group mb-3 mb-0 text-center">
-                            <button class="btn btn-primary btn-block" type="submit"><i class="mdi mdi-login"></i> <?php echo get_phrase('log_in'); ?> </button>
-                        </div>
-                    </form>
 
-                    <form action="<?php echo site_url('login/send_reset_link'); ?>" method="post" id="forgotForm" style="display: none;">
                         <div class="form-group mb-3">
-                            <a href="javascript: void(0);" class="text-muted float-end" onclick="backToLogin();"><small><?php echo get_phrase('back_to_login'); ?></small></a>
-                            <label for="forgotEmail"><?php echo get_phrase('email'); ?></label>
-                            <input class="form-control" type="email" name="email" required="" id="forgotEmail" placeholder="Enter your email">
+                            <label for="password"><?php echo get_phrase('confirm_password'); ?></label>
+                            <input class="form-control" type="password" name="confirm_password" required="" id="confirm_password" placeholder="Enter your password">
+                            <span class="text-danger" id="error_message"></span>
                         </div>
+
+
                         <div class="form-group mb-3 mb-0 text-center">
-                            <button class="btn btn-primary btn-block" type="submit"><i class="mdi mdi-login"></i> <?php echo get_phrase('sent_password_reset_link'); ?> </button>
+                            <button class="btn btn-primary btn-block" type="submit"><i class="mdi mdi-login"></i> <?php echo get_phrase('change_password'); ?> </button>
                         </div>
                     </form>
                     <!-- end form-->
