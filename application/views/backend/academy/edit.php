@@ -216,10 +216,10 @@
 
                                   <ul class="list-inline mb-0 wizard text-center">
                                       <li class="previous list-inline-item">
-                                          <a href="javascript::" class="btn btn-info"> <i class="mdi mdi-arrow-left-bold"></i> </a>
+                                          <a href="javascript:void(0);" class="btn btn-info" onclick="goToPrevious()"> <i class="mdi mdi-arrow-left-bold"></i> </a>
                                       </li>
                                       <li class="next list-inline-item">
-                                          <a href="javascript::" class="btn btn-info"> <i class="mdi mdi-arrow-right-bold"></i> </a>
+                                          <a href="javascript:void(0);" class="btn btn-info" onclick="goToNext()"> <i class="mdi mdi-arrow-right-bold"></i> </a>
                                       </li>
                                   </ul>
 
@@ -239,6 +239,41 @@
     }
 </style>
 <script type="text/javascript">
+    function goToNext() {
+    let currentTab = document.querySelector('.nav-link.active');
+    let nextTab = currentTab.parentElement.nextElementSibling?.querySelector('.nav-link');
+
+    if (nextTab) {
+        currentTab.classList.remove('active');
+        currentTab.classList.remove('show');
+        nextTab.classList.add('active');
+        nextTab.classList.add('show');
+        
+        // Show the corresponding content
+        let currentContent = document.querySelector(currentTab.getAttribute('href'));
+        let nextContent = document.querySelector(nextTab.getAttribute('href'));
+        currentContent.classList.remove('active');
+        nextContent.classList.add('active');
+    }
+}
+
+function goToPrevious() {
+    let currentTab = document.querySelector('.nav-link.active');
+    let previousTab = currentTab.parentElement.previousElementSibling?.querySelector('.nav-link');
+
+    if (previousTab) {
+        currentTab.classList.remove('active');
+        currentTab.classList.remove('show');
+        previousTab.classList.add('active');
+        previousTab.classList.add('show');
+        
+        // Show the corresponding content
+        let currentContent = document.querySelector(currentTab.getAttribute('href'));
+        let previousContent = document.querySelector(previousTab.getAttribute('href'));
+        currentContent.classList.remove('active');
+        previousContent.classList.add('active');
+    }
+}
   $(document).ready(function() {
       $('#basic_description').summernote();
       $('#outcomes_desc').summernote();
