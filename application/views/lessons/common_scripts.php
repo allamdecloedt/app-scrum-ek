@@ -6,6 +6,11 @@ var savedProgress;
 var currentProgress = '<?php echo lesson_progress($lesson_id); ?>';
 var lessonType = '<?php echo $lesson_details['lesson_type']; ?>';
 var videoProvider = '<?php echo $provider; ?>';
+let remainingTime;
+let timerInterval;
+let currentQuestion = 1; // Variable pour suivre la question actuelle
+let quizSubmitted = false;  // Drapeau pour vérifier si le quiz a été soumis
+
 
 function markThisLessonAsCompleted(lesson_id) {
   $('#lesson_list_area').hide();
@@ -156,18 +161,90 @@ function toggle_lesson_view() {
 
 
 //FORTH SECTIONS
+// JavaScript pour gérer le chronomètre
 function getStarted(first_quiz_question) {
     $('#quiz-header').hide();
     $('#lesson-summary').hide();
-    $('#question-number-'+first_quiz_question).show();
+    $('#question-number-' + first_quiz_question).show();
+    currentQuestion = first_quiz_question; // Initialiser la première question
+    startTimer(15); // Commencez le chronomètre avec 10 secondes ou toute autre durée
 }
+
 function showNextQuestion(next_question) {
-    $('#question-number-'+(next_question-1)).hide();
-    $('#question-number-'+next_question).show();
+    $('#question-number-' + (next_question - 1)).hide();
+    $('#question-number-' + next_question).show();
+    currentQuestion = next_question; // Mettre à jour la question actuelle
+    startTimer(15); // Redémarrer le chronomètre pour la nouvelle question
 }
+
+function startTimer(duration) {
+    // Effacer tout intervalle existant pour éviter les doublons
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+
+    // Initialiser le temps restant
+    remainingTime = duration;
+
+    // Démarrer le nouvel intervalle de mise à jour du chronomètre
+    timerInterval = setInterval(updateTimer, 1000);
+}
+
+function updateTimer() {
+    let minutes = Math.floor(remainingTime / 60);
+    let seconds = remainingTime % 60;
+    
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
+ 
+    document.getElementById('timer' + currentQuestion).textContent = minutes + ':' + seconds;
+    
+    if (remainingTime <= 0) {
+        clearInterval(timerInterval);
+        
+        // Si ce n'est pas la dernière question, passer à la question suivante
+        if (currentQuestion < <?php echo count($quiz_questions->result_array()); ?>) {
+           currentQuestion++; 
+          showNextQuestion(currentQuestion); // Passe automatiquement à la question suivante
+        } else {
+            // Vérifier si le quiz n'a pas déjà été soumis
+            if (!quizSubmitted) {
+                quizSubmitted = true;  // Marquer le quiz comme soumis
+                alert("Temps écoulé! Soumettez le quiz.");
+                submitQuiz(); // Soumettez le quiz une seule fois
+            }
+        }
+    } else {
+        remainingTime--;
+    }
+}
+
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+
 function submitQuiz() {
+  quizSubmitted = true;
+  var lesson_id = '<?php echo $lesson_id; ?>';
+  document.getElementById(lesson_id).checked = true
+  markThisLessonAsCompleted(lesson_id);
     $.ajax({
         url: '<?php echo site_url('addons/lessons/submit_quiz'); ?>',
+        type: 'post',
+        data: $('form#quiz_form').serialize(),
+        success: function(response) {
+            $('#quiz-body').hide();
+            $('#quiz-result').html(response);
+        }
+    });
+}
+function check_result() {
+  quizSubmitted = true;
+  var lesson_id = '<?php echo $lesson_id; ?>';
+  document.getElementById(lesson_id).checked = true
+  markThisLessonAsCompleted(lesson_id);
+    $.ajax({
+        url: '<?php echo site_url('addons/lessons/check_result'); ?>',
         type: 'post',
         data: $('form#quiz_form').serialize(),
         success: function(response) {

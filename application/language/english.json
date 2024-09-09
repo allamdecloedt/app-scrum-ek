@@ -1351,5 +1351,13 @@
     "forget_password": "Forget password",
     "invalid_your_email": "Invalid your email",
     "forgot_account?": "Forgot account?",
-    "invalid_reset_link": "Invalid reset link"
+    "invalid_reset_link": "Invalid reset link",
+    "already_passed": "Already passed",
+    "quiz_result": "Quiz result",
+    "manage_quiz": "Manage quiz",
+    "select_quiz": "Select quiz",
+    "select_cours": "Select cours",
+    "cours": "Cours",
+    "submit_answers": "Submit answers",
+    "not_realized": "Not realized"
 }

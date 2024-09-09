@@ -41,7 +41,7 @@
                             $lesson_progress = lesson_progress($lesson['id']);
                             ?>
                             <div class="form-group">
-                              <input type="checkbox" id="<?php echo $lesson['id']; ?>" onchange="markThisLessonAsCompleted(this.id)" <?php if($lesson_progress == 1):?> checked <?php endif; ?>>
+                              <input type="checkbox" id="<?php echo $lesson['id']; ?>" <?php if($lesson['lesson_type'] == 'quiz'):?> disabled <?php endif; ?> onchange="markThisLessonAsCompleted(this.id)" <?php if($lesson_progress == 1):?> checked  <?php endif; ?>>
                               <label for="<?php echo $lesson['id']; ?>"></label>
                             </div>
 

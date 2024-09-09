@@ -738,6 +738,35 @@ class Admin extends CI_Controller
 		}
 	}
 
+	//START quiz section
+	public function quiz_result($param1 = '', $param2 = '')
+	{
+  
+	  if ($param1 == 'list') {
+		$page_data['class_id'] = htmlspecialchars($this->input->post('class_id'));
+		$page_data['cours_id'] = htmlspecialchars($this->input->post('cours_id'));
+		$page_data['quiz_id'] = htmlspecialchars($this->input->post('quiz_id'));
+		$this->load->view('backend/admin/quiz/list', $page_data);
+	  }
+  
+   
+  
+	  if (empty($param1)) {
+		$page_data['folder_name'] = 'quiz';
+		$page_data['page_title'] = 'quiz';
+		$this->load->view('backend/index', $page_data);
+	  }
+	}
+ 
+	public function quiz($action = "", $id = "")
+	{
+  
+	  // PROVIDE A LIST OF SECTION ACCORDING TO CLASS ID
+	  if ($action == 'list') {
+		$page_data['class_id'] = $id;
+		$this->load->view('backend/admin/quiz/list_quiz', $page_data);
+	  }
+	}
 	// GET THE GRADE ACCORDING TO MARK
 	public function get_grade($acquired_mark)
 	{

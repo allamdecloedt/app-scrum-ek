@@ -740,6 +740,20 @@ class Crud_model extends CI_Model {
 	}
 	//END MARKS section
 
+		//START MARKS section
+		public function get_quiz($quiz_id = "" ,$student  = "" ) {
+
+			$this->db->select('quiz_id, COUNT(*) as total_responses, SUM(submitted_answer_status) as correct_responses, user_id');
+			$this->db->from('quiz_responses');
+			$this->db->where('quiz_id', $quiz_id);
+			if($student != "")
+			$this->db->where('user_id', $student);
+			$this->db->group_by('quiz_id,user_id');
+	
+			$query = $this->db->get();
+			return $query;
+
+		}
 	// Grade creation
 	public function grade_create() {
 		$data['name'] = html_escape($this->input->post('grade'));
