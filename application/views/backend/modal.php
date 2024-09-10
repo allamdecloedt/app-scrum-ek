@@ -14,6 +14,12 @@ function largeModal(url, header)
     }
   });
 }
+function confirmModal_alert(message)
+{
+  jQuery('#alert-modal-confimation').modal('show', {backdrop: 'true'});
+  jQuery('#alert-modal-confimation .modal-message').html(message);
+
+}
 
 function previewModal(url, header)
 {
@@ -131,6 +137,27 @@ function blankFunction(){
             <button type="button" class="btn btn-info my-2" data-bs-dismiss="modal"><?php echo get_phrase('cancel'); ?></button>
             <button type="submit" class="btn btn-danger my-2" onclick=""><?php echo get_phrase('continue'); ?></button>
           </form>
+        </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Info Alert Modal -->
+<div id="alert-modal-confimation" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true" style=" z-index: 1056;">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body p-4">
+        <div class="text-center">
+          <i class="dripicons-information h1 text-info"></i>
+          <h4 class="mt-2"><?php echo get_phrase('heads_up') ?>!</h4>
+          <div class="modal-message">
+
+          </div>
+         
+            <button type="button" class="btn btn-info my-2" data-bs-dismiss="modal"><?php echo get_phrase('ok'); ?></button>
+       
+          
         </div>
       </div>
     </div><!-- /.modal-content -->
