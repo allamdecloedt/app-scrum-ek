@@ -1359,5 +1359,11 @@
     "select_cours": "Select cours",
     "cours": "Cours",
     "submit_answers": "Submit answers",
-    "not_realized": "Not realized"
+    "not_realized": "Not realized",
+    "the_question_title_is_required": "The question title is required",
+    "number_of_options_must_be_greater_than_zero": "Number of options must be greater than zero",
+    "fill_in_all_fields": "Fill in all fields",
+    "ok": "Ok",
+    "you_must_select_at_least_one_correct_answer": "You must select at least one correct answer",
+    "refresh": "Refresh"
 }
