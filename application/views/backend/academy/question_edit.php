@@ -21,7 +21,7 @@
     <div class="form-group mb-2" id='multiple_choice_question'>
         <label for="number_of_options"><?php echo get_phrase('number_of_options'); ?></label>
         <div class="input-group">
-            <input type="number" class="form-control" name="number_of_options" id="number_of_options" data-validate="required" data-message-required="Value Required" min="0"  oninput="showOptions(jQuery(this).val())" value="<?php echo $question_details['number_of_options']; ?>" disabled>
+            <input type="number" class="form-control" name="number_of_options" id="number_of_options" data-validate="required" data-message-required="Value Required" min="0"  oninput="showOptions(jQuery(this).val())" value="<?php echo $question_details['number_of_options']; ?>" >
         </div>
     </div>
     <?php for ($i = 0; $i < $question_details['number_of_options']; $i++):?>
@@ -52,6 +52,7 @@
                 console.log(response);
                 if (response == 1) {
                     success_notify('<?php echo get_phrase('question_has_been_updated'); ?>');
+                    $('#scrollable-modal').modal('hide');
                 }else {
                     error_notify('<?php echo get_phrase('no_options_can_be_blank_and_there_has_to_be_atleast_one_answer'); ?>');
                 }
