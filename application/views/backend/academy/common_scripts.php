@@ -157,6 +157,15 @@
     }
 
     function showOptions(number_of_options){
+
+            // Save current option values
+            var existingOptions = [];
+            jQuery('.options').each(function(index) {
+                var optionValue = jQuery(this).find('input[type="text"]').val();
+                var isChecked = jQuery(this).find('input[type="checkbox"]').is(':checked');
+                existingOptions.push({ value: optionValue, checked: isChecked });
+            });
+
         $.ajax({
             type: "POST",
             url: "<?php echo site_url('addons/courses/manage_multiple_choices_options'); ?>",
@@ -164,6 +173,14 @@
             success: function(response){
                 jQuery('.options').remove();
                 jQuery('#multiple_choice_question').after(response);
+
+                     // Repopulate saved options
+                    jQuery('.options').each(function(index) {
+                        if (existingOptions[index]) {
+                            jQuery(this).find('input[type="text"]').val(existingOptions[index].value);
+                            jQuery(this).find('input[type="checkbox"]').prop('checked', existingOptions[index].checked);
+                        }
+                    });
             }
         });
     }
