@@ -368,6 +368,9 @@ class Login extends CI_Controller
 		public function new_password(){
 			$this->load->view('reset_password');
 		}
+		public function new_password_student(){
+			$this->load->view('new_password');
+		}
 		public function reset_password()
 		{
 			$token = $this->input->get('token');
@@ -406,6 +409,47 @@ class Login extends CI_Controller
 					$this->session->set_flashdata('message_type', 'danger');
 					redirect('login/new_password');
 				}
+			} else {
+				// Jeton invalide
+				$this->session->set_flashdata('message', get_phrase('invalid_reset_link'));
+				$this->session->set_flashdata('message_type', 'danger');
+				redirect('login/new_password');
+			}
+		}
+
+		public function add_new_password()
+		{
+			$user_id = $this->input->get('user_id');
+			$query = $this->db->get_where('users', array('id' => $user_id));
+
+			if ($query->num_rows() > 0) {
+				$user = $query->row_array();
+				// Vérifier si le jeton n'a pas expiré
+				
+					$new_password = $this->input->post('new_password');
+					$confirm_password = $this->input->post('confirm_password');
+
+					if ($new_password === $confirm_password) {
+
+						// Mettre à jour le mot de passe
+						$this->db->where('id', $user['id']);
+						$this->db->update('users', array(
+							'password' => sha1($new_password),
+							
+							
+						));
+
+						// Message de succès
+						$this->session->set_flashdata('message', get_phrase('password_add_successful'));
+						$this->session->set_flashdata('message_type', 'success');
+						redirect('login');
+					} else {
+						// Les mots de passe ne correspondent pas
+						$this->session->set_flashdata('message', get_phrase('passwords_do_not_match'));
+						$this->session->set_flashdata('message_type', 'danger');
+						redirect($_SERVER['HTTP_REFERER'], 'refresh');
+					}
+				
 			} else {
 				// Jeton invalide
 				$this->session->set_flashdata('message', get_phrase('invalid_reset_link'));

@@ -149,6 +149,91 @@ class Email_model extends CI_Model {
 		}
 	}
 
+	function password_send_add_student($link = '' , $user_id = "")
+	{
+		$query			=	$this->db->get_where('users' , array('id' => $user_id))->row_array();
+		if(sizeof($query) > 0)
+		{
+
+			$email_msg	=	'<!DOCTYPE html>
+				<html lang="en">
+				<head>
+					<meta charset="UTF-8">
+					<meta name="viewport" content="width=device-width, initial-scale=1.0">
+					<title>Password Reset</title>
+					<style>
+						body {
+							font-family: Arial, sans-serif;
+							background-color: #f4f4f4;
+							color: #ffffff;
+							line-height: 1.6;
+							margin: 0;
+							padding: 0;
+						}
+						.container {
+							max-width: 600px;
+							margin: 20px auto;
+							background: #fff;
+							padding: 20px;
+							border-radius: 10px;
+							box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+						}
+						h2 {
+							color: #333;
+						}
+						p {
+							margin: 10px 0;
+						}
+						.button {
+							display: inline-block;
+							padding: 10px 20px;
+							font-size: 16px;
+							color: #fff !important;
+							background-color: #5d0ea8;
+							text-decoration: none;
+							border-radius: 5px;
+							margin-top: 20px;
+						}
+						.footer {
+							margin-top: 30px;
+							font-size: 12px;
+							color: #777;
+							text-align: center;
+						}
+					</style>
+				</head>
+				<body>
+					<div class="container">
+						<h2>Password Reset Request</h2>
+						<p>Hello '.ucfirst($query['name']).'</p>
+						<p>We received a request to add your password for your account. You can add your password by clicking the link below:</p>
+						<a href="'.$link.'" class="button"> Password</a>
+						<p>If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
+						
+						<div class="footer">
+							<p>&copy; 2024. All rights reserved.</p>
+						</div>
+					</div>
+				</body>
+				</html>
+				';
+
+			$email_sub	=	"Password reset request";
+			$email_to	=	$query['email'];
+
+			if (get_smtp('mail_sender') == 'php_mailer') {
+				$this->send_mail_using_php_mailer($email_msg , $email_sub , $email_to);
+			}else{
+				$this->send_mail_using_smtp($email_msg , $email_sub , $email_to);
+			}
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
 	function contact_message_email($email_from, $email_to, $email_message) {
 		$email_sub = "Message from School Website";
 

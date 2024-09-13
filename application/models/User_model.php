@@ -580,7 +580,7 @@ class User_model extends CI_Model
 	{
 		$user_data['name'] = html_escape($this->input->post('name'));
 		$user_data['email'] = html_escape($this->input->post('email'));
-		$user_data['password'] = sha1(html_escape($this->input->post('password')));
+		// $user_data['password'] = sha1(html_escape($this->input->post('password')));
 		$user_data['birthday'] = strtotime(html_escape($this->input->post('birthday')));
 		$user_data['gender'] = html_escape($this->input->post('gender'));
 		$user_data['address'] = html_escape($this->input->post('address'));
@@ -612,6 +612,11 @@ class User_model extends CI_Model
 			$this->db->insert('enrols', $enroll_data);
 
 			move_uploaded_file($_FILES['student_image']['tmp_name'], 'uploads/users/' . $user_id . '.jpg');
+			// Create the reset link
+			$reset_link = base_url("login/new_password_student?user_id=" . $user_id);
+
+			$this->email_model->password_send_add_student($reset_link,$user_id);
+	
 
 			$this->session->set_flashdata('flash_message', get_phrase('student_added_successfully'));
 			$response = array(
