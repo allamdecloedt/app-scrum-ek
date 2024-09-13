@@ -55,7 +55,10 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block;
 }
 
-
+.required {
+  color: rgb(231, 86, 86);
+ 
+  }
 
 body {
   margin: 0;

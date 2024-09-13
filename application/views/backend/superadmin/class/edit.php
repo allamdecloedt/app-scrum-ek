@@ -3,12 +3,12 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('manage_class/update/'.$param1); ?>">
     <div class="form-row">
     <div class="form-group mb-1 col-md-12">
-            <label for="name"><?php echo get_phrase('class_name'); ?></label>
+            <label for="name"><?php echo get_phrase('class_name'); ?><span class="required"> * </span></label>
             <input type="text" class="form-control" value="<?php echo $class['name']; ?>" id="name" name = "name" required>
             <small id="name_help" class="form-text text-muted"><?php echo get_phrase('provide_class_name'); ?></small>
         </div>
         <div class="form-group mb-1 col-md-12">
-            <label for="price"><?php echo get_phrase('class_price'); ?></label>
+            <label for="price"><?php echo get_phrase('class_price'); ?><span class="required"> * </span></label>
             <?php $currencies = $this->db->get_where('settings_school', array('school_id' => school_id()))->row('system_currency'); ?>
 
             <div class="form-inline">

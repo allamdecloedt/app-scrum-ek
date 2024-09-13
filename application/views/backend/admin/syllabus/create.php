@@ -4,11 +4,11 @@
         <input type="hidden" name="school_id" value="<?php echo $school_id; ?>">
         <input type="hidden" name="session_id" value="<?php echo active_session(); ?>">
         <div class="form-group col-md-12 mb-2">
-            <label for="title"><?php echo get_phrase('tittle'); ?></label>
+            <label for="title"><?php echo get_phrase('tittle'); ?><span class="required"> * </span></label>
             <input type="text" class="form-control" id="title" name = "title" required>
         </div>
         <div class="form-group col-md-12 mb-2">
-            <label for="class_id_on_create"><?php echo get_phrase('class'); ?></label>
+            <label for="class_id_on_create"><?php echo get_phrase('class'); ?><span class="required"> * </span></label>
             <select class="form-control select2" data-toggle = "select2" id="class_id_on_create" name="class_id" onchange="classWiseSectionOnCreate(this.value)" required>
                 <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                 <?php $classes = $this->db->get_where('classes', array('school_id' => $school_id))->result_array(); ?>
@@ -19,20 +19,20 @@
         </div>
 
         <div class="form-group col-md-12 mb-2">
-            <label for="section_id_on_create"><?php echo get_phrase('section'); ?></label>
+            <label for="section_id_on_create"><?php echo get_phrase('section'); ?><span class="required"> * </span></label>
             <select class="form-control select2" data-toggle = "select2" id="section_id_on_create" name="section_id" required>
                 <option value=""><?php echo get_phrase('select_a_section'); ?></option>
             </select>
         </div>
 
         <div class="form-group col-md-12 mb-2">
-            <label for="subject_id_on_create"><?php echo get_phrase('subject'); ?></label>
+            <label for="subject_id_on_create"><?php echo get_phrase('subject'); ?><span class="required"> * </span></label>
             <select class="form-control select2" data-toggle = "select2" id="subject_id_on_create" name="subject_id" requied>
                 <option><?php echo get_phrase('select_a_subject'); ?></option>
             </select>
         </div>
         <div class="form-group col-md-12 mb-2">
-            <label for="syllabus_file"><?php echo get_phrase('upload_syllabus'); ?></label>
+            <label for="syllabus_file"><?php echo get_phrase('upload_syllabus'); ?><span class="required"> * </span></label>
             <div class="custom-file-upload d-inline-block">
                 <input type="file" class="form-control" id="syllabus_file" name = "syllabus_file" required>
             </div>

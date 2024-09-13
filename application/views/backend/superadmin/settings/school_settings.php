@@ -7,13 +7,13 @@
                     <form method="POST" class="col-12 schoolForm" action="<?php echo route('school_settings/update') ;?>" id = "schoolForm">
                         <div class="col-12">
                             <div class="form-group row mb-3">
-                                <label class="col-md-3 col-form-label" for="school_name"> <?php echo get_phrase('school_name') ;?></label>
+                                <label class="col-md-3 col-form-label" for="school_name"> <?php echo get_phrase('school_name') ;?><span class="required"> * </span></label>
                                 <div class="col-md-9">
                                     <input type="text" id="school_name" name="school_name" class="form-control"  value="<?php echo $school_data['name'] ;?>" required>
                                 </div>
                             </div>
                             <div class="form-group row mb-3">
-                                <label class="col-md-3 col-form-label" for="description"><?php echo get_phrase('description'); ?></label>
+                                <label class="col-md-3 col-form-label" for="description"><?php echo get_phrase('description'); ?><span class="required"> * </span></label>
                                 <div class="col-md-9">
                                 <textarea class="form-control"  id="description"  name = "description" rows="5" required><?php echo $school_data['description']; ?></textarea>
                                 <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_description'); ?></small>
@@ -21,16 +21,16 @@
                             </div>
 
                             <div class="form-group row mb-3">
-                                <label class="col-md-3 col-form-label" for="phone"><?php echo get_phrase('phone') ;?></label>
+                                <label class="col-md-3 col-form-label" for="phone"><?php echo get_phrase('phone') ;?><span class="required"> * </span></label>
                                 <div class="col-md-9">
                                     <input type="text" id="phone" name="phone" class="form-control"  value="<?php echo $school_data['phone'] ;?>" required>
                                 </div>
                             </div>
 
                             <div class="form-group row mb-3">
-                                <label class="col-md-3 col-form-label" for="access"><?php echo get_phrase('Access'); ?></label>
+                                <label class="col-md-3 col-form-label" for="access"><?php echo get_phrase('Access'); ?><span class="required"> * </span></label>
                                 <div class="col-md-9">
-                                <select name="access" id="access" class="form-control select2" data-toggle = "select2">
+                                <select name="access" id="access" class="form-control select2" data-toggle = "select2" required>
                                     <option value=""><?php echo get_phrase('select_a_access'); ?></option>
                                     <option <?php if ($school_data['access'] == 1): ?> selected <?php endif; ?> value="1"><?php echo get_phrase('public'); ?></option>
                                     <option <?php if ($school_data['access'] == 0): ?> selected <?php endif; ?> value="0"><?php echo get_phrase('privé'); ?></option>
@@ -48,9 +48,9 @@
                             </div>
 
                             <div class="form-group row mb-3">
-                                <label class="col-md-3 col-form-label"  for="access"><?php echo get_phrase('Category'); ?></label>
+                                <label class="col-md-3 col-form-label"  for="access"><?php echo get_phrase('Category'); ?><span class="required"> * </span></label>
                                 <div class="col-md-9">
-                                    <select name="category" id="category" class="form-control select2" data-toggle = "select2">
+                                    <select name="category" id="category" class="form-control select2" data-toggle = "select2" required>
                                         <option value=""><?php echo get_phrase('select_a_category'); ?></option>
                                         <?php $categories = $this->db->get_where('categories', array())->result_array(); ?>
                                         <?php foreach ($categories as $categorie): ?>

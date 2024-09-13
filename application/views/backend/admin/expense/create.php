@@ -1,17 +1,17 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('expense/create'); ?>">
   <div class="form-row">
     <div class="form-group mb-1">
-      <label for="date"><?php echo get_phrase('date'); ?></label>
+      <label for="date"><?php echo get_phrase('date'); ?><span class="required"> * </span></label>
       <input type="text" class="form-control date" id="date" data-bs-toggle="date-picker" data-single-date-picker="true" name = "date" value="" required>
     </div>
 
     <div class="form-group mb-1">
-      <label for="amount"><?php echo get_phrase('amount').' ('.currency_code_and_symbol('code').')'; ?></label>
+      <label for="amount"><?php echo get_phrase('amount').' ('.currency_code_and_symbol('code').')'; ?><span class="required"> * </span></label>
       <input type="text" class="form-control" id="amount" name = "amount" required>
     </div>
 
     <div class="form-group mb-1">
-      <label for="expense_category_id"><?php echo get_phrase('expense_category'); ?></label>
+      <label for="expense_category_id"><?php echo get_phrase('expense_category'); ?><span class="required"> * </span></label>
       <select class="form-control select2" data-toggle = "select2" name="expense_category_id" id = "expense_category_id_on_create" required>
         <option value=""><?php echo get_phrase('select_an_expense_category'); ?></option>
         <?php

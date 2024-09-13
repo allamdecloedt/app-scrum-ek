@@ -3,7 +3,7 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('session_manager/update/'.$param1); ?>">
     <div class="form-row">
         <div class="form-group mb-1">
-            <label for="name"><?php echo get_phrase('session_title'); ?></label>
+            <label for="name"><?php echo get_phrase('session_title'); ?><span class="required"> * </span></label>
             <input type="text" class="form-control" value="<?php echo $session['name']; ?>" id="name" name = "session_title" required>
             <small id="name_help" class="form-text text-muted"><?php echo get_phrase('provide_session_title'); ?></small>
         </div>

@@ -60,7 +60,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-xl-8">
                                                 <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="course_title"><?php echo get_phrase('course_title'); ?> <span class="required">*</span> </label>
+                                                    <label class="col-md-2 col-form-label" for="course_title"><?php echo get_phrase('course_title'); ?> <span class="required"> * </span> </label>
                                                     <div class="col-md-10">
                                                         <input type="text" class="form-control" id="course_title" name = "title" placeholder="<?php echo get_phrase('enter_course_title'); ?>" required>
                                                     </div>
@@ -81,7 +81,7 @@
                                         <div class="row justify-content-center">
                                             <div class="col-xl-8">
                                                 <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="class_id"><?php echo get_phrase('class'); ?><span class="required">*</span></label>
+                                                    <label class="col-md-2 col-form-label" for="class_id"><?php echo get_phrase('class'); ?><span class="required"> * </span></label>
                                                     <div class="col-md-10">
                                                         <select class="form-control select2" data-bs-toggle="select2"  name="class_id" id="class_id_add_cours" required>
                                                             <option value=""><?php echo get_phrase('select_a_class'); ?></option>
@@ -105,7 +105,7 @@
                                                     <input type="hidden" name="user_id" value="<?php echo $this->session->userdata('user_id'); ?>">
                                                 <?php else: ?>
                                                 <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="user_id"><?php echo get_phrase('instructor'); ?><span class="required">*</span></label>
+                                                    <label class="col-md-2 col-form-label" for="user_id"><?php echo get_phrase('instructor'); ?><span class="required"> * </span></label>
                                                     <div class="col-md-10">
                                                         <select class="form-control select2" data-bs-toggle="select2" name="user_id" id="user_id" required>
                                                             <option value=""><?php echo get_phrase('select_a_teacher'); ?></option>
@@ -140,7 +140,7 @@
 
                                             <div class="col-xl-8">
                                                 <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="course_overview_provider"><?php echo get_phrase('course_overview_provider'); ?></label>
+                                                    <label class="col-md-2 col-form-label" for="course_overview_provider"><?php echo get_phrase('course_overview_provider'); ?><span class="required"> * </span></label>
                                                     <div class="col-md-10">
                                                         <select class="form-control select2" data-bs-toggle="select2" name="course_overview_provider" id="course_overview_provider">
                                                             <option value="youtube"><?php echo get_phrase('youtube'); ?></option>
@@ -153,7 +153,7 @@
 
                                             <div class="col-xl-8">
                                                 <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="course_overview_url"><?php echo get_phrase('course_overview_url'); ?></label>
+                                                    <label class="col-md-2 col-form-label" for="course_overview_url"><?php echo get_phrase('course_overview_url'); ?><span class="required"> * </span></label>
                                                     <div class="col-md-10">
                                                         <input type="text" class="form-control" name="course_overview_url" id="course_overview_url" placeholder="E.g: https://www.youtube.com/watch?v=oBtf8Yglw2w" required>
                                                     </div>

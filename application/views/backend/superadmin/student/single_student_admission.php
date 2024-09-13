@@ -3,21 +3,21 @@
 <form method="POST" class="p-3 d-block ajaxForm" action="<?php echo route('student/create_single_student/submit'); ?>" id = "student_admission_form" enctype="multipart/form-data">
     <div class="col-md-12">
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="name"><?php echo get_phrase('name'); ?></label>
+            <label class="col-md-3 col-form-label" for="name"><?php echo get_phrase('name'); ?><span class="required"> * </span></label>
             <div class="col-md-9">
                 <input type="text" id="name" name="name" class="form-control" placeholder="name" required>
             </div>
         </div>
 
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="email"><?php echo get_phrase('email'); ?></label>
+            <label class="col-md-3 col-form-label" for="email"><?php echo get_phrase('email'); ?><span class="required"> * </span></label>
             <div class="col-md-9">
                 <input type="email" class="form-control" id="email" name="email" placeholder="email" required>
             </div>
         </div>
 
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="password"><?php echo get_phrase('password'); ?></label>
+            <label class="col-md-3 col-form-label" for="password"><?php echo get_phrase('password'); ?><span class="required"> * </span></label>
             <div class="col-md-9">
                 <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
             </div>
@@ -25,7 +25,7 @@
 
 
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?></label>
+            <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?><span class="required"> * </span></label>
             <div class="col-md-9">
                 <select name="class_id" id="class_id_add" class="form-control select2" data-toggle = "select2" required onchange="classWiseSection(this.value)">
                     <option value=""><?php echo get_phrase('select_a_class'); ?></option>
@@ -38,7 +38,7 @@
         </div>
 
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="section_id"><?php echo get_phrase('section'); ?></label>
+            <label class="col-md-3 col-form-label" for="section_id"><?php echo get_phrase('section'); ?><span class="required"> * </span></label>
             <div class="col-md-9" id = "section_content">
                 <select name="section_id" id="section_id" class="form-control select2" data-toggle = "select2" required >
                     <option value=""><?php echo get_phrase('select_section'); ?></option>
@@ -47,14 +47,14 @@
         </div>
 
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="birthdatepicker"><?php echo get_phrase('birthday'); ?></label>
+            <label class="col-md-3 col-form-label" for="birthdatepicker"><?php echo get_phrase('birthday'); ?><span class="required"> * </span></label>
             <div class="col-md-9 position-relative" id="datepicker4">
                 <input type="text" class="form-control" data-provide="datepicker" data-date-autoclose="true" data-date-container="#datepicker4" name = "birthday"   value="<?php echo date('m/d/Y'); ?>" required>
             </div>
         </div>
 
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="gender"><?php echo get_phrase('gender'); ?></label>
+            <label class="col-md-3 col-form-label" for="gender"><?php echo get_phrase('gender'); ?><span class="required"> * </span></label>
             <div class="col-md-9">
                 <select name="gender" id="gender" class="form-control select2" data-toggle = "select2"  required>
                     <option value=""><?php echo get_phrase('select_gender'); ?></option>
@@ -75,7 +75,7 @@
         </div>
 
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="phone"><?php echo get_phrase('phone'); ?></label>
+            <label class="col-md-3 col-form-label" for="phone"><?php echo get_phrase('phone'); ?><span class="required"> * </span></label>
             <div class="col-md-9">
                 <input type="text" id="phone" name="phone" class="form-control" placeholder="phone" required>
             </div>

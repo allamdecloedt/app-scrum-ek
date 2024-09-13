@@ -1,6 +1,6 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('expense_category/create'); ?>">
   <div class="form-group mb-2">
-    <label for="name"><?php echo get_phrase('expense_category_name'); ?></label>
+    <label for="name"><?php echo get_phrase('expense_category_name'); ?><span class="required"> * </span></label>
     <input type="text" class="form-control" id="name" name = "name" required>
   </div>
 

@@ -8,25 +8,25 @@ foreach($users as $user):
     <div class="form-row">
       <div class="form-group mb-1">
         <input type="hidden" name="school_id" value="<?php echo school_id(); ?>">
-        <label for="name"><?php echo get_phrase('name'); ?></label>
+        <label for="name"><?php echo get_phrase('name'); ?><span class="required"> * </span></label>
         <input type="text" value="<?php echo $user['name']; ?>" class="form-control" id="name" name = "name" required>
         <small id="" class="form-text text-muted"><?php echo get_phrase('provide_teacher_name'); ?></small>
       </div>
 
       <div class="form-group mb-1">
-        <label for="email"><?php echo get_phrase('email'); ?></label>
+        <label for="email"><?php echo get_phrase('email'); ?><span class="required"> * </span></label>
         <input type="email" value="<?php echo $user['email']; ?>" class="form-control" id="email" name = "email" required>
         <small id="" class="form-text text-muted"><?php echo get_phrase('provide_teacher_email'); ?></small>
       </div>
 
       <div class="form-group mb-1">
-        <label for="designation"><?php echo get_phrase('designation'); ?></label>
+        <label for="designation"><?php echo get_phrase('designation'); ?><span class="required"> * </span></label>
         <input type="text" value="<?php echo $teacher['designation']; ?>" class="form-control" id="designation" name = "designation" required>
         <small id="" class="form-text text-muted"><?php echo get_phrase('provide_teacher_designation'); ?></small>
       </div>
 
       <div class="form-group mb-1">
-        <label for="department"><?php echo get_phrase('department'); ?></label>
+        <label for="department"><?php echo get_phrase('department'); ?><span class="required"> * </span></label>
         <select name="department" id="department" class="form-control select2" data-toggle = "select2" required>
           <option value=""><?php echo get_phrase('select_a_department'); ?></option>
           <?php $departments = $this->db->get_where('departments', array('school_id' => school_id()))->result_array();
@@ -39,7 +39,7 @@ foreach($users as $user):
       </div>
 
       <div class="form-group mb-1">
-        <label for="phone"><?php echo get_phrase('phone_number'); ?></label>
+        <label for="phone"><?php echo get_phrase('phone_number'); ?><span class="required"> * </span></label>
         <input type="text" value="<?php echo $user['phone']; ?>" class="form-control" id="phone" name = "phone" required>
         <small id="" class="form-text text-muted"><?php echo get_phrase('provide_teacher_phone_number'); ?></small>
       </div>

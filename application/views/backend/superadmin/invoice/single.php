@@ -1,7 +1,7 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('invoice/single'); ?>">
   <div class="form-row">
     <div class="form-group mb-2">
-      <label for="class_id_on_create"><?php echo get_phrase('class'); ?></label>
+      <label for="class_id_on_create"><?php echo get_phrase('class'); ?><span class="required"> * </span></label>
       <select name="class_id" id="class_id_on_create" class="form-control select2" data-bs-toggle="select2"  required onchange="classWiseStudentOnCreate(this.value)">
         <option value=""><?php echo get_phrase('select_a_class'); ?></option>
         <?php $classes = $this->crud_model->get_classes()->result_array(); ?>
@@ -12,7 +12,7 @@
     </div>
 
     <div class="form-group mb-2">
-      <label for="student_id_on_create"><?php echo get_phrase('select_student'); ?></label>
+      <label for="student_id_on_create"><?php echo get_phrase('select_student'); ?><span class="required"> * </span></label>
       <div id = "student_content">
         <select name="student_id" id="student_id_on_create" class="form-control select2" data-bs-toggle="select2" required >
           <option value=""><?php echo get_phrase('select_a_student'); ?></option>
@@ -21,22 +21,22 @@
     </div>
 
     <div class="form-group mb-2">
-      <label for="title"><?php echo get_phrase('invoice_title'); ?></label>
+      <label for="title"><?php echo get_phrase('invoice_title'); ?><span class="required"> * </span></label>
       <input type="text" class="form-control" id="title" name = "title" required>
     </div>
 
     <div class="form-group mb-2">
-      <label for="total_amount"><?php echo get_phrase('total_amount').' ('.currency_code_and_symbol('code').')'; ?></label>
+      <label for="total_amount"><?php echo get_phrase('total_amount').' ('.currency_code_and_symbol('code').')'; ?><span class="required"> * </span></label>
       <input type="number" class="form-control" id="total_amount" name = "total_amount" required>
     </div>
 
     <div class="form-group mb-2">
-      <label for="paid_amount"><?php echo get_phrase('paid_amount').' ('.currency_code_and_symbol('code').')'; ?></label>
+      <label for="paid_amount"><?php echo get_phrase('paid_amount').' ('.currency_code_and_symbol('code').')'; ?><span class="required"> * </span></label>
       <input type="number" class="form-control" id="paid_amount" name = "paid_amount" required>
     </div>
 
     <div class="form-group mb-2">
-      <label for="status"><?php echo get_phrase('status'); ?></label>
+      <label for="status"><?php echo get_phrase('status'); ?><span class="required"> * </span></label>
       <select name="status" id="status" class="form-control select2" data-bs-toggle="select2" required >
         <option value=""><?php echo get_phrase('select_a_status'); ?></option>
         <option value="paid"><?php echo get_phrase('paid'); ?></option>

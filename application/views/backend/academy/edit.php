@@ -70,7 +70,7 @@
                                       <div class="row justify-content-center">
                                           <div class="col-xl-8">
                                               <div class="form-group row mb-3">
-                                                  <label class="col-md-2 col-form-label" for="course_title"><?php echo get_phrase('course_title'); ?> <span class="required">*</span> </label>
+                                                  <label class="col-md-2 col-form-label" for="course_title"><?php echo get_phrase('course_title'); ?> <span class="required"> * </span> </label>
                                                   <div class="col-md-10">
                                                       <input type="text" value="<?php echo $course['title']; ?>" class="form-control" id="course_title" name = "title" placeholder="<?php echo get_phrase('enter_course_title'); ?>" required>
                                                   </div>
@@ -80,7 +80,7 @@
                                               <div class="form-group row mb-3">
                                                   <label class="col-md-2 col-form-label" for="basic_description"><?php echo get_phrase('description'); ?></label>
                                                   <div class="col-md-10">
-                                                      <textarea name="description" rows="5" id="basic_description" class="form-control"><?php echo $course['description']; ?></textarea>
+                                                      <textarea name="description" rows="5" id="basic_description" class="form-control" ><?php echo $course['description']; ?></textarea>
                                                   </div>
                                               </div>
                                           </div> <!-- end col -->
@@ -91,7 +91,7 @@
                                       <div class="row justify-content-center">
                                           <div class="col-xl-8">
                                               <div class="form-group row mb-3">
-                                                  <label class="col-md-2 col-form-label" for="class_id"><?php echo get_phrase('class'); ?><span class="required">*</span></label>
+                                                  <label class="col-md-2 col-form-label" for="class_id"><?php echo get_phrase('class'); ?><span class="required"> * </span></label>
                                                   <div class="col-md-10">
                                                       <select class="form-control select2" data-toggle="select2"  name="class_id" id="class_id_add_cours" required>
                                                           <option value=""><?php echo get_phrase('select_a_class'); ?></option>
@@ -118,7 +118,7 @@
                                                 <input type="hidden" name="user_id" value="<?php echo $this->session->userdata('user_id'); ?>">
                                               <?php else: ?>
                                                 <div class="form-group row mb-3">
-                                                    <label class="col-md-2 col-form-label" for="user_id"><?php echo get_phrase('instructor'); ?><span class="required">*</span></label>
+                                                    <label class="col-md-2 col-form-label" for="user_id"><?php echo get_phrase('instructor'); ?><span class="required"> * </span></label>
                                                     <div class="col-md-10">
                                                         <select class="form-control select2" data-toggle="select2" name="user_id" id="user_id" required>
                                                             <option value=""><?php echo get_phrase('select_a_teacher'); ?></option>

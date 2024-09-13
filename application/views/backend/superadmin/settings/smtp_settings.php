@@ -5,7 +5,7 @@
                 <form method="POST" class="col-12 smtpForm" action="<?php echo route('smtp_settings/update') ; ?>" id = "smtpsettings">
                     <div class="col-12">
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="mail_sender"><?php echo get_phrase('mail_sender') ; ?></label>
+                            <label class="col-md-3 col-form-label" for="mail_sender"><?php echo get_phrase('mail_sender') ; ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <select class="form-control select2" data-toggle = "select2" name="mail_sender" id="mail_sender" onchange = "showHideSMTPCredentials(this.value)" required>
                                     <option value="php_mailer" <?php if (get_smtp('mail_sender') == 'php_mailer'): ?> selected <?php endif; ?>><?php echo get_phrase('php_mailer') ;?></option>
@@ -15,40 +15,40 @@
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="smtp_protocol">SMTP <?php echo get_phrase('protocol') ; ?></label>
+                            <label class="col-md-3 col-form-label" for="smtp_protocol">SMTP <?php echo get_phrase('protocol') ; ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <input type="text" id="smtp_protocol" name="smtp_protocol" class="form-control"  value="<?php echo get_smtp('smtp_protocol') ; ?>" required>
                             </div>
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="smtp_host">SMTP <?php echo get_phrase('host') ; ?></label>
+                            <label class="col-md-3 col-form-label" for="smtp_host">SMTP <?php echo get_phrase('host') ; ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <input type="text" id="smtp_host" name="smtp_host" class="form-control"  value="<?php echo get_smtp('smtp_host') ; ?>" required>
                             </div>
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="smtp_crypto">SMTP <?php echo get_phrase('crypto') ; ?></label>
+                            <label class="col-md-3 col-form-label" for="smtp_crypto">SMTP <?php echo get_phrase('crypto') ; ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <input type="text" id="smtp_crypto" name="smtp_crypto" class="form-control"  value="<?php echo get_smtp('smtp_crypto') ; ?>" required>
                             </div>
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="smtp_port">SMTP <?php echo get_phrase('port') ; ?></label>
+                            <label class="col-md-3 col-form-label" for="smtp_port">SMTP <?php echo get_phrase('port') ; ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <input type="text" id="smtp_port" name="smtp_port" class="form-control"  value="<?php echo get_smtp('smtp_port') ; ?>" required>
                             </div>
                         </div>
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="smtp_username">SMTP <?php echo get_phrase('username') ; ?></label>
+                            <label class="col-md-3 col-form-label" for="smtp_username">SMTP <?php echo get_phrase('username') ; ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <input type="text" id="smtp_username" name="smtp_username" class="form-control"  value="<?php echo get_smtp('smtp_username') ; ?>" required>
                             </div>
                         </div>
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="smtp_password">SMTP <?php echo get_phrase('password') ; ?></label>
+                            <label class="col-md-3 col-form-label" for="smtp_password">SMTP <?php echo get_phrase('password') ; ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <input type="text" id="smtp_password" name="smtp_password" class="form-control"  value="<?php echo get_smtp('smtp_password') ; ?>" required>
                             </div>
