@@ -16,12 +16,12 @@
             </div>
         </div>
 
-        <div class="form-group row mb-3">
+        <!-- <div class="form-group row mb-3">
             <label class="col-md-3 col-form-label" for="password"><?php echo get_phrase('password'); ?><span class="required"> * </span></label>
             <div class="col-md-9">
                 <input type="password" class="form-control" id="password" name="password" placeholder="password" required>
             </div>
-        </div>
+        </div> -->
 
 
         <div class="form-group row mb-3">
@@ -47,9 +47,9 @@
         </div>
 
         <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="birthdatepicker"><?php echo get_phrase('birthday'); ?><span class="required"> * </span></label>
+            <label class="col-md-3 col-form-label" for="birthdatepicker"><?php echo get_phrase('birthday'); ?></label>
             <div class="col-md-9 position-relative" id="datepicker4">
-                <input type="text" class="form-control" data-provide="datepicker" data-date-autoclose="true" data-date-container="#datepicker4" name = "birthday"   value="<?php echo date('m/d/Y'); ?>" required>
+                <input type="text" class="form-control" data-provide="datepicker"  placeholder="<?php echo get_phrase('birthday'); ?>" data-date-autoclose="true" data-date-container="#datepicker4" name = "birthday"   value="" >
             </div>
         </div>
 
