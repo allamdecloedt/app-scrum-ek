@@ -11,7 +11,7 @@
         <form method="POST" class="col-12 systemAjaxForm" action="<?php echo route('payment_settings/system') ;?>" id = "system_settings">
           <div class="col-12">
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="system_currency"> <?php echo get_phrase('system_currency') ;?> </label>
+              <label class="col-md-3 col-form-label" for="system_currency"> <?php echo get_phrase('system_currency') ;?> <span class="required"> * </span></label>
               <div class="col-md-9">
                 <select class="form-control select2" data-bs-toggle="select2" id = "system_currency" name="system_currency" required>
                   <option value=""><?php echo get_phrase('select_system_currency'); ?></option>
@@ -27,7 +27,7 @@
             </div>
           </div>
           <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="currency_position"> <?php echo get_phrase('currency_position') ;?> </label>
+            <label class="col-md-3 col-form-label" for="currency_position"> <?php echo get_phrase('currency_position') ;?><span class="required"> * </span> </label>
             <div class="col-md-9">
               <select class="form-control select2" data-bs-toggle="select2" id = "currency_position" name="currency_position" required>
                 <option value="left" <?php if ($result['currency_position'] == 'left') echo 'selected';?> ><?php echo get_phrase('left'); ?></option>
@@ -67,7 +67,7 @@
             </div>
 
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="paypal_currency"> <?php echo get_phrase('paypal_currency') ;?> </label>
+              <label class="col-md-3 col-form-label" for="paypal_currency"> <?php echo get_phrase('paypal_currency') ;?> <span class="required"> * </span></label>
               <div class="col-md-9">
                 <select class="form-control select2" data-bs-toggle="select2" id = "paypal_currency" name="paypal_currency" required>
                   <option value=""><?php echo get_phrase('select_paypal_currency'); ?></option>
@@ -93,14 +93,14 @@
           </div>
 
           <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="paypal_client_id_sandbox"> <?php echo get_phrase('client_id_(sandbox)') ;?></label>
+            <label class="col-md-3 col-form-label" for="paypal_client_id_sandbox"> <?php echo get_phrase('client_id_(sandbox)') ;?><span class="required"> * </span></label>
             <div class="col-md-9">
               <input type="text" id="paypal_client_id_sandbox" name="paypal_client_id_sandbox" class="form-control"  value="<?php echo $paypal[0]->paypal_client_id_sandbox; ?>" required>
             </div>
           </div>
 
           <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="paypal_client_id_production"> <?php echo get_phrase('client_id_(production)') ;?></label>
+            <label class="col-md-3 col-form-label" for="paypal_client_id_production"> <?php echo get_phrase('client_id_(production)') ;?><span class="required"> * </span></label>
             <div class="col-md-9">
               <input type="text" id="paypal_client_id_production" name="paypal_client_id_production" class="form-control"  value="<?php echo $paypal[0]->paypal_client_id_production;?>" required>
             </div>
@@ -133,7 +133,7 @@
             </div>
 
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="stripe_currency"> <?php echo get_phrase('stripe_currency') ;?></label>
+              <label class="col-md-3 col-form-label" for="stripe_currency"> <?php echo get_phrase('stripe_currency') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <select class="form-control select2" data-bs-toggle="select2" id = "stripe_currency" name="stripe_currency" required>
                   <option value=""><?php echo get_phrase('select_stripe_currency'); ?></option>
@@ -159,28 +159,28 @@
           </div>
 
           <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="stripe_test_secret_key"> <?php echo get_phrase('test_secret_key') ;?></label>
+            <label class="col-md-3 col-form-label" for="stripe_test_secret_key"> <?php echo get_phrase('test_secret_key') ;?><span class="required"> * </span></label>
             <div class="col-md-9">
               <input type="text" id="stripe_test_secret_key" name="stripe_test_secret_key" class="form-control"  value="<?php echo $stripe[0]->stripe_test_secret_key;?>" required>
             </div>
           </div>
 
           <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="stripe_test_public_key"> <?php echo get_phrase('test_public_key') ;?></label>
+            <label class="col-md-3 col-form-label" for="stripe_test_public_key"> <?php echo get_phrase('test_public_key') ;?><span class="required"> * </span></label>
             <div class="col-md-9">
               <input type="text" id="stripe_test_public_key" name="stripe_test_public_key" class="form-control"  value="<?php echo $stripe[0]->stripe_test_public_key;?>" required>
             </div>
           </div>
 
           <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="stripe_live_secret_key"> <?php echo get_phrase('live_secret_key') ;?></label>
+            <label class="col-md-3 col-form-label" for="stripe_live_secret_key"> <?php echo get_phrase('live_secret_key') ;?><span class="required"> * </span></label>
             <div class="col-md-9">
               <input type="text" id="stripe_live_secret_key" name="stripe_live_secret_key" class="form-control"  value="<?php echo $stripe[0]->stripe_live_secret_key;?>" required>
             </div>
           </div>
 
           <div class="form-group row mb-3">
-            <label class="col-md-3 col-form-label" for="stripe_live_public_key"> <?php echo get_phrase('live_public_key') ;?></label>
+            <label class="col-md-3 col-form-label" for="stripe_live_public_key"> <?php echo get_phrase('live_public_key') ;?><span class="required"> * </span></label>
             <div class="col-md-9">
               <input type="text" id="stripe_live_public_key" name="stripe_live_public_key" class="form-control"  value="<?php echo $stripe[0]->stripe_live_public_key;?>" required>
             </div>

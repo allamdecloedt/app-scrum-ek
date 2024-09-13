@@ -1,25 +1,25 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('admin/create'); ?>">
     <div class="form-row">
         <div class="form-group mb-1">
-            <label for="name"><?php echo get_phrase('name'); ?></label>
+            <label for="name"><?php echo get_phrase('name'); ?><span class="required"> * </span></label>
             <input type="text" class="form-control" id="name" name = "name" required>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_name'); ?></small>
         </div>
 
         <div class="form-group mb-1">
-            <label for="email"><?php echo get_phrase('email'); ?></label>
+            <label for="email"><?php echo get_phrase('email'); ?><span class="required"> * </span></label>
             <input type="email" class="form-control" id="email" name = "email" required>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_email'); ?></small>
         </div>
 
         <div class="form-group mb-1">
-            <label for="password"><?php echo get_phrase('password'); ?></label>
+            <label for="password"><?php echo get_phrase('password'); ?><span class="required"> * </span></label>
             <input type="password" class="form-control" id="password" name = "password" required>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_password'); ?></small>
         </div>
 
         <div class="form-group mb-1">
-            <label for="phone"><?php echo get_phrase('phone_number'); ?></label>
+            <label for="phone"><?php echo get_phrase('phone_number'); ?><span class="required"> * </span></label>
             <input type="text" class="form-control" id="phone" name = "phone" required>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_phone_number'); ?></small>
         </div>
@@ -27,7 +27,7 @@
 
         <div class="form-group mb-1">
             <label for="gender"><?php echo get_phrase('admin_of'); ?></label>
-            <select name="school_id" id="school_id" class="form-control select2" data-toggle = "select2">
+            <select name="school_id" id="school_id" class="form-control select2" data-toggle = "select2" required>
                 <option value=""><?php echo get_phrase('select_a_school'); ?></option>
                 <?php $schools = $this->crud_model->get_schools()->result_array(); ?>
                 <?php foreach ($schools as $school): ?>
@@ -51,7 +51,7 @@
 
 
         <div class="form-group mb-1">
-            <label for="phone"><?php echo get_phrase('address'); ?></label>
+            <label for="phone"><?php echo get_phrase('address'); ?><span class="required"> * </span></label>
             <textarea class="form-control" id="address" name = "address" rows="5" required></textarea>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_address'); ?></small>
         </div>

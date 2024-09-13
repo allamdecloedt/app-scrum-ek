@@ -3,7 +3,7 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('class_room/update/'.$param1); ?>">
     <div class="form-row">
         <div class="form-group mb-1">
-            <label for="name"><?php echo get_phrase('class_room_name'); ?></label>
+            <label for="name"><?php echo get_phrase('class_room_name'); ?><span class="required"> * </span></label>
             <input type="text" class="form-control" value="<?php echo $class_room['name']; ?>" id="name" name = "name" required>
             <small id="name_help" class="form-text text-muted"><?php echo get_phrase('provide_class_room_name'); ?></small>
         </div>

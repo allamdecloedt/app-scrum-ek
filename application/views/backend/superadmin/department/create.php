@@ -2,7 +2,7 @@
     <div class="form-row">
         <input type="hidden" name="school_id" value="<?php echo school_id(); ?>">
         <div class="form-group mb-1">
-            <label for="name"><?php echo get_phrase('department_name'); ?></label>
+            <label for="name"><?php echo get_phrase('department_name'); ?><span class="required"> * </span></label>
             <input type="text" class="form-control" id="name" name = "name" required>
             <small id="name_help" class="form-text text-muted"><?php echo get_phrase('provide_department_name'); ?></small>
         </div>

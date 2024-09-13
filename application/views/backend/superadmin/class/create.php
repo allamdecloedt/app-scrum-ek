@@ -3,13 +3,13 @@
     <input type="hidden" name="school_id" value="<?php echo school_id(); ?>">
     
     <div class="form-group mb-1 col-md-12">
-        <label for="name"><?php echo get_phrase('class_name'); ?></label>
+        <label for="name"><?php echo get_phrase('class_name'); ?><span class="required"> * </span></label>
         <input type="text" class="form-control" id="name" name="name" required>
         <small id="name_help" class="form-text text-muted"><?php echo get_phrase('provide_class_name'); ?></small>
     </div>
     
     <div class="form-group mb-1 col-md-12">
-        <label for="price"><?php echo get_phrase('Price'); ?></label>
+        <label for="price"><?php echo get_phrase('Price'); ?><span class="required"> * </span></label>
         <?php $currencies = $this->db->get_where('settings_school', array('school_id' => school_id()))->row('system_currency'); ?>
         
         <div class="form-inline">

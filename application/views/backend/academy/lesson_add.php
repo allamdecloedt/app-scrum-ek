@@ -1,14 +1,14 @@
 <?php $course_sections = $this->lms_model->get_section('course', $param1)->result_array(); ?>
 <form action="<?php echo site_url('addons/courses/lessons/'.$param1.'/add'); ?>" method="post" id="uploadForm" enctype="multipart/form-data">
     <div class="form-group mb-2">
-        <label><?php echo get_phrase('title'); ?></label>
+        <label><?php echo get_phrase('title'); ?><span class="required"> * </span></label>
         <input type="text" name = "title" class="form-control" required>
     </div>
 
     <input type="hidden" name="course_id" value="<?php echo $param1; ?>">
 
     <div class="form-group mb-2">
-        <label for="section_id"><?php echo get_phrase('section'); ?></label>
+        <label for="section_id"><?php echo get_phrase('section'); ?><span class="required"> * </span></label>
         <select class="form-control select2" data-toggle="select2" name="section_id" id="section_id" required>
             <?php foreach ($course_sections as $section): ?>
                 <option value="<?php echo $section['id']; ?>"><?php echo $section['title']; ?></option>
@@ -17,7 +17,7 @@
     </div>
 
     <div class="form-group mb-2">
-        <label for="section_id"><?php echo get_phrase('lesson_type'); ?></label>
+        <label for="section_id"><?php echo get_phrase('lesson_type'); ?><span class="required"> * </span></label>
         <select class="form-control select2" data-toggle="select2" name="lesson_type" id="lesson_type" required onchange="show_lesson_type_form(this.value)">
             <option value=""><?php echo get_phrase('select_type_of_lesson'); ?></option>
             <option value="video-url"><?php echo get_phrase('video'); ?></option>
@@ -120,35 +120,40 @@
     });
 
         document.getElementById('uploadForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const fileInput = document.getElementById('userfileMe');
-            const file = fileInput.files[0];
-            const maxSize = 500 * 1024 * 1024; // 500 MB
-            const maxWidth = 1920;
-            const maxHeight = 1080;
- 
-            if (file) {
-                if (file.size > maxSize) {
-                    document.getElementById('error').innerText = 'La taille du fichier ne doit pas dépasser 100 Mo.';
-                    return;
-                }
- 
-                const video = document.createElement('video');
-                video.preload = 'metadata';
- 
-                video.onloadedmetadata = function() {
-                    window.URL.revokeObjectURL(video.src);
-                    if (video.videoWidth > maxWidth || video.videoHeight > maxHeight) {
-                        document.getElementById('error').innerText = 'Les dimensions de la vidéo ne doivent pas dépasser 1920x1080 pixels.';
-                    } else {
-                        // Si tout est correct, soumettre le formulaire
-                        document.getElementById('uploadForm').submit();
-                        document.getElementById('success').innerText = 'Good video';
-                        document.getElementById('error').innerText = ' ';
+            var type_lesson = document.getElementById('lesson_type').value;
+            if(type_lesson == "s3-video"){
+                event.preventDefault();
+                const fileInput = document.getElementById('userfileMe');
+                const file = fileInput.files[0];
+                const maxSize = 500 * 1024 * 1024; // 500 MB
+                const maxWidth = 1920;
+                const maxHeight = 1080;
+    
+                if (file) {
+                    if (file.size > maxSize) {
+                        document.getElementById('error').innerText = 'La taille du fichier ne doit pas dépasser 100 Mo.';
+                        return;
                     }
-                };
- 
-                video.src = URL.createObjectURL(file);
+    
+                    const video = document.createElement('video');
+                    video.preload = 'metadata';
+    
+                    video.onloadedmetadata = function() {
+                        window.URL.revokeObjectURL(video.src);
+                        if (video.videoWidth > maxWidth || video.videoHeight > maxHeight) {
+                            document.getElementById('error').innerText = 'Les dimensions de la vidéo ne doivent pas dépasser 1920x1080 pixels.';
+                        } else {
+                            // Si tout est correct, soumettre le formulaire
+                            document.getElementById('uploadForm').submit();
+                            document.getElementById('success').innerText = 'Good video';
+                            document.getElementById('error').innerText = ' ';
+                        }
+                    };
+    
+                    video.src = URL.createObjectURL(file);
+                }
+
             }
+         
         });
 </script>

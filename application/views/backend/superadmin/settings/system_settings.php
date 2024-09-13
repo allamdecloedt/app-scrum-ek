@@ -2,51 +2,51 @@
   <div class="col-xl-7 col-lg-12 col-md-12 col-sm-12">
     <div class="card">
       <div class="card-body py-2">
-        <h4 class="header-title d-inline-block"><?php echo get_phrase('system_settings') ;?></h4>
+        <h4 class="header-title d-inline-block"><?php echo get_phrase('system_settings') ;?><span class="required"> * </span></h4>
         <form method="POST" class="col-12 systemAjaxForm" action="<?php echo route('system_settings/update') ;?>" id = "system_settings">
           <div class="col-12">
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="system_name"> <?php echo get_phrase('system_name') ;?></label>
+              <label class="col-md-3 col-form-label" for="system_name"> <?php echo get_phrase('system_name') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <input type="text" id="system_name" name="system_name" class="form-control"  value="<?php echo get_settings('system_name') ;?>" required>
               </div>
             </div>
 
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="system_title"><?php echo get_phrase('title') ;?></label>
+              <label class="col-md-3 col-form-label" for="system_title"><?php echo get_phrase('title') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <input type="text" id="system_title" name="system_title" class="form-control"  value="<?php echo get_settings('system_title') ;?>" required>
               </div>
             </div>
 
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="system_email"> <?php echo get_phrase('school_email') ;?></label>
+              <label class="col-md-3 col-form-label" for="system_email"> <?php echo get_phrase('school_email') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <input type="email" id="system_email" name="system_email" class="form-control"  value="<?php echo get_settings('system_email') ;?>" required>
               </div>
             </div>
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="phone"> <?php echo get_phrase('phone') ;?></label>
+              <label class="col-md-3 col-form-label" for="phone"> <?php echo get_phrase('phone') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <input type="text" id="phone" name="phone" class="form-control"  value="<?php echo get_settings('phone') ;?>" required>
               </div>
             </div>
 
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="fax"> <?php echo get_phrase('fax') ;?></label>
+              <label class="col-md-3 col-form-label" for="fax"> <?php echo get_phrase('fax') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <input type="text" id="fax" name="fax" class="form-control"  value="<?php echo get_settings('fax') ;?>" required>
               </div>
             </div>
 
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="address"> <?php echo get_phrase('address') ;?></label>
+              <label class="col-md-3 col-form-label" for="address"> <?php echo get_phrase('address') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <textarea class="form-control" id="address" name = "address" rows="5" required><?php echo get_settings('address') ;?></textarea>
               </div>
             </div>
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="purchase_code"> <?php echo get_phrase('purchase_code') ;?></label>
+              <label class="col-md-3 col-form-label" for="purchase_code"> <?php echo get_phrase('purchase_code') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <input type="text" id="purchase_code" name="purchase_code" class="form-control"  value="<?php echo get_settings('purchase_code') ;?>" required>
               </div>
@@ -64,14 +64,14 @@
               </div>
             </div>
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="footer_text"> <?php echo get_phrase('footer_text') ;?></label>
+              <label class="col-md-3 col-form-label" for="footer_text"> <?php echo get_phrase('footer_text') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <input type="text" id="footer_text" name="footer_text" class="form-control"  value="<?php echo get_settings('footer_text') ;?>" required>
               </div>
             </div>
 
             <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="footer_link"><?php echo get_phrase('footer_link') ;?></label>
+              <label class="col-md-3 col-form-label" for="footer_link"><?php echo get_phrase('footer_link') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
                 <input type="text" id="footer_link" name="footer_link" class="form-control"  value="<?php echo get_settings('footer_link') ;?>" required>
               </div>

@@ -1,6 +1,11 @@
 /**
 * main style
 */
+.required {
+    color: rgb(231, 86, 86);
+   
+    }
+
 
 .timeline-item {
   background-color: #fff;
