@@ -204,7 +204,7 @@ class Email_model extends CI_Model {
 				</head>
 				<body>
 					<div class="container">
-						<h2>Password Reset Request</h2>
+						<h2>Add Password </h2>
 						<p>Hello '.ucfirst($query['name']).'</p>
 						<p>We received a request to add your password for your account. You can add your password by clicking the link below:</p>
 						<a href="'.$link.'" class="button"> Password</a>
