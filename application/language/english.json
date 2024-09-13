@@ -1366,5 +1366,6 @@
     "ok": "Ok",
     "you_must_select_at_least_one_correct_answer": "You must select at least one correct answer",
     "refresh": "Refresh",
-    "no_instruction_found": "No instruction found"
+    "no_instruction_found": "No instruction found",
+    "add_new_password": "Add new password"
 }
