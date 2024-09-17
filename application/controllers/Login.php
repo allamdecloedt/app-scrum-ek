@@ -332,7 +332,7 @@ class Login extends CI_Controller
 				$token = bin2hex(random_bytes(50));
 				
 				// Set the expiration date (1 hour from now)
-				$expires_at = date("Y-m-d H:i:s", strtotime('+1 hour'));
+				$expires_at = date("Y-m-d H:i:s", strtotime('+24 hour'));
 
 				// Update the database with the token and expiration
 				$this->db->where('id', $user['id']);

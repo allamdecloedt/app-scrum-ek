@@ -70,68 +70,78 @@ class Email_model extends CI_Model {
 		if(sizeof($query) > 0)
 		{
 
-			$email_msg	=	'<!DOCTYPE html>
-				<html lang="en">
-				<head>
-					<meta charset="UTF-8">
-					<meta name="viewport" content="width=device-width, initial-scale=1.0">
-					<title>Password Reset</title>
-					<style>
-						body {
-							font-family: Arial, sans-serif;
-							background-color: #f4f4f4;
-							color: #ffffff;
-							line-height: 1.6;
-							margin: 0;
-							padding: 0;
-						}
-						.container {
-							max-width: 600px;
-							margin: 20px auto;
-							background: #fff;
-							padding: 20px;
-							border-radius: 10px;
-							box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-						}
-						h2 {
-							color: #333;
-						}
-						p {
-							margin: 10px 0;
-						}
-						.button {
-							display: inline-block;
-							padding: 10px 20px;
-							font-size: 16px;
-							color: #fff !important;
-							background-color: #5d0ea8;
-							text-decoration: none;
-							border-radius: 5px;
-							margin-top: 20px;
-						}
-						.footer {
-							margin-top: 30px;
-							font-size: 12px;
-							color: #777;
-							text-align: center;
-						}
-					</style>
-				</head>
-				<body>
-					<div class="container">
-						<h2>Password Reset Request</h2>
-						<p>Hello '.ucfirst($query['name']).'</p>
-						<p>We received a request to reset your password for your account. You can reset your password by clicking the link below:</p>
-						<a href="'.$link.'" class="button">Reset Password</a>
-						<p>If you did not request a password reset, please ignore this email or contact support if you have questions.</p>
-						
-						<div class="footer">
-							<p>&copy; 2024. All rights reserved.</p>
-						</div>
+			$email_msg = '
+			<!DOCTYPE html>
+			<html lang="fr">
+			<head>
+				<meta charset="UTF-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1.0">
+				<title>Réinitialisation de votre mot de passe</title>
+				<style>
+					body {
+						font-family: Arial, sans-serif;
+						background-color: #f4f4f4;
+						color: #333;
+						line-height: 1.6;
+						margin: 0;
+						padding: 0;
+					}
+					.container {
+						max-width: 600px;
+						margin: 20px auto;
+						background: #fff;
+						padding: 20px;
+						border-radius: 10px;
+						box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+					}
+					h2 {
+						color: #5d0ea8;
+					}
+					p {
+						margin: 10px 0;
+						color: #555;
+					}
+					.button {
+						display: inline-block;
+						padding: 15px 25px;
+						font-size: 16px;
+						color: #fff !important;
+						background-color: #5d0ea8;
+						text-decoration: none;
+						border-radius: 5px;
+						margin-top: 20px;
+						transition: background-color 0.3s ease;
+					}
+					.button:hover {
+						background-color: #4c0e8f;
+					}
+					.footer {
+						margin-top: 30px;
+						font-size: 12px;
+						color: #777;
+						text-align: center;
+					}
+					.footer p {
+						margin: 0;
+					}
+				</style>
+			</head>
+			<body>
+				<div class="container">
+					<h2>Réinitialisation de votre mot de passe</h2>
+					<p>Bonjour '.ucfirst($query['name']).',</p>
+					<p>Vous avez fait une demande de réinitialisation de votre mot de passe. Si vous êtes à l\'origine de cette demande, veuillez cliquer sur le lien ci-dessous pour créer un nouveau mot de passe :</p>
+					<a href="'.$link.'" class="button">Réinitialiser mon mot de passe</a>
+					<p>Ce lien est valide pendant 24 heures.</p>
+					<p>Si vous n\'êtes pas à l\'origine de cette demande, veuillez ignorer cet e-mail. Votre mot de passe actuel restera inchangé et votre compte demeure sécurisé.</p>
+					<p>Si vous avez des questions ou besoin d\'assistance, n\'hésitez pas à contacter notre équipe support à l’adresse suivante : <a href="mailto:'.get_settings('system_email').'">'.get_settings('system_email').'</a>.</p>
+					<div class="footer">
+						<p>&copy; 2024. Tous droits réservés.</p>
 					</div>
-				</body>
-				</html>
-				';
+				</div>
+			</body>
+			</html>';
+			
 
 			$email_sub	=	"Password reset request";
 			$email_to	=	$query['email'];
