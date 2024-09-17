@@ -363,7 +363,7 @@
                 <div class="file-spacer"></div>
                 <span class="file-name-photo file-name"><?php echo get_phrase('choose_a_file'); ?>...</span>
               </label>
-              <input id="student_image" type="file" class="inputfile" name="student_image" accept=".jpg, .jpeg .png" required>
+              <input id="student_image" type="file" class="inputfile" name="student_image" accept=".jpg, .jpeg, .png" required>
             </div>
 
           </div>
@@ -624,7 +624,7 @@
                 <div class="file-spacer"></div>
                 <span class="file-name-school-image file-name"><?php echo get_phrase('choose_a_file'); ?>...</span>
               </label>
-              <input id="school_image" type="file" class="inputfile" name="school_image" accept=".jpg, .jpeg .png " required>
+              <input id="school_image" type="file" class="inputfile" name="school_image" accept=".jpg, .jpeg, .png " required>
             </div>
 
           </div>

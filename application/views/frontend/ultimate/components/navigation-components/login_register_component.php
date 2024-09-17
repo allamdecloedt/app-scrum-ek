@@ -125,7 +125,7 @@
                         <span class="file-name-photo file-name"><?php echo get_phrase('picture'); ?>...</span>
                         <span class="required"> * </span>  </label>
                     <input id="student_image_upload" type="file" class="inputfile" name="student_image_upload"
-                        accept="image/*" required>
+                        accept=".jpg, .jpeg, .png" required>
                 </div>
             </div>
             <!-- Second Register Form Section End-->
