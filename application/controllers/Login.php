@@ -321,7 +321,7 @@ class Login extends CI_Controller
 		}
 		public function send_reset_link()
 		{
-			
+			return 'delco ';
 			$email = $this->input->post('email');
 			$query = $this->db->get_where('users', array('email' => $email));
 
