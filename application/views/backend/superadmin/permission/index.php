@@ -17,7 +17,7 @@
             <div class="row mt-3">
                 <div class="col-md-1"></div>
                 <div class="col-md-4">
-                    <select name="class" id="class_id" class="form-control select2" data-toggle = "select2" onchange="classWiseSection(this.value)" required>
+                    <select name="class" id="class_id_perm" class="form-control select2" data-toggle = "select2" onchange="classWiseSection(this.value)" required>
                         <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                             <?php
                             $classes = $this->db->get_where('classes', array('school_id' => school_id()))->result_array();
@@ -70,7 +70,7 @@
     }
 
     function filter(){
-        var class_id = $('#class_id').val();
+        var class_id = $('#class_id_perm').val();
         var section_id = $('#section_id').val();
         if(class_id != "" && section_id!= ""){
             $.ajax({
@@ -95,7 +95,7 @@
         }else{
             value = 1;
         }
-        var class_id = $('#class_id').val();
+        var class_id = $('#class_id_perm').val();
         var section_id = $('#section_id').val();
 
         $.ajax({
