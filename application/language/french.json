@@ -1313,5 +1313,7 @@
     "less": "Less",
     "no_student_account": "No student account",
     "forgot_your_account?_": "Forgot your account? ",
-    "forgot_account?": "Forgot account?"
+    "forgot_account?": "Forgot account?",
+    "quiz_result": "Quiz result",
+    "ok": "Ok"
 }
