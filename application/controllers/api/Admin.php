@@ -1375,24 +1375,6 @@ public function create_teacher_post() {
     }
 
     // Handle image upload
-    if (isset($_FILES['image']) && $_FILES['image']['size'] > 0) {
-        $upload_path = './uploads/users/';
-        $image_path = $upload_path . $user_id . '.jpg'; // Save the image as 'user_id.jpg'
-
-        // Load the upload library
-        $config['upload_path'] = $upload_path;
-        $config['allowed_types'] = 'jpg|jpeg|png';
-        $config['file_name'] = $user_id . '.jpg';
-        $config['overwrite'] = true;
-        $this->load->library('upload', $config);
-
-        if (!$this->upload->do_upload('image')) {
-            $this->output
-                ->set_status_header(500)
-                ->set_output(json_encode(['error' => $this->upload->display_errors()]));
-            return;
-        }
-    }
 
     // Return success response
     $this->output
@@ -3995,7 +3977,7 @@ public function sections_for_class_get() {
 }
 
 
-/*  public function create_invoice_post() {
+  public function create_invoice_post() {
     $student_id = $this->input->post('student_id');
     $class_id = $this->input->post('class_id');
     $total_amount = $this->input->post('total_amount');
@@ -4068,79 +4050,9 @@ public function sections_for_class_get() {
         ->set_content_type('application/json')
         ->set_output(json_encode(['status' => true, 'invoice_id' => $invoice_id]));
 }
-  */
+  
 
-  public function create_invoice_post() {
-    // Get raw POST data
-    $input_data = json_decode($this->input->raw_input_stream, true);
-    
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        log_message('error', 'JSON decode error: ' . json_last_error_msg());
-        $this->output
-            ->set_status_header(400)
-            ->set_output(json_encode(['status' => false, 'message' => 'Invalid JSON input']));
-        return;
-    }
 
-    // Log the input data for verification
-    log_message('debug', 'Input data: ' . json_encode($input_data));
-
-    // Validate and log the 'created_at' date
-    $created_at = isset($input_data['created_at']) ? $input_data['created_at'] : null;
-    if (empty($created_at)) {
-        log_message('error', 'Missing created_at');
-        $this->output
-            ->set_status_header(400)
-            ->set_output(json_encode(['status' => false, 'message' => 'Missing created_at']));
-        return;
-    }
-
-    // Try parsing the date
-    $date_format = 'Y/m/d H:i:s';
-    $created_at_datetime = DateTime::createFromFormat($date_format, $created_at);
-
-    if ($created_at_datetime === false) {
-        $errors = DateTime::getLastErrors();
-        log_message('error', 'Date parsing error: ' . $created_at . ' Errors: ' . print_r($errors, true));
-        $this->output
-            ->set_status_header(400)
-            ->set_output(json_encode(['status' => false, 'message' => 'Invalid date format. Expected format: ' . $date_format]));
-        return;
-    }
-
-    $created_at_timestamp = $created_at_datetime->getTimestamp();
-    log_message('debug', 'Parsed timestamp: ' . $created_at_timestamp);
-
-    // Prepare invoice data and insert
-    $invoice_data = [
-        'title' => 'Invoice for ' . (isset($input_data['user_name']) ? $input_data['user_name'] : 'Unknown'),
-        'total_amount' => isset($input_data['total_amount']) ? $input_data['total_amount'] : 0,
-        'class_id' => isset($input_data['class_id']) ? $input_data['class_id'] : null,
-        'student_id' => isset($input_data['student_id']) ? $input_data['student_id'] : null,
-        'paid_amount' => isset($input_data['paid_amount']) ? $input_data['paid_amount'] : 0,
-        'status' => 'unpaid',
-        'payment_method' => isset($input_data['payment_method']) ? $input_data['payment_method'] : 'unknown',
-        'school_id' => isset($input_data['school_id']) ? $input_data['school_id'] : null,
-        'session' => isset($input_data['session']) ? $input_data['session'] : null,
-        'created_at' => $created_at_timestamp,
-        'updated_at' => $created_at_timestamp,
-    ];
-
-    $this->db->insert('invoices', $invoice_data);
-    if ($this->db->affected_rows() > 0) {
-        $invoice_id = $this->db->insert_id();
-        log_message('debug', 'Invoice created successfully with ID: ' . $invoice_id);
-
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode(['status' => true, 'invoice_id' => $invoice_id, 'message' => 'Invoice created successfully']));
-    } else {
-        log_message('error', 'Database insert error: ' . $this->db->error()['message']);
-        $this->output
-            ->set_status_header(500)
-            ->set_output(json_encode(['status' => false, 'message' => 'Failed to insert invoice data']));
-    }
-}
 
 
 
