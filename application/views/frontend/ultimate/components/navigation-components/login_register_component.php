@@ -284,6 +284,61 @@
         });
     }
 
+
+   document.getElementById("loginSubmit").addEventListener("click", function (event) {
+       if(!loginSubmit()){
+              event.preventDefault();
+       }
+    });
+
+
+    function loginSubmit() {
+        var email = document.getElementById("loginEmail").value;
+        var password = document.getElementById("loginPassword").value;
+
+         validateCredentials(email, password).then((status) => {
+            if (status) {
+                document.getElementById("login-form").submit();
+                return true;
+            }
+            else {
+                return false;
+                
+            }
+        });
+    }
+
+    
+
+     function validateCredentials(email, password) {
+        return new Promise((resolve, reject) => {
+            var emailInput = document.getElementById("loginEmail");
+            var passwordInput = document.getElementById("loginPassword");
+
+                fetch('<?php echo base_url("login/validate_credentials"); ?>', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: email, password: password }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status == false) {
+                            error_notify('<?php echo get_phrase("credentials_incorrect") ?>');
+                            resolve(false);
+                        } else {
+                            resolve(true);
+                        }
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                        resolve(false);
+                    });
+            
+        });
+    }
+
     function showTab(n) {
         var x = document.getElementsByClassName("tab");
         for (var i = 0; i < x.length; i++) {
