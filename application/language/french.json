@@ -1314,5 +1314,7 @@
     "no_student_account": "No student account",
     "forgot_your_account?_": "Forgot your account? ",
     "forgot_account?": "Forgot account?",
-    "credentials_incorrect": "Credentials incorrect"
+    "credentials_incorrect": "Credentials incorrect",
+    "student_admission": "Student admission",
+    "loading_photo": "Loading photo"
 }

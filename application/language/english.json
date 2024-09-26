@@ -1369,5 +1369,7 @@
     "no_instruction_found": "No instruction found",
     "add_new_password": "Add new password",
     "invalid_email_address": "Invalid email address",
-    "credentials_incorrect": "Credentials incorrect"
+    "credentials_incorrect": "Credentials incorrect",
+    "email_adress_not_in_use": "Email adress not in use",
+    "e-mail_address_not_in_use": "E-mail address not in use"
 }
