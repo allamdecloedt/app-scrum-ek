@@ -1317,4 +1317,7 @@
     "credentials_incorrect": "Credentials incorrect",
     "student_admission": "Student admission",
     "loading_photo": "Loading photo"
+
+    "quiz_result": "Quiz result",
+    "ok": "Ok"
 }

@@ -162,6 +162,10 @@ $route['api/ApproveStudent']='api/Admin/approve_student';
 $route['api/GetSectionsList'] = 'api/Admin/section';
 $route['api/DeleteStudent'] = 'api/Admin/delete_student';
 $route['api/NumberStudentOnlineAdmission'] = 'api/Admin/count_student_online_admission';
+$route['api/GetStudentIdByUserId'] = 'api/Admin/get_student_id';
+$route['api/GetSectionsForClass'] = 'api/Admin/sections_for_class';
+$route['api/GetUserName/(:num)']='api/Admin/user_name_by_student_id/$1';
+
 
 
 
@@ -224,10 +228,14 @@ $route['api/CreateSession'] = 'api/Admin/create_session';
 $route['api/EditSession'] = 'api/Admin/edit_session';
 $route['api/DeleteSession/(:num)'] = 'api/Admin/delete_session/$1';
 
-$route['api/CreateClassRoom'] = 'api/Admin/add_class_room';
-$route['api/UpdateClassRoom/(:num)'] = 'api/Admin/update_class_room/$1';
-$route['api/DeleteClassRoom/(:num)'] = 'api/Admin/delete_class_room/$1';
-$route['api/GetClassRoom/(:num)'] = 'api/Admin/get_class_room/$1';
+
+
+$route['api/createInvoice'] = 'api/Admin/create_invoice';
+$route['api/PaidInvoice'] = 'api/Admin/paid_invoice';
+$route['api/getInvoiceStatus'] = 'api/Admin/invoice_status';
+
+
+
 
 $route['api/AddMarks'] = 'api/Admin/add_marks';
 $route['api/FilterExams/(:num)'] = 'api/Admin/filter_exams_by_school_id/$1';
@@ -236,8 +244,34 @@ $route['api/GetSectionsByClassId/(:num)'] = 'api/Admin/get_sections_by_class_id/
 $route['api/GetSubjectIdByName/(:any)'] = 'api/Admin/get_subject_id_by_name/$1';
 $route['api/UpdateMarks'] = 'api/Admin/update_marks';
 
+$route['api/CreateClassRoom'] = 'api/Admin/add_class_room';
+$route['api/UpdateClassRoom/(:num)'] = 'api/Admin/update_class_room/$1';
+$route['api/DeleteClassRoom/(:num)'] = 'api/Admin/delete_class_room/$1';
+$route['api/GetClassRoom/(:num)'] = 'api/Admin/get_class_room/$1';
+
+
+$route['api/CreateRoutine'] = 'api/Admin/create_routine';
+$route['api/UpdateRoutine/(:num)'] = 'api/Admin/update_routine/$1';
+$route['api/DeleteRoutine/(:num)'] = 'api/Admin/delete_routine/$1';
+$route['api/GetRoutine/(:num)'] = 'api/Admin/routines_by_school_id/$1';
+$route['api/GetRoutineByClassAndSection/(:num)/(:num)'] = 'api/Admin/routines_by_class_and_section/$1/$2';
+
+
+
+$route['api/GetInvoice'] = 'api/Admin/invoice_by_date_range';
+$route['api/invoices/parent'] = 'api/Admin/get_invoice_by_parent_id';
+$route['api/invoices/create'] = 'api/Admin/create_single_invoice';
+$route['api/invoices/create_mass'] = 'api/Admin/create_mass_invoice';
+$route['api/invoices/update/(:num)'] = 'api/Admin/update_invoice/$1';
+$route['api/invoices/delete/(:num)'] = 'api/Admin/delete_invoice/$1';
 
 
 
 
 
+
+
+
+
+
+$route['api/GetAppropriateCourses'] = 'api/Admin/get_appropriate_courses';
