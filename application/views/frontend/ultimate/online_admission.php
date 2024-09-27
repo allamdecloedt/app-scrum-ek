@@ -363,7 +363,8 @@
                 <div class="file-spacer"></div>
                 <span class="file-name-photo file-name"><?php echo get_phrase('choose_a_file'); ?>...</span>
               </label>
-              <input id="student_image" type="file" class="inputfile" name="student_image" accept=".jpg, .jpeg, .png" required>
+              <input id="student_image" type="file" class="inputfile" name="student_image" accept=".jpg, .jpeg, .png"
+                required>
             </div>
 
           </div>
@@ -624,7 +625,8 @@
                 <div class="file-spacer"></div>
                 <span class="file-name-school-image file-name"><?php echo get_phrase('choose_a_file'); ?>...</span>
               </label>
-              <input id="school_image" type="file" class="inputfile" name="school_image" accept=".jpg, .jpeg, .png " required>
+              <input id="school_image" type="file" class="inputfile" name="school_image" accept=".jpg, .jpeg, .png "
+                required>
             </div>
 
           </div>
@@ -815,7 +817,7 @@
       <?php endif; ?>
 
       <div class="text-center">
-        <button type="submit" id="submitBtn"
+        <button type="submit" id="submitBtnSchool"
           class="btn btn-wide mb-11 text-uppercase submit-button"><?php echo get_phrase('apply'); ?></button>
         <button type="reset" id="resetBtn" style="display: none;"></button>
       </div>
@@ -868,3 +870,50 @@
       });
     });
   </script>
+
+
+  <script>
+
+  const studentform = document.getElementById("studentform");
+
+
+  if (studentform) {
+    document.getElementById('submitBtn').addEventListener('click', function (event) {
+   
+     if (studentform.checkValidity()) {
+     
+       
+       setTimeout(function () {
+        studentform.reset(); 
+      }, 500);
+
+      } else {
+        
+        studentform.reportValidity(); 
+      }
+    });
+  }
+</script>
+
+
+ <script>
+  const schoolform = document.getElementById("schoolform");
+
+  if (schoolform) {
+    document.getElementById('submitBtnSchool').addEventListener('click', function (event) {
+ 
+      if (schoolform.checkValidity()) {
+
+       setTimeout(function () {
+        schoolform.reset(); 
+      }, 500);
+      } else {
+ 
+        schoolform.reportValidity();
+      }
+    });
+  }
+</script>
+
+
+ 
