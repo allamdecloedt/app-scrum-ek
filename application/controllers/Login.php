@@ -459,4 +459,20 @@ class Login extends CI_Controller
 		}
 
 
+		 public function validate_credentials()
+    {
+        $json_data = json_decode(file_get_contents('php://input'), true);
+        $email = $json_data['email'];
+		$password = $json_data['password'];
+        $query = $this->db->get_where('users', array('email' => $email, 'password' => sha1($password)));
+        $num_rows = $query->num_rows();
+
+        if ($num_rows > 0) {
+            echo json_encode(array('status' => true, 'debug' => 'Welcome'));
+        } else {
+            echo json_encode(array('status' => false, 'debug' => 'Credentials incorrect'));
+        }
+    }
+
+
 }
