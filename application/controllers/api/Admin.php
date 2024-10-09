@@ -1297,7 +1297,7 @@ public function fetch_admins_by_name_get()
 
 //Teacher Part
 
-public function create_teacher_post() {
+/* public function create_teacher_post() {
     // Validate the input data
     if (!$this->input->post('name') || !$this->input->post('email') || !$this->input->post('password') || !$this->input->post('address') || !$this->input->post('phone') || !$this->input->post('gender') || !$this->input->post('department_id')) {
         $this->output
@@ -1380,7 +1380,119 @@ public function create_teacher_post() {
     $this->output
         ->set_content_type('application/json')
         ->set_output(json_encode(['success' => 'Teacher created successfully', 'teacher_id' => $teacher_id]));
+} */
+
+public function create_teacher_post() {
+    // Validate the input data
+    if (!$this->input->post('name') || !$this->input->post('email') || !$this->input->post('password') || !$this->input->post('address') || !$this->input->post('phone') || !$this->input->post('gender') || !$this->input->post('department_id')) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid input data']));
+        return;
+    }
+
+    $data = $this->input->post();
+
+    // Log the received department ID and the data array
+    log_message('debug', 'Department ID received: ' . $data['department_id']);
+    log_message('debug', 'Full data received: ' . json_encode($data));
+
+    // Fetch department details based on department ID, including school_id
+    $this->db->select('id, name, school_id');
+    $this->db->from('departments');
+    $this->db->where('id', $data['department_id']);
+    $department = $this->db->get()->row_array();
+    
+    if (!$department) {
+        $this->output
+            ->set_status_header(400)
+            ->set_output(json_encode(['error' => 'Invalid department ID']));
+        return;
+    }
+
+    $department_id = $department['id'];
+    $school_id = $department['school_id'];
+
+    // Prepare social links as JSON
+    $social_links = json_encode([
+        'facebook' => $data['facebook'],
+        'linkedin' => $data['linkedin'],
+        'twitter' => $data['twitter'],
+    ]);
+
+    // Insert the user data into the 'users' table
+    $user_data = [
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => password_hash($data['password'], PASSWORD_BCRYPT), // Hash the password
+        'address' => $data['address'],
+        'phone' => $data['phone'],
+        'gender' => $data['gender'],
+        'school_id' => $school_id // Include school_id
+    ];
+    $this->db->insert('users', $user_data);
+    $user_id = $this->db->insert_id();
+
+    if (!$user_id) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['error' => 'Failed to create user']));
+        return;
+    }
+
+    // Insert the teacher data into the 'teachers' table
+    $teacher_data = [
+        'user_id' => $user_id,
+        'department_id' => $department_id,
+        'school_id' => $school_id, // Use school_id from department
+        'designation' => $data['designation'],
+        'about' => $data['about'],
+        'social_links' => $social_links,
+        'watch_history' => json_encode([]), // Default to empty watch history
+    ];
+    $this->db->insert('teachers', $teacher_data);
+    $teacher_id = $this->db->insert_id();
+
+    if (!$teacher_id) {
+        $this->output
+            ->set_status_header(500)
+            ->set_output(json_encode(['error' => 'Failed to create teacher']));
+        return;
+    }
+
+    // Handle image upload
+    if (!empty($_FILES['image']['name'])) {
+        $config['upload_path'] = './uploads/users/';
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['file_name'] = $user_id . '.jpg'; // Store the image with the user ID as the file name
+        $config['overwrite'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('image')) {
+            $error = $this->upload->display_errors();
+            log_message('error', 'Image Upload Error: ' . $error);
+            $this->output
+                ->set_status_header(400)
+                ->set_output(json_encode(['error' => $error]));
+            return;
+        }
+    }
+
+    // Add image URL to the response
+    $image_path = 'uploads/users/' . $user_id . '.jpg';
+    $image_url = file_exists($image_path) ? base_url($image_path) : base_url('uploads/users/default.jpg');
+
+    // Return success response with image URL
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode([
+            'success' => 'Teacher created successfully',
+            'teacher_id' => $teacher_id,
+            'image_url' => $image_url
+        ]));
 }
+
 
 public function edit_teacher_put($teacher_id) {
     // Read the raw input
@@ -7199,4 +7311,1535 @@ public function get_invoices_by_student($student_id) {
   /*
   * eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdGF0dXMiOjIwMCwibWVzc2FnZSI6Ik9LIiwidXNlcl9pZCI6IjI0MSIsIm5hbWUiOiJTdWJoYW4gTWlhIiwiZW1haWwiOiJzdWJoYW5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJzY2hvb2xfaWQiOiI4IiwiYWRkcmVzcyI6IkJoYWlyYWIgQmF6YXIsIFJham5hZ2FyIiwicGhvbmUiOiIwMTkyMTA0MDk2MCIsImJpcnRoZGF5IjoiMDEtSmFuLTE5NzAiLCJnZW5kZXIiOiJtYWxlIiwiYmxvb2RfZ3JvdXAiOiJhYisiLCJ2YWxpZGl0eSI6dHJ1ZX0.z435NqyIgcVtVNVb7jnN1ewlF2omN6HGxVz23gQZBK8
   **/
+
+
+
+
+
+
+//Partie Quiz (stocker les reponses dans la table question_quiz)
+/* public function submit_quiz_post() {
+    // Log the raw input for debugging
+    $raw_post_data = file_get_contents("php://input");
+    log_message('debug', 'Raw POST data: ' . $raw_post_data);
+
+    // Decode JSON input
+    $input_data = json_decode($raw_post_data, true);
+
+    // Initialize variables
+    $submitted_quiz_info = array();
+    $container = array();
+
+    // Retrieve user ID from the decoded JSON
+    $user_id = isset($input_data['user_id']) ? $input_data['user_id'] : null;
+    if (!$user_id) {
+        echo json_encode(['status' => 'error', 'message' => 'User ID is missing']);
+        return;
+    }
+
+    // Retrieve quiz ID and submitted answers
+    $quiz_id = isset($input_data['quiz_id']) ? $input_data['quiz_id'] : null;
+    $submitted_answers = isset($input_data['submitted_answers']) ? $input_data['submitted_answers'] : null;
+
+    if (!$quiz_id || !$submitted_answers) {
+        echo json_encode(['status' => 'error', 'message' => 'Quiz ID or submitted answers are missing']);
+        return;
+    }
+
+    // Fetch quiz questions using the helper function
+    $quiz_questions = $this->get_quiz_questions($quiz_id);
+    $total_correct_answers = 0;
+
+    foreach ($quiz_questions as $quiz_question) {
+        $question_id = $quiz_question['id'];
+        $correct_answers = json_decode($quiz_question['correct_answers']); // Correct answers
+    
+        // Get the submitted answers for this question
+        $submitted_answers_for_question = isset($submitted_answers[$question_id]) ? $submitted_answers[$question_id] : array();
+    
+        // Sort both arrays for accurate comparison
+        sort($correct_answers);
+        sort($submitted_answers_for_question);
+    
+        // Compare submitted answers with correct answers
+        if ($correct_answers === $submitted_answers_for_question) {
+            $submitted_answer_status = 1; // Correct answer
+        } else {
+            $submitted_answer_status = 0; // Incorrect answer
+        }
+    
+        // Prepare data for insertion/updating in the database
+        $response_data = array(
+            'user_id' => $user_id,
+            'quiz_id' => $quiz_id,
+            'question_id' => $question_id,
+            'submitted_answers' => json_encode($submitted_answers_for_question),
+            'correct_answers' => json_encode($correct_answers),
+            'submitted_answer_status' => $submitted_answer_status
+        );
+    
+        // Check if an entry exists already for this question and user
+        $this->db->where('user_id', $user_id);
+        $this->db->where('quiz_id', $quiz_id);
+        $this->db->where('question_id', $question_id);
+        $query = $this->db->get('quiz_responses');
+    
+        if ($query->num_rows() == 0) {
+            // Insert new response if it doesn't exist
+            $this->db->insert('quiz_responses', $response_data);
+        } else {
+            // Update existing response
+            $this->db->where('user_id', $user_id);
+            $this->db->where('quiz_id', $quiz_id);
+            $this->db->where('question_id', $question_id);
+            $this->db->update('quiz_responses', $response_data);
+        }
+    
+        // Add question info to the response container
+        $container = array(
+            "question_id" => $question_id,
+            "submitted_answer_status" => $submitted_answer_status, // 1 if correct, 0 if not
+            "submitted_answers" => json_encode($submitted_answers_for_question),
+            "correct_answers" => json_encode($correct_answers),
+        );
+        array_push($submitted_quiz_info, $container);
+    
+        // Count the correct answers
+        if ($submitted_answer_status == 1) {
+            $total_correct_answers++;
+        }
+    }
+    
+    // Prepare the JSON response
+    $response = array(
+        'submitted_quiz_info' => $submitted_quiz_info,
+        'total_correct_answers' => $total_correct_answers,
+        'total_questions' => count($quiz_questions),
+    );
+
+    // Return the response as JSON
+    echo json_encode($response);
+} */
+/* 
+public function submit_quiz_post() {
+    // Get and decode JSON input
+    $input_data = json_decode(file_get_contents("php://input"), true);
+
+    // Initialize variables
+    $submitted_quiz_info = array();
+    $container = array();
+
+    // Check for required fields in the input data
+    if (!isset($input_data['user_id']) || !isset($input_data['quiz_id']) || !isset($input_data['submitted_answers'])) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Missing user ID, quiz ID, or submitted answers'
+        ]);
+        return;
+    }
+
+    // Assign values from JSON input
+    $user_id = $input_data['user_id'];
+    $quiz_id = $input_data['quiz_id'];
+    $submitted_answers = $input_data['submitted_answers'];
+
+    // Fetch quiz questions using the helper function
+    $quiz_questions = $this->get_quiz_questions($quiz_id);
+    if (empty($quiz_questions)) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'No questions found for the quiz'
+        ]);
+        return;
+    }
+
+    $total_correct_answers = 0;
+
+    foreach ($quiz_questions as $quiz_question) {
+        $question_id = $quiz_question['id'];
+        $correct_answers = json_decode($quiz_question['correct_answers'], true); // Correct answers
+    
+        // Get the submitted answers for this question
+        $submitted_answers_for_question = isset($submitted_answers[$question_id]) ? $submitted_answers[$question_id] : array();
+
+        // Sort both arrays for accurate comparison
+        sort($correct_answers);
+        sort($submitted_answers_for_question);
+
+        // Compare submitted answers with correct answers
+        $submitted_answer_status = ($correct_answers === $submitted_answers_for_question) ? 1 : 0;
+    
+        // Prepare data for insertion/updating in the database
+        $response_data = array(
+            'user_id' => $user_id,
+            'quiz_id' => $quiz_id,
+            'question_id' => $question_id,
+            'submitted_answers' => json_encode($submitted_answers_for_question),
+            'correct_answers' => json_encode($correct_answers),
+            'submitted_answer_status' => $submitted_answer_status,
+            'date_submitted' => date('Y-m-d H:i:s')  // Add timestamp
+        );
+
+        // Check if an entry exists already for this question and user
+        $this->db->where('user_id', $user_id);
+        $this->db->where('quiz_id', $quiz_id);
+        $this->db->where('question_id', $question_id);
+        $query = $this->db->get('quiz_responses');
+
+        if ($query->num_rows() == 0) {
+            // Insert new response if it doesn't exist
+            $this->db->insert('quiz_responses', $response_data);
+        } else {
+            // Update existing response
+            $this->db->where('user_id', $user_id);
+            $this->db->where('quiz_id', $quiz_id);
+            $this->db->where('question_id', $question_id);
+            $this->db->update('quiz_responses', $response_data);
+        }
+
+        // Add question info to the response container
+        $container = array(
+            "question_id" => $question_id,
+            "submitted_answer_status" => $submitted_answer_status, // 1 if correct, 0 if not
+            "submitted_answers" => json_encode($submitted_answers_for_question),
+            "correct_answers" => json_encode($correct_answers),
+        );
+        array_push($submitted_quiz_info, $container);
+
+        // Count the correct answers
+        if ($submitted_answer_status == 1) {
+            $total_correct_answers++;
+        }
+    }
+
+    // Prepare the JSON response
+    $response = array(
+        'status' => 'success',
+        'submitted_quiz_info' => $submitted_quiz_info,
+        'total_correct_answers' => $total_correct_answers,
+        'total_questions' => count($quiz_questions),
+    );
+
+    // Return the response as JSON
+    echo json_encode($response);
+} 
+ */
+/* public function submit_quiz_post() {
+    // Get and decode JSON input
+    $input_data = json_decode(file_get_contents("php://input"), true);
+
+    // Initialize variables
+    $submitted_quiz_info = array();
+    $container = array();
+
+    // Check for required fields in the input data
+    if (!isset($input_data['user_id']) || !isset($input_data['quiz_id']) || !isset($input_data['submitted_answers'])) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Missing user ID, quiz ID, or submitted answers'
+        ]);
+        return;
+    }
+
+    // Assign values from JSON input
+    $user_id = $input_data['user_id'];
+    $quiz_id = $input_data['quiz_id'];
+    $submitted_answers = $input_data['submitted_answers'];
+
+    // Fetch quiz questions using the helper function
+    $quiz_questions = $this->get_quiz_questions($quiz_id);
+    if (empty($quiz_questions)) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'No questions found for the quiz'
+        ]);
+        return;
+    }
+
+    $total_correct_answers = 0;
+
+    foreach ($quiz_questions as $quiz_question) {
+        $question_id = $quiz_question['id'];
+        $correct_answers = json_decode($quiz_question['correct_answers'], true); // Correct answers
+
+        // Get the submitted answers for this question
+        $submitted_answers_for_question = isset($submitted_answers[$question_id]) ? $submitted_answers[$question_id] : array();
+
+        // Sort both arrays for accurate comparison
+        sort($correct_answers);
+        sort($submitted_answers_for_question);
+
+        // Compare submitted answers with correct answers
+        $submitted_answer_status = ($correct_answers === $submitted_answers_for_question) ? 1 : 0;
+
+        // Prepare data for insertion/updating in the database
+        $response_data = array(
+            'user_id' => $user_id,
+            'quiz_id' => $quiz_id,
+            'question_id' => $question_id,
+            'submitted_answers' => json_encode($submitted_answers_for_question),
+            'correct_answers' => json_encode($correct_answers),
+            'submitted_answer_status' => $submitted_answer_status,
+            'date_submitted' => date('Y-m-d H:i:s')  // Add timestamp
+        );
+
+        // Check if an entry exists already for this question and user
+        $this->db->where('user_id', $user_id);
+        $this->db->where('quiz_id', $quiz_id);
+        $this->db->where('question_id', $question_id);
+        $query = $this->db->get('quiz_responses');
+
+        if ($query->num_rows() == 0) {
+            // Insert new response if it doesn't exist
+            $this->db->insert('quiz_responses', $response_data);
+        } else {
+            // Update existing response
+            $this->db->where('user_id', $user_id);
+            $this->db->where('quiz_id', $quiz_id);
+            $this->db->where('question_id', $question_id);
+            $this->db->update('quiz_responses', $response_data);
+        }
+
+        // Add question info to the response container
+        $container = array(
+            "question_id" => $question_id,
+            "submitted_answer_status" => $submitted_answer_status, // 1 if correct, 0 if not
+            "submitted_answers" => json_encode($submitted_answers_for_question),
+            "correct_answers" => json_encode($correct_answers),
+        );
+        array_push($submitted_quiz_info, $container);
+
+        // Count the correct answers
+        if ($submitted_answer_status == 1) {
+            $total_correct_answers++;
+        }
+    }
+
+    // After processing all the quiz questions, get the related lesson_id
+    $lesson_id = $this->get_lesson_id_by_quiz($quiz_id);
+
+    if ($lesson_id) {
+        // Update course progress to 1 for this lesson
+        $this->save_course_progress($lesson_id, 1);
+    } else {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'No lesson associated with this quiz'
+        ]);
+        return;
+    }
+
+    // Prepare the JSON response
+    $response = array(
+        'status' => 'success',
+        'submitted_quiz_info' => $submitted_quiz_info,
+        'total_correct_answers' => $total_correct_answers,
+        'total_questions' => count($quiz_questions),
+        'lesson_id' => $lesson_id,
+        'progress' => 1 // Mark progress as complete
+    );
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+
+public function get_quiz_questions($quiz_id) {
+    $this->db->where('quiz_id', $quiz_id);
+    return $this->db->get('question')->result_array(); // Ensure the table name is correct
+}
+
+public function get_lesson_id_by_quiz($quiz_id) {
+    // Assuming 'lesson_type' is 'quiz' and 'quiz_id' refers to the 'id' column in the 'lesson' table.
+    $this->db->select('id'); // 'id' is the lesson_id in the 'lesson' table
+    $this->db->where('lesson_type', 'quiz');
+    $this->db->where('id', $quiz_id); // Assuming quiz_id matches the 'id' in the 'lesson' table
+    $result = $this->db->get('lesson')->row();
+    return $result ? $result->id : null; // Returning the lesson_id (id column in the 'lesson' table)
+}
+
+
+public function save_course_progress($lesson_id, $progress) {
+    // Get the current user_id from session or other means
+    $user_id = $this->session->userdata('user_id');
+    if (!$user_id) {
+        // Log or return an error if no user_id is found
+        log_message('error', 'User ID not found in session.');
+        return;
+    }
+
+    log_message('info', "Fetched user_id: $user_id");
+
+    // Fetch the user's watch history directly from the 'users' table
+    $this->db->select('watch_history');
+    $this->db->from('users');
+    $this->db->where('id', $user_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() == 0) {
+        // Handle case if no user found
+        log_message('error', "No user found with user_id: $user_id");
+        return;
+    }
+
+    $user_details = $query->row_array();
+    $watch_history = isset($user_details['watch_history']) ? $user_details['watch_history'] : '';
+
+    log_message('info', "Fetched watch_history for user_id $user_id: $watch_history");
+
+    // Initialize watch history array
+    $watch_history_array = array();
+
+    // If watch history is empty, add the current lesson and progress
+    if (empty($watch_history)) {
+        log_message('info', 'Watch history is empty, adding new lesson.');
+        array_push($watch_history_array, array('lesson_id' => $lesson_id, 'progress' => $progress));
+    } else {
+        // Decode existing watch history
+        $watch_history_array = json_decode($watch_history, true);
+        $found = false;
+
+        // Update progress if lesson_id exists in watch history
+        foreach ($watch_history_array as &$lesson) {
+            if ($lesson['lesson_id'] == $lesson_id) {
+                log_message('info', "Updating existing progress for lesson_id: $lesson_id");
+                $lesson['progress'] = $progress;
+                $found = true;
+                break;
+            }
+        }
+
+        // If lesson_id is not found, add a new entry to the watch history
+        if (!$found) {
+            log_message('info', "Adding new lesson_id: $lesson_id to watch history.");
+            array_push($watch_history_array, array('lesson_id' => $lesson_id, 'progress' => $progress));
+        }
+    }
+
+    // Log the watch history array before updating the user
+    log_message('info', 'Final watch history: ' . json_encode($watch_history_array));
+
+    // Update the user's watch history in the database
+    $data['watch_history'] = json_encode($watch_history_array);
+    $this->db->where('id', $user_id);
+    $update_status = $this->db->update('users', $data);
+
+    // Log success or failure of the update
+    if ($update_status) {
+        log_message('info', "Watch history updated successfully for user_id: $user_id");
+    } else {
+        log_message('error', "Failed to update watch history for user_id: $user_id");
+    }
+
+    return $progress;
+}
+ */
+public function submit_quiz_post() {
+    // Get and decode JSON input
+    $input_data = json_decode(file_get_contents("php://input"), true);
+
+    // Initialize variables
+    $submitted_quiz_info = array();
+    $container = array();
+
+    // Check for required fields in the input data
+    if (!isset($input_data['user_id']) || !isset($input_data['quiz_id']) || !isset($input_data['submitted_answers'])) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Missing user ID, quiz ID, or submitted answers'
+        ]);
+        return;
+    }
+
+    // Assign values from JSON input
+    $user_id = $input_data['user_id'];
+    $quiz_id = $input_data['quiz_id'];
+    $submitted_answers = $input_data['submitted_answers'];
+
+    // Fetch quiz questions
+    $this->db->where('quiz_id', $quiz_id);
+    $quiz_questions = $this->db->get('question')->result_array(); // Ensure the table name is correct
+
+    if (empty($quiz_questions)) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'No questions found for the quiz'
+        ]);
+        return;
+    }
+
+    $total_correct_answers = 0;
+
+    // Process each quiz question
+    foreach ($quiz_questions as $quiz_question) {
+        $question_id = $quiz_question['id'];
+        $correct_answers = json_decode($quiz_question['correct_answers'], true); // Correct answers
+
+        // Get the submitted answers for this question
+        $submitted_answers_for_question = isset($submitted_answers[$question_id]) ? $submitted_answers[$question_id] : array();
+
+        // Sort both arrays for accurate comparison
+        sort($correct_answers);
+        sort($submitted_answers_for_question);
+
+        // Compare submitted answers with correct answers
+        $submitted_answer_status = ($correct_answers === $submitted_answers_for_question) ? 1 : 0;
+
+        // Prepare data for insertion/updating in the database
+        $response_data = array(
+            'user_id' => $user_id,
+            'quiz_id' => $quiz_id,
+            'question_id' => $question_id,
+            'submitted_answers' => json_encode($submitted_answers_for_question),
+            'correct_answers' => json_encode($correct_answers),
+            'submitted_answer_status' => $submitted_answer_status,
+            'date_submitted' => date('Y-m-d H:i:s')  // Add timestamp
+        );
+
+        // Check if an entry exists already for this question and user
+        $this->db->where('user_id', $user_id);
+        $this->db->where('quiz_id', $quiz_id);
+        $this->db->where('question_id', $question_id);
+        $query = $this->db->get('quiz_responses');
+
+        if ($query->num_rows() == 0) {
+            // Insert new response if it doesn't exist
+            $this->db->insert('quiz_responses', $response_data);
+        } else {
+            // Update existing response
+            $this->db->where('user_id', $user_id);
+            $this->db->where('quiz_id', $quiz_id);
+            $this->db->where('question_id', $question_id);
+            $this->db->update('quiz_responses', $response_data);
+        }
+
+        // Add question info to the response container
+        $container = array(
+            "question_id" => $question_id,
+            "submitted_answer_status" => $submitted_answer_status, // 1 if correct, 0 if not
+            "submitted_answers" => json_encode($submitted_answers_for_question),
+            "correct_answers" => json_encode($correct_answers),
+        );
+        array_push($submitted_quiz_info, $container);
+
+        // Count the correct answers
+        if ($submitted_answer_status == 1) {
+            $total_correct_answers++;
+        }
+    }
+
+    // Get the related lesson_id by quiz_id
+    $this->db->select('id');
+    $this->db->where('lesson_type', 'quiz');
+    $this->db->where('id', $quiz_id); // Assuming quiz_id matches the 'id' in the 'lesson' table
+    $lesson_result = $this->db->get('lesson')->row();
+
+    $lesson_id = $lesson_result ? $lesson_result->id : null;
+    if (!$lesson_id) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'No lesson associated with this quiz'
+        ]);
+        return;
+    }
+
+    // Save course progress
+    // Get the current user_id from session
+    if (!$user_id) {
+        log_message('error', 'User ID not found in session.');
+        return;
+    }
+
+    // Fetch the user's watch history directly from the 'users' table
+    $this->db->select('watch_history');
+    $this->db->from('users');
+    $this->db->where('id', $user_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() == 0) {
+        log_message('error', "No user found with user_id: $user_id");
+        return;
+    }
+
+    $user_details = $query->row_array();
+    $watch_history = isset($user_details['watch_history']) ? $user_details['watch_history'] : '';
+
+    // Initialize watch history array
+    $watch_history_array = array();
+
+    // If watch history is empty, add the current lesson and progress
+    if (empty($watch_history)) {
+        array_push($watch_history_array, array('lesson_id' => $lesson_id, 'progress' => 1));
+    } else {
+        // Decode existing watch history
+        $watch_history_array = json_decode($watch_history, true);
+        $found = false;
+
+        // Update progress if lesson_id exists in watch history
+        foreach ($watch_history_array as &$lesson) {
+            if ($lesson['lesson_id'] == $lesson_id) {
+                $lesson['progress'] = 1;
+                $found = true;
+                break;
+            }
+        }
+
+        // If lesson_id is not found, add a new entry to the watch history
+        if (!$found) {
+            array_push($watch_history_array, array('lesson_id' => $lesson_id, 'progress' => 1));
+        }
+    }
+
+    // Update the user's watch history in the database
+    $data['watch_history'] = json_encode($watch_history_array);
+    $this->db->where('id', $user_id);
+    $this->db->update('users', $data);
+
+    // Prepare the JSON response
+    $response = array(
+        'status' => 'success',
+        'submitted_quiz_info' => $submitted_quiz_info,
+        'total_correct_answers' => $total_correct_answers,
+        'total_questions' => count($quiz_questions),
+        'lesson_id' => $lesson_id,
+        'progress' => 1 // Mark progress as complete
+    );
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+
+
+
+/* public function check_progress_get($user_id) {
+    // Load the user details using the user_id
+    $this->load->model('user_model');
+    $user_details = $this->user_model->get_all_users($user_id)->row_array();
+
+    // Check if the user exists
+    if (!$user_details) {
+        echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        return;
+    }
+
+    // Retrieve the watch history
+    $watch_history = $user_details['watch_history'];
+
+    // If no watch history is found, return a message
+    if (empty($watch_history)) {
+        echo json_encode(['status' => 'success', 'progress' => 'No lessons watched yet']);
+        return;
+    }
+
+    // Decode the watch history to retrieve progress details
+    $watch_history_array = json_decode($watch_history, true);
+
+    // Prepare a response with all lessons and their progress
+    $progress_info = array();
+
+    foreach ($watch_history_array as $lesson_progress) {
+        $progress_info[] = array(
+            'lesson_id' => $lesson_progress['lesson_id'],
+            'progress' => $lesson_progress['progress']
+        );
+    }
+
+    // Return the progress information as JSON
+    $response = array(
+        'status' => 'success',
+        'progress_info' => $progress_info
+    );
+
+    echo json_encode($response);
+}
+ */
+
+
+/* public function check_progress_get($user_id) {
+    // Query the database to get user details directly
+    $this->db->select('watch_history');
+    $this->db->where('id', $user_id);
+    $query = $this->db->get('users');
+    $user_details = $query->row_array();
+
+    // Check if the user exists
+    if (!$user_details) {
+        echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        return;
+    }
+
+    // Retrieve the watch history from the user details
+    $watch_history = $user_details['watch_history'];
+
+    // If no watch history is found, return a message
+    if (empty($watch_history)) {
+        echo json_encode(['status' => 'success', 'progress' => 'No lessons watched yet']);
+        return;
+    }
+
+    // Decode the watch history to retrieve progress details
+    $watch_history_array = json_decode($watch_history, true);
+
+    // Prepare a response with all lessons and their progress
+    $progress_info = array();
+
+    foreach ($watch_history_array as $lesson_progress) {
+        $progress_info[] = array(
+            'lesson_id' => $lesson_progress['lesson_id'],
+            'progress' => $lesson_progress['progress']
+        );
+    }
+
+    // Return the progress information as JSON
+    $response = array(
+        'status' => 'success',
+        'progress_info' => $progress_info
+    );
+
+    echo json_encode($response);
+} */
+
+public function check_progress_get($user_id, $quiz_id) {
+    if (!$user_id || !$quiz_id) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid user ID or quiz ID']);
+        return;
+    }
+    // Query the database to get user details directly
+    $this->db->select('watch_history');
+    $this->db->where('id', $user_id);
+    $query = $this->db->get('users');
+    $user_details = $query->row_array();
+
+    // Check if the user exists
+    if (!$user_details) {
+        echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        return;
+    }
+
+    // Retrieve the watch history from the user details
+    $watch_history = $user_details['watch_history'];
+
+    // If no watch history is found, return a message
+    if (empty($watch_history)) {
+        echo json_encode(['status' => 'success', 'progress' => 0]); // 0 means not started
+        return;
+    }
+
+    // Decode the watch history to retrieve progress details
+    $watch_history_array = json_decode($watch_history, true);
+
+    // Check if the quiz is present in the watch history
+    foreach ($watch_history_array as $lesson_progress) {
+        if ($lesson_progress['lesson_id'] == $quiz_id) {
+            echo json_encode([
+                'status' => 'success',
+                'progress' => $lesson_progress['progress'] // Return 1 or 0
+            ]);
+            return;
+        }
+    }
+
+    // If no progress is found for the quiz, return 0
+    echo json_encode(['status' => 'success', 'progress' => 0]);
+}
+
+
+
+public function register_post() {
+    $response = array();
+
+    // Retrieve the JSON input directly
+    $input_data = json_decode(file_get_contents('php://input'), true);
+
+    // Extract fields from the JSON input
+    $name = isset($input_data['name']) ? $input_data['name'] : null;
+    $email = isset($input_data['email']) ? $input_data['email'] : null;
+    $password = isset($input_data['password']) ? $input_data['password'] : null;
+    $role = isset($input_data['role']) ? $input_data['role'] : null;
+
+    // Log the received input for debugging purposes
+    log_message('debug', 'Input received: ' . print_r($input_data, true));
+
+    // Input validation
+    if (empty($name) || empty($email) || empty($password) || empty($role)) {
+        $response['status'] = 400;
+        $response['message'] = 'Invalid input parameters';
+        $response['validity'] = false;
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+    }
+
+    // Check if email already exists
+    $existing_user = $this->db->get_where('users', array('email' => $email))->row_array();
+    if ($existing_user) {
+        $response['status'] = 409;
+        $response['message'] = 'Email already registered';
+        $response['validity'] = false;
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+    }
+
+    // Prepare user data for insertion
+    $data = array(
+        'name' => $name,
+        'email' => $email,
+        'password' => sha1($password), // Use bcrypt if needed for better security
+        'role' => ucfirst(strtolower($role)), // Capitalize the role name
+        'school_id' => isset($input_data['school_id']) ? $input_data['school_id'] : NULL,
+        'address' => isset($input_data['address']) ? $input_data['address'] : NULL,
+        'phone' => isset($input_data['phone']) ? $input_data['phone'] : NULL,
+        'birthday' => isset($input_data['birthday']) ? strtotime($input_data['birthday']) : NULL,
+        'gender' => isset($input_data['gender']) ? strtolower($input_data['gender']) : NULL,
+ 
+    );
+
+    // Insert into the 'users' table
+    $this->db->insert('users', $data);
+
+    // Check if insertion was successful
+    if ($this->db->affected_rows() > 0) {
+        $user_id = $this->db->insert_id(); // Get the ID of the inserted user
+        $response['status'] = 201;
+        $response['message'] = 'Registered Successfully';
+        $response['user_id'] = $user_id;
+        $response['name'] = $data['name'];
+        $response['email'] = $data['email'];
+        $response['role'] = strtolower($data['role']);
+        $response['school_id'] = $data['school_id'];
+        $response['address'] = $data['address'];
+        $response['phone'] = $data['phone'];
+        $response['birthday'] = $data['birthday'] ? date('d-M-Y', $data['birthday']) : null;
+        $response['gender'] = $data['gender'];
+
+        $response['validity'] = true;
+
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+    } else {
+        $response['status'] = 500;
+        $response['message'] = 'Registration Failed';
+        $response['validity'] = false;
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+    }
+}
+
+/* public function send_confirmation_email_post()
+{
+    // Retrieve the email from POST request
+    $email = strtolower($this->input->post('email')); // Ensure email is in lowercase
+    
+    // Log email received
+    log_message('info', 'Email received: ' . $email);
+    
+    // Check if the email exists in the database
+    $user_query = $this->db->get_where('users', array('LOWER(email)' => $email));
+    
+    // Log the number of rows found
+    log_message('info', 'Number of rows found for email ' . $email . ': ' . $user_query->num_rows());
+    
+    if ($user_query->num_rows() > 0) {
+        // Get the user data
+        $user = $user_query->row_array();
+        log_message('info', 'User found: ' . print_r($user, true));
+        
+        // Generate a secure reset token
+        $reset_token = bin2hex(random_bytes(50));
+        log_message('info', 'Reset token generated: ' . $reset_token);
+        
+        // Set the expiration time for the reset token (e.g., 24 hours)
+        $expires_at = date("Y-m-d H:i:s", strtotime('+24 hours'));
+        log_message('info', 'Token expiration time set to: ' . $expires_at);
+        
+        // Update the user table with the reset token and expiration date
+        $this->db->where('id', $user['id']);
+        $this->db->update('users', array(
+            'reset_token' => $reset_token,
+            'reset_expires_at' => $expires_at
+        ));
+        log_message('info', 'Database updated with reset token for user ID: ' . $user['id']);
+        
+        // Generate the reset link
+        $reset_link = base_url("login/new_password?token=" . $reset_token);
+        log_message('info', 'Reset link generated: ' . $reset_link);
+
+        // Create the email message
+        $email_msg = '
+        <!DOCTYPE html>
+        <html lang="fr">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Réinitialisation de votre mot de passe</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    color: #333;
+                    line-height: 1.6;
+                    margin: 0;
+                    padding: 0;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 20px auto;
+                    background: #fff;
+                    padding: 20px;
+                    border-radius: 10px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }
+                h2 {
+                    color: #5d0ea8;
+                }
+                p {
+                    margin: 10px 0;
+                    color: #555;
+                }
+                .button {
+                    display: inline-block;
+                    padding: 15px 25px;
+                    font-size: 16px;
+                    color: #fff !important;
+                    background-color: #5d0ea8;
+                    text-decoration: none;
+                    border-radius: 5px;
+                    margin-top: 20px;
+                    transition: background-color 0.3s ease;
+                }
+                .button:hover {
+                    background-color: #4c0e8f;
+                }
+                .footer {
+                    margin-top: 30px;
+                    font-size: 12px;
+                    color: #777;
+                    text-align: center;
+                }
+                .footer p {
+                    margin: 0;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>Réinitialisation de votre mot de passe</h2>
+                <p>Bonjour '.ucfirst($user['name']).',</p>
+                <p>Vous avez fait une demande de réinitialisation de votre mot de passe. Si vous êtes à l\'origine de cette demande, veuillez cliquer sur le lien ci-dessous pour créer un nouveau mot de passe :</p>
+                <a href="'.$reset_link.'" class="button">Réinitialiser mon mot de passe</a>
+                <p>Ce lien est valide pendant 24 heures.</p>
+                <p>Si vous n\'êtes pas à l\'origine de cette demande, veuillez ignorer cet e-mail. Votre mot de passe actuel restera inchangé et votre compte demeure sécurisé.</p>
+                <p>Si vous avez des questions ou besoin d\'assistance, n\'hésitez pas à contacter notre équipe support à l’adresse suivante : <a href="mailto:'.get_settings('system_email').'">'.get_settings('system_email').'</a>.</p>
+                <div class="footer">
+                    <p>&copy; 2024. Tous droits réservés.</p>
+                </div>
+            </div>
+        </body>
+        </html>';
+        
+        log_message('info', 'Email content generated.');
+
+        // Send the email using SMTP
+        $send_status = $this->send_mail_using_smtp($email_msg, "Password reset request", $user['email'], null, "Your School Name");
+        log_message('info', 'Email send status: ' . ($send_status ? 'Success' : 'Failed'));
+
+        // Return a success response
+        $response = array(
+            'status' => 'success',
+            'message' => 'Confirmation email sent successfully.'
+        );
+        echo json_encode($response);
+    } else {
+        // If email is not found, return an error response
+        $response = array(
+            'status' => 'error',
+            'message' => 'Email not found.'
+        );
+        log_message('error', 'Email not found: ' . $email);
+        echo json_encode($response);
+    }
+}
+
+public function send_mail_using_smtp($msg = NULL, $sub = NULL, $to = NULL, $from = NULL, $school_name = NULL) {
+    $this->load->library('email');
+    
+    // Retrieve the SMTP settings from the database
+    $this->load->database();
+    $smtp_settings = $this->db->get_where('smtp_settings', array('id' => 1))->row_array();
+
+    // Use the values from the database table to configure SMTP
+    $smtp_protocol = $smtp_settings['smtp_protocol'];
+    $smtp_host = $smtp_settings['smtp_host'];
+    $smtp_port = $smtp_settings['smtp_port'];
+    $smtp_username = $smtp_settings['smtp_username'];
+    $smtp_password = $smtp_settings['smtp_password'];
+    $smtp_crypto = $smtp_settings['smtp_crypto'];
+
+    // Set default from email if not provided
+    if ($from == NULL) {
+        $from = $smtp_settings['smtp_set_from'] ? $smtp_settings['smtp_set_from'] : 'your-default-email@gmail.com'; // Use the email from DB or fallback
+    }
+
+    // Log SMTP details for debugging
+    log_message('info', 'SMTP Host: ' . $smtp_host);
+    log_message('info', 'SMTP Port: ' . $smtp_port);
+    log_message('info', 'SMTP Username: ' . $smtp_username);
+    log_message('info', 'SMTP Crypto: ' . $smtp_crypto);
+
+    // Encode the subject properly using mb_encode_mimeheader
+    $encoded_subject = mb_encode_mimeheader($sub, 'UTF-8', 'B', "\r\n");
+
+    // SMTP & email configuration
+    $config = array(
+        'protocol'  => $smtp_protocol,
+        'smtp_host' => $smtp_host,
+        'smtp_port' => $smtp_port,
+        'smtp_user' => $smtp_username,
+        'smtp_pass' => $smtp_password,
+        'smtp_crypto' => $smtp_crypto, // TLS or SSL encryption
+        'mailtype'  => 'html',
+        'charset'   => 'utf-8',
+        'newline'   => "\r\n",
+        'wordwrap'  => TRUE
+    );
+
+    // Initialize the email library with the configuration
+    $this->email->initialize($config);
+    log_message('info', 'SMTP configuration initialized.');
+
+    // Set the headers properly
+    $this->email->from($from, $school_name ?? 'Your School Name');
+    $this->email->reply_to($from, $school_name ?? 'Your School Name');
+    $this->email->to($to);
+    $this->email->subject($encoded_subject);
+    $this->email->message($msg);
+
+    // Attempt to send the email
+    if (!$this->email->send()) {
+        log_message('error', 'Failed to send email. Debug info: ' . $this->email->print_debugger());
+        return false;
+    } else {
+        log_message('info', 'Email sent successfully to: ' . $to);
+        return true;
+    }
+}
+ */
+
+
+/* 
+public function send_reset_link_api_post() {
+    // Read the raw POST data as JSON
+    $postData = json_decode(file_get_contents("php://input"), true);
+    
+    // Debugging: Log all POST data to check what is received
+    log_message('info', 'POST Data: ' . print_r($postData, true));
+
+    // Get the email from the decoded JSON data
+    $email = isset($postData['email']) ? strtolower($postData['email']) : '';
+
+    // Check if the email field is empty
+    if (empty($email)) {
+        // Return error response if the email is empty
+        $response = array(
+            'status' => 'error',
+            'message' => 'Email is required'
+        );
+        log_message('error', 'Email field is empty');
+        echo json_encode($response);
+        return;
+    }
+
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        // Return error response if the email format is invalid
+        $response = array(
+            'status' => 'error',
+            'message' => 'Invalid email format'
+        );
+        log_message('error', 'Invalid email format: ' . $email);
+        echo json_encode($response);
+        return;
+    }
+
+    // Query the database to check if the email exists
+    $query = $this->db->get_where('users', array('email' => $email));
+
+    // Check if a user exists with that email
+    if ($query->num_rows() > 0) {
+        $user = $query->row_array();
+
+        // Generate a secure token and set the expiration
+        $token = bin2hex(random_bytes(50));
+        $expires_at = date("Y-m-d H:i:s", strtotime('+24 hours')); // Set expiration time for 24 hours
+
+        // Update the database with the reset token and expiration time
+        $this->db->where('id', $user['id']);
+        $this->db->update('users', array(
+            'reset_token' => $token,
+            'reset_expires_at' => $expires_at
+        ));
+
+        // Generate the reset link
+        $reset_link = base_url("login/new_password?token=" . $token);
+
+        // Use the email model to send the reset email
+        if ($this->email_model->password_reset_email_link($reset_link, $user['id'])) {
+            // Return a success response if email is sent successfully
+            $response = array(
+                'status' => 'success',
+                'message' => 'Password reset link sent successfully to ' . $email
+            );
+            log_message('info', 'Password reset link sent to: ' . $email);
+        } else {
+            // Return an error response if email sending fails
+            $response = array(
+                'status' => 'error',
+                'message' => 'Failed to send reset link. Please try again later.'
+            );
+            log_message('error', 'Failed to send reset link to: ' . $email);
+        }
+        echo json_encode($response);
+    } else {
+        // Return an error if the email was not found
+        $response = array(
+            'status' => 'error',
+            'message' => 'Email not found'
+        );
+        log_message('error', 'Email not found: ' . $email);
+        echo json_encode($response);
+    }
+} */
+
+public function send_reset_link_api_post() {
+    // Read the raw POST data as JSON
+    $postData = json_decode(file_get_contents("php://input"), true);
+
+    // Get the email from the decoded JSON data
+    $email = isset($postData['email']) ? strtolower($postData['email']) : '';
+
+    // Check if the email field is empty
+    if (empty($email)) {
+        $response = array(
+            'status' => 'error',
+            'message' => 'Email is required'
+        );
+        log_message('error', 'Email field is empty');
+        $this->output->set_status_header(400); // Set HTTP status code to 400 (Bad Request)
+        echo json_encode($response);
+        return;
+    }
+
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $response = array(
+            'status' => 'error',
+            'message' => 'Invalid email format'
+        );
+        log_message('error', 'Invalid email format: ' . $email);
+        $this->output->set_status_header(400); // Set HTTP status code to 400 (Bad Request)
+        echo json_encode($response);
+        return;
+    }
+
+    // Query the database to check if the email exists
+    $query = $this->db->get_where('users', array('email' => $email));
+
+    if ($query->num_rows() > 0) {
+        $user = $query->row_array();
+
+        // Generate a random 6-digit validation code
+        $validation_code = mt_rand(100000, 999999);
+
+        // Set the expiration time (46 seconds from now)
+        $expires_at = date("Y-m-d H:i:s", strtotime('+46 seconds'));
+
+        // Update the database with the validation code and expiration time
+        try {
+            $this->db->where('id', $user['id']);
+            $this->db->update('users', array(
+                'reset_token' => $validation_code,
+                'reset_expires_at' => $expires_at
+            ));
+        } catch (Exception $e) {
+            log_message('error', 'Database update failed: ' . $e->getMessage());
+            $this->output->set_status_header(500);
+            echo json_encode(array('status' => 'error', 'message' => 'Database update failed.'));
+            return;
+        }
+
+        // Prepare the email template
+        $email_message = '
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Validation Code</title>
+            <style>
+                body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 0; }
+                .container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+                h2 { color: #5d0ea8; text-align: center; }
+                p { margin: 10px 0; color: #555; text-align: center; }
+                .code-box { text-align: center; margin: 20px 0; font-size: 24px; font-weight: bold; color: #5d0ea8; letter-spacing: 5px; }
+                .footer { margin-top: 30px; font-size: 12px; color: #777; text-align: center; }
+                .footer p { margin: 0; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>Code de Validation</h2>
+                <p>Bonjour ' . ucfirst($user['name']) . ',</p>
+                <p>Voici votre code de validation:</p>
+                <div class="code-box">' . $validation_code . '</div>
+                <p>Ce code est valide pendant 46 secondes.</p>
+                <p>Si vous n\'avez pas demandé ce code, veuillez ignorer cet e-mail. Votre compte reste sécurisé.</p>
+                <p>Pour toute assistance, veuillez contacter notre équipe support à l’adresse suivante : <a href="mailto:' . get_settings('system_email') . '">' . get_settings('system_email') . '</a>.</p>
+                <div class="footer">
+                    <p>&copy; ' . date("Y") . ' Tous droits réservés.</p>
+                </div>
+            </div>
+        </body>
+        </html>';
+
+        // Send the email
+        try {
+            if ($this->email_model->send_email_with_validation_code($email_message, $user['email'])) {
+                $response = array('status' => 'success', 'message' => 'Validation code sent successfully to ' . $email);
+                log_message('info', 'Validation code sent to: ' . $email);
+                $this->output->set_status_header(200); // Set HTTP status code to 200 (OK)
+            } else {
+                throw new Exception('Email sending failed.');
+            }
+        } catch (Exception $e) {
+            log_message('error', 'Email sending failed: ' . $e->getMessage());
+            $response = array('status' => 'error', 'message' => 'Failed to send validation code. Please try again later.');
+            $this->output->set_status_header(500); // Set HTTP status code to 500 (Internal Server Error)
+        }
+
+    } else {
+        $response = array('status' => 'error', 'message' => 'Email not found');
+        log_message('error', 'Email not found: ' . $email);
+        $this->output->set_status_header(404); // Set HTTP status code to 404 (Not Found)
+    }
+
+    echo json_encode($response);
+}
+
+
+
+public function resend_code_api_post() {
+    // Read the raw POST data as JSON
+    $postData = json_decode(file_get_contents("php://input"), true);
+
+    // Get the email from the decoded JSON data
+    $email = isset($postData['email']) ? strtolower($postData['email']) : '';
+
+    // Check if the email field is empty
+    if (empty($email)) {
+        $response = array('status' => 'error', 'message' => 'Email is required');
+        echo json_encode($response);
+        return;
+    }
+
+    // Query the database to check if the email exists
+    $query = $this->db->get_where('users', array('email' => $email));
+
+    if ($query->num_rows() > 0) {
+        $user = $query->row_array();
+
+        // Generate a new random 6-digit validation code
+        $validation_code = mt_rand(100000, 999999);
+        $expires_at = date("Y-m-d H:i:s", strtotime('+46 seconds'));
+
+        // Update the database with the new validation code and expiration time
+        $this->db->where('id', $user['id']);
+        $this->db->update('users', array(
+            'reset_token' => $validation_code,
+            'reset_expires_at' => $expires_at
+        ));
+        // Prepare the email template
+        $email_message = '
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Validation Code</title>
+            <style>
+                body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 0; }
+                .container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+                h2 { color: #5d0ea8; text-align: center; }
+                p { margin: 10px 0; color: #555; text-align: center; }
+                .code-box { text-align: center; margin: 20px 0; font-size: 24px; font-weight: bold; color: #5d0ea8; letter-spacing: 5px; }
+                .footer { margin-top: 30px; font-size: 12px; color: #777; text-align: center; }
+                .footer p { margin: 0; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>Code de Validation</h2>
+                <p>Bonjour ' . ucfirst($user['name']) . ',</p>
+                <p>Voici votre code de validation:</p>
+                <div class="code-box">' . $validation_code . '</div>
+                <p>Ce code est valide pendant 46 secondes.</p>
+                <p>Si vous n\'avez pas demandé ce code, veuillez ignorer cet e-mail. Votre compte reste sécurisé.</p>
+                <p>Pour toute assistance, veuillez contacter notre équipe support à l’adresse suivante : <a href="mailto:' . get_settings('system_email') . '">' . get_settings('system_email') . '</a>.</p>
+                <div class="footer">
+                    <p>&copy; ' . date("Y") . ' Tous droits réservés.</p>
+                </div>
+            </div>
+        </body>
+        </html>';
+
+        // Send the email with validation code
+        if ($this->email_model->send_email_with_validation_code($email_message, $user['email'])) {
+            $response = array('status' => 'success', 'message' => 'Validation code resent successfully to ' . $email);
+        } else {
+            $response = array('status' => 'error', 'message' => 'Failed to resend validation code. Please try again later.');
+        }
+
+        echo json_encode($response);
+    } else {
+        $response = array('status' => 'error', 'message' => 'Email not found');
+        echo json_encode($response);
+    }
+}
+
+
+public function verify_code_api_post() {
+    // Read the raw POST data as JSON
+    $postData = json_decode(file_get_contents("php://input"), true);
+
+    // Get the email and the code from the decoded JSON data
+    $email = isset($postData['email']) ? strtolower($postData['email']) : '';
+    $code = isset($postData['code']) ? $postData['code'] : '';
+
+    // Check if the email or code field is empty
+    if (empty($email) || empty($code)) {
+        $response = array('status' => 'error', 'message' => 'Email and code are required');
+        echo json_encode($response);
+        return;
+    }
+
+    // Query the database to check if the email exists
+    $query = $this->db->get_where('users', array('email' => $email));
+
+    if ($query->num_rows() > 0) {
+        $user = $query->row_array();
+
+        // Check if the code matches and has not expired
+        if ($user['reset_token'] == $code && strtotime($user['reset_expires_at']) > time()) {
+            // Code is valid
+            $response = array('status' => 'success', 'message' => 'Code verified successfully');
+        } else {
+            // Code is invalid or expired
+            $response = array('status' => 'error', 'message' => 'Invalid or expired code');
+        }
+    } else {
+        $response = array('status' => 'error', 'message' => 'Email not found');
+    }
+
+    echo json_encode($response);
+}
+
+public function getUserIdByEmail_post() {
+    // Get the posted email
+    $postData = json_decode(file_get_contents("php://input"), true);
+    $email = isset($postData['email']) ? strtolower($postData['email']) : '';
+
+    // Check if the email is empty
+    if (empty($email)) {
+        $response = array('status' => 'error', 'message' => 'Email is required');
+        echo json_encode($response);
+        return;
+    }
+
+    // Query the database to get the user_id by email
+    $this->db->select('id');
+    $this->db->from('users');
+    $this->db->where('email', $email);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        // User found
+        $user = $query->row();
+        $response = array('status' => 'success', 'user_id' => $user->id);
+    } else {
+        // User not found
+        $response = array('status' => 'error', 'message' => 'User not found with this email');
+    }
+
+    echo json_encode($response);
+}
+
+
+
+public function update_Password_post() {
+    $postData = json_decode(file_get_contents("php://input"), true);
+    $user_id = isset($postData['user_id']) ? $postData['user_id'] : null;
+    $new_password = isset($postData['new_password']) ? $postData['new_password'] : null;
+
+    if (empty($user_id) || empty($new_password)) {
+        $response = array('status' => 'error', 'message' => 'User ID or new password is missing');
+        echo json_encode($response);
+        return;
+    }
+
+    $encrypted_password = sha1($new_password);
+    $this->db->where('id', $user_id);
+    $update = $this->db->update('users', array('password' => $encrypted_password));
+
+    // Log SQL query and error for debugging
+    log_message('info', 'SQL Query: ' . $this->db->last_query());
+    if ($this->db->error()) {
+        log_message('error', 'DB Error: ' . $this->db->error()['message']);
+    }
+
+    if ($update) {
+        $response = array('status' => 'success', 'message' => 'Password updated successfully');
+    } else {
+        $response = array('status' => 'error', 'message' => 'Failed to update password');
+    }
+
+    echo json_encode($response);
+}
+
+
+//SMTP API 
+
+public function set_smtp_settings_post()
+{
+    // Fetch the POST data
+    $smtp_host     = $this->input->post('smtp_host');
+    $smtp_port     = $this->input->post('smtp_port');
+    $smtp_user     = $this->input->post('smtp_username');
+    $smtp_pass     = $this->input->post('smtp_password');
+    $smtp_protocol = $this->input->post('smtp_protocol');
+    $smtp_secure   = $this->input->post('smtp_crypto'); // For SSL or TLS
+    $school_id     = $this->input->post('school_id'); // For multi-school
+
+    // Log the POST data for debugging
+    log_message('debug', 'SMTP Settings POST data: ' . print_r($this->input->post(), true));
+
+    // Validate input
+    $this->form_validation->set_rules('smtp_host', 'SMTP Host', 'required');
+    $this->form_validation->set_rules('smtp_port', 'SMTP Port', 'required|integer');
+    $this->form_validation->set_rules('smtp_username', 'SMTP User', 'required|valid_email');
+    $this->form_validation->set_rules('smtp_password', 'SMTP Password', 'required');
+    $this->form_validation->set_rules('smtp_protocol', 'SMTP Protocol', 'required');
+    $this->form_validation->set_rules('smtp_crypto', 'SMTP Secure', 'in_list[ssl,tls]');
+    $this->form_validation->set_rules('school_id', 'School ID', 'required|integer');
+
+    // Check if validation passed
+    if ($this->form_validation->run() === FALSE) {
+        // Return validation errors
+        echo json_encode(array('status' => 'error', 'message' => validation_errors()));
+        return;
+    }
+
+    // Ensure school_id is provided
+    if (empty($school_id)) {
+        echo json_encode(array('status' => 'error', 'message' => 'School ID is required.'));
+        return;
+    }
+
+    // Check if an SMTP setting already exists for the school
+    $existing_setting = $this->db->get_where('smtp_settings', array('school_id' => $school_id))->row_array();
+
+    $data = array(
+        'smtp_host'     => $smtp_host,
+        'smtp_port'     => $smtp_port,
+        'smtp_username'     => $smtp_user,
+        'smtp_password'     => $smtp_pass,
+        'smtp_protocol' => $smtp_protocol,
+        'smtp_crypto'   => $smtp_secure,
+        'school_id'     => $school_id,
+    );
+
+    // If a setting exists, update it, otherwise insert new one
+    if ($existing_setting) {
+        $this->db->where('school_id', $school_id);
+        $this->db->update('smtp_settings', $data);
+        $message = 'SMTP settings updated successfully';
+    } else {
+        $this->db->insert('smtp_settings', $data);
+        $message = 'SMTP settings saved successfully';
+    }
+
+    // Return success message
+    echo json_encode(array('status' => 'success', 'message' => $message));
+}
+
+
+public function get_smtp_settings_get() {
+    // Call the helper function to fetch SMTP settings
+    $smtp_settings = $this->get_smtp_settings();
+
+    if (!empty($smtp_settings)) {
+        // If settings are found, return them with a success status
+        $this->response([
+            'status' => true,
+            'data' => $smtp_settings
+        ], 200); // HTTP 200 OK
+    } else {
+        // If no settings are found, return an error
+        log_message('error', 'SMTP settings could not be retrieved or are empty');
+        $this->response([
+            'status' => false,
+            'message' => 'SMTP settings not found'
+        ], 404); // HTTP 404 Not Found
+    }
+}
+
+// Helper function to fetch SMTP settings
+private function get_smtp_settings() {
+    // Query the 'smtp_settings' table to get the first record (assuming id=1)
+    $this->db->where('id', 1);
+    $smtp_settings = $this->db->get('smtp_settings')->row_array();
+
+    // If no data is found, return an empty array
+    if (!$smtp_settings) {
+        return [];
+    }
+    return $smtp_settings;
+}
+
+
+
+
+
+public function get_alls_smtp_settings_get() {
+    // Call the helper function to fetch all SMTP settings
+    $smtp_settings = $this->get_all_smtp_settings();
+
+    if (!empty($smtp_settings)) {
+        // If settings are found, return them with a success status
+        $this->response([
+            'status' => true,
+            'data' => $smtp_settings
+        ], 200); // HTTP 200 OK
+    } else {
+        // If no settings are found, return an error
+        log_message('error', 'SMTP settings could not be retrieved or are empty');
+        $this->response([
+            'status' => false,
+            'message' => 'SMTP settings not found'
+        ], 404); // HTTP 404 Not Found
+    }
+}
+
+// Helper function to fetch all SMTP settings
+private function get_all_smtp_settings() {
+    // Query the 'smtp_settings' table to get all records
+    $smtp_settings = $this->db->get('smtp_settings')->result_array();
+
+    // If no data is found, return an empty array
+    if (empty($smtp_settings)) {
+        return [];
+    }
+    return $smtp_settings;
+}
+
 }

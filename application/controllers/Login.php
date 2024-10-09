@@ -459,4 +459,59 @@ class Login extends CI_Controller
 		}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		public function validate_code() {
+			$user_id = $this->input->post('user_id');
+			$code = $this->input->post('validation_code');
+		
+			$query = $this->db->get_where('users', array('id' => $user_id))->row_array();
+			if (sizeof($query) > 0) {
+				// Check if the code matches and if it's still valid
+				if ($query['validation_code'] == $code && strtotime($query['validation_expires_at']) > time()) {
+					// Code is valid
+					$this->session->set_flashdata('message', 'Validation successful');
+					$this->session->set_flashdata('message_type', 'success');
+				} else {
+					// Code is invalid or expired
+					$this->session->set_flashdata('message', 'Invalid or expired validation code');
+					$this->session->set_flashdata('message_type', 'danger');
+				}
+			} else {
+				$this->session->set_flashdata('message', 'User not found');
+				$this->session->set_flashdata('message_type', 'danger');
+			}
+		
+			redirect($_SERVER['HTTP_REFERER'], 'refresh');
+		}
+		
+
+
+
 }

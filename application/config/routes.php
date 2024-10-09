@@ -275,3 +275,29 @@ $route['api/invoices/delete/(:num)'] = 'api/Admin/delete_invoice/$1';
 
 
 $route['api/GetAppropriateCourses'] = 'api/Admin/get_appropriate_courses';
+
+
+$route['api/SubmitQuiz'] = 'api/Admin/submit_quiz';
+$route['api/checkProgress/(:num)/(:num)'] = 'api/Admin/check_progress/$1/$2';
+
+$route['api/Register']  = 'api/Admin/register';
+
+$route['api/VerifyEmail'] = 'api/Admin/send_reset_link_api';
+
+$route['api/ResendCode'] =  'api/Admin/resend_code_api';
+
+$route['api/VerifyCode'] =  'api/Admin/verify_code_api';
+
+$route['api/GetUserIdByEmail'] = 'api/Admin/getUserIdByEmail';
+
+
+$route['api/UpdatePassword'] = 'api/Admin/update_Password';
+
+
+$route['api/SetSmtpSettings'] = 'api/Admin/set_smtp_settings';
+
+
+$route['api/GetSmtpSettings'] = 'api/Admin/get_smtp_settings';
+
+
+$route['api/GetAllSmtpSettings'] = 'api/Admin/get_alls_smtp_settings';

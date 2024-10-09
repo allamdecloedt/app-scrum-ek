@@ -13,6 +13,7 @@ class Lms_model extends CI_Model {
     function index(){
         
     }
+    
 
     public function get_course_by_id($course_id){
         return $this->db->get_where('course', array('id' => $course_id))->row_array();
