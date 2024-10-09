@@ -269,6 +269,9 @@
 
                     <div class="row justify-content-center">
                         <form action="<?php echo base_url('home/join_school/' . $school_id); ?>" method="post">
+                            
+                                <!-- Champ caché pour le jeton CSRF -->
+                            <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
                             <button id="join-button" type="submit" class="join-button text-uppercase"
                                 style="display:none"><?php echo htmlspecialchars(get_phrase("join")); ?></button>
                         </form>

@@ -154,7 +154,7 @@ function openQuizResultModal(quiz_id, user_id) {
             user_id: user_id
         },
         success: function(response) {
-            // console.log('ffffff : '+response);
+           
             // Injecter le contenu dans la modale
             $('#quiz-result-content').html(response);
         },

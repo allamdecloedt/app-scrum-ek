@@ -1,4 +1,7 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('addon_manager/install'); ?>" enctype="multipart/form-data">
+  <!-- Champ caché pour le jeton CSRF -->
+  <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+  
   <div class="form-row">
     <?php $school_id = school_id(); ?>
     <input type="hidden" name="school_id" value="<?php echo $school_id; ?>">

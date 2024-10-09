@@ -34,6 +34,9 @@
              style="opacity: 0.05;">
             <form method="post"
               action="<?php echo route('payment_success/stripe/' . $invoice_id.'/'.$amount_to_pay);?>">
+              <!-- Champ caché pour le jeton CSRF -->
+              <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
               <label>
                   <div id="card-element" class="field is-empty"></div>
                   <span><span><?php echo get_phrase('credit_/_debit_card');?></span></span>

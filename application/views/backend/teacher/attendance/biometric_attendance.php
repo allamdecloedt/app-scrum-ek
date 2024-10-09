@@ -1,5 +1,8 @@
 <?php $school_id = school_id(); ?>
 <form method="POST" class="d-block ajaxForm responsive_media_query" action="<?php echo site_url('addons/biometric_attendance/biometric_attendance'); ?>" enctype="multipart/form-data">
+  <!-- Champ caché pour le jeton CSRF -->
+  <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+  
     <div class="form-row">
         <div class="form-group mb-1">
             <label for="biometric_attendance_file"><?php echo get_phrase('choose_biometric_attendance_file'); ?></label>

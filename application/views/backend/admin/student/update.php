@@ -35,6 +35,9 @@
                 ?>
                 <h4 class="text-center mx-0 py-2 mt-0 mb-3 px-0 text-white bg-primary"><?php echo get_phrase('update_student_information'); ?></h4>
                 <form method="POST" class="col-12 d-block ajaxForm" action="<?php echo route('student/updated/'.$student_id.'/'.$student['user_id']); ?>" id = "student_update_form" enctype="multipart/form-data">
+                    <!-- Champ caché pour le jeton CSRF -->
+                    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
                     <div class="col-md-12">
                         <div class="form-group row mb-3">
                             <label class="col-md-3 col-form-label" for="name"><?php echo get_phrase('name'); ?></label>

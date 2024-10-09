@@ -73,7 +73,7 @@ $('document').ready(function(){
 });
 
 function examsWiseClass(examId) {
-    console.log(examId);
+
     $.ajax({
         url: "<?php echo route('exam_class/list/'); ?>"+examId,
         success: function(response){

@@ -1,4 +1,7 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('book_issue/create'); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-group row mb-3">
         <label class="col-md-3 col-form-label" for="issue_date"><?php echo get_phrase('issue_date'); ?></label>
         <div class="col-md-9">
@@ -63,11 +66,11 @@ $(document).ready(function () {
 });
 
 function classWiseStudentOnCreate(classId) {
-  console.log(classId);
+
   $.ajax({
     url: "<?php echo route('student/dropdown/'); ?>"+classId,
     success: function(response){
-      console.log(response);
+   
       $('#student_id_on_modal').html(response);
     }
   });

@@ -1,4 +1,7 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('event_calendar/create'); ?>">
+  <!-- Champ caché pour le jeton CSRF -->
+  <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+  
 
     <input type="hidden" name="school_id" id="school_id" value="<?php echo $this->session->userdata('school_id'); ?>">
   <div class="form-row">

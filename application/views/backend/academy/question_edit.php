@@ -14,6 +14,8 @@
 ?>
 <form action="<?php echo site_url('addons/courses/quiz_questions/'.$param2.'/edit/'.$param1); ?>" method="post" id = 'mcq_form'>
     <input type="hidden" name="question_type" value="mcq">
+        <!-- Champ caché pour le jeton CSRF -->
+        <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     <div class="form-group mb-2">
         <label for="title"><?php echo get_phrase('question_title'); ?></label>
         <input class="form-control" type="text" name="title" id="title" value="<?php echo $question_details['title']; ?>" required>
@@ -48,11 +50,19 @@
             url: '<?php echo site_url('addons/courses/quiz_questions/'.$param2.'/edit/'.$param1); ?>',
             type: 'post',
             data: $('form#mcq_form').serialize(),
+            dataType: 'json',
             success: function(response) {
-                console.log(response);
-                if (response == 1) {
+              
+
+                if (response.html == 1) {
                     success_notify('<?php echo get_phrase('question_has_been_updated'); ?>');
+                    
+                    // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                    var newCsrfName = response.csrf.csrfName;
+                    var newCsrfHash = response.csrf.csrfHash;
+                    $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
                     $('#scrollable-modal').modal('hide');
+ 
                 }else {
                     error_notify('<?php echo get_phrase('no_options_can_be_blank_and_there_has_to_be_atleast_one_answer'); ?>');
                 }

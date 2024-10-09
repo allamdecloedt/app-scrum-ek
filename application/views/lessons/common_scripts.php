@@ -35,7 +35,7 @@ function markThisLessonAsCompleted(lesson_id) {
 
 
 var timer = setInterval(function(){
-  console.log('Current Progress is '+currentProgress);
+
   if (lessonType == 'video' && videoProvider == 'html5' && currentProgress != 1) {
     getCurrentTime();
   }

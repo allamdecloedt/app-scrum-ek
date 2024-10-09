@@ -1,4 +1,7 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('grade/create'); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-row">
         <div class="form-group mb-1">
             <label for="grade"><?php echo get_phrase('grade'); ?></label>

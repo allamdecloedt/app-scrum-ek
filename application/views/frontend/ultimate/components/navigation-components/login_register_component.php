@@ -10,6 +10,9 @@
         </svg>
         <form class="login-form mt-10" id="login-form" action="<?php echo site_url('login/validate_login_frontend'); ?>"
             method="post">
+            <!-- Champ caché pour le jeton CSRF -->
+            <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
             <div class="mb-4 mt-4 login-input">
                 <label for="loginEmail"
                     class="login-input-label text-uppercase"><?php echo get_phrase("e-mail") ?><span class="required"> * </span></label>
@@ -69,6 +72,9 @@
 
         <form class="register-form mt-10" id="register-form" method="post" enctype="multipart/form-data"
             action="<?php echo site_url('register/register_user'); ?>">
+
+            <!-- Champ caché pour le jeton CSRF -->
+             <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
 
             <!-- First Register Form Section -->
             <div class="tab">
@@ -180,6 +186,9 @@
         
             <form class="forget-form mt-10" id="forget-form" method="post" enctype="multipart/form-data"
                 action="<?php echo site_url('login/send_reset_link'); ?>">
+                <!-- Champ caché pour le jeton CSRF -->
+                <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
 
                 <!-- First forget Form Section -->
                 <!-- <div class="tab"> -->

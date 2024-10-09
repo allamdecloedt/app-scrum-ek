@@ -1,5 +1,8 @@
 <?php $gallery = $this->db->get_where('frontend_gallery', array('frontend_gallery_id' => $param1))->row_array(); ?>
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('frontend_gallery/update/'.$param1); ?>">
+  <!-- Champ caché pour le jeton CSRF -->
+  <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+  
   <div class="form-row">
     <div class="form-group mb-1">
       <label for="title"><?php echo get_phrase('gallery_title'); ?></label>

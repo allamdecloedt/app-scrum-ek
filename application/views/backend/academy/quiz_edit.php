@@ -3,6 +3,9 @@ $quiz_details = $this->lms_model->get_lessons('lesson', $param1)->row_array();
 $sections = $this->lms_model->get_section('course', $param2)->result_array();
 ?>
 <form action="<?php echo site_url('addons/courses/quizes/'.$param2.'/edit/'.$param1); ?>" method="post">
+        <!-- Champ caché pour le jeton CSRF -->
+        <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+        
     <div class="form-group mb-2">
         <label for="title"><?php echo get_phrase('quiz_title'); ?><span class="required"> * </span></label>
         <input class="form-control" type="text" name="title" id="title" value="<?php echo $quiz_details['title']; ?>" required>

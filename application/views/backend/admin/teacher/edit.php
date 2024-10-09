@@ -5,6 +5,9 @@ foreach($users as $user):
   $social_links = json_decode($teacher['social_links'], true);
   ?>
   <form method="POST" class="d-block ajaxForm" action="<?php echo route('teacher/update/'.$param1); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-row">
       <div class="form-group mb-1">
         <input type="hidden" name="school_id" value="<?php echo school_id(); ?>">

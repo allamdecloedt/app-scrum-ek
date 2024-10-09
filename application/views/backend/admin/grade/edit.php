@@ -1,5 +1,8 @@
 <?php $grade = $this->db->get_where('grades', array('id' => $param1))->row_array(); ?>
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('grade/update/'.$grade['id']); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-row">
         <div class="form-group mb-2">
             <label for="grade"><?php echo get_phrase('grade'); ?></label>
