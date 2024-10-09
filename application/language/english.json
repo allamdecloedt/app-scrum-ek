@@ -1389,7 +1389,7 @@
     "update_book_issue_info": "Update book issue info",
     "returned_successfully": "Returned successfully",
     "deleted_successfully": "Deleted successfully",
-    "session_has_been_updated_successfully": "Session has been updated successfully"
+    "session_has_been_updated_successfully": "Session has been updated successfully",
 
     "invalid_email_address": "Invalid email address",
     "credentials_incorrect": "Credentials incorrect",
