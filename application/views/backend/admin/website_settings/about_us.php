@@ -2,6 +2,9 @@
   <div class="card-body">
     <h4 class="header-title"><?php echo get_phrase('about_us_settings') ;?></h4>
     <form method="POST" class="col-12 aboutUsSettings" action="<?php echo route('about_us/update') ;?>" id = "about_us_settings">
+      <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
       <div class="row justify-content-left">
         <div class="col-12">
           <div class="form-group row mb-3">

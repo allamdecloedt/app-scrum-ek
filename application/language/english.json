@@ -1368,8 +1368,32 @@
     "refresh": "Refresh",
     "no_instruction_found": "No instruction found",
     "add_new_password": "Add new password",
+
+    "admin_has_been_deleted_successfully": "Admin has been deleted successfully",
+    "teacher_has_been_deleted_successfully": "Teacher has been deleted successfully",
+    "accountant_has_been_deleted_successfully": "Accountant has been deleted successfully",
+    "librarian_deleted_successfully": "Librarian deleted successfully",
+    "class_routine_updated_successfully": "Class routine updated successfully",
+    "class_routine_deleted_successfully": "Class routine deleted successfully",
+    "classroom_deleted_successfully": "Classroom deleted successfully",
+    "classroom_updated_successfully": "Classroom updated successfully",
+    "department_has_been_deleted_successfully": "Department has been deleted successfully",
+    "exam_updated_successfully": "Exam updated successfully",
+    "grade_updated_successfully": "Grade updated successfully",
+    "grade_deleted_successfully": "Grade deleted successfully",
+    "invoice_deleted_successfully": "Invoice deleted successfully",
+    "expense_category_updated_successfully": "Expense category updated successfully",
+    "expense_category_deleted_successfully": "Expense category deleted successfully",
+    "books_updated_successfully": "Books updated successfully",
+    "books_deleted_successfully": "Books deleted successfully",
+    "update_book_issue_info": "Update book issue info",
+    "returned_successfully": "Returned successfully",
+    "deleted_successfully": "Deleted successfully",
+    "session_has_been_updated_successfully": "Session has been updated successfully"
+
     "invalid_email_address": "Invalid email address",
     "credentials_incorrect": "Credentials incorrect",
     "email_adress_not_in_use": "Email adress not in use",
     "e-mail_address_not_in_use": "E-mail address not in use"
+
 }

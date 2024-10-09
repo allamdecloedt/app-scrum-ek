@@ -1,5 +1,8 @@
 <?php $school_id = school_id(); ?>
 <form method="POST" class="d-block responsive_media_query" action="<?php echo site_url('superadmin/online_admission/assigned'); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
 
     <input type="hidden" name="student_id" value="<?php echo $param1; ?>">
     

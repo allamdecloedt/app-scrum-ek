@@ -4,6 +4,9 @@
         $teacher = $this->db->get_where('teachers', array('user_id' => $user['id']))->row_array();
 ?>
     <form method="POST" class="d-block ajaxForm" action="<?php echo route('teacher/update/'.$param1); ?>">
+        <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
         <div class="form-row">
             <div class="form-group mb-1">
                 <input type="hidden" name="school_id" value="<?php echo school_id(); ?>">

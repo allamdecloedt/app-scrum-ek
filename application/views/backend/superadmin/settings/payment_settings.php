@@ -9,6 +9,9 @@
       <div class="card-body">
         <h4 class="header-title"><?php echo get_phrase('system_currency') ;?></h4>
         <form method="POST" class="col-12 systemAjaxForm" action="<?php echo route('payment_settings/system') ;?>" id = "system_settings">
+          <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
           <div class="col-12">
             <div class="form-group row mb-3">
               <label class="col-md-3 col-form-label" for="system_currency"> <?php echo get_phrase('system_currency') ;?> <span class="required"> * </span></label>
@@ -55,6 +58,9 @@
       <div class="card-body">
         <h4 class="header-title"><?php echo get_phrase('paypal_settings') ;?></h4>
         <form method="POST" class="col-12 paypalAjaxForm" action="<?php echo route('payment_settings/paypal') ;?>" id = "paypal_settings">
+          <!-- Champ caché pour le jeton CSRF -->
+          <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
           <div class="col-12">
             <div class="form-group row mb-3">
               <label class="col-md-3 col-form-label" for="paypal_active"> <?php echo get_phrase('active') ;?> </label>
@@ -121,6 +127,8 @@
       <div class="card-body">
         <h4 class="header-title"><?php echo get_phrase('stripe_settings') ;?></h4>
         <form method="POST" class="col-12 stripeAjaxForm" action="<?php echo route('payment_settings/stripe') ;?>" id = "stripe_settings">
+          <!-- Champ caché pour le jeton CSRF -->
+         <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
           <div class="col-12">
             <div class="form-group row mb-3">
               <label class="col-md-3 col-form-label" for="stripe_active"> <?php echo get_phrase('active') ;?></label>

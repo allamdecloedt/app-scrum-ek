@@ -1,5 +1,8 @@
 <?php $event = $this->db->get_where('frontend_events', array('frontend_events_id' => $param1))->row_array();?>
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('events/update/'.$param1); ?>">
+  <!-- Champ caché pour le jeton CSRF -->
+  <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+  
   <div class="form-row">
     <div class="form-group mb-1">
       <label for="title"><?php echo get_phrase('event_title'); ?></label>

@@ -241,11 +241,15 @@
 						</div>
 						<div class="w-100 float-start">
 							<form action="<?php echo route('paypal_checkout'); ?>" method="post" class="paypal-form form">
+								    <!-- Champ caché pour le jeton CSRF -->
+     							<input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
 								<hr class="border mb-4">
 								<input type="hidden" name="invoice_id" value="<?php echo $invoice_details['id']; ?>">
 								<button type="submit" class="payment-button float-end"><?php echo get_phrase('pay_by_paypal'); ?></button>
 				            </form>
 				            <form action="<?php echo route('stripe_checkout'); ?>" method="post" class="stripe-form form">
+								    <!-- Champ caché pour le jeton CSRF -->
+    							 <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
 				            	<hr class="border mb-4">
 								<input type="hidden" name="invoice_id" value="<?php echo $invoice_details['id']; ?>">
 								<button type="submit" class="payment-button float-end"><?php echo get_phrase('pay_by_stripe'); ?></button>

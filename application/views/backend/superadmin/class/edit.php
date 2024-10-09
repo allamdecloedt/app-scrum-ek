@@ -1,6 +1,9 @@
 <?php $classes = $this->db->get_where('classes', array('id' => $param1))->result_array(); ?>
 <?php foreach($classes as $class){ ?>
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('manage_class/update/'.$param1); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-row">
     <div class="form-group mb-1 col-md-12">
             <label for="name"><?php echo get_phrase('class_name'); ?><span class="required"> * </span></label>

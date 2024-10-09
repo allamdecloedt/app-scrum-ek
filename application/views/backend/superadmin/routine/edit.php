@@ -2,6 +2,9 @@
 <?php $routines = $this->db->get_where('routines', array('id' => $param1))->result_array(); ?>
 <?php foreach($routines as $routine): ?>
     <form method="POST" class="d-block ajaxForm" action="<?php echo route('routine/update/'.$param1); ?>" style="min-width: 300px;">
+        <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
         <div class="form-group row mb-2">
             <label for="class_id_on_routine_creation" class="col-md-3 col-form-label"><?php echo get_phrase('class'); ?></label>
             <div class="col-md-9">

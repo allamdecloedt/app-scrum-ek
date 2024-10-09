@@ -3,6 +3,9 @@
         <div class="card">
             <div class="card-body">
                 <form method="POST" class="col-12 smtpForm" action="<?php echo route('smtp_settings/update') ; ?>" id = "smtpsettings">
+                    <!-- Champ caché pour le jeton CSRF -->
+                     <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
                     <div class="col-12">
                         <div class="form-group row mb-3">
                             <label class="col-md-3 col-form-label" for="mail_sender"><?php echo get_phrase('mail_sender') ; ?><span class="required"> * </span></label>

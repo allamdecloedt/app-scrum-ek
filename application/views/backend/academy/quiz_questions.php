@@ -104,15 +104,25 @@ function(a) {
                 });
             });
         }
+                // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+                var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+                var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+               
 
         itemJSON = JSON.stringify(itemArray);
         $.ajax({
             url: '<?php echo site_url('addons/courses/ajax_sort_question/');?>',
             type : 'POST',
-            data : {itemJSON : itemJSON},
+            data : {itemJSON : itemJSON , [csrfName]: csrfHash},
             success: function(response)
             {
                 success_notify('<?php echo get_phrase('questions_have_been_sorted'); ?>');
+
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+
                 setTimeout(function()
                 {
                     location.reload();

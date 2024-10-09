@@ -37,6 +37,9 @@
 
                     <!-- form -->
                     <form action="<?php echo site_url('login/validate_login'); ?>" method="post" id="loginForm">
+                        <!-- Champ caché pour le jeton CSRF -->
+                    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
                         <div class="form-group mb-3">
                             <label for="emailaddress"><?php echo get_phrase('email'); ?></label>
                             <input class="form-control" type="email" name="email" id="emailaddress" required="" placeholder="Enter your email">
@@ -53,6 +56,9 @@
                     </form>
 
                     <form action="<?php echo site_url('login/send_reset_link'); ?>" method="post" id="forgotForm" style="display: none;">
+                        <!-- Champ caché pour le jeton CSRF -->
+                    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+                    
                         <div class="form-group mb-3">
                             <a href="javascript: void(0);" class="text-muted float-end" onclick="backToLogin();"><small><?php echo get_phrase('back_to_login'); ?></small></a>
                             <label for="forgotEmail"><?php echo get_phrase('email'); ?></label>

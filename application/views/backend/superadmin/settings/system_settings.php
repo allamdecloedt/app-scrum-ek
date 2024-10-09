@@ -4,6 +4,8 @@
       <div class="card-body py-2">
         <h4 class="header-title d-inline-block"><?php echo get_phrase('system_settings') ;?><span class="required"> * </span></h4>
         <form method="POST" class="col-12 systemAjaxForm" action="<?php echo route('system_settings/update') ;?>" id = "system_settings">
+          <!-- Champ caché pour le jeton CSRF -->
+         <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
           <div class="col-12">
             <div class="form-group row mb-3">
               <label class="col-md-3 col-form-label" for="system_name"> <?php echo get_phrase('system_name') ;?><span class="required"> * </span></label>
@@ -107,6 +109,8 @@
       <div class="card-body">
         <h4 class="header-title"><?php echo get_phrase('product_update') ;?></h4>
         <form action="<?php echo site_url('updater/update'); ?>" method="post" enctype="multipart/form-data">
+              <!-- Champ caché pour le jeton CSRF -->
+          <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
           <label for="file_name"><?php echo get_phrase('file'); ?></label>
           <input type="file" class="form-control" name="file_name" id="file_name">
           <button class="btn btn-secondary mt-3 float-end"><?php echo get_phrase('update'); ?></button>
@@ -121,7 +125,8 @@
       <div class="card-body">
         <h4 class="header-title"><?php echo get_phrase('system_logo') ;?></h4>
         <form method="POST" class="col-12 systemLogoAjaxForm" action="<?php echo route('system_settings/logo_update') ;?>" id = "system_settings" enctype="multipart/form-data">
-
+            <!-- Champ caché pour le jeton CSRF -->
+            <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
           <div class="row justify-content-center">
             <div class="col-xl-4">
               <div class="form-group row mb-3">

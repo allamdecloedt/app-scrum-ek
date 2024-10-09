@@ -38,7 +38,9 @@
 
 
                     <form action="<?php echo base_url('login/reset_password?token=' . $this->input->get('token')); ?>" method="POST">
-
+                    <!-- Champ caché pour le jeton CSRF -->
+                    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+                    
                         <div class="form-group mb-3">
                             <label for="password"><?php echo get_phrase('new_password'); ?></label>
                             <input class="form-control" type="password" name="new_password" required="" id="new_password" placeholder="Enter your password">

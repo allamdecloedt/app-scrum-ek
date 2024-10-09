@@ -21,6 +21,8 @@
                 <div class="row">
                     <div class="col-xl-12">
                         <form class="required-form" action="<?php echo site_url('addons/courses/index/update/'.$course['id']); ?>" method="post" enctype="multipart/form-data">
+                         <!-- Champ caché pour le jeton CSRF -->
+                         <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
                             <div id="basicwizard">
 
                                 <ul class="nav nav-pills nav-justified form-wizard-header mb-3">

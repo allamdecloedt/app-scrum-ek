@@ -1,4 +1,7 @@
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('invoice/mass'); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-row">
         <div class="form-group mb-1">
             <label for="class_id_on_create"><?php echo get_phrase('class'); ?></label>

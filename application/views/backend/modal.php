@@ -134,6 +134,9 @@ function blankFunction(){
           <h4 class="mt-2"><?php echo get_phrase('heads_up') ?>!</h4>
           <p class="mt-3"><?php echo get_phrase('are_you_sure'); ?>?</p>
           <form method="POST" class="ajaxDeleteForm" action="" id = "delete_form">
+                <!-- Champ caché pour le jeton CSRF -->
+                <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
             <button type="button" class="btn btn-info my-2" data-bs-dismiss="modal"><?php echo get_phrase('cancel'); ?></button>
             <button type="submit" class="btn btn-danger my-2" onclick=""><?php echo get_phrase('continue'); ?></button>
           </form>

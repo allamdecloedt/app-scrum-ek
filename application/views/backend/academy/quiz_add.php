@@ -1,5 +1,7 @@
 <?php $course_sections = $this->lms_model->get_section('course', $param1)->result_array(); ?>
 <form action="<?php echo site_url('addons/courses/quizes/'.$param1.'/add'); ?>" method="post">
+        <!-- Champ caché pour le jeton CSRF -->
+        <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     <div class="form-group mb-2">
         <label for="title"><?php echo get_phrase('quiz_title'); ?><span class="required"> * </span></label>
         <input class="form-control" type="text" name="title" id="title" required>

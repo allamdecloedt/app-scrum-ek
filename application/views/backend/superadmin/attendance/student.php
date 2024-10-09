@@ -26,6 +26,7 @@
                             <?php if($update_attendance->num_rows() > 0): ?>
                                 <?php $row = $update_attendance->row(); ?>
                                 <input type="hidden" name="attendance_id[]" value="<?php echo $row->id; ?>">
+                                <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
                                 <input type="radio" id="" name="status-<?php echo $enroll['student_id']; ?>" value="1" class="present" <?php if($row->status == 1) echo 'checked'; ?> required> <?php echo get_phrase('present'); ?> &nbsp;
                                 <input type="radio" id="" name="status-<?php echo $enroll['student_id']; ?>" value="0" class="absent" <?php if($row->status != 1) echo 'checked'; ?> required> <?php echo get_phrase('absent'); ?>
                             <?php else: ?>

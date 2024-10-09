@@ -19,6 +19,8 @@
 
 <!--Delete Form-->
 <form class="ajaxForm" method="post" action="<?php echo route('manage_class/delete/'.$param1); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+     <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     <div class="form-group  col-md-12">
         <button type="button" class="btn btn-warning my-2 me-1" data-bs-dismiss="modal"><?php echo get_phrase('cancel'); ?></button>
         <button type="submit" class="btn btn-danger my-2 ms-1"><?php echo get_phrase('continue'); ?></button>
