@@ -4,6 +4,8 @@ $quiz_details = $this->lms_model->get_lessons('lesson', $param1)->row_array();
 $questions = $this->lms_model->get_quiz_questions($param1)->result_array();
 ?>
 <?php if (count($quiz_details)): ?>
+            <!-- Champ caché pour le jeton CSRF -->
+            <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -114,6 +116,7 @@ function(a) {
             url: '<?php echo site_url('addons/courses/ajax_sort_question/');?>',
             type : 'POST',
             data : {itemJSON : itemJSON , [csrfName]: csrfHash},
+            dataType: 'json',
             success: function(response)
             {
                 success_notify('<?php echo get_phrase('questions_have_been_sorted'); ?>');
@@ -130,7 +133,8 @@ function(a) {
             }
         });
     }
-    onDomChange(function(){
+    
+    $(document).ready(function(){
         $('#question-sort-btn').show();
     });
 </script>

@@ -62,11 +62,10 @@
         if(message_title != "" || message_number_of_options != "" || message_number_of_options != "" ){
 
             confirmModal_alert(message_title+" "+message_number_of_options+" "+message_number_of_options);
-        }
+        }else{
 
-        
 
-        if (isValid) {
+            if (isValid) {
                 $.ajax({
                     url: '<?php echo site_url('addons/courses/quiz_questions/'.$param1.'/add'); ?>',
                     type: 'post',
@@ -89,6 +88,7 @@
                     }
                 });
               
+            }
         }
         largeModal('<?php echo site_url('modal/popup/academy/quiz_questions/'.$param1); ?>', '<?php echo get_phrase('manage_quiz_questions'); ?>');
     });
