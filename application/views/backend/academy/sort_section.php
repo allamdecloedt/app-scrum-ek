@@ -1,5 +1,7 @@
 <?php $course_sections = $this->lms_model->get_section('course', $param1)->result_array(); ?>
 <?php if (count($course_sections)): ?>
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -85,6 +87,7 @@
             url: '<?php echo site_url('addons/courses/ajax_sort_section/');?>',
             type : 'POST',
             data : {itemJSON : itemJSON , [csrfName]: csrfHash},
+            dataType: 'json',
             success: function(response)
             {
                 success_notify('<?php echo get_phrase('sections_have_been_sorted'); ?>');
@@ -102,7 +105,8 @@
             }
         });
     }
-    onDomChange(function(){
+
+    $(document).ready(function(){
         $('#section-sort-btn').show();
     });
 </script>

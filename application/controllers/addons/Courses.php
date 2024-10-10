@@ -216,6 +216,14 @@ class Courses extends CI_Controller {
   public function ajax_sort_section() {
     $section_json = $this->input->post('itemJSON');
     $this->lms_model->sort_section($section_json);
+      // Préparer le nouveau jeton CSRF
+      $csrf = array(
+                'csrfName' => $this->security->get_csrf_token_name(),
+                'csrfHash' => $this->security->get_csrf_hash(),
+              );
+          
+      // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+      echo json_encode(array('csrf' => $csrf));
   }
 
 
@@ -232,6 +240,14 @@ class Courses extends CI_Controller {
   public function ajax_sort_question() {
     $question_json = $this->input->post('itemJSON');
     $this->lms_model->sort_question($question_json);
+              // Préparer le nouveau jeton CSRF
+              $csrf = array(
+                'csrfName' => $this->security->get_csrf_token_name(),
+                'csrfHash' => $this->security->get_csrf_hash(),
+            );
+      
+            // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+            echo json_encode(array('csrf' => $csrf));
   }
   // this function is responsible for managing multiple choice question
   public function manage_multiple_choices_options() {
