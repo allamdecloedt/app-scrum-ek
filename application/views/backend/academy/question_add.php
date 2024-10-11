@@ -3,7 +3,7 @@
      <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     <input type="hidden" name="question_type" value="mcq">
     <div class="form-group mb-2">
-        <label for="title"><?php echo get_phrase('question_title'); ?>xxxxxx</label>
+        <label for="title"><?php echo get_phrase('question_title'); ?></label>
         <input class="form-control" type="text" name="title" id="title" >
     </div>
     <div class="form-group mb-2" id='multiple_choice_question'>

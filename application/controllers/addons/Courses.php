@@ -156,7 +156,14 @@ class Courses extends CI_Controller {
     }
     elseif ($param2 == 'delete') {
       $response = $this->lms_model->delete_course_section($param1, $param3);
-      echo $response;
+      // echo $response;
+            // Préparer le nouveau jeton CSRF
+            $csrf = array(
+              'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+                  );
+    // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+    echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
     redirect(site_url('addons/courses/course_edit/'.$param1), 'refresh');
   }
@@ -236,6 +243,14 @@ class Courses extends CI_Controller {
   public function ajax_sort_lesson() {
     $lesson_json = $this->input->post('itemJSON');
     $this->lms_model->sort_lesson($lesson_json);
+    // Préparer le nouveau jeton CSRF
+    $csrf = array(
+              'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+          );
+      
+    // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+    echo json_encode(array('csrf' => $csrf));
   }
   public function ajax_sort_question() {
     $question_json = $this->input->post('itemJSON');

@@ -89,6 +89,7 @@ function sort() {
         url: '<?php echo site_url('addons/courses/ajax_sort_lesson/');?>',
         type : 'POST',
         data : {itemJSON : itemJSON , [csrfName]: csrfHash},
+        dataType: 'json',
         success: function(response)
         {
             success_notify('<?php echo get_phrase('lessons_have_been_sorted'); ?>');
