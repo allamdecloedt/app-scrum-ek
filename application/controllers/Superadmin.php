@@ -2459,7 +2459,7 @@ class Superadmin extends CI_Controller
     if ($param1 == 'delete') {
       //$this->db->where('id', $user_id);
       //$this->db->delete('users');
-      $this->db->where('code', $code);
+      $this->db->where('user_id', $user_id);
       $this->db->delete('students');
 
       $this->session->set_flashdata('flash_message', get_phrase('admission_data_deleted_successfully'));
