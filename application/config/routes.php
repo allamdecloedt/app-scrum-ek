@@ -275,3 +275,6 @@ $route['api/invoices/delete/(:num)'] = 'api/Admin/delete_invoice/$1';
 
 
 $route['api/GetAppropriateCourses'] = 'api/Admin/get_appropriate_courses';
+//Partie Quiz (stocker les reponses dans la table question_quiz)
+$route['api/SubmitQuiz'] = 'api/Admin/submit_quiz';
+$route['api/checkProgress/(:num)/(:num)'] = 'api/Admin/check_progress/$1/$2';

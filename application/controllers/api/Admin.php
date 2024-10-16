@@ -7199,4 +7199,228 @@ public function get_invoices_by_student($student_id) {
   /*
   * eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdGF0dXMiOjIwMCwibWVzc2FnZSI6Ik9LIiwidXNlcl9pZCI6IjI0MSIsIm5hbWUiOiJTdWJoYW4gTWlhIiwiZW1haWwiOiJzdWJoYW5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJzY2hvb2xfaWQiOiI4IiwiYWRkcmVzcyI6IkJoYWlyYWIgQmF6YXIsIFJham5hZ2FyIiwicGhvbmUiOiIwMTkyMTA0MDk2MCIsImJpcnRoZGF5IjoiMDEtSmFuLTE5NzAiLCJnZW5kZXIiOiJtYWxlIiwiYmxvb2RfZ3JvdXAiOiJhYisiLCJ2YWxpZGl0eSI6dHJ1ZX0.z435NqyIgcVtVNVb7jnN1ewlF2omN6HGxVz23gQZBK8
   **/
+  //Partie Quiz (stocker les reponses dans la table question_quiz)
+
+
+public function submit_quiz_post() {
+    // Get and decode JSON input
+    $input_data = json_decode(file_get_contents("php://input"), true);
+
+    // Initialize variables
+    $submitted_quiz_info = array();
+    $container = array();
+
+    // Check for required fields in the input data
+    if (!isset($input_data['user_id']) || !isset($input_data['quiz_id']) || !isset($input_data['submitted_answers'])) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Missing user ID, quiz ID, or submitted answers'
+        ]);
+        return;
+    }
+
+    // Assign values from JSON input
+    $user_id = $input_data['user_id'];
+    $quiz_id = $input_data['quiz_id'];
+    $submitted_answers = $input_data['submitted_answers'];
+
+    // Fetch quiz questions
+    $this->db->where('quiz_id', $quiz_id);
+    $quiz_questions = $this->db->get('question')->result_array(); // Ensure the table name is correct
+
+    if (empty($quiz_questions)) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'No questions found for the quiz'
+        ]);
+        return;
+    }
+
+    $total_correct_answers = 0;
+
+    // Process each quiz question
+    foreach ($quiz_questions as $quiz_question) {
+        $question_id = $quiz_question['id'];
+        $correct_answers = json_decode($quiz_question['correct_answers'], true); // Correct answers
+
+        // Get the submitted answers for this question
+        $submitted_answers_for_question = isset($submitted_answers[$question_id]) ? $submitted_answers[$question_id] : array();
+
+        // Sort both arrays for accurate comparison
+        sort($correct_answers);
+        sort($submitted_answers_for_question);
+
+        // Compare submitted answers with correct answers
+        $submitted_answer_status = ($correct_answers === $submitted_answers_for_question) ? 1 : 0;
+
+        // Prepare data for insertion/updating in the database
+        $response_data = array(
+            'user_id' => $user_id,
+            'quiz_id' => $quiz_id,
+            'question_id' => $question_id,
+            'submitted_answers' => json_encode($submitted_answers_for_question),
+            'correct_answers' => json_encode($correct_answers),
+            'submitted_answer_status' => $submitted_answer_status,
+            'date_submitted' => date('Y-m-d H:i:s')  // Add timestamp
+        );
+
+        // Check if an entry exists already for this question and user
+        $this->db->where('user_id', $user_id);
+        $this->db->where('quiz_id', $quiz_id);
+        $this->db->where('question_id', $question_id);
+        $query = $this->db->get('quiz_responses');
+
+        if ($query->num_rows() == 0) {
+            // Insert new response if it doesn't exist
+            $this->db->insert('quiz_responses', $response_data);
+        } else {
+            // Update existing response
+            $this->db->where('user_id', $user_id);
+            $this->db->where('quiz_id', $quiz_id);
+            $this->db->where('question_id', $question_id);
+            $this->db->update('quiz_responses', $response_data);
+        }
+
+        // Add question info to the response container
+        $container = array(
+            "question_id" => $question_id,
+            "submitted_answer_status" => $submitted_answer_status, // 1 if correct, 0 if not
+            "submitted_answers" => json_encode($submitted_answers_for_question),
+            "correct_answers" => json_encode($correct_answers),
+        );
+        array_push($submitted_quiz_info, $container);
+
+        // Count the correct answers
+        if ($submitted_answer_status == 1) {
+            $total_correct_answers++;
+        }
+    }
+
+    // Get the related lesson_id by quiz_id
+    $this->db->select('id');
+    $this->db->where('lesson_type', 'quiz');
+    $this->db->where('id', $quiz_id); // Assuming quiz_id matches the 'id' in the 'lesson' table
+    $lesson_result = $this->db->get('lesson')->row();
+
+    $lesson_id = $lesson_result ? $lesson_result->id : null;
+    if (!$lesson_id) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'No lesson associated with this quiz'
+        ]);
+        return;
+    }
+
+    // Save course progress
+    // Get the current user_id from session
+    if (!$user_id) {
+        log_message('error', 'User ID not found in session.');
+        return;
+    }
+
+    // Fetch the user's watch history directly from the 'users' table
+    $this->db->select('watch_history');
+    $this->db->from('users');
+    $this->db->where('id', $user_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() == 0) {
+        log_message('error', "No user found with user_id: $user_id");
+        return;
+    }
+
+    $user_details = $query->row_array();
+    $watch_history = isset($user_details['watch_history']) ? $user_details['watch_history'] : '';
+
+    // Initialize watch history array
+    $watch_history_array = array();
+
+    // If watch history is empty, add the current lesson and progress
+    if (empty($watch_history)) {
+        array_push($watch_history_array, array('lesson_id' => $lesson_id, 'progress' => 1));
+    } else {
+        // Decode existing watch history
+        $watch_history_array = json_decode($watch_history, true);
+        $found = false;
+
+        // Update progress if lesson_id exists in watch history
+        foreach ($watch_history_array as &$lesson) {
+            if ($lesson['lesson_id'] == $lesson_id) {
+                $lesson['progress'] = 1;
+                $found = true;
+                break;
+            }
+        }
+
+        // If lesson_id is not found, add a new entry to the watch history
+        if (!$found) {
+            array_push($watch_history_array, array('lesson_id' => $lesson_id, 'progress' => 1));
+        }
+    }
+
+    // Update the user's watch history in the database
+    $data['watch_history'] = json_encode($watch_history_array);
+    $this->db->where('id', $user_id);
+    $this->db->update('users', $data);
+
+    // Prepare the JSON response
+    $response = array(
+        'status' => 'success',
+        'submitted_quiz_info' => $submitted_quiz_info,
+        'total_correct_answers' => $total_correct_answers,
+        'total_questions' => count($quiz_questions),
+        'lesson_id' => $lesson_id,
+        'progress' => 1 // Mark progress as complete
+    );
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+
+public function check_progress_get($user_id, $quiz_id) {
+    if (!$user_id || !$quiz_id) {
+        echo json_encode(['status' => 'error', 'message' => 'Invalid user ID or quiz ID']);
+        return;
+    }
+    // Query the database to get user details directly
+    $this->db->select('watch_history');
+    $this->db->where('id', $user_id);
+    $query = $this->db->get('users');
+    $user_details = $query->row_array();
+
+    // Check if the user exists
+    if (!$user_details) {
+        echo json_encode(['status' => 'error', 'message' => 'User not found']);
+        return;
+    }
+
+    // Retrieve the watch history from the user details
+    $watch_history = $user_details['watch_history'];
+
+    // If no watch history is found, return a message
+    if (empty($watch_history)) {
+        echo json_encode(['status' => 'success', 'progress' => 0]); // 0 means not started
+        return;
+    }
+
+    // Decode the watch history to retrieve progress details
+    $watch_history_array = json_decode($watch_history, true);
+
+    // Check if the quiz is present in the watch history
+    foreach ($watch_history_array as $lesson_progress) {
+        if ($lesson_progress['lesson_id'] == $quiz_id) {
+            echo json_encode([
+                'status' => 'success',
+                'progress' => $lesson_progress['progress'] // Return 1 or 0
+            ]);
+            return;
+        }
+    }
+
+    // If no progress is found for the quiz, return 0
+    echo json_encode(['status' => 'success', 'progress' => 0]);
+}
+
+
 }
