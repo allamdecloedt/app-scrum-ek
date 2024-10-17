@@ -58,6 +58,8 @@
 
     <form action="<?php echo site_url('register/register_user_form'); ?>" method="post" id="studentform"
       class="js-validate studentform  container" enctype="multipart/form-data">
+          <!-- Champ caché pour le jeton CSRF -->
+     <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
 
       <div class="row justify-content-center">
         <h4 class="col h2 pb-11 text-uppercase d-flex justify-content-center form-title">
@@ -402,6 +404,8 @@
 
     <form action="<?php echo site_url('admission/online_admission/submit/school'); ?>" method="post" id="schoolform"
       class="js-validate studentform realtime-form container" enctype="multipart/form-data">
+          <!-- Champ caché pour le jeton CSRF -->
+     <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
 
       <div class="row justify-content-center">
         <h4 class="col h2 pb-5 text-uppercase d-flex justify-content-center form-title">

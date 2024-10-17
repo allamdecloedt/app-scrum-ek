@@ -35,6 +35,8 @@
               <div class="col-md-12">
                 <form class="form-horizontal form-groups" method="post"
                   action="<?php echo site_url('install/step3/configure_database');?>">
+                  <!-- Champ caché pour le jeton CSRF -->
+                  <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
                   <hr>
                   <div class="form-group">
             				<label class="col-sm-3 control-label">Database Name</label>

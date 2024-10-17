@@ -3,6 +3,10 @@
     $section_details = $this->lms_model->get_section('section', $param1)->row_array();
 ?>
 <form action="<?php echo site_url('addons/courses/course_sections/'.$param2.'/edit/'.$param1); ?>" method="post">
+
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-group">
         <label for="title"><?php echo get_phrase('title'); ?><span class="required"> * </span></label>
         <input class="form-control" type="text" name="title" id="title" value="<?php echo $section_details['title']; ?>" required>

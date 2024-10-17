@@ -5,6 +5,8 @@
                 <div class="card-body">
                     <h4 class="header-title"><?php echo get_phrase('school_settings') ;?></h4>
                     <form method="POST" class="col-12 schoolForm" action="<?php echo route('school_settings/update') ;?>" id = "schoolForm">
+                        <!-- Champ caché pour le jeton CSRF -->
+                        <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
                         <div class="col-12">
                             <div class="form-group row mb-3">
                                 <label class="col-md-3 col-form-label" for="school_name"> <?php echo get_phrase('school_name') ;?><span class="required"> * </span></label>

@@ -15,6 +15,7 @@
         <div class="card ">
             <div class="row mt-3 justify-content-center">
                 <div class="col-md-1 mb-1"></div>
+                <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
 
                 <div class="col-md-2 mb-1">
                     <select name="class" id="class_id_cours" class="form-control select2" data-toggle = "select2" required onchange="classWiseCours(this.value)">
@@ -112,13 +113,21 @@ function filter_attendance(){
     var class_id = $('#class_id_cours').val();
     var cours_id = $('#cours_id').val();
     var quiz_id = $('#quiz_id').val();
+    // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+    var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+    var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
     if(class_id != "" && cours_id != "" && quiz_id != "" ){
         $.ajax({
             type: 'POST',
             url: '<?php echo route('quiz_result/list') ?>',
-            data: {class_id : class_id, cours_id : cours_id, quiz_id : quiz_id},
+            data: {class_id : class_id, cours_id : cours_id, quiz_id : quiz_id , [csrfName]: csrfHash},
+            dataType: 'json',
             success: function(response){
-                $('.quiz_content').html(response);
+                $('.quiz_content').html(response.html);
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
             }
         });
     }else{
@@ -154,7 +163,7 @@ function openQuizResultModal(quiz_id, user_id) {
             user_id: user_id
         },
         success: function(response) {
-            // console.log('ffffff : '+response);
+
             // Injecter le contenu dans la modale
             $('#quiz-result-content').html(response);
         },

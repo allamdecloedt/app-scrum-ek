@@ -58,12 +58,26 @@ class Courses extends CI_Controller {
     if($param1 == 'activity'){
       $this->student_access_denied();
       $this->lms_model->course_activity($param2);
+                  // Préparer le nouveau jeton CSRF
+                  $csrf = array(
+                    'csrfName' => $this->security->get_csrf_token_name(),
+                    'csrfHash' => $this->security->get_csrf_hash(),
+                );
+                          // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+          echo json_encode(array('csrf' => $csrf));
     }
 
     if($param1 == 'delete'){
       $this->student_access_denied();
       $response = $this->lms_model->delete_course($param2);
-      echo $response;
+      // Préparer le nouveau jeton CSRF
+      $csrf = array(
+                'csrfName' => $this->security->get_csrf_token_name(),
+                'csrfHash' => $this->security->get_csrf_hash(),
+                    );
+      // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+      echo json_encode(array('status' => $response, 'csrf' => $csrf));
+      // echo $response;
     }
 
     if(empty($param1)){
@@ -142,7 +156,14 @@ class Courses extends CI_Controller {
     }
     elseif ($param2 == 'delete') {
       $response = $this->lms_model->delete_course_section($param1, $param3);
-      echo $response;
+      // echo $response;
+            // Préparer le nouveau jeton CSRF
+            $csrf = array(
+              'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+                  );
+    // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+    echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
     redirect(site_url('addons/courses/course_edit/'.$param1), 'refresh');
   }
@@ -202,6 +223,14 @@ class Courses extends CI_Controller {
   public function ajax_sort_section() {
     $section_json = $this->input->post('itemJSON');
     $this->lms_model->sort_section($section_json);
+      // Préparer le nouveau jeton CSRF
+      $csrf = array(
+                'csrfName' => $this->security->get_csrf_token_name(),
+                'csrfHash' => $this->security->get_csrf_hash(),
+              );
+          
+      // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+      echo json_encode(array('csrf' => $csrf));
   }
 
 
@@ -214,15 +243,43 @@ class Courses extends CI_Controller {
   public function ajax_sort_lesson() {
     $lesson_json = $this->input->post('itemJSON');
     $this->lms_model->sort_lesson($lesson_json);
+    // Préparer le nouveau jeton CSRF
+    $csrf = array(
+              'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+          );
+      
+    // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+    echo json_encode(array('csrf' => $csrf));
   }
   public function ajax_sort_question() {
     $question_json = $this->input->post('itemJSON');
     $this->lms_model->sort_question($question_json);
+              // Préparer le nouveau jeton CSRF
+              $csrf = array(
+                'csrfName' => $this->security->get_csrf_token_name(),
+                'csrfHash' => $this->security->get_csrf_hash(),
+            );
+      
+            // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+            echo json_encode(array('csrf' => $csrf));
   }
   // this function is responsible for managing multiple choice question
   public function manage_multiple_choices_options() {
     $page_data['number_of_options'] = $this->input->post('number_of_options');
-    $this->load->view('backend/academy/manage_multiple_choices_options', $page_data);
+    // $this->load->view('backend/academy/manage_multiple_choices_options', $page_data);
+
+          // Charger la vue mise à jour
+          $response_html = $this->load->view('backend/academy/manage_multiple_choices_options', $page_data, TRUE);
+
+          // Préparer le nouveau jeton CSRF
+          $csrf = array(
+              'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+          );
+    
+          // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+          echo json_encode(array('html' => $response_html, 'csrf' => $csrf));
   }
   // Manage Quize Questions
   public function quiz_questions($quiz_id = "", $action = "", $question_id = "") {
@@ -231,16 +288,40 @@ class Courses extends CI_Controller {
 
     if ($action == 'add') {
       $response = $this->lms_model->add_quiz_questions($quiz_id);
-      echo $response;
+      // echo $response;
+      // Préparer le nouveau jeton CSRF
+      $csrf = array(
+          'csrfName' => $this->security->get_csrf_token_name(),
+          'csrfHash' => $this->security->get_csrf_hash(),
+      );
+
+      // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+      echo json_encode(array('html' => $response, 'csrf' => $csrf));
     }
 
     elseif ($action == 'edit') {
       $response = $this->lms_model->update_quiz_questions($question_id);
-      echo $response;
+      // echo $response;
+            // Préparer le nouveau jeton CSRF
+            $csrf = array(
+              'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+          );
+    
+          // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+          echo json_encode(array('html' => $response, 'csrf' => $csrf));
     }
     elseif ($action == 'delete') {
       $response = $this->lms_model->delete_quiz_question($question_id);
-      echo $response;
+      // echo $response;
+            // Préparer le nouveau jeton CSRF
+            $csrf = array(
+              'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+          );
+    
+          // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+          echo json_encode(array('html' => $response, 'csrf' => $csrf));
     }
   }
 

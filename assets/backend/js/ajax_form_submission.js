@@ -15,8 +15,12 @@ function ajaxSubmit(e, form, callBackFunction) {
             dataType: 'json',
             data: data,
             success: function (response) {
-                if (response.status) {
-                    success_notify(response.notification);
+                // var response = JSON.parse(response.status);
+            // Décoder la partie status de la réponse
+            var statusData = JSON.parse(response.status);
+
+                if (statusData.status) {
+                    success_notify(statusData.notification);
                     if (form.attr('class') === 'ajaxDeleteForm') {
                         $('#alert-modal').modal('toggle')
                     } else {
@@ -24,11 +28,13 @@ function ajaxSubmit(e, form, callBackFunction) {
                     }
                     callBackFunction();
                 } else {
-                    error_notify(response.notification);
+                    error_notify(statusData.notification);
                 }
+                console.log()
+                // Mettre à jour le jeton CSRF pour les futures soumissions
+                $('input[name="' + response.csrf.csrfName + '"]').val(response.csrf.csrfHash);
 
                 setTimeout(() => {
-                    console.log(response);
                     if (response.refresh) {
                         window.location.reload()
                     }

@@ -879,4 +879,15 @@ class Email_model extends CI_Model {
 			return true;
 		}
 	}
+	function send_email_with_validation_code($email_message, $email_to) {
+		$email_sub = "Your Validation Code";
+		
+		// Sending the email using SMTP or PHPMailer
+		if (get_smtp('mail_sender') == 'php_mailer') {
+			return $this->send_mail_using_php_mailer($email_message, $email_sub, $email_to);
+		} else {
+			return $this->send_mail_using_smtp($email_message, $email_sub, $email_to);
+		}
+	}
+	
 }

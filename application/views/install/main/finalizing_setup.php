@@ -24,6 +24,8 @@
               <div class="col-md-12">
                 <form class="form-horizontal form-groups" method="post"
                   action="<?php echo site_url('install/finalizing_setup/setup_admin');?>">
+                  <!-- Champ caché pour le jeton CSRF -->
+                  <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
                   <hr>
                   <div class="form-group">
             				<label class="col-sm-3 control-label">School Name</label>

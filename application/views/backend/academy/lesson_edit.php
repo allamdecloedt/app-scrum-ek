@@ -6,6 +6,9 @@ $sections = $this->lms_model->get_section('course', $param2)->result_array();
 
 <form  id="uploadForm" action="<?php echo site_url('addons/courses/lessons/'.$param2.'/edit'.'/'.$param1); ?>" method="post" enctype="multipart/form-data">
 
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
     <div class="form-group mb-2">
         <label><?php echo get_phrase('title'); ?><span class="required"> * </span></label>
         <input type="text" name = "title" class="form-control" required value="<?php echo $lesson_details['title']; ?>">

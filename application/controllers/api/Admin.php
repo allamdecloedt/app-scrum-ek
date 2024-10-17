@@ -7199,6 +7199,7 @@ public function get_invoices_by_student($student_id) {
   /*
   * eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdGF0dXMiOjIwMCwibWVzc2FnZSI6Ik9LIiwidXNlcl9pZCI6IjI0MSIsIm5hbWUiOiJTdWJoYW4gTWlhIiwiZW1haWwiOiJzdWJoYW5AZXhhbXBsZS5jb20iLCJyb2xlIjoiYWRtaW4iLCJzY2hvb2xfaWQiOiI4IiwiYWRkcmVzcyI6IkJoYWlyYWIgQmF6YXIsIFJham5hZ2FyIiwicGhvbmUiOiIwMTkyMTA0MDk2MCIsImJpcnRoZGF5IjoiMDEtSmFuLTE5NzAiLCJnZW5kZXIiOiJtYWxlIiwiYmxvb2RfZ3JvdXAiOiJhYisiLCJ2YWxpZGl0eSI6dHJ1ZX0.z435NqyIgcVtVNVb7jnN1ewlF2omN6HGxVz23gQZBK8
   **/
+
   //Partie Quiz (stocker les reponses dans la table question_quiz)
 
 
@@ -7421,6 +7422,295 @@ public function check_progress_get($user_id, $quiz_id) {
     // If no progress is found for the quiz, return 0
     echo json_encode(['status' => 'success', 'progress' => 0]);
 }
+
+
+
+  //Forget password
+
+public function send_reset_link_api_post() {
+    // Read the raw POST data as JSON
+    $postData = json_decode(file_get_contents("php://input"), true);
+
+    // Get the email from the decoded JSON data
+    $email = isset($postData['email']) ? strtolower($postData['email']) : '';
+
+    // Check if the email field is empty
+    if (empty($email)) {
+        $response = array(
+            'status' => 'error',
+            'message' => 'Email is required'
+        );
+        log_message('error', 'Email field is empty');
+        $this->output->set_status_header(400); // Set HTTP status code to 400 (Bad Request)
+        echo json_encode($response);
+        return;
+    }
+
+    // Validate email format
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $response = array(
+            'status' => 'error',
+            'message' => 'Invalid email format'
+        );
+        log_message('error', 'Invalid email format: ' . $email);
+        $this->output->set_status_header(400); // Set HTTP status code to 400 (Bad Request)
+        echo json_encode($response);
+        return;
+    }
+
+    // Query the database to check if the email exists
+    $query = $this->db->get_where('users', array('email' => $email));
+
+    if ($query->num_rows() > 0) {
+        $user = $query->row_array();
+
+        // Generate a random 6-digit validation code
+        $validation_code = mt_rand(100000, 999999);
+
+        // Set the expiration time (46 seconds from now)
+        $expires_at = date("Y-m-d H:i:s", strtotime('+46 seconds'));
+
+        // Update the database with the validation code and expiration time
+        try {
+            $this->db->where('id', $user['id']);
+            $this->db->update('users', array(
+                'reset_token' => $validation_code,
+                'reset_expires_at' => $expires_at
+            ));
+        } catch (Exception $e) {
+            log_message('error', 'Database update failed: ' . $e->getMessage());
+            $this->output->set_status_header(500);
+            echo json_encode(array('status' => 'error', 'message' => 'Database update failed.'));
+            return;
+        }
+
+        // Prepare the email template
+        $email_message = '
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Validation Code</title>
+            <style>
+                body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 0; }
+                .container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+                h2 { color: #5d0ea8; text-align: center; }
+                p { margin: 10px 0; color: #555; text-align: center; }
+                .code-box { text-align: center; margin: 20px 0; font-size: 24px; font-weight: bold; color: #5d0ea8; letter-spacing: 5px; }
+                .footer { margin-top: 30px; font-size: 12px; color: #777; text-align: center; }
+                .footer p { margin: 0; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>Code de Validation</h2>
+                <p>Bonjour ' . ucfirst($user['name']) . ',</p>
+                <p>Voici votre code de validation:</p>
+                <div class="code-box">' . $validation_code . '</div>
+                <p>Ce code est valide pendant 46 secondes.</p>
+                <p>Si vous n\'avez pas demandé ce code, veuillez ignorer cet e-mail. Votre compte reste sécurisé.</p>
+                <p>Pour toute assistance, veuillez contacter notre équipe support à l’adresse suivante : <a href="mailto:' . get_settings('system_email') . '">' . get_settings('system_email') . '</a>.</p>
+                <div class="footer">
+                    <p>&copy; ' . date("Y") . ' Tous droits réservés.</p>
+                </div>
+            </div>
+        </body>
+        </html>';
+
+        // Send the email
+        try {
+            if ($this->email_model->send_email_with_validation_code($email_message, $user['email'])) {
+                $response = array('status' => 'success', 'message' => 'Validation code sent successfully to ' . $email);
+                log_message('info', 'Validation code sent to: ' . $email);
+                $this->output->set_status_header(200); // Set HTTP status code to 200 (OK)
+            } else {
+                throw new Exception('Email sending failed.');
+            }
+        } catch (Exception $e) {
+            log_message('error', 'Email sending failed: ' . $e->getMessage());
+            $response = array('status' => 'error', 'message' => 'Failed to send validation code. Please try again later.');
+            $this->output->set_status_header(500); // Set HTTP status code to 500 (Internal Server Error)
+        }
+
+    } else {
+        $response = array('status' => 'error', 'message' => 'Email not found');
+        log_message('error', 'Email not found: ' . $email);
+        $this->output->set_status_header(404); // Set HTTP status code to 404 (Not Found)
+    }
+
+    echo json_encode($response);
+}
+public function resend_code_api_post() {
+    // Read the raw POST data as JSON
+    $postData = json_decode(file_get_contents("php://input"), true);
+
+    // Get the email from the decoded JSON data
+    $email = isset($postData['email']) ? strtolower($postData['email']) : '';
+
+    // Check if the email field is empty
+    if (empty($email)) {
+        $response = array('status' => 'error', 'message' => 'Email is required');
+        echo json_encode($response);
+        return;
+    }
+
+    // Query the database to check if the email exists
+    $query = $this->db->get_where('users', array('email' => $email));
+
+    if ($query->num_rows() > 0) {
+        $user = $query->row_array();
+
+        // Generate a new random 6-digit validation code
+        $validation_code = mt_rand(100000, 999999);
+        $expires_at = date("Y-m-d H:i:s", strtotime('+46 seconds'));
+
+        // Update the database with the new validation code and expiration time
+        $this->db->where('id', $user['id']);
+        $this->db->update('users', array(
+            'reset_token' => $validation_code,
+            'reset_expires_at' => $expires_at
+        ));
+        // Prepare the email template
+        $email_message = '
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Validation Code</title>
+            <style>
+                body { font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; margin: 0; padding: 0; }
+                .container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+                h2 { color: #5d0ea8; text-align: center; }
+                p { margin: 10px 0; color: #555; text-align: center; }
+                .code-box { text-align: center; margin: 20px 0; font-size: 24px; font-weight: bold; color: #5d0ea8; letter-spacing: 5px; }
+                .footer { margin-top: 30px; font-size: 12px; color: #777; text-align: center; }
+                .footer p { margin: 0; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>Code de Validation</h2>
+                <p>Bonjour ' . ucfirst($user['name']) . ',</p>
+                <p>Voici votre code de validation:</p>
+                <div class="code-box">' . $validation_code . '</div>
+                <p>Ce code est valide pendant 46 secondes.</p>
+                <p>Si vous n\'avez pas demandé ce code, veuillez ignorer cet e-mail. Votre compte reste sécurisé.</p>
+                <p>Pour toute assistance, veuillez contacter notre équipe support à l’adresse suivante : <a href="mailto:' . get_settings('system_email') . '">' . get_settings('system_email') . '</a>.</p>
+                <div class="footer">
+                    <p>&copy; ' . date("Y") . ' Tous droits réservés.</p>
+                </div>
+            </div>
+        </body>
+        </html>';
+
+        // Send the email with validation code
+        if ($this->email_model->send_email_with_validation_code($email_message, $user['email'])) {
+            $response = array('status' => 'success', 'message' => 'Validation code resent successfully to ' . $email);
+        } else {
+            $response = array('status' => 'error', 'message' => 'Failed to resend validation code. Please try again later.');
+        }
+
+        echo json_encode($response);
+    } else {
+        $response = array('status' => 'error', 'message' => 'Email not found');
+        echo json_encode($response);
+    }
+}
+public function verify_code_api_post() {
+    // Read the raw POST data as JSON
+    $postData = json_decode(file_get_contents("php://input"), true);
+
+    // Get the email and the code from the decoded JSON data
+    $email = isset($postData['email']) ? strtolower($postData['email']) : '';
+    $code = isset($postData['code']) ? $postData['code'] : '';
+
+    // Check if the email or code field is empty
+    if (empty($email) || empty($code)) {
+        $response = array('status' => 'error', 'message' => 'Email and code are required');
+        echo json_encode($response);
+        return;
+    }
+
+    // Query the database to check if the email exists
+    $query = $this->db->get_where('users', array('email' => $email));
+
+    if ($query->num_rows() > 0) {
+        $user = $query->row_array();
+
+        // Check if the code matches and has not expired
+        if ($user['reset_token'] == $code && strtotime($user['reset_expires_at']) > time()) {
+            // Code is valid
+            $response = array('status' => 'success', 'message' => 'Code verified successfully');
+        } else {
+            // Code is invalid or expired
+            $response = array('status' => 'error', 'message' => 'Invalid or expired code');
+        }
+    } else {
+        $response = array('status' => 'error', 'message' => 'Email not found');
+    }
+
+    echo json_encode($response);
+}
+public function getUserIdByEmail_post() {
+    // Get the posted email
+    $postData = json_decode(file_get_contents("php://input"), true);
+    $email = isset($postData['email']) ? strtolower($postData['email']) : '';
+
+    // Check if the email is empty
+    if (empty($email)) {
+        $response = array('status' => 'error', 'message' => 'Email is required');
+        echo json_encode($response);
+        return;
+    }
+
+    // Query the database to get the user_id by email
+    $this->db->select('id');
+    $this->db->from('users');
+    $this->db->where('email', $email);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        // User found
+        $user = $query->row();
+        $response = array('status' => 'success', 'user_id' => $user->id);
+    } else {
+        // User not found
+        $response = array('status' => 'error', 'message' => 'User not found with this email');
+    }
+
+    echo json_encode($response);
+}
+public function update_Password_post() {
+    $postData = json_decode(file_get_contents("php://input"), true);
+    $user_id = isset($postData['user_id']) ? $postData['user_id'] : null;
+    $new_password = isset($postData['new_password']) ? $postData['new_password'] : null;
+
+    if (empty($user_id) || empty($new_password)) {
+        $response = array('status' => 'error', 'message' => 'User ID or new password is missing');
+        echo json_encode($response);
+        return;
+    }
+
+    $encrypted_password = sha1($new_password);
+    $this->db->where('id', $user_id);
+    $update = $this->db->update('users', array('password' => $encrypted_password));
+
+    // Log SQL query and error for debugging
+    log_message('info', 'SQL Query: ' . $this->db->last_query());
+    if ($this->db->error()) {
+        log_message('error', 'DB Error: ' . $this->db->error()['message']);
+    }
+
+    if ($update) {
+        $response = array('status' => 'success', 'message' => 'Password updated successfully');
+    } else {
+        $response = array('status' => 'error', 'message' => 'Failed to update password');
+    }
+
+    echo json_encode($response);
+}
+
+
 
 
 }

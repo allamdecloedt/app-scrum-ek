@@ -1,5 +1,7 @@
 <?php $course_sections = $this->lms_model->get_section('course', $param1)->result_array(); ?>
 <?php if (count($course_sections)): ?>
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -75,14 +77,27 @@
             });
         }
 
+                // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+                var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+                var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+              
+
         itemJSON = JSON.stringify(itemArray);
         $.ajax({
             url: '<?php echo site_url('addons/courses/ajax_sort_section/');?>',
             type : 'POST',
-            data : {itemJSON : itemJSON},
+            data : {itemJSON : itemJSON , [csrfName]: csrfHash},
+            dataType: 'json',
             success: function(response)
             {
                 success_notify('<?php echo get_phrase('sections_have_been_sorted'); ?>');
+
+               
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+            
                 setTimeout(function(){
                     location.reload();
                 }, 1000);
@@ -90,7 +105,8 @@
             }
         });
     }
-    onDomChange(function(){
+
+    $(document).ready(function(){
         $('#section-sort-btn').show();
     });
 </script>
