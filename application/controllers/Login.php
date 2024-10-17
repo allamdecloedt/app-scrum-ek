@@ -461,16 +461,23 @@ class Login extends CI_Controller
 
 		 public function validate_credentials()
     {
-        $json_data = json_decode(file_get_contents('php://input'), true);
-        $email = $json_data['email'];
-		$password = $json_data['password'];
+        // $json_data = json_decode(file_get_contents('php://input'), true);
+        $email = $this->input->post('email');
+		$password = $this->input->post('password');
         $query = $this->db->get_where('users', array('email' => $email, 'password' => sha1($password)));
         $num_rows = $query->num_rows();
+		// Préparer le nouveau jeton CSRF
+	    $csrf = array(
+			'csrfName' => $this->security->get_csrf_token_name(),
+			'csrfHash' => $this->security->get_csrf_hash(),
+			);
+		  
+
 
         if ($num_rows > 0) {
-            echo json_encode(array('status' => true, 'debug' => 'Welcome'));
+            echo json_encode(array('status' => true, 'debug' => 'Welcome' , 'csrf' => $csrf));
         } else {
-            echo json_encode(array('status' => false, 'debug' => 'Credentials incorrect'));
+            echo json_encode(array('status' => false, 'debug' => 'Credentials incorrect' , 'csrf' => $csrf));
         }
     }
 

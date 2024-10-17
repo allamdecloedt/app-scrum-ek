@@ -1368,7 +1368,6 @@
     "refresh": "Refresh",
     "no_instruction_found": "No instruction found",
     "add_new_password": "Add new password",
-
     "admin_has_been_deleted_successfully": "Admin has been deleted successfully",
     "teacher_has_been_deleted_successfully": "Teacher has been deleted successfully",
     "accountant_has_been_deleted_successfully": "Accountant has been deleted successfully",
@@ -1390,10 +1389,9 @@
     "returned_successfully": "Returned successfully",
     "deleted_successfully": "Deleted successfully",
     "session_has_been_updated_successfully": "Session has been updated successfully",
-
     "invalid_email_address": "Invalid email address",
     "credentials_incorrect": "Credentials incorrect",
     "email_adress_not_in_use": "Email adress not in use",
-    "e-mail_address_not_in_use": "E-mail address not in use"
-
+    "e-mail_address_not_in_use": "E-mail address not in use",
+    "select_a_schools": "Select a schools"
 }
