@@ -7425,6 +7425,96 @@ public function check_progress_get($user_id, $quiz_id) {
 
 
 
+
+  //register 
+
+public function register_post() {
+    $response = array();
+
+    // Retrieve the JSON input directly
+    $input_data = json_decode(file_get_contents('php://input'), true);
+
+    // Extract fields from the JSON input
+    $name = isset($input_data['name']) ? $input_data['name'] : null;
+    $email = isset($input_data['email']) ? $input_data['email'] : null;
+    $password = isset($input_data['password']) ? $input_data['password'] : null;
+    $role = isset($input_data['role']) ? $input_data['role'] : null;
+
+    // Log the received input for debugging purposes
+    log_message('debug', 'Input received: ' . print_r($input_data, true));
+
+    // Input validation
+    if (empty($name) || empty($email) || empty($password) || empty($role)) {
+        $response['status'] = 400;
+        $response['message'] = 'Invalid input parameters';
+        $response['validity'] = false;
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+    }
+
+    // Check if email already exists
+    $existing_user = $this->db->get_where('users', array('email' => $email))->row_array();
+    if ($existing_user) {
+        $response['status'] = 409;
+        $response['message'] = 'Email already registered';
+        $response['validity'] = false;
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+    }
+
+    // Prepare user data for insertion
+    $data = array(
+        'name' => $name,
+        'email' => $email,
+        'password' => sha1($password), // Use bcrypt if needed for better security
+        'role' => ucfirst(strtolower($role)), // Capitalize the role name
+        'school_id' => isset($input_data['school_id']) ? $input_data['school_id'] : NULL,
+        'address' => isset($input_data['address']) ? $input_data['address'] : NULL,
+        'phone' => isset($input_data['phone']) ? $input_data['phone'] : NULL,
+        'birthday' => isset($input_data['birthday']) ? strtotime($input_data['birthday']) : NULL,
+        'gender' => isset($input_data['gender']) ? strtolower($input_data['gender']) : NULL,
+ 
+    );
+
+    // Insert into the 'users' table
+    $this->db->insert('users', $data);
+
+    // Check if insertion was successful
+    if ($this->db->affected_rows() > 0) {
+        $user_id = $this->db->insert_id(); // Get the ID of the inserted user
+        $response['status'] = 201;
+        $response['message'] = 'Registered Successfully';
+        $response['user_id'] = $user_id;
+        $response['name'] = $data['name'];
+        $response['email'] = $data['email'];
+        $response['role'] = strtolower($data['role']);
+        $response['school_id'] = $data['school_id'];
+        $response['address'] = $data['address'];
+        $response['phone'] = $data['phone'];
+        $response['birthday'] = $data['birthday'] ? date('d-M-Y', $data['birthday']) : null;
+        $response['gender'] = $data['gender'];
+
+        $response['validity'] = true;
+
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+    } else {
+        $response['status'] = 500;
+        $response['message'] = 'Registration Failed';
+        $response['validity'] = false;
+        return $this->output
+                    ->set_content_type('application/json')
+                    ->set_output(json_encode($response));
+    }
+}
+
+  
+  
+  
+
   //Forget password
 
 public function send_reset_link_api_post() {
