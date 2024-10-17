@@ -276,7 +276,20 @@ $route['api/invoices/delete/(:num)'] = 'api/Admin/delete_invoice/$1';
 
 $route['api/GetAppropriateCourses'] = 'api/Admin/get_appropriate_courses';
 
+
+//Partie Quiz (stocker les reponses dans la table question_quiz)
+$route['api/SubmitQuiz'] = 'api/Admin/submit_quiz';
+$route['api/checkProgress/(:num)/(:num)'] = 'api/Admin/check_progress/$1/$2';
+
+// Forget Password
+$route['api/VerifyEmail'] = 'api/Admin/send_reset_link_api';
+$route['api/ResendCode'] =  'api/Admin/resend_code_api';
+$route['api/VerifyCode'] =  'api/Admin/verify_code_api';
+$route['api/GetUserIdByEmail'] = 'api/Admin/getUserIdByEmail';
+$route['api/UpdatePassword'] = 'api/Admin/update_Password';
+
 //register 
 $route['api/Register']  = 'api/Admin/register';
+
 
 
