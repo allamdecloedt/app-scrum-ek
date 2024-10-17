@@ -6,6 +6,9 @@ $slider_images = json_decode($slider_images_json);
   <div class="card-body">
     <h4 class="header-title"><?php echo get_phrase('homepage_slider_settings') ;?></h4>
     <form method="POST" class="col-12 homepageSliderSettings" action="<?php echo route('homepage_slider/update') ;?>" id = "homepage_slider_settings" enctype="multipart/form-data">
+      <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
       <div class="row justify-content-left">
         <div class="col-12">
           <?php for ($i = 0; $i <3; $i++): ?>

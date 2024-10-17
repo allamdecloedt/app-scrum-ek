@@ -103,16 +103,26 @@ function getExportUrl(type) {
   var dateRange = $('#selectedValue').text();
   var selectedClass = $('#class_id_invoice').val();
   var selectedStatus = $('#status').val();
+  // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+  var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+  var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
   $.ajax({
     type : 'post',
     url: url,
-    data : {type : type, dateRange : dateRange, selectedClass : selectedClass, selectedStatus : selectedStatus},
+    data : {type : type, dateRange : dateRange, selectedClass : selectedClass, selectedStatus : selectedStatus , [csrfName]: csrfHash},
+    dataType: 'json', // Important pour que la réponse soit interprétée comme un JSON
+
     success : function(response) {
       if (type == 'csv') {
-        window.open(response, '_self');
+        window.open(response.url, '_self');
       }else{
-        window.open(response, '_blank');
+        window.open(response.url, '_blank');
       }
+
+          // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+          var newCsrfName = response.csrf.csrfName;
+        var newCsrfHash = response.csrf.csrfHash;
+        $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
     }
   });
 }

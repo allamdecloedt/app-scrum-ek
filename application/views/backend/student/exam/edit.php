@@ -1,6 +1,9 @@
 <?php $exams = $this->db->get_where('exams', array('id' => $param1))->result_array(); ?>
 <?php foreach($exams as $exam){ ?>
   <form method="POST" class="d-block ajaxForm" action="<?php echo route('exam/update/'.$param1); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-row">
       <div class="form-group mb-1">
         <label for="exam_name"><?php echo get_phrase('exam_name'); ?></label>

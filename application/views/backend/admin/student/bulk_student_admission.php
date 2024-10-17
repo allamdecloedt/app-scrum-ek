@@ -1,5 +1,8 @@
 <?php $school_id = school_id(); ?>
 <form method="POST" class="col-md-12 ajaxForm" action="<?php echo route('student/create_bulk_student'); ?>" id = "student_admission_form">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="row justify-content-md-center">
         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3 mb-lg-0">
             <select name="class_id" id="class_id_bulk" class="form-control select2" data-toggle = "select2" onchange="classWiseSection(this.value)" required>

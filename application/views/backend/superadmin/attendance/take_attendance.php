@@ -1,5 +1,8 @@
 <?php $school_id = school_id(); ?>
 <form method="POST" class="d-block ajaxForm responsive_media_query" action="<?php echo route('attendance/take_attendance'); ?>" style="min-width: 300px; max-width: 400px;">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-group row">
         <div class="col-md-12">
             <label for="date_on_taking_attendance"><?php echo get_phrase('date'); ?></label>
@@ -85,17 +88,25 @@
         var date = $('#date_on_taking_attendance').val();
         var class_id = $('#class_id_on_taking_attendance').val();
         var section_id = $('#section_id_on_taking_attendance').val();
+        // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+        var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+        var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
 
         if(date != '' && class_id != '' && section_id != ''){
             $.ajax({
                 type : 'POST',
                 url : '<?php echo route('attendance/student/'); ?>',
-                data: {date : date, class_id : class_id, section_id : section_id},
+                data: {date : date, class_id : class_id, section_id : section_id , [csrfName]: csrfHash},
+                dataType: 'json',
                 success : function(response) {
                     $('#student_content').show();
-                    $('#student_content').html(response);
+                    $('#student_content').html(response.status);
                     $('#showStudentDiv').hide();
                     $('#updateAttendanceDiv').show();
+                    // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrfName;
+                var newCsrfHash = response.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
                 }
             });
         }else{

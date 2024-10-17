@@ -1,5 +1,8 @@
 <?php $school_id = school_id(); ?>
 <form method="POST" class="d-block ajaxForm responsive_media_query" action="<?php echo route('attendance/take_attendance'); ?>" style="min-width: 300px; max-width: 400px;">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-group row">
         <div class="col-md-12">
             <label for="date_on_taking_attendance"><?php echo get_phrase('date'); ?></label>

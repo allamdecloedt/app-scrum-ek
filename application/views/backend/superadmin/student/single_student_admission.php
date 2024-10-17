@@ -1,6 +1,9 @@
 <?php $school_id = school_id(); ?>
 
 <form method="POST" class="p-3 d-block ajaxForm" action="<?php echo route('student/create_single_student/submit'); ?>" id = "student_admission_form" enctype="multipart/form-data">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="col-md-12">
         <div class="form-group row mb-3">
             <label class="col-md-3 col-form-label" for="name"><?php echo get_phrase('name'); ?><span class="required"> * </span></label>

@@ -25,6 +25,8 @@ $lesson_progress = lesson_progress($lesson_details['id']);
     </div>
 
     <form class="" id="quiz_form" action="" method="post">
+        <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
         <?php if (count($quiz_questions->result_array()) > 0): ?>
             <?php foreach ($quiz_questions->result_array() as $key => $quiz_question):
                 $options = json_decode($quiz_question['options']);

@@ -7,6 +7,9 @@ $profile_data = $this->user_model->get_profile_data();
             <div class="card-body">
                 <h4 class="header-title"><?php echo get_phrase('update_profile') ; ?></h4>
                 <form method="POST" class="col-12 profileAjaxForm" action="<?php echo route('profile/update_profile') ; ?>" id = "profileAjaxForm" enctype="multipart/form-data">
+                    <!-- Champ caché pour le jeton CSRF -->
+                    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
                     <div class="col-12">
                         <div class="form-group row mb-3">
                             <label class="col-md-3 col-form-label" for="name"> <?php echo get_phrase('name') ; ?></label>
@@ -66,7 +69,9 @@ $profile_data = $this->user_model->get_profile_data();
             <div class="card-body">
                 <h4 class="header-title"><?php echo get_phrase('change_password') ; ?></h4>
                 <form method="POST" class="col-12 changePasswordAjaxForm" action="<?php echo route('profile/update_password') ; ?>" id = "changePasswordAjaxForm" enctype="multipart/form-data">
-                    <div class="col-12">
+                   <!-- Champ caché pour le jeton CSRF -->
+                    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+                      <div class="col-12">
                         <div class="form-group row mb-3">
                             <label class="col-md-3 col-form-label" for="current_password"> <?php echo get_phrase('current_password') ; ?></label>
                             <div class="col-md-9">

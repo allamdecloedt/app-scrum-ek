@@ -96,6 +96,9 @@
         <div class="container">
           <form class="pt-8" action="<?php echo site_url('home/contact/send'); ?>"
         method="post" class="js-validate">
+        <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
             <div class="row">
               <!-- Input -->
               <div class="col-12 col-md-6">

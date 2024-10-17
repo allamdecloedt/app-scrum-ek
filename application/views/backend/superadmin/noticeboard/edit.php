@@ -13,6 +13,9 @@ $notice = $this->db->get_where('noticeboard', array('id' => $param1))->row_array
 </div>
 <div class="notice-edit-portion hidden">
   <form method="POST" class="d-block ajaxForm" action="<?php echo route('noticeboard/update/'.$param1); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-row">
 
       <div class="form-group mb-1">

@@ -64,7 +64,11 @@ function confirmModal(delete_url, param)
 function confirmModalRedirect(delete_url)
 {
   jQuery('#alert-modal-redirect').modal('show', {backdrop: 'static'});
-  document.getElementById('alert-modal-redirect-url').setAttribute('href' , delete_url);
+  // document.getElementById('alert-modal-redirect-url').setAttribute('href' , delete_url);
+  // Mettre à jour l'action du formulaire avec l'URL de suppression
+  document.getElementById('delete-form').setAttribute('action', delete_url);
+
+
 }
 
 function genericConfirmModal(callBackFunction)
@@ -80,6 +84,11 @@ function callTheCallBackFunction() {
 function blankFunction(){
 
 }
+function reloadFunction(){
+  // reload the current page
+  window.location.reload();
+}
+
 </script>
 
 
@@ -134,6 +143,9 @@ function blankFunction(){
           <h4 class="mt-2"><?php echo get_phrase('heads_up') ?>!</h4>
           <p class="mt-3"><?php echo get_phrase('are_you_sure'); ?>?</p>
           <form method="POST" class="ajaxDeleteForm" action="" id = "delete_form">
+                <!-- Champ caché pour le jeton CSRF -->
+                <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
             <button type="button" class="btn btn-info my-2" data-bs-dismiss="modal"><?php echo get_phrase('cancel'); ?></button>
             <button type="submit" class="btn btn-danger my-2" onclick=""><?php echo get_phrase('continue'); ?></button>
           </form>
@@ -173,8 +185,14 @@ function blankFunction(){
           <i class="dripicons-information h1 text-info"></i>
           <h4 class="mt-2"><?php echo get_phrase('heads_up') ?>!</h4>
           <p class="mt-3"><?php echo get_phrase('are_you_sure'); ?>?</p>
+          <!-- <form id="delete-form" method="POST" action=""> -->
+          <form method="POST" class="ajaxDeleteForm" action="" id = "delete-form">
+            <!-- Ajoutez ici le jeton CSRF -->
+            <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+
           <button type="button" class="btn btn-info my-2" data-bs-dismiss="modal"><?php echo get_phrase('cancel'); ?></button>
-          <a href="" id="alert-modal-redirect-url" class="btn btn-danger my-2"><?php echo get_phrase('continue'); ?></a>
+          <button type="submit" class="btn btn-danger my-2" onclick="reloadFunction()"><?php echo get_phrase('continue'); ?></button>
+          </form>
         </div>
       </div>
     </div><!-- /.modal-content -->

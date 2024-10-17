@@ -1,5 +1,8 @@
 
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('manage_class/section/'.$param1); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <?php $count = 0; ?>
     <?php $sections = $this->db->get_where('sections', array('class_id' => $param1))->result_array(); ?>
     <?php foreach($sections as $section){

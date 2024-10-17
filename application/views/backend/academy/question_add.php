@@ -1,4 +1,6 @@
 <form action="" method="" id = 'mcq_form'>
+    <!-- Champ caché pour le jeton CSRF -->
+     <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     <input type="hidden" name="question_type" value="mcq">
     <div class="form-group mb-2">
         <label for="title"><?php echo get_phrase('question_title'); ?></label>
@@ -60,26 +62,33 @@
         if(message_title != "" || message_number_of_options != "" || message_number_of_options != "" ){
 
             confirmModal_alert(message_title+" "+message_number_of_options+" "+message_number_of_options);
-        }
+        }else{
 
-        
 
-        if (isValid) {
+            if (isValid) {
                 $.ajax({
                     url: '<?php echo site_url('addons/courses/quiz_questions/'.$param1.'/add'); ?>',
                     type: 'post',
                     data: $('form#mcq_form').serialize(),
+                    dataType: 'json',
                     success: function(response) {
-                    if (response == 1) {
+                    if (response.html == 1) {
                         success_notify('<?php echo get_phrase('question_has_been_added'); ?>');
+                    
+                    // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                    var newCsrfName = response.csrf.csrfName;
+                    var newCsrfHash = response.csrf.csrfHash;
+                    $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
                          // Fermer le modal après succès
                     $('#scrollable-modal').modal('hide');
+
                     }else {
                         error_notify('<?php echo get_phrase('no_options_can_be_blank_and_there_has_to_be_atleast_one_answer'); ?>');
                     }
                     }
                 });
               
+            }
         }
         largeModal('<?php echo site_url('modal/popup/academy/quiz_questions/'.$param1); ?>', '<?php echo get_phrase('manage_quiz_questions'); ?>');
     });

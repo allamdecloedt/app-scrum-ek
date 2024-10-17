@@ -2,6 +2,9 @@
 <?php $subjects = $this->db->get_where('subjects', array('id' => $param1))->result_array(); ?>
 <?php foreach($subjects as $subject){ ?>
 <form method="POST" class="d-block ajaxForm" action="<?php echo route('subject/update/'.$param1); ?>">
+    <!-- Champ caché pour le jeton CSRF -->
+    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+    
     <div class="form-row">
         <div class="form-group mb-1">
             <label for="class"><?php echo get_phrase('class'); ?></label>

@@ -275,5 +275,8 @@ $route['api/invoices/delete/(:num)'] = 'api/Admin/delete_invoice/$1';
 
 
 $route['api/GetAppropriateCourses'] = 'api/Admin/get_appropriate_courses';
+
 //register 
 $route['api/Register']  = 'api/Admin/register';
+
+
