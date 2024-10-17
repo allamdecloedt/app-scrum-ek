@@ -238,7 +238,18 @@ class Lessons extends CI_Controller {
         $page_data['total_questions'] = count($quiz_questions);
     
         // Chargement de la vue
-        $this->load->view('backend/superadmin/quiz/quiz_popup_result', $page_data);
+        // $this->load->view('backend/superadmin/quiz/quiz_popup_result', $page_data);
+
+        // Charger la vue mise à jour
+		$response_html = $this->load->view('backend/superadmin/quiz/quiz_popup_result', $page_data, TRUE);
+		// Préparer le nouveau jeton CSRF
+		$csrf = array(
+					'csrfName' => $this->security->get_csrf_token_name(),
+					'csrfHash' => $this->security->get_csrf_hash(),
+				);
+			
+		// Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+		echo json_encode(array('status' => $response_html, 'csrf' => $csrf));
     }
     
 
