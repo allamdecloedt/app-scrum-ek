@@ -25,14 +25,6 @@
         </div>
     </div>
 
-    <div class="form-group row mb-2">
-        <label for="subject_id_on_routine_creation" class="col-md-3 col-form-label"><?php echo get_phrase('subject'); ?></label>
-        <div class="col-md-9">
-            <select name="subject_id" id = "subject_id_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
-                <option value=""><?php echo get_phrase('select_section'); ?></option>
-            </select>
-        </div>
-    </div>
 
     <div class="form-group row mb-2">
         <label for="teacher" class="col-md-3 col-form-label"><?php echo get_phrase('teacher'); ?></label>
