@@ -99,13 +99,23 @@ function filter_attendance(){
     var class_id = $('#class_id_mark').val();
     var section_id = $('#section_id').val();
     // var subject = $('#subject_id').val();
+    // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+    var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+    var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
     if(class_id != "" && section_id != "" && exam != "" ){
         $.ajax({
             type: 'POST',
             url: '<?php echo route('mark/list') ?>',
-            data: {class_id : class_id, section_id : section_id, exam : exam},
+            data: {class_id : class_id, section_id : section_id, exam : exam , [csrfName]: csrfHash},
+            dataType: 'json',
             success: function(response){
-                $('.mark_content').html(response);
+                $('.mark_content').html(response.status);
+
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+
             }
         });
     }else{
