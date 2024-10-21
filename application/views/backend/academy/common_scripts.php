@@ -188,6 +188,11 @@
             data: {number_of_options : number_of_options , [csrfName]: csrfHash},
             dataType: 'json',
             success: function(response){
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+
                 jQuery('.options').remove();
                 jQuery('#multiple_choice_question').after(response.html);
 
@@ -199,10 +204,6 @@
                         }
                     });
               
-                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
-                var newCsrfName = response.csrf.csrfName;
-                var newCsrfHash = response.csrf.csrfHash;
-                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
             }
         });
     }
