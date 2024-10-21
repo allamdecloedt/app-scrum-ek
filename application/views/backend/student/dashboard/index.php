@@ -45,17 +45,22 @@
                               <h5 class="text-muted font-weight-normal mt-0" title="Number of Teacher"> <i class="mdi mdi-account-group title_icon"></i><?php echo get_phrase('classes'); ?>  <a href="" style="color: #6c757d; display: none;" id = "teacher_list"><i class = "mdi mdi-export"></i></a></h5>
                               <h3 class="mt-3 mb-3">
                                   <?php
-                                   $student_list =  $student_data->result_array();
-                                   $student_ids = array();
-                                   foreach ($student_list as $student) {
-                                       if(!in_array($student['id'], $student_ids)){
-                                           array_push($student_ids, $student['id']);
-                                       }
-                                   }
-                               
-                                   $this->db->where_in('student_id', $student_ids);
-                                   $student_cours = $this->db->get('enrols')->num_rows();
-                                    echo $student_cours;
+                                  if($student_data->num_rows() > 0 ){
+                                    $student_list =  $student_data->result_array();
+                                    $student_ids = array();
+                                    foreach ($student_list as $student) {
+                                        if(!in_array($student['id'], $student_ids)){
+                                            array_push($student_ids, $student['id']);
+                                        }
+                                    }
+                                
+                                    $this->db->where_in('student_id', $student_ids);
+                                    $student_cours = $this->db->get('enrols')->num_rows();
+                                     echo $student_cours;
+                                  }else{
+                                    echo $student_data->num_rows();
+                                  }
+                                 
                                    ?>
                               </h3>
                               <p class="mb-0 text-muted">
