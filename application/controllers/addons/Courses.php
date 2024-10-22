@@ -217,7 +217,15 @@ class Courses extends CI_Controller {
 
   public function ajax_get_video_details() {
     $video_details = $this->video_model->getVideoDetails($_POST['video_url']);
-    echo $video_details['duration'];
+    // echo $video_details['duration'];
+
+      // Préparer le nouveau jeton CSRF
+          $csrf = array(
+                'csrfName' => $this->security->get_csrf_token_name(),
+                'csrfHash' => $this->security->get_csrf_hash(),
+                     );
+      // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+      echo json_encode(array('duration' => $video_details['duration'], 'csrf' => $csrf));
   }
 
   public function ajax_sort_section() {
