@@ -1398,5 +1398,7 @@
     "department_has_been_updated_successfully": "Department has been updated successfully",
     "expense_updated_successfully": "Expense updated successfully",
     "expense_deleted_successfully": "Expense deleted successfully",
-    "updated_successfully": "Updated successfully"
+    "updated_successfully": "Updated successfully",
+    "the_file_size_exceeds_the_limit.": "The file size exceeds the limit.",
+    "old": "old"
 }
