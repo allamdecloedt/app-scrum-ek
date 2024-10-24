@@ -1455,10 +1455,12 @@ public function register_user_form()
         $user_id = $this->db->insert_id();
 
 
-        if (isset($_FILES['student_image_upload']) && $_FILES['student_image_upload']['error'] == UPLOAD_ERR_OK) {
+        if (isset($_FILES['student_image']) && $_FILES['student_image']['error'] == UPLOAD_ERR_OK) {
+		
             $upload_path = 'uploads/users/' . $user_id . '.jpg';
-            move_uploaded_file($_FILES['student_image_upload']['tmp_name'], $upload_path);
+            move_uploaded_file($_FILES['student_image']['tmp_name'], $upload_path);
         }
+		
 		$this->email_model->Add_online_admission($data['email'], $user_id,$data['name']);
 		$this->session->set_userdata('user_login_type', true);
         $this->session->set_userdata('student_login', true);
