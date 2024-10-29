@@ -170,6 +170,7 @@ class Student extends CI_Controller {
 			$page_data['attendance_date'] = strtotime($date);
 			$page_data['class_id'] = htmlspecialchars($this->input->post('class_id'));
 			$page_data['section_id'] = htmlspecialchars($this->input->post('section_id'));
+			$page_data['school_id'] = htmlspecialchars($this->input->post('school_id'));
 			$page_data['month'] = htmlspecialchars($this->input->post('month'));
 			$page_data['year'] = htmlspecialchars($this->input->post('year'));
 			// $this->load->view('backend/student/attendance/list', $page_data);
