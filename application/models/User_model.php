@@ -914,7 +914,7 @@ class User_model extends CI_Model
 			$checker = array(
 				'student_id' => $id,
 				'session' => $this->active_session,
-				'school_id' => $this->school_id
+				
 			);
 			$enrol_data = $this->db->get_where('enrols', $checker)->row_array();
 			$student_details = $this->db->get_where('students', array('id' => $id))->row_array();
@@ -1148,10 +1148,15 @@ class User_model extends CI_Model
 	}
 
 	//GET LOGGED IN USERS CLASS ID AND SECTION ID (FOR STUDENT LOGGED IN VIEW)
-	public function get_logged_in_student_details()
+	public function get_logged_in_student_details($school_id = null)
 	{
 		$user_id = $this->session->userdata('user_id');
-		$student_data = $this->db->get_where('students', array('user_id' => $user_id))->row_array();
+		// $student_data = $this->db->get_where('students', array('user_id' => $user_id,"school_id" => $school_id))->row_array();
+		if ($school_id !== null) {
+			$student_data = $this->db->get_where('students', array('user_id' => $user_id, 'school_id' => $school_id))->row_array();
+		} else {
+			$student_data = $this->db->get_where('students', array('user_id' => $user_id))->row_array();
+		}
 		$student_details = $this->get_student_details_by_id('student', $student_data['id']);
 		return $student_details;
 	}

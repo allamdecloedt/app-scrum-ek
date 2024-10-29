@@ -118,6 +118,7 @@ var getDailtyAttendance = function () {
     var year = $('#year').val();
     var class_id = $('#class_id_attendance').val();
     var section_id = $('#section_id').val();
+    var school_id = $('#school_id').val();
     // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
     var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
     var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
@@ -125,7 +126,7 @@ var getDailtyAttendance = function () {
         $.ajax({
             type: 'POST',
             url: '<?php echo route('attendance/filter') ?>',
-            data: {month : month, year : year, class_id : class_id, section_id : section_id , [csrfName]: csrfHash},
+            data: {month : month, year : year, class_id : class_id, section_id : section_id ,school_id : school_id , [csrfName]: csrfHash},
             dataType: 'json',
             success: function(response){
                 $('.attendance_content').html(response.status);

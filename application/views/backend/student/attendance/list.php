@@ -1,4 +1,4 @@
-<?php $school_id = school_id(); ?>
+
 <div class="row">
   <div class="col-md-4"></div>
   <div class="col-md-4">
@@ -37,13 +37,16 @@
 </thead>
 <tbody>
   <?php
-  $student_data = $this->user_model->get_logged_in_student_details();
+  $student_data = $this->user_model->get_logged_in_student_details($school_id);
   $student_id_count = 0;
   $active_sesstion = active_session();
   $this->db->order_by('student_id', 'asc');
-  $attendance_of_students = $this->db->get_where('daily_attendances', array('class_id' => $class_id, 'section_id' => $section_id, 'school_id' => $school_id, 'session_id' => $active_sesstion))->result_array();
-  foreach($attendance_of_students as $attendance_of_student){ ?>
-    <?php if ($attendance_of_student['student_id'] == $student_data['id']): ?>
+  $attendance_of_students = $this->db->get_where('daily_attendances', array('class_id' => $class_id,'student_id' => $student_data['student_id'], 'section_id' => $section_id, 'school_id' => $school_id, 'session_id' => $active_sesstion))->result_array();
+
+
+  foreach($attendance_of_students as $attendance_of_student){  ?>
+         
+    <?php if ($attendance_of_student['student_id'] == $student_data['student_id']): ?>
       <?php if(date('m', $attendance_date) == date('m', $attendance_of_student['timestamp'])): ?>
         <?php if($student_id_count != $attendance_of_student['student_id']): ?>
           <tr>
