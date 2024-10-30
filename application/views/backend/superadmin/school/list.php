@@ -6,7 +6,7 @@ if($check_data->num_rows() > 0):?>
     <thead>
         <tr style="background-color: #313a46; color: #ababab;">
         <th><?php echo get_phrase('name'); ?></th>
-        <th><?php echo get_phrase('email'); ?></th>
+   
         <th><?php echo get_phrase('address'); ?></th>
         <th><?php echo get_phrase('phone'); ?></th>
         <th><?php echo get_phrase('description'); ?></th>
@@ -18,11 +18,10 @@ if($check_data->num_rows() > 0):?>
         <?php
         $admins = $this->db->get_where('schools', array('Etat' => 1 , 'status'=> 1))->result_array();
         foreach($admins as $admin){
-            $user = $this->db->get_where('users', array('school_id' => $admin['id']))->row_array();
             ?>
             <tr>
                 <td><?php echo $admin['name']; ?></td>
-                <td><?php echo $user['email']; ?></td>
+              
                 <td><?php echo $admin['address']; ?></td>
                 <td><?php echo $admin['phone']; ?></td>
 

@@ -132,6 +132,9 @@ class User_model extends CI_Model
 		if($duplication_status){
 		$this->db->insert('schools', $data);
 		$school_id = $this->db->insert_id();
+		if ($_FILES['school_image']['name'] != "") {
+			move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $school_id . '.jpg');
+		}
 	    // Data to be inserted
 		$data = array(
 					array(
