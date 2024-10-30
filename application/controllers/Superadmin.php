@@ -911,7 +911,15 @@ class Superadmin extends CI_Controller
         'status' => true,
         'notification' => get_phrase('status_has_been_updated')
       );
-      echo json_encode($response);
+      
+        // Préparer la réponse avec un nouveau jeton CSRF
+        $csrf = array(
+                  'csrfName' => $this->security->get_csrf_token_name(),
+                  'csrfHash' => $this->security->get_csrf_hash(),
+                );
+              
+      // Renvoyer la réponse avec un nouveau jeton CSRF
+      echo json_encode(array('status' => json_encode($response), 'csrf' => $csrf));
     }
 
     //updated to database
@@ -952,7 +960,17 @@ class Superadmin extends CI_Controller
     if ($param1 == 'filter') {
       $page_data['class_id'] = $param2;
       $page_data['section_id'] = $param3;
-      $this->load->view('backend/superadmin/student/list', $page_data);
+      // $this->load->view('backend/superadmin/student/list', $page_data);
+      $html_content = $this->load->view('backend/superadmin/student/list', $page_data, TRUE);
+
+      // Prepare a new CSRF token for the response
+      $csrf = array(
+          'csrfName' => $this->security->get_csrf_token_name(),
+          'csrfHash' => $this->security->get_csrf_hash(),
+      );
+  
+      // Return JSON response with the HTML content and new CSRF token
+      echo json_encode(array('html' => $html_content, 'csrf' => $csrf));
     }
 
     if (empty($param1)) {
