@@ -101,7 +101,7 @@
                         <div class="form-group row mb-3">
                             <label class="col-md-3 col-form-label" for="birthdatepicker"><?php echo get_phrase('birthday'); ?></label>
                             <div class="col-md-9">
-                                <input type="text" class="form-control date" id="birthdatepicker" data-bs-toggle="date-picker" data-single-date-picker="true" name = "birthday"  value="<?php echo date('m/d/Y', $this->user_model->get_user_details($student['user_id'], 'birthday')); ?>" required>
+                                <input type="text" class="form-control date" id="birthdatepicker" data-bs-toggle="date-picker" data-single-date-picker="true" name = "birthday"  value="<?php echo date('m/d/Y', strtotime($this->user_model->get_user_details($student['user_id'], 'birthday'))); ?>" required>
                             </div>
                         </div>
 
