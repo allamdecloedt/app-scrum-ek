@@ -1320,5 +1320,17 @@
     "quiz_result": "Quiz result",
     "ok": "Ok",
     "e-mail_address_not_in_use": "E-mail address not in use",
-    "old": "ancien"
+    "old": "ancien",
+    "manage_quiz": "Manage quiz",
+    "select_quiz": "Select quiz",
+    "cours": "Cours",
+    "not_realized": "Not realized",
+    "provide_admin_description": "Provide admin description",
+    "access": "Access",
+    "select_a_access": "Select a access",
+    "privé": "Privé",
+    "provide_admin_access": "Provide admin access",
+    "provide_admin_category": "Provide admin category",
+    "school_profile_image": "School profile image",
+    "approved_school": "Approved school"
 }
