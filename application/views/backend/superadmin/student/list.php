@@ -1,6 +1,20 @@
 <?php
   $school_id = school_id();
 ?>
+<?php
+  // Fetch the count of students
+  $student_count = $this->db->get_where('enrols', array('class_id' => $class_id, 'section_id' => $section_id, 'school_id' => $school_id, 'session' => active_session()))->num_rows();
+?>
+
+<!-- Student Count Card -->
+<div class="row mb-2">
+  <div class="col-md-12 text-right">
+    <span class="badge badge-pill badge-secondary" style="font-size: 14px; padding: 8px 12px; background-color: #313a46; color: #ffffff;">
+      <?php echo get_phrase('Total Students'); ?>: <?php echo $student_count; ?>
+    </span>
+  </div>
+</div>
+
 <table id="basic-datatable" class="table table-striped dt-responsive nowrap" width="100%">
   <thead>
     <tr style="background-color: #313a46; color: #ababab;">
