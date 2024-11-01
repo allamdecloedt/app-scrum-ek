@@ -827,19 +827,15 @@ class User_model extends CI_Model
 
 	public function delete_student($student_id, $user_id)
 	{
-		$this->db->where('id', $student_id);
-		$this->db->delete('students');
 
 		$this->db->where('student_id', $student_id);
 		$this->db->delete('enrols');
 
-		$this->db->where('id', $user_id);
-		$this->db->delete('users');
 
-		$path = 'uploads/users/' . $user_id . '.jpg';
-		if (file_exists($path)) {
-			unlink($path);
-		}
+		// $path = 'uploads/users/' . $user_id . '.jpg';
+		// if (file_exists($path)) {
+		// 	unlink($path);
+		// }
 
 		$response = array(
 			'status' => true,
