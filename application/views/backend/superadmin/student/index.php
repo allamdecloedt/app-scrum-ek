@@ -31,7 +31,7 @@
                                 ?>
                                 <option value="<?php echo $class['id']; ?>" <?php if($class['id'] == $class_id) echo 'selected'; ?>>
                                     <?php echo $class['name']; ?>
-                                    <?php echo "(".$total_student->num_rows().")"; ?>
+                                   
                                 </option>
                             <?php } ?>
                         </select>

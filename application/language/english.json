@@ -1400,5 +1400,6 @@
     "expense_deleted_successfully": "Expense deleted successfully",
     "updated_successfully": "Updated successfully",
     "the_file_size_exceeds_the_limit.": "The file size exceeds the limit.",
-    "old": "old"
+    "old": "old",
+    "Total_Students": "Total Students"
 }
