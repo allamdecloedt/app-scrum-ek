@@ -25,9 +25,8 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
                 <!-- <?php echo get_frontend_settings('homepage_note_title'); ?>-->
 
                 <p class="h6 text-center text-break intro-container-content-back">
-                  <!--<?php echo htmlspecialchars_decode(get_frontend_settings('homepage_note_description')); ?>-->
-                  <span class="intro-container-content-back">des compétences pour aujourd'hui (et demain). nous vous
-                    accompagnons dans vos premiere pas.</span>
+                  <!--<?php //echo htmlspecialchars_decode(get_frontend_settings('homepage_note_description')); ?>-->
+                  <span class="intro-container-content-back">Des compétences pour aujourd'hui et demain! <br> Nous vous accompagnons dans vos premiers pas.</span>
                 </p>
               </div>
               <!-- End Title -->
