@@ -1,5 +1,5 @@
 <?php
-$logo_dark = base_url('uploads/images/decloedt/logo/white-logo.svg');
+$logo_dark = base_url('uploads/images/decloedt/logo/white-logo.png');
 $social = get_frontend_settings('social_links');
 $links = json_decode($social);
 ?>
