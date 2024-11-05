@@ -1332,5 +1332,12 @@
     "provide_admin_access": "Provide admin access",
     "provide_admin_category": "Provide admin category",
     "school_profile_image": "School profile image",
-    "approved_school": "Approved school"
+    "approved_school": "Approved school",
+    "0_courses_found_in_category": "0 courses found in category",
+    "admin_has_been_deleted_successfully": "Admin has been deleted successfully",
+    "routines_fetched_successfully": "Routines fetched successfully",
+    "select_classes": "Select classes",
+    "section_for_class": "Section for class",
+    "department_has_been_updated_successfully": "Department has been updated successfully",
+    "accountant_has_been_updated_successfully": "Accountant has been updated successfully"
 }
