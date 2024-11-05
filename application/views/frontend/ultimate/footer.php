@@ -79,20 +79,20 @@ $links = json_decode($social);
         <!-- Social Networks -->
         <div class="d-flex justify-content-center col-12 col-sm-4">
           <ul class="list-inline mb-0">
-            <li class="list-inline-item mx-0">
-              <a class="btn btn-sm btn-icon btn-soft-secondary rounded-circle" href="<?php echo $links[0]->facebook; ?>"
+            <!-- <li class="list-inline-item mx-0">
+              <a class="btn btn-sm btn-icon btn-soft-secondary rounded-circle" href="<?php //echo $links[0]->facebook; ?>"
                 target="_blank">
                 <span class="fab fa-facebook-f btn-icon__inner"></span>
               </a>
             </li>
             <li class="list-inline-item mx-0">
               <a class="btn btn-sm btn-icon btn-soft-secondary rounded-circle"
-                href="<?php echo $links[0]->instagram; ?>" target="_blank">
+                href="<?php //echo $links[0]->instagram; ?>" target="_blank">
                 <span class="fab fa-instagram btn-icon__inner"></span>
               </a>
-            </li>
-            <li class="list-inline-item mx-0">
-              <a class="btn btn-sm btn-icon btn-soft-secondary rounded-circle" href="<?php echo $links[0]->twitter; ?>"
+            </li> -->
+            <!-- <li class="list-inline-item mx-0">
+              <a class="btn btn-sm btn-icon btn-soft-secondary rounded-circle" href="<?php //echo $links[0]->twitter; ?>"
                 target="_blank">
                 <span class=""></span>
                 <svg class="btn-icon__inner" xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor"
@@ -101,20 +101,20 @@ $links = json_decode($social);
                         d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
                     </svg>
               </a>
-            </li>
-            <li class="list-inline-item mx-0">
-              <a class="btn btn-sm btn-icon btn-soft-secondary rounded-circle" href="<?php echo $links[0]->google; ?>"
+            </li> -->
+            <!-- <li class="list-inline-item mx-0">
+              <a class="btn btn-sm btn-icon btn-soft-secondary rounded-circle" href="<?php //echo $links[0]->google; ?>"
                 target="_blank">
                 <span class="fab fa-google btn-icon__inner"></span>
               </a>
-            </li>
+            </li> -->
             
-            <li class="list-inline-item mx-0">
-              <a class="btn btn-sm btn-icon btn-soft-secondary rounded-circle" href="<?php echo $links[0]->linkedin; ?>"
+            <!-- <li class="list-inline-item mx-0">
+              <a class="btn btn-sm btn-icon btn-soft-secondary rounded-circle" href="<?php //echo $links[0]->linkedin; ?>"
                 target="_blank">
                 <span class="fab fa-linkedin btn-icon__inner"></span>
               </a>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
