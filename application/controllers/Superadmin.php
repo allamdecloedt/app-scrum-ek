@@ -887,12 +887,28 @@ class Superadmin extends CI_Controller
 
     if ($param1 == 'create_bulk_student') {
       $response = $this->user_model->bulk_student_create();
-      echo $response;
+      // echo $response;
+              // Préparer la réponse avec un nouveau jeton CSRF
+      $csrf = array(
+            'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+            );
+            
+      // Renvoyer la réponse avec un nouveau jeton CSRF
+      echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
 
     if ($param1 == 'create_excel') {
       $response = $this->user_model->excel_create();
-      echo $response;
+      // die($response) ;
+      // Préparer la réponse avec un nouveau jeton CSRF
+      $csrf = array(
+            'csrfName' => $this->security->get_csrf_token_name(),
+            'csrfHash' => $this->security->get_csrf_hash(),
+            );
+                
+      // Renvoyer la réponse avec un nouveau jeton CSRF
+      echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
 
     // form view

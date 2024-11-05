@@ -706,20 +706,21 @@ class User_model extends CI_Model
 		$school_id = $this->school_id;
 		$session_id = $this->active_session;
 		$role = 'student';
-
+		
 		$file_name = $_FILES['csv_file']['name'];
-		move_uploaded_file($_FILES['csv_file']['tmp_name'], 'uploads/csv_file/student.generate.csv');
-
+		move_uploaded_file($_FILES['csv_file']['tmp_name'], 'uploads/csv_file/student.generate.csv');	
 		if (($handle = fopen('uploads/csv_file/student.generate.csv', 'r')) !== FALSE) { // Check the resource is valid
 			$count = 0;
 			$duplication_counter = 0;
-			while (($all_data = fgetcsv($handle, 1000, ",")) !== FALSE) { // Check opening the file is OK!
+			while (($line = fgets($handle)) !== FALSE) { // Lire chaque ligne en tant que chaîne de caractères
+				$all_data = explode(',', $line); // Diviser la ligne en utilisant la virgule comme séparateur
+				   
 				if ($count > 0) {
-					$user_data['name'] = html_escape($all_data[0]);
+					$user_data['name'] = str_replace('"', '', trim($all_data[0]));
 					$user_data['email'] = html_escape($all_data[1]);
-					$user_data['password'] = sha1($all_data[2]);
-					$user_data['phone'] = html_escape($all_data[3]);
-					$user_data['gender'] = html_escape($all_data[5]);
+					$user_data['password'] = sha1(trim($all_data[2]));
+					$user_data['phone'] = trim(html_escape($all_data[3]));
+					$user_data['gender'] = str_replace('"', '', trim($all_data[4]));
 					$user_data['role'] = $role;
 					$user_data['school_id'] = $school_id;
 					$user_data['watch_history'] = '[]';
@@ -730,10 +731,9 @@ class User_model extends CI_Model
 					if ($duplication_status) {
 						$this->db->insert('users', $user_data);
 						$user_id = $this->db->insert_id();
-
 						$student_data['code'] = student_code();
 						$student_data['user_id'] = $user_id;
-						// $student_data['parent_id'] = html_escape($all_data[4]);
+						// $student_data['parent_id'] = html_escape($all_data[4]);				
 						$student_data['session'] = $session_id;
 						$student_data['school_id'] = $school_id;
 						$this->db->insert('students', $student_data);
