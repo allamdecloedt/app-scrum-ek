@@ -16,7 +16,7 @@ if($check_data->num_rows() > 0):?>
     </thead>
     <tbody>
         <?php
-        $admins = $this->db->get_where('schools', array('Etat' => 1 , 'status'=> 1))->result_array();
+        $admins = $this->db->get_where('schools', array('Etat' => 1 , 'status'=> 1 , 'id !=' => 1))->result_array();
         foreach($admins as $admin){
             ?>
             <tr>
