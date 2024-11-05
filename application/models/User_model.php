@@ -1031,7 +1031,7 @@ class User_model extends CI_Model
 
 	public function get_schools($limit, $start)
 	{
-		$result = $this->db->limit($limit, $start)->get_where('schools', array('status' => 1));
+		$result = $this->db->limit($limit, $start)->get_where('schools', array('status' => 1 , 'Etat' => 1));
 		return $result;
 	}
 
