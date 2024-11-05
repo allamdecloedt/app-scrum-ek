@@ -85,11 +85,11 @@
     <div class="row">
       <div class="col-12 col-lg-6 text-center">
         <h1 class="text-light pt-11 text-break form-text-title display-6 text-uppercase">Message us </h1>
-        <p class="py-10 text-break form-text ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt itaque
-          doloribus
-          expedita possimus enim, harum commodi distinctio architecto quaerat culpa, nesciunt reprehenderit, inventore
-          molestias libero fugiat in iusto eius deserunt beatae dolore! Aliquam velit distinctio maiores. Impedit,
-          nisi est? Repudiandae tenetur quae autem eaque!</p>
+        <p class="py-10 text-break form-text ">Have questions about our e-learning platform or need assistance? 
+          Our team is here to support you every step of the way. Whether you’re a student exploring new courses, 
+          an instructor looking to share your expertise, or a partner interested in collaboration, feel free to reach out. 
+          Please fill out the form below, 
+          and we’ll get back to you as soon as possible. Let's work together to make your learning experience exceptional!</p>
       </div>
       <!-- Contacts Form -->
       <div class="form col-12 col-lg-6 form container g-0 my-3">
