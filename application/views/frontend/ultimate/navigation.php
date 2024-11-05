@@ -1,5 +1,5 @@
 <?php
-$logo_light = base_url('uploads/images/decloedt/logo/white-logo.svg');
+$logo_light = base_url('uploads/images/decloedt/logo/white-logo.png');
 $system_name = get_frontend_settings('website_title');
 ?>
 <!-- ========== HEADER ========== -->
@@ -10,8 +10,8 @@ $system_name = get_frontend_settings('website_title');
       <nav class="navbar position-relative navbar-expand-lg container-fluid sticky-nav nav-home">
         <div class="container-fluid">
           <!-- Logo -->
-          <a class="logo navbar-brand " href="<?php echo site_url('home'); ?>">
-            <img src="<?php echo $logo_light; ?>" />
+          <a class="logo navbar-brand "  href="<?php echo site_url('home'); ?>">
+            <img style="width: 20%;" src="<?php echo $logo_light; ?>" />
           </a>
           <!-- End Logo -->
           <!-- Responsive Toggle Button -->
