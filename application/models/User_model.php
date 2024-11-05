@@ -708,7 +708,24 @@ class User_model extends CI_Model
 		$role = 'student';
 		
 		$file_name = $_FILES['csv_file']['name'];
-		move_uploaded_file($_FILES['csv_file']['tmp_name'], 'uploads/csv_file/student.generate.csv');	
+		// move_uploaded_file($_FILES['csv_file']['tmp_name'], 'uploads/csv_file/student.generate.csv');	
+		$upload_path = 'uploads/csv_file/student.generate.csv';
+		// Vérifier si le dossier de destination existe
+		if (!is_dir('uploads/csv_file/')) {
+			mkdir('uploads/csv_file/', 0755, true); // Créer le dossier avec les permissions nécessaires
+		}
+		
+		if (!move_uploaded_file($_FILES['csv_file']['tmp_name'], $upload_path)) {
+			error_log("Erreur : Impossible de déplacer le fichier uploadé.");
+			return json_encode(array('status' => false, 'notification' => 'Erreur lors du déplacement du fichier.'));
+		}
+		
+		// Vérifier si le fichier a bien été déplacé
+		if (!file_exists($upload_path)) {
+			error_log("Erreur : Fichier CSV non trouvé à l'emplacement : $upload_path");
+			return json_encode(array('status' => false, 'notification' => 'Fichier CSV introuvable.'));
+		}
+
 		if (($handle = fopen('uploads/csv_file/student.generate.csv', 'r')) !== FALSE) { // Check the resource is valid
 			$count = 0;
 			$duplication_counter = 0;
