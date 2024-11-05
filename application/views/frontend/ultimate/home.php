@@ -19,14 +19,14 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <div class="pr-md-4">
               <!-- Title -->
               <div class="mb-7 intro-text-section">
-                <h2 class="display-3  text-md-start text-center text-break text-uppercase">Un apprentissage qui vous
-                  ressemble</h2>
+                <h2 class="display-3  text-md-start text-center text-break text-uppercase">Learning that suits you
+                Skills for today and tomorrow!</h2>
 
                 <!-- <?php echo get_frontend_settings('homepage_note_title'); ?>-->
 
                 <p class="h6 text-center text-break intro-container-content-back">
                   <!--<?php //echo htmlspecialchars_decode(get_frontend_settings('homepage_note_description')); ?>-->
-                  <span class="intro-container-content-back">Des compétences pour aujourd'hui et demain! <br> Nous vous accompagnons dans vos premiers pas.</span>
+                  <span class="intro-container-content-back">We're here to support you every step of the way.</span>
                 </p>
               </div>
               <!-- End Title -->
@@ -41,7 +41,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
                   <div class="col-sm-auto  w-50 col align-self-center ">
                     <a class="text-light intro-container-content-front btn btn-change5 btn-sm w-100 btn-wide"
                       href="<?php echo site_url('home/about'); ?>">
-                      DÉCOUVREZ</a>
+                      DISCOVER</a>
                   </div>
                 </div>
               </div>
@@ -289,9 +289,8 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
     <div class="split left">
       <div class="centered">
         <div class="split-text">
-          <p class="">Améliorez les compétences de votre équipe Donnez à votre équipe les connaissances, l'expériance et
-            la
-            confiance dont elle a besoin pour résoudre n'importe quel problème</p>
+          <p class="">Build your skills at your own pace. 
+            Gain practical knowledge and use interactive tools to grow and reach your goals with confidence.</p>
         </div>
       </div>
     </div>
@@ -361,34 +360,34 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
       <div class="carousel-inner">
         <div class="carousel-item active" class="d-block">
           <div class="event-overlay">
-            <img src="uploads/images/decloedt/placeholders/worksm.jpg">
+            <img src="uploads/images/decloedt/placeholders/Image_01.jpg">
           </div>
           <div class="carousel-caption d-md-block">
             <div>
               <h5 class="event-content-title">Work Smarter, Not Harder Online Conference</h5>
-              <p class="event-content-desc">Some representative placeholder content for the first slide.</p>
+              <!-- <p class="event-content-desc">Some representative placeholder content for the first slide.</p> -->
             </div>
 
           </div>
         </div>
         <div class="carousel-item" class="d-block">
           <div class="event-overlay">
-            <img src="uploads/images/decloedt/placeholders/akw.jpg">
+            <img src="uploads/images/decloedt/placeholders/Image_02.jpg">
           </div>
 
           <div class="carousel-caption d-md-block">
             <h5 class="event-content-title">From Awkward To Awesome: Secrets To Succes</h5>
-            <p class="event-content-desc">Some representative placeholder content for the second slide.</p>
+            <!-- <p class="event-content-desc">Some representative placeholder content for the second slide.</p> -->
           </div>
         </div>
         <div class="carousel-item" class="d-block">
           <div class="event-overlay">
-            <img src="uploads/images/decloedt/placeholders/elearning.jpg">
+            <img src="uploads/images/decloedt/placeholders/Image_03.jpg">
           </div>
 
           <div class="carousel-caption d-md-block">
             <h5 class="event-content-title">Virtual Learning In Modern Scrum Enviroments</h5>
-            <p class="event-content-desc">Some representative placeholder content for the third slide.</p>
+            <!-- <p class="event-content-desc">Some representative placeholder content for the third slide.</p> -->
           </div>
         </div>
       </div>
