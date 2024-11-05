@@ -72,7 +72,6 @@ foreach($schools as $school): ?>
           <?php 
             // Vérifiez si l'image existe
             $image = $this->user_model->get_school_image($param1);
-            echo 'fettah '.$image ; 
             $is_image_exists = !empty($image); 
             ?>
           <input id="school_image" type="file" class="form-control" name="school_image" accept=".jpg, .jpeg, .png" <?php echo $is_image_exists ? '' : 'required'; ?>>
