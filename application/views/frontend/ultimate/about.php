@@ -34,15 +34,18 @@
    
 
         <h1>About us</h1>
-        <p class="h6">	
-        Welcome to WAYO ACADEMY, where learning meets flexibility and empowerment. 
-        We believe in providing a personalized and engaging educational experience that fits seamlessly into your life. 
-        Our platform offers a wide range of expert-led courses and practical resources designed to help you gain relevant
-        skills for today and tomorrow. Whether you're starting a new career path, upskilling, or exploring a passion, 
-        we’re here to support you every step of the way. Join us on a journey of growth and achievement.
-        
-        <span class="dynamic-message">— Because learning should be as dynamic as you are.</span>
-    </p>
+    <div class="split-text">
+        <p class="h4" >	
+          Welcome to WAYO ACADEMY, where learning meets flexibility and empowerment. 
+          We believe in providing a personalized and engaging educational experience that fits seamlessly into your life. 
+          Our platform offers a wide range of expert-led courses and practical resources designed to help you gain relevant
+          skills for today and tomorrow. Whether you're starting a new career path, upskilling, or exploring a passion, 
+          we’re here to support you every step of the way. Join us on a journey of growth and achievement.
+          
+         
+         </p>
+         <span class="dynamic-message ">— Because learning should be as dynamic as you are.</span>
+    </div>
 
           
 

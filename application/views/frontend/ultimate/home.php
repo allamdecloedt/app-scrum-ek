@@ -19,7 +19,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <div class="pr-md-4">
               <!-- Title -->
               <div class="mb-7 intro-text-section">
-                <h2 class="display-3  text-md-start text-center text-break text-uppercase">Learning that suits you
+                <h2 class="display-3  text-md-start text-center text-break text-uppercase">Learning that suits you </br>
                 Skills for today and tomorrow!</h2>
 
                 <!-- <?php echo get_frontend_settings('homepage_note_title'); ?>-->

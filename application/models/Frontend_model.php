@@ -383,8 +383,8 @@ class Frontend_model extends CI_Model
     $address = html_escape($this->input->post('address'));
     $comment = html_escape($this->input->post('comment'));
 
-    $receiver_email = $this->db->get_where('users', array('role' => 'superadmin'))->row('email');
-
+    // $receiver_email = $this->db->get_where('users', array('role' => 'superadmin'))->row('email');
+    $receiver_email = get_settings('system_email'); 
     $msg = '<p>' . nl2br($comment) . "</p>";
     $msg .= '<p>' . $first_name . " " . $last_name . '</p>';
     $msg .= "<p>Phone : " . $phone . '</p>';

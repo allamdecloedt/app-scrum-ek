@@ -7,9 +7,9 @@ About Us Page Styling
   padding: 15px;
   font-size: 1.5em;
   font-weight: bold;
-  color: #ffffff;
-  background: linear-gradient(135deg, #1a73e8 0%, #673ab7 100%);
-  border-radius: 8px;
+  font-family: "Lucida Handwriting";
+  color: #f7f2f2;
+
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -94,8 +94,8 @@ About Us Page Styling
 }
 .about-section-content p {
   color: #ffffff;
-  font-size: 1rem;
-  font-weight: 400;
+  font-size: 1.2rem;
+  font-weight: bold;
   text-align: center;
   font-family: "Roboto", sans-serif;
   padding-top: 20px;
