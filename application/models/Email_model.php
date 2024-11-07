@@ -375,7 +375,7 @@ class Email_model extends CI_Model {
 	}
 	function School_online_admission($email = "", $school_name = "",$name = ""){
 		// $image_url = "http://51.92.7.185/uploads/images/decloedt/logo/white-logo.svg"; // URL de l'image à côté des informations
-		$image_url = base_url('uploads/images/decloedt/logo/white-logo.svg');
+		$image_url = base_url('uploads/images/decloedt/logo/white-logo.png');
 
 		$email_message =  '
 		<html>
@@ -465,7 +465,7 @@ class Email_model extends CI_Model {
 
 		$email_sub		= 'Registration ';
 		$email_to = $email;
-		$school_name = "Decloedt";
+		$school_name = "Wayo acadmy";
 		
 
 		$this->send_mail_using_smtp($email_message, $email_sub, $email_to ,Null,$school_name);
