@@ -2437,7 +2437,15 @@ class Superadmin extends CI_Controller
   {
     if ($param1 == 'update_profile') {
       $response = $this->user_model->update_profile();
-      echo $response;
+      // echo $response;
+            // Préparer la réponse avec un nouveau jeton CSRF
+            $csrf = array(
+              'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+                    );
+                  
+            // Renvoyer la réponse avec un nouveau jeton CSRF
+            echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
     if ($param1 == 'update_password') {
       $response = $this->user_model->update_password();
