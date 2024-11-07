@@ -444,7 +444,7 @@ class Email_model extends CI_Model {
 			Registration School
 			</div>
 			<div class="email-body">
-			<div class="info-container">
+			<div class="info-container" style="max-width: 22%;max-height: 164px;">
 			<img src="'.$image_url.'" alt="Image" class="info-image">
 			<div>
 			  <p>Your registration has been made.</p>
