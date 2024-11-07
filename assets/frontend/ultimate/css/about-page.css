@@ -15,21 +15,8 @@ About Us Page Styling
   overflow: hidden;
 }
 
-.dynamic-message::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.2);
-  transform: skewX(-45deg);
-  transition: 0.5s;
-}
 
-.dynamic-message:hover::before {
-  left: 100%;
-}
+
 
 .dynamic-message::after {
   content: "";
@@ -42,10 +29,7 @@ About Us Page Styling
   transition: 0.5s;
 }
 
-.dynamic-message:hover::after {
-  left: 0;
-  width: 100%;
-}
+
 .about-image-container {
   width: 100%;
   height: 130vh;
