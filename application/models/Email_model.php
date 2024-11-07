@@ -375,7 +375,7 @@ class Email_model extends CI_Model {
 	}
 	function School_online_admission($email = "", $school_name = "",$name = ""){
 		// $image_url = "http://51.92.7.185/uploads/images/decloedt/logo/white-logo.svg"; // URL de l'image à côté des informations
-		$image_url = base_url('uploads/images/decloedt/logo/white-logo.png');
+		$image_url = base_url('uploads/images/decloedt/logo/logo_email.svg');
 
 		$email_message =  '
 		<html>
@@ -456,7 +456,7 @@ class Email_model extends CI_Model {
 		  </div>
 			</div>
 			<div class="email-footer">
-			  <p>&copy; '.date("Y").' Decloedt  . All rights reserved.</p>
+			  <p>&copy; '.date("Y").' Wayo Acadmy  . All rights reserved.</p>
 			</div>
 		  </div>
 		</body>
