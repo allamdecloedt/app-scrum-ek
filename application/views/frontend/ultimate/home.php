@@ -382,7 +382,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
         </div>
         <div class="carousel-item" class="d-block">
           <div class="event-overlay">
-            <img src="uploads/images/decloedt/placeholders/Image_03.jpg">
+            <img src="uploads/images/decloedt/placeholders/image_03.jpg">
           </div>
 
           <div class="carousel-caption d-md-block">
