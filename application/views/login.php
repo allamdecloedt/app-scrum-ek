@@ -28,7 +28,8 @@
                     <!-- Logo -->
                     <div class="text-center text-lg-left mb-3">
                         <a href="<?php echo site_url(); ?>">
-                            <span><img src="<?php echo $this->settings_model->get_logo_dark(); ?>" alt="" height="35"></span>
+                        <?php $logo_dark = base_url('uploads/images/decloedt/logo/logo_mail.png'); ?>
+                            <span><img src="<?php echo $logo_dark; ?>" alt="" height="35"></span>
                         </a>
                     </div>
                     <!-- title-->
