@@ -373,11 +373,10 @@ class Email_model extends CI_Model {
 		$this->send_mail_using_smtp($email_message, $email_sub, $email_to ,Null,$school_data['name']);
 
 	}
-	function School_online_admission($email = "", $school_name = "",$name = ""){
-		// $image_url = "http://51.92.7.185/uploads/images/decloedt/logo/white-logo.svg"; // URL de l'image à côté des informations
+	function School_online_admission($email = "", $school_name = "", $name = "") {
 		$image_url = base_url('uploads/images/decloedt/logo/logo_mail.png');
-
-		$email_message =  '
+	
+		$email_message = '
 		<html>
 		<head>
 		  <style>
@@ -419,6 +418,7 @@ class Email_model extends CI_Model {
 			  color: #ffffff;
 			  text-decoration: none;
 			  border-radius: 4px;
+			  text-align: center;
 			}
 			.email-footer {
 			  background-color: #f1f1f1;
@@ -428,50 +428,70 @@ class Email_model extends CI_Model {
 			  font-size: 12px;
 			}
 			.info-image {
-				width: 100%;
-				max-width: 200px;
-				margin-right: 38px;
+			  width: 100%;
+			  max-width: 150px;
+			  margin-right: 20px;
+			}
+			.info-container {
+			  display: flex;
+			  align-items: center;
+			  flex-wrap: wrap;
+			  text-align: left;
+			}
+			@media only screen and (max-width: 600px) {
+			  .email-container {
+				width: 90%;
+				margin: auto;
+			  }
+			  .email-header {
+				font-size: 20px;
+				padding: 15px;
+			  }
+			  .email-body {
+				padding: 20px 10px;
 			  }
 			  .info-container {
-				display: flex;
-				align-items: center;
+				flex-direction: column;
+				text-align: center;
 			  }
+			  .info-image {
+				margin: 0 auto 15px;
+			  }
+			}
 		  </style>
 		</head>
 		<body>
 		  <div class="email-container">
 			<div class="email-header">
-			Registration School
+			  Registration School
 			</div>
 			<div class="email-body">
-			<div class="info-container" style="max-width: 22%;max-height: 164px;">
-			<img src="'.$image_url.'" alt="Image" class="info-image">
-			<div>
-			  <p>Your registration has been made.</p>
-			  <p>Hello '.$name.'</p>
-			  <p><strong>Name school:</strong> '.$school_name.'</p>
-			  <p><strong>Email:</strong> '.$email.'</p>
-			  <p><a href="http://51.92.7.185/login" class="btn">Login to Your Account</a></p>
-			</div>
-		  </div>
+			  <div class="info-container">
+				<img src="'.$image_url.'" alt="Image" class="info-image">
+				<div>
+				  <p>Your registration has been made.</p>
+				  <p>Hello '.$name.',</p>
+				  <p><strong>Name school:</strong> '.$school_name.'</p>
+				  <p><strong>Email:</strong> '.$email.'</p>
+				  <p><a href="http://51.92.7.185/login" class="btn">Login to Your Account</a></p>
+				</div>
+			  </div>
 			</div>
 			<div class="email-footer">
-			  <p>&copy; '.date("Y").' Wayo Acadmy  . All rights reserved.</p>
+			  <p>&copy; '.date("Y").' Wayo Academy. All rights reserved.</p>
 			</div>
 		  </div>
 		</body>
 		</html>
 		';
-
-		$email_sub		= 'Registration ';
+	
+		$email_sub = 'Registration';
 		$email_to = $email;
-		$school_name = "Wayo acadmy";
-		
-
-		$this->send_mail_using_smtp($email_message, $email_sub, $email_to ,Null,$school_name);
-
-
+		$school_name = "Wayo Academy";
+	
+		$this->send_mail_using_smtp($email_message, $email_sub, $email_to, null, $school_name);
 	}
+	
 	function approved_online_admission($student_id = "", $user_id = "")
 	{
 				$student_details = $this->user_model->get_student_details_by_id('student', $student_id);
