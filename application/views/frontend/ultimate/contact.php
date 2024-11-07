@@ -38,8 +38,8 @@
                 </svg>
                 <div class="card-body">
                   <h5 class="card-title text-uppercase">Phone</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">Casablanca Office</h6>
-                  <p class="card-text py-3">+212 6 15 15 15 16</p>
+                  <h6 class="card-subtitle mb-2 text-muted">Office</h6>
+                  <p class="card-text py-3"><?php echo get_settings('phone'); ?></p>
                   <div class="card-bar"></div>
                 </div>
               </div>
@@ -53,8 +53,8 @@
                 </svg>
                 <div class="card-body">
                   <h5 class="card-title text-uppercase">Email</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">Casablanca Office</h6>
-                  <p class="card-text py-3">contact@decloedtacademy.com</p>
+                  <h6 class="card-subtitle mb-2 text-muted">Office</h6>
+                  <p class="card-text py-3"> <?php echo get_settings('system_email'); ?></p>
                   <div class="card-bar"></div>
                 </div>
               </div>
@@ -68,10 +68,9 @@
                 </svg>
                 <div class="card-body">
                   <h5 class="card-title text-uppercase">Address</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">Casablanca Office</h6>
+                  <h6 class="card-subtitle mb-2 text-muted">Office</h6>
 
-                  <p class="card-text py-3">4 Rue al Kassar <br>
-                    20520 Casablanca Morocco</p>
+                  <p class="card-text py-3"><?php echo get_settings('address'); ?></p>
                   <div class="card-bar"></div>
                 </div>
               </div>
@@ -94,10 +93,9 @@
       <!-- Contacts Form -->
       <div class="form col-12 col-lg-6 form container g-0 my-3">
         <div class="container">
-          <form class="pt-8" action="<?php echo site_url('home/contact/send'); ?>"
-        method="post" class="js-validate">
+          <form class="pt-8" action="<?php echo site_url('home/contact/send'); ?>" method="post" class="js-validate">
         <!-- Champ caché pour le jeton CSRF -->
-    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+         <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     
             <div class="row">
               <!-- Input -->
