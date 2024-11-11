@@ -103,7 +103,7 @@
                             <div class="col-md-9">
                             <?php 
                                 $birthdayTimestamp = $this->user_model->get_user_details($student['user_id'], 'birthday');
-                                $formattedBirthday = $birthdayTimestamp ? date('m/d/Y', $birthdayTimestamp) : '';
+                                $formattedBirthday = $birthdayTimestamp ? $birthdayTimestamp : '';
                             ?>
                             <input type="text" class="form-control date" id="birthdatepicker" data-bs-toggle="date-picker" data-single-date-picker="true" name="birthday" value="<?php echo $formattedBirthday; ?>" required>
 
