@@ -104,7 +104,7 @@
                                   <!-- <input type="text" class="form-control" data-provide="datepicker"  placeholder="<?php echo get_phrase('birthday'); ?>" data-date-autoclose="true" data-date-container="#datepicker4" name = "birthday"   value="<?php //if($this->user_model->get_user_details($student['user_id'], 'birthday') != "") echo date('m/d/Y', strtotime($this->user_model->get_user_details($student['user_id'], 'birthday'))); ?>" > -->
                                   <?php 
                                     $birthdayTimestamp = $this->user_model->get_user_details($student['user_id'], 'birthday');
-                                    $formattedBirthday = $birthdayTimestamp ? date('m/d/Y', $birthdayTimestamp) : '';
+                                    $formattedBirthday = $birthdayTimestamp ? $birthdayTimestamp : '';
                                 ?>
                                 <input type="text" class="form-control date" id="birthdatepicker" data-bs-toggle="date-picker" data-single-date-picker="true" name="birthday" value="<?php echo $formattedBirthday; ?>" required>
 
