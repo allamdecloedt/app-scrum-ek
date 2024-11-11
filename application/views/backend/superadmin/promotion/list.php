@@ -29,11 +29,12 @@
                         </thead>
                         <tbody>
                             <?php foreach ($enrolments as $enrolment):
+                            
                                   $student_details = $this->user_model->get_student_details_by_id('student', $enrolment['student_id']);
                                   $section_details = $this->crud_model->get_section_details_by_id('section', $student_details['section_id'])->row_array(); ?>
                               <tr>
                                   <td class="text-center">
-                                    <img src="<?php echo $this->user_model->get_user_image($student_details['id']); ?>" height="50" alt=""><br>
+                                    <img src="<?php echo $this->user_model->get_user_image($student_details['user_id']); ?>" height="50" alt=""><br>
                                   </td>
                                   <td>
                                     <?php echo $student_details['name']; ?>
