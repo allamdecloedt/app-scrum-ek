@@ -40,14 +40,14 @@
 
                     <div class="col-md-12">
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="name"><?php echo get_phrase('name'); ?></label>
+                            <label class="col-md-3 col-form-label" for="name"><?php echo get_phrase('name'); ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <input type="text" id="name" name="name" class="form-control"  value="<?php echo $this->user_model->get_user_details($student['user_id'], 'name'); ?>" placeholder="name" required>
                             </div>
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="email"><?php echo get_phrase('email'); ?></label>
+                            <label class="col-md-3 col-form-label" for="email"><?php echo get_phrase('email'); ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <input type="email" class="form-control" id="email" name="email" value="<?php echo $this->user_model->get_user_details($student['user_id'], 'email'); ?>" placeholder="email" required>
                             </div>
@@ -56,7 +56,7 @@
 
 
                         <div class="form-group row mb-3">
-                                <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?></label>
+                                <label class="col-md-3 col-form-label" for="class_id"><?php echo get_phrase('class'); ?><span class="required"> * </span></label>
                                 <div class="col-md-9">
                                     <select name="class_id[]" id="class_id" class=" form-control"  onchange="classWiseSectionOnStudentEdit(this.value)" multiple="multiple" required data-live-search="true">
                                         <option value=""><?php echo get_phrase('select_classes'); ?></option>
@@ -79,9 +79,9 @@
 
                                     ?>
                                     <div class="form-group row mb-3 section-select " id="section_select_<?php echo $class_id; ?>">
-                                        <label class="col-md-3 col-form-label"><?php echo get_phrase('section_for_class') . ' ' . $class_name; ?></label>
+                                        <label class="col-md-3 col-form-label"><?php echo get_phrase('section_for_class') . ' ' . $class_name; ?><span class="required"> * </span></label>
                                         <div class="col-md-9">
-                                            <select name="section_id_<?php echo $class_id; ?>"  id="section_id_<?php echo $class_id; ?>" class=" form-control" >
+                                            <select name="section_id_<?php echo $class_id; ?>"  id="section_id_<?php echo $class_id; ?>" class=" form-control" required>
                                                 <option value=""><?php echo get_phrase('select_a_section'); ?></option>
                                                 <?php 
                                                 $sections = $this->db->get_where('sections', array('class_id' => $class_id))->result_array(); 
@@ -98,10 +98,10 @@
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="birthdatepicker"><?php echo get_phrase('birthday'); ?></label>
+                            <label class="col-md-3 col-form-label" for="birthdatepicker"><?php echo get_phrase('birthday'); ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <div class=" position-relative" id="datepicker4">
-                                  <!-- <input type="text" class="form-control" data-provide="datepicker"  placeholder="<?php echo get_phrase('birthday'); ?>" data-date-autoclose="true" data-date-container="#datepicker4" name = "birthday"   value="<?php //if($this->user_model->get_user_details($student['user_id'], 'birthday') != "") echo date('m/d/Y', strtotime($this->user_model->get_user_details($student['user_id'], 'birthday'))); ?>" > -->
+                                  <!-- <input type="text" class="form-control" data-provide="datepicker"  placeholder="<?php //echo get_phrase('birthday'); ?>" data-date-autoclose="true" data-date-container="#datepicker4" name = "birthday"   value="<?php //if($this->user_model->get_user_details($student['user_id'], 'birthday') != "") echo date('m/d/Y', strtotime($this->user_model->get_user_details($student['user_id'], 'birthday'))); ?>" > -->
                                   <?php 
                                     $birthdayTimestamp = $this->user_model->get_user_details($student['user_id'], 'birthday');
                                     $formattedBirthday = $birthdayTimestamp ? $birthdayTimestamp : '';
@@ -113,7 +113,7 @@
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="gender"><?php echo get_phrase('gender'); ?></label>
+                            <label class="col-md-3 col-form-label" for="gender"><?php echo get_phrase('gender'); ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <select name="gender" id="gender" class="form-control" required>
                                     <option value=""><?php echo get_phrase('select_gender'); ?></option>
@@ -125,14 +125,14 @@
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="example-textarea"><?php echo get_phrase('address'); ?></label>
+                            <label class="col-md-3 col-form-label" for="example-textarea"><?php echo get_phrase('address'); ?><span class="required"> * </span></label>
                             <div class="col-md-9">
-                                <textarea class="form-control" id="example-textarea" rows="5" name = "address" placeholder="address"><?php echo $this->user_model->get_user_details($student['user_id'], 'address'); ?></textarea>
+                                <textarea class="form-control" id="example-textarea" rows="5" name = "address" placeholder="address" required><?php echo $this->user_model->get_user_details($student['user_id'], 'address'); ?></textarea>
                             </div>
                         </div>
 
                         <div class="form-group row mb-3">
-                            <label class="col-md-3 col-form-label" for="phone"><?php echo get_phrase('phone'); ?></label>
+                            <label class="col-md-3 col-form-label" for="phone"><?php echo get_phrase('phone'); ?><span class="required"> * </span></label>
                             <div class="col-md-9">
                                 <input type="text" id="phone" name="phone" class="form-control" value="<?php echo $this->user_model->get_user_details($student['user_id'], 'phone'); ?>" placeholder="phone" required>
                             </div>
