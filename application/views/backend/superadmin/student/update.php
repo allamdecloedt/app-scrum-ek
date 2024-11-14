@@ -103,10 +103,10 @@
                                 <div class=" position-relative" id="datepicker4">
                                   <!-- <input type="text" class="form-control" data-provide="datepicker"  placeholder="<?php //echo get_phrase('birthday'); ?>" data-date-autoclose="true" data-date-container="#datepicker4" name = "birthday"   value="<?php //if($this->user_model->get_user_details($student['user_id'], 'birthday') != "") echo date('m/d/Y', strtotime($this->user_model->get_user_details($student['user_id'], 'birthday'))); ?>" > -->
                                   <?php 
-                                    $birthdayTimestamp = $this->user_model->get_user_details($student['user_id'], 'birthday');
-                                    $formattedBirthday = $birthdayTimestamp ? $birthdayTimestamp : '';
-                                ?>
-                                <input type="text" class="form-control date" id="birthdatepicker" data-bs-toggle="date-picker" data-single-date-picker="true" name="birthday" value="<?php echo $formattedBirthday; ?>" required>
+                                        $birthdayTimestamp = $this->user_model->get_user_details($student['user_id'], 'birthday');
+                                        $formattedBirthday = $birthdayTimestamp ? date('Y-m-d', $birthdayTimestamp) : ''; // Format compatible avec <input type="date">
+                                    ?>
+                                    <input type="date" class="form-control" id="birthdatepicker" name="birthday" value="<?php echo $formattedBirthday; ?>" required>
 
                                 </div>
                             </div>
@@ -180,6 +180,10 @@ function classWiseSectionOnStudentEdit() {
             var sectionContainer = $('#section_selects_container');
              sectionContainer.empty(); // Vider le conteneur des selects de section
 
+               // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+                var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+                var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+
             if (classIds.length > 0) {
                 classIds.forEach(function(classId) {
                     var className = $('#class_id option[value="' + classId + '"]').data('class-name'); // Récupère le nom de la classe
@@ -187,12 +191,17 @@ function classWiseSectionOnStudentEdit() {
                     $.ajax({
                         url: "<?php echo site_url('superadmin/get_sections_by_class'); ?>",
                         type: 'POST',
-                        data: {class_ids: [classId]}, // Passer un tableau contenant un seul ID de classe
-                        success: function(response) {
-
-                            var sections = JSON.parse(response);
+                        data: {class_ids: [classId] , [csrfName]: csrfHash}, // Passer un tableau contenant un seul ID de classe
+                        dataType: 'json',
+                        success: function(response) {                     
+                            var sections = response.sections;
                             var selectedSections = <?php echo json_encode($selected_section_ids); ?>;
                             sectionOptions = '<option value=""><?php echo get_phrase('select_a_section'); ?></option>';
+
+                            // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                            var newCsrfName = response.csrf.csrfName;
+                            var newCsrfHash = response.csrf.csrfHash;
+                            $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
                       
                              if (sections.length > 0) {
                                 sections.forEach(function(section) {
@@ -208,9 +217,9 @@ function classWiseSectionOnStudentEdit() {
 
                             var sectionSelect = `
                                 <div class="form-group row mb-3 section-select" id="${classId}">
-                                    <label class="col-md-3 col-form-label"><?php echo get_phrase('section_for_class'); ?> ${className}</label>
+                                    <label class="col-md-3 col-form-label"><?php echo get_phrase('section_for_class'); ?> ${className}<span class="required"> * </span></label>
                                     <div class="col-md-9">
-                                        <select name="section_id_${classId}" id="section_id_${classId}" class=" form-control" >
+                                        <select name="section_id_${classId}" id="section_id_${classId}" class=" form-control" required>
                                            ${sectionOptions}
                                         </select>
                                     </div>
