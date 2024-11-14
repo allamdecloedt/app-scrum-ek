@@ -23,11 +23,11 @@ if($check_data->num_rows() > 0):?>
                 <td><?php echo $admin['name']; ?></td>
               
 
-                <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;" title="<?php echo htmlspecialchars($admin['address']); ?>">
+                <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;" title="<?php echo $admin['address']; ?>">
                 <?php echo strlen($admin['address']) > 50 ? substr($admin['address'], 0, 50) . '...' : $admin['address']; ?>
                 </td>
                 <td><?php echo $admin['phone']; ?></td>
-                <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;" title="<?php echo htmlspecialchars($admin['description']); ?>">
+                <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;" title="<?php echo $admin['description']; ?>">
                 <?php echo strlen($admin['description']) > 50 ? substr($admin['description'], 0, 50) . '...' : $admin['description']; ?>
                 </td>
 
