@@ -29,7 +29,7 @@ foreach($schools as $school): ?>
 
     <div class="form-group mb-1">
             <label for="access"><?php echo get_phrase('Access'); ?><span class="required"> * </span></label>
-            <select name="access" id="access" class="form-control select2" data-toggle = "select2">
+            <select name="access" id="access" class="form-control select2" data-toggle = "select2" required>
                 <option value=""><?php echo get_phrase('select_a_access'); ?></option>
                 <option <?php if ($school['access'] == 1): ?> selected <?php endif; ?> value="1"><?php echo get_phrase('public'); ?></option>
                 <option <?php if ($school['access'] == 0): ?> selected <?php endif; ?> value="0"><?php echo get_phrase('privé'); ?></option>
