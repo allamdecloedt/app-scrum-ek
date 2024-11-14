@@ -77,7 +77,14 @@ class Admin extends CI_Controller
 			$sections = array_merge($sections, $result);
 		}
 
-		echo json_encode($sections);
+		         // Prepare a new CSRF token for the response
+				 $csrf = array(
+					'csrfName' => $this->security->get_csrf_token_name(),
+					'csrfHash' => $this->security->get_csrf_hash(),
+				);
+			
+				// Return JSON response with the HTML content and new CSRF token
+				echo json_encode(array('sections' => $sections, 'csrf' => $csrf));
 	}
 
 
