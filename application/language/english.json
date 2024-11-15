@@ -1401,5 +1401,6 @@
     "updated_successfully": "Updated successfully",
     "the_file_size_exceeds_the_limit.": "The file size exceeds the limit.",
     "old": "old",
-    "Total_Students": "Total Students"
+    "Total_Students": "Total Students",
+    "email_address": "Email address"
 }

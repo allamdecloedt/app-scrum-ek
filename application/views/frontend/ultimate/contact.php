@@ -82,14 +82,7 @@
   </div>
   <div class="container-fluid form-section">
     <div class="row">
-      <div class="col-12 col-lg-6 text-center">
-        <h1 class="text-light pt-11 text-break form-text-title display-6 text-uppercase">Message us </h1>
-        <p class="py-10 text-break form-text ">Have questions about our e-learning platform or need assistance? 
-          Our team is here to support you every step of the way. Whether you’re a student exploring new courses, 
-          an instructor looking to share your expertise, or a partner interested in collaboration, feel free to reach out. 
-          Please fill out the form below, 
-          and we’ll get back to you as soon as possible. Let's work together to make your learning experience exceptional!</p>
-      </div>
+
       <!-- Contacts Form -->
       <div class="form col-12 col-lg-6 form container g-0 my-3">
         <div class="container">
@@ -157,7 +150,7 @@
                       </svg>
                     </span>
                     <input type="email" class="form-control shadow-none" name="email"
-                      placeholder="<?php echo get_phrase('Your email address'); ?>" required
+                      placeholder="<?php echo get_phrase('Email address'); ?>" required
                       data-msg="Please enter a valid email address." data-error-class="u-has-error"
                       data-success-class="u-has-success">
                     <span class="text-danger required">*</span>
@@ -178,7 +171,7 @@
                           d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
                       </svg>
                     </span>
-                    <input type="tel" class="form-control shadow-none" placeholder=" +212 622 22 22 22" name="phone"
+                    <input type="tel" class="form-control shadow-none" placeholder="+971 22 222 2222" name="phone"
                       required data-msg="Please enter a valid phone number." data-error-class="u-has-error"
                       data-success-class="u-has-success">
                     <span class="text-danger required">*</span>
@@ -253,7 +246,7 @@
   </div>
   <div class="container-fluid location-container">
     <div class="row">
-      <h1 class="office-title text-center text-break py-10 text-uppercase">Decloedt Academy Location</h1>
+      <h1 class="office-title text-center text-break py-10 text-uppercase">WAYO ACADEMY LOCATION</h1>
     </div>
     <div class="row">
       <div id="map" class="g-0 col-12"></div>

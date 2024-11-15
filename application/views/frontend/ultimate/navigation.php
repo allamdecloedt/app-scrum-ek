@@ -42,7 +42,7 @@ $system_name = get_frontend_settings('website_title');
                 echo 'active'; ?>" href="<?php echo site_url('home/courses'); ?>"><?php echo get_phrase('Courses'); ?>
               </a>
               <a class="nav-link  <?php if ($page_name == 'contact')
-                echo 'active'; ?>" href="<?php echo site_url('home/contact'); ?>"><?php echo get_phrase('Contact'); ?>
+                echo 'active'; ?>" href="<?php echo site_url('home/contact'); ?>"><?php echo get_phrase('contact_us'); ?>
               </a>
 
               <div class=" v-divider-nav"></div>
