@@ -1260,7 +1260,8 @@ class User_model extends CI_Model
 	}
 
 	public function googleAPI()
-	{ {
+	{ 
+		{
 			$api = '';
 			return $api;
 		}
