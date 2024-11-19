@@ -45,11 +45,18 @@ $system_name = get_frontend_settings('website_title');
                 echo 'active'; ?>" href="<?php echo site_url('home/contact'); ?>"><?php echo get_phrase('contact_us'); ?>
               </a>
 
-              <div class=" v-divider-nav"></div>
+             
 
               <?php if ($this->session->userdata('user_id')) { ?>
+               
+                <a href="<?php echo route('dashboard'); ?>" target="" class=" btn btn-outline-light website-button ml-2 ml-lg-3 d-none d-md-inline-block">
+                  <?php echo get_phrase('visit_dashboard'); ?></a>
+                
 
-                <div class="user-section "><span
+                <div class=" v-divider-nav" style="margin-left: 20px;"></div>
+
+                <div class="user-section ">
+                  <span
                     class="text-capitalize ml-2 ml-lg-3  align-content-center text-white"><?php echo $this->session->user_name; ?></span>
 
                   <img src="<?php echo $this->user_model->get_user_image($this->session->userdata('user_id')); ?>"

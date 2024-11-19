@@ -1405,5 +1405,6 @@
     "email_address": "Email address",
     "online_admission_student": "Online admission student",
     "send": "Send",
-    "your_message_has_been_sent_successfully.": "Your message has been sent successfully."
+    "your_message_has_been_sent_successfully.": "Your message has been sent successfully.",
+    "visit_dashboard": "Visit dashboard"
 }
