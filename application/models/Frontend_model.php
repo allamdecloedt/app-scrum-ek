@@ -390,7 +390,15 @@ class Frontend_model extends CI_Model
     $msg .= "<p>Phone : " . $phone . '</p>';
     $msg .= "<p>Address : " . $address . '</p>';
 
-    $this->email_model->contact_message_email($email, $receiver_email, $msg);
+    // $this->email_model->contact_message_email($email, $receiver_email, $msg);
+    // return json_encode(array('status' => 1, 'message' => get_phrase('successfully_has_been_recoded_your_request') ));
+    try {
+      $this->email_model->contact_message_email($email, $receiver_email, $msg);
+      $this->session->set_flashdata('toast_message', ['type' => 'success', 'message' => get_phrase('Your message has been sent successfully.')]);
+  } catch (Exception $e) {
+      $this->session->set_flashdata('toast_message', ['type' => 'error', 'message' => get_phrase('Failed to send your message. Please try again later.')]);
+  }
+
   }
 
   // update slider images

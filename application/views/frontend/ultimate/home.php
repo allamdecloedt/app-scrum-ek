@@ -17,34 +17,59 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
         <div class="row">
           <div class="col-lg-6 mb-7 mb-lg-0 align-content-center intro-container-content-front">
             <div class="pr-md-4">
+
+            <div class="background"></div>
+
+            <div class="text-container">
+                <div class="title">Your mentorship</div>
+                <div class="title">their success.</div>
+
+
+                <div class="subtitle">Strengthen loyalty, maintain engagement, and drive growth.</div>
+
+            </div>
               <!-- Title -->
-              <div class="mb-7 intro-text-section">
-                <h2 class="display-3  text-md-start text-center text-break text-uppercase">Learning that suits you </br>
-                Skills for today and tomorrow!</h2>
+              <!-- <div class="mb-7 intro-text-section"> -->
+                <!-- <h2 class="display-3  text-md-start text-center text-break text-uppercase" style="font-size: 3.5em;">Learning that suits you. </h2> -->
+                <!-- <?php //echo get_frontend_settings('homepage_note_title'); ?>-->
 
-                <!-- <?php echo get_frontend_settings('homepage_note_title'); ?>-->
-
-                <p class="h6 text-center text-break intro-container-content-back">
+                <!-- <p class="h4 text-center text-break intro-container-content-back"> -->
                   <!--<?php //echo htmlspecialchars_decode(get_frontend_settings('homepage_note_description')); ?>-->
-                  <span class="intro-container-content-back">We're here to support you every step of the way.</span>
-                </p>
-              </div>
+                  <!-- <span class="intro-container-content-back">Empowering skills for today and tomorrow</span></br> -->
+                  <!-- <span class="intro-container-content-back">We're here to support you every step of the way.</span> -->
+                <!-- </p> -->
+              <!-- </div> -->
               <!-- End Title -->
               <!-- Buttons -->
-              <div class="">
-                <div class="row">
-                  <div class="col-sm-auto  w-sm-50  col-12 align-self-center pb-sm-0 pb-4 d-flex ">
-                    <a class="text-light  btn btn-change5 btn-sm w-100 btn-wide"
-                      href="<?php echo site_url('admission/online_admission'); ?>">
-                      ONLINE ADMISSION</a>
+              <div class="text-center">
+                <div class="row justify-content-center">
+                  <!-- Student Admission Button -->
+                  <div class="col-sm-auto w-50 align-self-center pb-2">
+                    <a class="text-light btn btn-change5 btn-sm w-100 violet-button"
+                      href="<?php echo site_url('admission/online_admission_student'); ?>">
+                      Student admission
+                    </a>
                   </div>
-                  <div class="col-sm-auto  w-50 col align-self-center ">
-                    <a class="text-light intro-container-content-front btn btn-change5 btn-sm w-100 btn-wide"
-                      href="<?php echo site_url('home/about'); ?>">
-                      DISCOVER</a>
+                  <!-- Mentor Admission Button -->
+                  <div class="col-sm-auto w-50 align-self-center pb-2">
+                    <a class="text-light btn btn-change5 btn-sm w-100 violet-button"
+                      href="<?php echo site_url('admission/online_admission'); ?>">
+                      Mentor admission
+                    </a>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <!-- Discover Our Courses Button -->
+                  <div class="col-sm-auto w-100 align-self-center mt-3">
+                    <a class="text-light btn btn-change6  w-50 violet-button"
+                      href="<?php echo site_url('home/courses'); ?>">
+                      Discover our courses
+                    </a>
                   </div>
                 </div>
               </div>
+
+
               <!-- End Buttons -->
             </div>
           </div>
@@ -137,7 +162,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
   <!-- Teacher Section -->
   <div class="section-height teacher-section">
     <!-- Title -->
-    <h2 class="social-media-main-text">Our Professional Teachers</h2>
+    <h2 class="social-media-main-text">Meet Your Mentors</h2>
     <!-- End Title -->
 
 
@@ -157,10 +182,10 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <h6 class="teacher-card-primary-text">Fattah</h6>
             <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
           </div>
-          <button class="teacher-card-primary-text">View Profile</button>
+          
           <div class="teacher-card-details">
             <div class="">
-              <a class="teacher-card-social-button" href="">
+              <a class="teacher-card-social-button" href="https://www.linkedin.com/company/decloedtcloud/mycompany/">
                 <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
                   fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
                   <path
@@ -181,10 +206,10 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <h6 class="teacher-card-primary-text">Mehdi</h6>
             <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
           </div>
-          <button class="teacher-card-primary-text">View Profile</button>
+          
           <div class="teacher-card-details">
             <div class="">
-              <a class="teacher-card-social-button" href="">
+              <a class="teacher-card-social-button" href="https://www.linkedin.com/company/decloedtcloud/mycompany/">
                 <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
                   fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
                   <path
@@ -205,10 +230,10 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <h6 class="teacher-card-primary-text">Mohamed</h6>
             <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
           </div>
-          <button class="teacher-card-primary-text">View Profile</button>
+          
           <div class="teacher-card-details">
             <div class="">
-              <a class="teacher-card-social-button" href="">
+              <a class="teacher-card-social-button" href="https://www.linkedin.com/company/decloedtcloud/mycompany/">
                 <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
                   fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
                   <path
@@ -228,10 +253,10 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <h6 class="teacher-card-primary-text">Olivia</h6>
             <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
           </div>
-          <button class="teacher-card-primary-text">View Profile</button>
+          
           <div class="teacher-card-details">
             <div>
-              <a class="teacher-card-social-button" href="">
+              <a class="teacher-card-social-button" href="https://www.linkedin.com/company/decloedtcloud/mycompany/">
                 <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
                   fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
                   <path
@@ -252,10 +277,10 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <h6 class="teacher-card-primary-text">Arran</h6>
             <h6 class="teacher-card-secondary-text">Full Stack Developer</h6>
           </div>
-          <button class="teacher-card-primary-text">View Profile</button>
+          
           <div class="teacher-card-details">
             <div class="">
-              <a class="teacher-card-social-button" href="">
+              <a class="teacher-card-social-button" href="https://www.linkedin.com/company/decloedtcloud/mycompany/">
                 <svg xmlns="http://www.w3.org/2000/svg" class=" teacher-linkedin" width="30" height="30"
                   fill="currentColor" class="bi bi-linkedin" viewBox="0 0 16 16">
                   <path
@@ -279,38 +304,9 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
   </div>
   <!-- End Teacher Section -->
-  <div class="text-section">
-    <svg id="visual" class="spacer-3" viewBox="0 0 1920 60" xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
-      <path
-        d="M0 23L40 19.2C80 15.3 160 7.7 240 5.3C320 3 400 6 480 7.8C560 9.7 640 10.3 720 13.3C800 16.3 880 21.7 960 21.2C1040 20.7 1120 14.3 1200 10.2C1280 6 1360 4 1440 8.3C1520 12.7 1600 23.3 1680 26.7C1760 30 1840 26 1880 24L1920 22L1920 0L1880 0C1840 0 1760 0 1680 0C1600 0 1520 0 1440 0C1360 0 1280 0 1200 0C1120 0 1040 0 960 0C880 0 800 0 720 0C640 0 560 0 480 0C400 0 320 0 240 0C160 0 80 0 40 0L0 0Z"
-        fill="#212121" stroke-linecap="round" stroke-linejoin="miter"></path>
-    </svg>
-    <div class="split left">
-      <div class="centered">
-        <div class="split-text">
-          <p class="">Build your skills at your own pace. 
-            Gain practical knowledge and use interactive tools to grow and reach your goals with confidence.</p>
-        </div>
-      </div>
-    </div>
-    <div class="split right">
-      <div class="split-img">
-        <img class=" centered"
-          src="uploads/images/decloedt/home/homme-affaires-senior-donnant-presentation-collegues-bureau.jpg"
-          alt="image of teacher teaching scrum">
-      </div>
-    </div>
-    <svg id="visual" class="spacer-4" viewBox="0 0 1920 60" xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
-      <path
-        d="M0 35L40 39C80 43 160 51 240 53.3C320 55.7 400 52.3 480 50.3C560 48.3 640 47.7 720 44.7C800 41.7 880 36.3 960 36.8C1040 37.3 1120 43.7 1200 47.8C1280 52 1360 54 1440 49.7C1520 45.3 1600 34.7 1680 31.3C1760 28 1840 32 1880 34L1920 36L1920 61L1880 61C1840 61 1760 61 1680 61C1600 61 1520 61 1440 61C1360 61 1280 61 1200 61C1120 61 1040 61 960 61C880 61 800 61 720 61C640 61 560 61 480 61C400 61 320 61 240 61C160 61 80 61 40 61L0 61Z"
-        fill="#212121" stroke-linecap="round" stroke-linejoin="miter"></path>
-    </svg>
-  </div>
 
 
-  <!-- Events Section -->
+
   <!-- Title -->
   <div class="event-title-section">
     <div class=" text-center event-title-section-text">
@@ -325,24 +321,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
         </svg>
       </div>
     </div>
-    <svg id="visual" class="spacer-bottom-event-section" viewBox="0 0 1920 100" xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
-      <path
-        d="M0 50L137 63L274 53L411 63L549 44L686 73L823 55L960 66L1097 68L1234 75L1371 71L1509 61L1646 69L1783 41L1920 43L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
-        fill="#3a3c43"></path>
-      <path
-        d="M0 41L137 39L274 36L411 56L549 52L686 61L823 40L960 32L1097 32L1234 36L1371 50L1509 52L1646 48L1783 59L1920 51L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
-        fill="#33353a"></path>
-      <path
-        d="M0 39L137 24L274 48L411 29L549 45L686 34L823 38L960 38L1097 45L1234 37L1371 47L1509 31L1646 25L1783 51L1920 51L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
-        fill="#2d2e32"></path>
-      <path
-        d="M0 32L137 35L274 36L411 34L549 26L686 23L823 20L960 27L1097 34L1234 36L1371 33L1509 32L1646 34L1783 29L1920 22L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
-        fill="#272729"></path>
-      <path
-        d="M0 18L137 13L274 12L411 18L549 21L686 17L823 16L960 19L1097 11L1234 23L1371 12L1509 10L1646 17L1783 19L1920 12L1920 0L1783 0L1646 0L1509 0L1371 0L1234 0L1097 0L960 0L823 0L686 0L549 0L411 0L274 0L137 0L0 0Z"
-        fill="#212121"></path>
-    </svg>
+
   </div>
 
   <!-- End Title -->
@@ -350,63 +329,55 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
   <div class="event-section">
 
     <!-----------------------------This Is a temporary visual-------------------------------------------->
-    <div id="eventCarousel" class="event-carousel carousel carousel-dark slide carousel-fade " data-ride="carousel">
-      <div class="carousel-indicators">
-        <button type="button" data-bs-target="#eventCarousel" data-bs-slide-to="0" class="active" aria-current="true"
-          aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#eventCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#eventCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-      </div>
-      <div class="carousel-inner">
-        <div class="carousel-item active" class="d-block">
-          <div class="event-overlay">
-            <img src="uploads/images/decloedt/placeholders/Image_01.jpg">
-          </div>
-          <div class="carousel-caption d-md-block">
-            <div>
-              <h5 class="event-content-title">Work Smarter, Not Harder Online Conference</h5>
-              <!-- <p class="event-content-desc">Some representative placeholder content for the first slide.</p> -->
+    <div id="eventCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+        <!-- Carousel Indicators -->
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#eventCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#eventCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#eventCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+
+        <!-- Carousel Inner -->
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="event-overlay">
+                    <img src="uploads/images/decloedt/placeholders/Image_01.png" class="d-block w-100" alt="Slide 1">
+                </div>
+                <div class="carousel-caption d-md-block">
+                    <h5 class="event-content-title">Work Smarter, Not Harder Online Conference</h5>
+                </div>
             </div>
 
-          </div>
-        </div>
-        <div class="carousel-item" class="d-block">
-          <div class="event-overlay">
-            <img src="uploads/images/decloedt/placeholders/Image_02.jpg">
-          </div>
+            <div class="carousel-item">
+                <div class="event-overlay">
+                    <img src="uploads/images/decloedt/placeholders/Image_02.png" class="d-block w-100" alt="Slide 2">
+                </div>
+                <div class="carousel-caption d-md-block">
+                    <h5 class="event-content-title">From Awkward To Awesome: Secrets To Success</h5>
+                </div>
+            </div>
 
-          <div class="carousel-caption d-md-block">
-            <h5 class="event-content-title">From Awkward To Awesome: Secrets To Succes</h5>
-            <!-- <p class="event-content-desc">Some representative placeholder content for the second slide.</p> -->
-          </div>
+            <div class="carousel-item">
+                <div class="event-overlay">
+                    <img src="uploads/images/decloedt/placeholders/Image_03.png" class="d-block w-100" alt="Slide 3">
+                </div>
+                <div class="carousel-caption d-md-block">
+                    <h5 class="event-content-title">Virtual Learning In Modern Scrum Environments</h5>
+                </div>
+            </div>
         </div>
-        <div class="carousel-item" class="d-block">
-          <div class="event-overlay">
-            <img src="uploads/images/decloedt/placeholders/image_03.jpg">
-          </div>
 
-          <div class="carousel-caption d-md-block">
-            <h5 class="event-content-title">Virtual Learning In Modern Scrum Enviroments</h5>
-            <!-- <p class="event-content-desc">Some representative placeholder content for the third slide.</p> -->
-          </div>
-        </div>
-      </div>
-      <div class="btn-background carousel-control-prev" type="button" data-bs-target="#eventCarousel"
-        data-bs-slide="prev">
-
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
+        <!-- Carousel Controls -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#eventCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
         </button>
-      </div>
-
-      <div class="btn-background carousel-control-next" type="button" data-bs-target="#eventCarousel"
-        data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
+        <button class="carousel-control-next" type="button" data-bs-target="#eventCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
         </button>
-      </div>
+  </div>
 
-    </div>
 
     <!------------------------------------------------------------------------------------------------>
 
