@@ -2,6 +2,13 @@
 Navigation Styling
 ------------------------------------*/
 
+/* Style pour afficher/masquer le menu */
+
+
+.user-dropdown.active {
+    display: block;
+}
+
 .nav {
   margin: auto;
 }
@@ -41,7 +48,7 @@ Navigation Styling
   }
 
   .user-dropdown {
-    bottom: -91px;
+    bottom: -40px;
   }
 
   .login-dropdown {
