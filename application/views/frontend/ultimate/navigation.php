@@ -65,7 +65,7 @@ $system_name = get_frontend_settings('website_title');
                 <?php include 'components/navigation-components/user_loggedin_component.php'; ?>
 
               <?php } else { ?>
-
+                <div class=" v-divider-nav" style="margin-left: 20px;"></div>
                 <a class="nav-link login-toggle"><?php echo get_phrase('Login'); ?> </a>
 
               <?php } ?>
