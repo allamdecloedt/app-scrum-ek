@@ -8,6 +8,142 @@ Home Page Styling
 Spacer Styling
 ------------------------------------*/
 
+/* Center and style the violet button */
+.violet-button {
+  background-color: #6c5ce7; /* Violet color */
+  font-size: 0.9rem;        /* Larger font size */
+  padding: 0.4rem 2rem;       /* Better padding */
+  border-radius: 0.5rem;    /* Rounded corners */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  
+}
+
+
+
+
+.carousel-inner img {
+  filter: brightness(70%);
+  transition: transform 0.5s ease;
+  height: 100vh; /* Occupe toute la hauteur de l'écran */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.carousel-inner .carousel-item:hover img {
+  transform: scale(1.05);
+  height: 100vh; /* Occupe toute la hauteur de l'écran */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.carousel-caption {
+  bottom: 20%;
+  text-align: left;
+}
+
+.event-content-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 50%;
+}
+
+.carousel-indicators [data-bs-target] {
+  background-color: #fff;
+}
+
+.carousel-indicators .active {
+  background-color: #007bff;
+}
+
+
+
+/* Conteneur principal */
+.text-container {
+    text-align: center;
+    max-width: 800px;
+    padding: 20px;
+}
+
+/* Style du titre */
+.title {
+    text-align: left;
+    font-size: 3em;
+    font-weight: 900;
+    color: #ffffff;
+    background: linear-gradient(90deg, #f5f2f7, #eff0f1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: fadeIn 2s ease-out;
+}
+
+/* Style du sous-titre */
+.subtitle {
+  text-align: left;
+    font-size: 1.2em;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 85px;
+    line-height: 1.6;
+    animation: fadeIn 2.5s ease-out;
+}
+
+/* Style des boutons */
+.button {
+    display: inline-block;
+    padding: 12px 24px;
+    margin: 10px;
+    font-size: 1em;
+    font-weight: 600;
+    color: #fff;
+    background-color: #333;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: transform 0.3s, background-color 0.3s;
+    animation: fadeIn 3s ease-out;
+}
+
+.button:hover {
+    background-color: #2575fc;
+    transform: scale(1.05);
+}
+
+/* Effet d'animation */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Animation de fond d'étoiles */
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: twinkle 1.5s infinite linear;
+}
+
+@keyframes twinkle {
+    0% { opacity: 0.8; }
+    50% { opacity: 0.2; }
+    100% { opacity: 0.8; }
+}
+
+
+
+
+
 .spacer-top,
 .spacer-3,
 .spacer-4,
@@ -94,7 +230,7 @@ First Section Styling
 
 .intro-text-section p {
   color: #d4d4db;
-  font-size: 1em;
+  font-size: 1.3em;
   font-weight: 600;
   text-align: left;
   padding-top: 50px;
@@ -573,6 +709,7 @@ Event Section Styling
   position: relative;
   width: 100%;
   z-index: -1;
+  max-height: 600px;
 }
 
 .event-overlay::after {
@@ -815,6 +952,16 @@ Responsive Styling
     background-color: #27272d !important;
   }
 
+  .btn-change6 {
+    font-family: "Montserrat", sans-serif !important;
+    letter-spacing: 0.15rem;
+    width: 100% !important;
+    background: #838383 !important;
+    color: #fff;
+  }
+  .btn-change6:hover {
+    background-color: #27272d !important;
+  }
   .intro-img img {
     display: none;
   }
@@ -860,6 +1007,33 @@ Responsive Styling
     color: #ffffff !important;
   }
 
+  /*--------------Intro---------------*/
+  .btn-change6 {
+    font-family: "Montserrat", sans-serif !important;
+    letter-spacing: 0.15rem;
+    width: 100% !important;
+    background: radial-gradient(
+      circle,
+      rgb(109, 0, 142) 0%,
+      rgb(126, 17, 221) 50%,
+      rgb(98, 0, 123) 100%
+    ) !important;
+    color: #fff !important;
+    border: 0px;
+    -webkit-transform-origin: 50% 50%;
+    transform-origin: 50% 50%;
+    -webkit-transition-duration: 0.5s;
+    transition-duration: 0.5s;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+    -webkit-box-shadow: -268px 0px 0 0 #838383 inset,255px 0px 0 0 #838383 inset;
+    box-shadow: -320px 0px 0 0 #838383 inset, 320px 0px 0 0 #838383 inset;
+  }
+  .btn-change6:hover {
+    -webkit-box-shadow: 0px 0px 0 0 #838383 inset, 0px 0px 0 #838383 inset;
+    box-shadow: 0px 0px 0 0 #838383 inset, 0px 0px 0 #838383 inset;
+    color: #ffffff !important;
+  }
   /*--------------Spacers----------------*/
 
   .spacer-top2 {

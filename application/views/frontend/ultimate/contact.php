@@ -86,9 +86,9 @@
       <!-- Contacts Form -->
       <div class="form col-12 col-lg-6 form container g-0 my-3">
         <div class="container">
-          <form class="pt-8" action="<?php echo site_url('home/contact/send'); ?>" method="post" class="js-validate">
-        <!-- Champ caché pour le jeton CSRF -->
-         <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+          <form  action="<?php echo site_url('home/contact/send'); ?>" method="post" id="contact_send" class="pt-8 js-validate contact_send realtime-form container" enctype="multipart/form-data">
+                <!-- Champ caché pour le jeton CSRF -->
+                <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     
             <div class="row">
               <!-- Input -->
@@ -234,7 +234,15 @@
                   </div>
                 </div>
               <?php endif; ?>
-              <button type="submit" class="btn btn-secondary btn-wide col-3 mb-3 ">Send</button>
+              <!-- <button type="submit" class="btn btn-secondary btn-wide col-3 mb-3 ">Send</button> -->
+
+              <div class="text-center">
+                <button  type="submit"  id="submitBtn"
+                  class="btn btn-secondary btn-wide col-3 mb-3  submit-button   text-uppercase "><?php echo get_phrase('Send'); ?></button>
+                  
+                  <button type="reset" id="resetBtn" style="display: none;"></button>
+                
+              </div>
             </div>
           </form>
         </div>
@@ -254,3 +262,48 @@
   </div>
   <!-- End Contact Content Section -->
 </main>
+
+<?php if ($this->session->flashdata('toast_message')): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toastData = <?php echo json_encode($this->session->flashdata('toast_message')); ?>;
+        const toastType = toastData.type === 'success' ? 'success' : 'error';
+        const toastMessage = toastData.message;
+
+        // Use your preferred toast library (example: Toastr)
+        if (toastType === 'success') {
+            toastr.success(toastMessage, 'Success', { timeOut: 5000 });
+        } else {
+            toastr.error(toastMessage, 'Error', { timeOut: 5000 });
+        }
+    });
+
+  
+</script>
+<?php endif; ?>
+
+
+<script>
+
+const contactform = document.getElementById("contact_send");
+
+
+if (contactform) {
+  document.getElementById('submitBtn').addEventListener('click', function (event) {
+ 
+   if (contactform.checkValidity()) {
+   
+     
+     setTimeout(function () {
+      contactform.reset(); 
+    }, 500);
+
+    } else {
+      
+      contactform.reportValidity(); 
+    }
+  });
+}
+</script>
+
+
