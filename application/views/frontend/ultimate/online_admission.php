@@ -237,8 +237,8 @@
         <div class="col-11 col-sm-8 col-lg-4   ">
           <div class="js-form-message mb-3">
             <div class="">
-              <p class="pb-3 form-label text-white text-end"><?php echo get_phrase('school_image'); ?> <span
-                  class="text-danger">*</span>
+              <p class="pb-3 form-label text-white text-end"><?php echo get_phrase('school_image'); ?> 
+
               </p>
               <div id="school-image-preview" class="">
                 <a role="button" class="btn school-image-preview-btn disabled">
@@ -259,8 +259,7 @@
                 <div class="file-spacer"></div>
                 <span class="file-name-school-image file-name"><?php echo get_phrase('choose_a_file'); ?>...</span>
               </label>
-              <input id="school_image" type="file" class="inputfile" name="school_image" accept=".jpg, .jpeg, .png "
-                required>
+              <input id="school_image" type="file" class="inputfile" name="school_image" accept=".jpg, .jpeg, .png ">
             </div>
 
           </div>

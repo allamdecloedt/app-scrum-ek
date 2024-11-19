@@ -324,7 +324,7 @@
           <div class="js-form-message">
             <div class="mb-3">
               <p class="pb-3 form-label text-white " style="text-align: center;"><?php echo get_phrase('your_photo'); ?> 
-                <span class="text-danger">*</span>
+              
               </p>
               <div id="photo-preview" class="photo-preview">
                 <!-- L'image sélectionnée apparaîtra ici -->
@@ -341,7 +341,7 @@
                 <div class="file-spacer"></div>
                 <span class="file-name-photo file-name"><?php echo get_phrase('choose_a_file'); ?>...</span>
               </label>
-              <input id="student_image" type="file" class="inputfile" name="student_image" accept=".jpg, .jpeg, .png" required>
+              <input id="student_image" type="file" class="inputfile" name="student_image" accept=".jpg, .jpeg, .png" >
             </div>
           </div>
         </div>
