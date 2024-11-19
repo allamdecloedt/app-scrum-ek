@@ -39,13 +39,14 @@ Spacer Styling
 }
 
 .carousel-caption {
-  bottom: 20%;
+  bottom: 4%;
   text-align: left;
 }
 
 .event-content-title {
   font-size: 1.8rem;
   font-weight: bold;
+  text-align: center;
   color: #fff;
   text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.7);
 }
