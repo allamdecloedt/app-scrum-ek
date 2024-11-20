@@ -37,10 +37,9 @@ $links = json_decode($social);
          <h4 class="h6 font-weight-semi-bold pb-4 pt-4 pt-sm-0 light-border-bottom">About</h4>
           <li><a class="list-group-item  custom-list-group-item" href="<?php echo site_url('home/about'); ?>">About</a>
           </li>
-          <li><a class="list-group-item  custom-list-group-item" href="<?php echo site_url('home/teachers'); ?>">Teachers
+          <li><a class="list-group-item  custom-list-group-item" href="<?php echo site_url('home#mentors-section'); ?>">Mentors
             </a></li>
-          <li><a class="list-group-item  custom-list-group-item" href="<?php echo site_url('home/gallery'); ?>">Gallery
-            </a></li>
+ 
         </ul>
         <!-- End List Group -->
       </div>
@@ -55,7 +54,7 @@ $links = json_decode($social);
               href="<?php echo site_url('home/terms_conditions'); ?>">Terms & Conditions</a></li>
           <li><a class="list-group-item list-group-item-action custom-list-group-item "
               href="<?php echo site_url('home/privacy_policy'); ?>">Privacy Policy</a></li>
-          <li><a class="list-group-item list-group-item-action custom-list-group-item mb-4" href="<?php echo site_url('login'); ?>">Login</a></li>
+        
         </ul>
         <!-- End List Group -->
       </div>
@@ -131,13 +130,19 @@ $links = json_decode($social);
 <!-- End Go to Top -->
 
 
-<!--<script type="text/javascript">
-function activateSchool(school_id) {
-  $.ajax({
-    url: "<?php echo site_url('home/active_school_id_for_frontend/'); ?>"+school_id,
-    success: function(response){
-      location.reload();
-    }
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function () {
+  const links = document.querySelectorAll("a[href^='#']");
+  links.forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const targetId = this.getAttribute("href").substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        targetElement.scrollIntoView({ behavior: "smooth" });
+      }
+    });
   });
-}
-</script>-->
+});
+
+</script>
