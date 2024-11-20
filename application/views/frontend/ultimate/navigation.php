@@ -36,7 +36,7 @@ $system_name = get_frontend_settings('website_title');
                 href="<?php echo site_url('home/noticeboard'); ?>"><?php echo get_phrase('Noticeboard'); ?>
               </a>-->
               <a class="nav-link  <?php if ($page_name == 'about')
-                echo 'active'; ?>" href="<?php echo site_url('home/about'); ?>"><?php echo get_phrase('About'); ?>
+                echo 'active'; ?>" href="<?php echo site_url('home/about'); ?>"><?php echo get_phrase('About_us'); ?>
               </a>
               <a class="nav-link <?php if ($page_name == 'courses')
                 echo 'active'; ?>" href="<?php echo site_url('home/courses'); ?>"><?php echo get_phrase('Courses'); ?>
