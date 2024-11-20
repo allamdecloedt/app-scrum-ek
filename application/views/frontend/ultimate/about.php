@@ -11,61 +11,37 @@
       <!-- End Divs-->
     </div>
   </div>
-  <div class=" g-0 about-image-container ">
 
-    <img class="rellax" data-rellax-speed="3" alt="About Us"
+  <!-- Image Section -->
+  <div class="about-image-container">
+    <img class="rellax about-image" data-rellax-speed="3" alt="About Us"
       src="<?php echo base_url('uploads/images/about_us/gros-plan-personnes-travaillant-au-bureau-min.jpg') ?>">
 
+    <!-- Content Section -->
     <div class="about-section">
-      <svg class="about-section-top-svg" id="visual" viewBox="0 0 1920 60" xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
-        <path
-          d="M0 39L45.7 34.5C91.3 30 182.7 21 274.2 20.2C365.7 19.3 457.3 26.7 548.8 25.2C640.3 23.7 731.7 13.3 823 12.8C914.3 12.3 1005.7 21.7 1097 27.3C1188.3 33 1279.7 35 1371.2 36.3C1462.7 37.7 1554.3 38.3 1645.8 35C1737.3 31.7 1828.7 24.3 1874.3 20.7L1920 17L1920 61L1874.3 61C1828.7 61 1737.3 61 1645.8 61C1554.3 61 1462.7 61 1371.2 61C1279.7 61 1188.3 61 1097 61C1005.7 61 914.3 61 823 61C731.7 61 640.3 61 548.8 61C457.3 61 365.7 61 274.2 61C182.7 61 91.3 61 45.7 61L0 61Z"
-          fill="#41434c"></path>
-        <path
-          d="M0 55L45.7 50.5C91.3 46 182.7 37 274.2 32.7C365.7 28.3 457.3 28.7 548.8 31.7C640.3 34.7 731.7 40.3 823 39.8C914.3 39.3 1005.7 32.7 1097 33.5C1188.3 34.3 1279.7 42.7 1371.2 45.8C1462.7 49 1554.3 47 1645.8 44.7C1737.3 42.3 1828.7 39.7 1874.3 38.3L1920 37L1920 61L1874.3 61C1828.7 61 1737.3 61 1645.8 61C1554.3 61 1462.7 61 1371.2 61C1279.7 61 1188.3 61 1097 61C1005.7 61 914.3 61 823 61C731.7 61 640.3 61 548.8 61C457.3 61 365.7 61 274.2 61C182.7 61 91.3 61 45.7 61L0 61Z"
-          fill="#212121"></path>
-      </svg>
-      <!-- About Section Content-->
-   <!-- Contenu de votre page -->
-   <?php $this->load->view('frontend/alert_view'); ?>
-      <!-- Autres contenus de la page -->
       <div class="container about-section-content">
-   
-
-        <h1>About us</h1>
-    <div class="split-text">
-        <p class="h4" >	
-          Welcome to WAYO ACADEMY, where learning meets flexibility and empowerment. 
-          We believe in providing a personalized and engaging educational experience that fits seamlessly into your life. 
-          Our platform offers a wide range of expert-led courses and practical resources designed to help you gain relevant
-          skills for today and tomorrow. Whether you're starting a new career path, upskilling, or exploring a passion, 
-          we’re here to support you every step of the way. Join us on a journey of growth and achievement.
-          
-         
-         </p>
-         <span class="dynamic-message ">— Because learning should be as dynamic as you are.</span>
-    </div>
-
-          
-
-
+        <h1 class="section-title">Welcome to WAYO Academy</h1>
+        <div class="split-text">
+          <p class="h4 fade-in">
+            Where learning adapts to you at WAYO ACADEMY, we are dedicated to delivering a personalized,
+            dynamic educational experience that integrates effortlessly into your life.
+            Our platform offers a diverse selection of expert-led courses and practical resources 
+            to help you develop the skills that matter most, for today and the future.
+          </p>
+          <p class="h4 fade-in">
+            Whether you're beginning a new career, advancing in your field, or exploring a passion,
+            we’ll support you at every stage. Join us in a journey of growth, discovery, and achievement.
+          </p>
+          <span class="dynamic-message fade-in">Because learning should evolve with you</span>
+        </div>
       </div>
 
-      <!-- About Section Content End-->
-      <svg class="about-section-bottom-svg" id="visual" viewBox="0 0 1920 60" xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1">
-        <path
-          d="M0 40L45.7 36.5C91.3 33 182.7 26 274.2 28.2C365.7 30.3 457.3 41.7 548.8 42.3C640.3 43 731.7 33 823 27.7C914.3 22.3 1005.7 21.7 1097 26.8C1188.3 32 1279.7 43 1371.2 49C1462.7 55 1554.3 56 1645.8 56.3C1737.3 56.7 1828.7 56.3 1874.3 56.2L1920 56L1920 0L1874.3 0C1828.7 0 1737.3 0 1645.8 0C1554.3 0 1462.7 0 1371.2 0C1279.7 0 1188.3 0 1097 0C1005.7 0 914.3 0 823 0C731.7 0 640.3 0 548.8 0C457.3 0 365.7 0 274.2 0C182.7 0 91.3 0 45.7 0L0 0Z"
-          fill="#41434c"></path>
-        <path
-          d="M0 4L45.7 3.7C91.3 3.3 182.7 2.7 274.2 5.8C365.7 9 457.3 16 548.8 21.7C640.3 27.3 731.7 31.7 823 31.3C914.3 31 1005.7 26 1097 21C1188.3 16 1279.7 11 1371.2 12C1462.7 13 1554.3 20 1645.8 25.5C1737.3 31 1828.7 35 1874.3 37L1920 39L1920 0L1874.3 0C1828.7 0 1737.3 0 1645.8 0C1554.3 0 1462.7 0 1371.2 0C1279.7 0 1188.3 0 1097 0C1005.7 0 914.3 0 823 0C731.7 0 640.3 0 548.8 0C457.3 0 365.7 0 274.2 0C182.7 0 91.3 0 45.7 0L0 0Z"
-          fill="#212121"></path>
+      <!-- Decorative SVG -->
+      <svg class="about-section-bottom-svg" id="visual" viewBox="0 0 1920 60" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 40L45.7 36.5C91.3 33 182.7 26 274.2 28.2C365.7 30.3 457.3 41.7 548.8 42.3C640.3 43 731.7 33 823 27.7C914.3 22.3 1005.7 21.7 1097 26.8C1188.3 32 1279.7 43 1371.2 49C1462.7 55 1554.3 56 1645.8 56.3C1737.3 56.7 1828.7 56.3 1874.3 56.2L1920 56L1920 0L1874.3 0C1828.7 0 1737.3 0 1645.8 0C1554.3 0 1462.7 0 1371.2 0C1279.7 0 1188.3 0 1097 0C1005.7 0 914.3 0 823 0C731.7 0 640.3 0 548.8 0C457.3 0 365.7 0 274.2 0C182.7 0 91.3 0 45.7 0L0 0Z" fill="#41434c"></path>
+        <path d="M0 4L45.7 3.7C91.3 3.3 182.7 2.7 274.2 5.8C365.7 9 457.3 16 548.8 21.7C640.3 27.3 731.7 31.7 823 31.3C914.3 31 1005.7 26 1097 21C1188.3 16 1279.7 11 1371.2 12C1462.7 13 1554.3 20 1645.8 25.5C1737.3 31 1828.7 35 1874.3 37L1920 39L1920 0L1874.3 0C1828.7 0 1737.3 0 1645.8 0C1554.3 0 1462.7 0 1371.2 0C1279.7 0 1188.3 0 1097 0C1005.7 0 914.3 0 823 0C731.7 0 640.3 0 548.8 0C457.3 0 365.7 0 274.2 0C182.7 0 91.3 0 45.7 0L0 0Z" fill="#212121"></path>
       </svg>
     </div>
   </div>
 </main>
-
-
-
 <!-- ========== END MAIN ========== -->
