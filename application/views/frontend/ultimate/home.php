@@ -158,9 +158,9 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
 
 
-
+<div id="mentors-section" >
   <!-- Teacher Section -->
-  <div class="section-height teacher-section">
+  <div class="section-height teacher-section"  >
     <!-- Title -->
     <h2 class="social-media-main-text">Meet Your Mentors</h2>
     <!-- End Title -->
@@ -304,6 +304,9 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
   </div>
   <!-- End Teacher Section -->
+
+</div>
+
 
 
 
