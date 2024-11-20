@@ -126,7 +126,7 @@
                   </svg>
                 </span>
                 <input type="email" placeholder="<?php echo get_phrase('email'); ?>"
-                  class="form-control rounded-end shadow-none text-capitalize" name="student_email" required
+                  class="form-control rounded-end shadow-none " name="student_email" required
                   data-msg="Please enter a valid email address." data-error-class="u-has-error"
                   data-success-class="u-has-success">
               </div>
