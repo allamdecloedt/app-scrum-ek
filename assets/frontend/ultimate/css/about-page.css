@@ -89,7 +89,7 @@ About Us Page Styling
   display: block;
   margin-top: 20px;
   padding: 15px;
-  font-size: 1.5em;
+  font-size: 1.9em;
   font-weight: bold;
   font-family: "Lucida Handwriting", "Brush Script MT", cursive;
   color: #f7f2f2;
@@ -121,7 +121,7 @@ About Us Page Styling
 
 .about-image-container img {
   width: 100%;
-  height: 150vh;
+  height: 127vh;
   object-fit: cover;
   object-position: center;
   position: absolute;
@@ -221,7 +221,7 @@ About Us Page Styling
   }
 
   .about-image-container img {
-    height: 210vh;
+    height: 244vh;
   }
 }
 /*--------------------------------------------576px---------------------------------------------------*/
