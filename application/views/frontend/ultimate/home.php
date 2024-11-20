@@ -22,10 +22,10 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
             <div class="text-container">
                 <div class="title">Your mentorship</div>
-                <div class="title">their success.</div>
+                <div class="title">their success</div>
 
 
-                <div class="subtitle">Strengthen loyalty, maintain engagement, and drive growth.</div>
+                <div class="subtitle">Strengthen loyalty, maintain engagement and drive growth</div>
 
             </div>
               <!-- Title -->
