@@ -27,8 +27,8 @@
             dynamic educational experience that integrates effortlessly into your life.
             Our platform offers a diverse selection of expert-led courses and practical resources 
             to help you develop the skills that matter most, for today and the future.
-          </p>
-          <p class="h4 fade-in">
+            </br>
+            </br>
             Whether you're beginning a new career, advancing in your field, or exploring a passion,
             we’ll support you at every stage. Join us in a journey of growth, discovery, and achievement.
           </p>

@@ -3,16 +3,12 @@ About Us Page Styling
 ------------------------------------*/
 
 /* Hero Section */
-/* .general-header {
-  position: relative;
-  height: 300px;
-  background: linear-gradient(135deg, #41434c, #212121);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-} */
+
+
+
+.about-section-content {
+  max-width: 992px; /* Limite la largeur du contenu */
+}
 
 .general-header h1 {
   font-size: 4rem;
@@ -55,9 +51,9 @@ About Us Page Styling
 .about-section-content {
   padding: 3rem;
   text-align: center;
-  background: #4d4d4d;
+  background: #4d4d4dde;
   border-radius: 15px;
-  margin-top: -50px;
+  margin-top: 15px;
   position: relative;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
@@ -95,9 +91,8 @@ About Us Page Styling
   padding: 15px;
   font-size: 1.5em;
   font-weight: bold;
-  font-family: "Lucida Handwriting";
+  font-family: "Lucida Handwriting", "Brush Script MT", cursive;
   color: #f7f2f2;
-
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -120,13 +115,13 @@ About Us Page Styling
 
 .about-image-container {
   width: 100%;
-  height: 130vh;
+  height: 64vh;
   z-index: -2;
 }
 
 .about-image-container img {
   width: 100%;
-  height: 215vh;
+  height: 150vh;
   object-fit: cover;
   object-position: center;
   position: absolute;
@@ -135,17 +130,19 @@ About Us Page Styling
   z-index: -1;
 }
 
+
 .about-section {
-  position: relative;
-  background: #212121;
-  z-index: 0;
-  width: 100%;
-  height: 65%;
-  top: 20vh;
+  display: flex;
+  align-items: center; /* Centre verticalement */
+  justify-content: center; /* Centre horizontalement */
+  min-height: 100vh; /* Prend toute la hauteur de la fenêtre */
+  text-align: center; /* Centre le texte à l'intérieur */
+  padding: 20px; /* Ajoute un espace autour pour les petits écrans */
+  box-sizing: border-box;
 }
 
 .about-section-content h1 {
-  color: #a2a2a2;
+  color: #ffffff;
   font-size: 2rem;
   font-weight: 400;
   text-align: center;
@@ -167,7 +164,7 @@ About Us Page Styling
   color: #ffffff;
   font-size: 1.2rem;
   font-weight: bold;
-  text-align: center;
+  text-align: justify;
   font-family: "Roboto", sans-serif;
   padding-top: 20px;
   padding-bottom: 20px;
