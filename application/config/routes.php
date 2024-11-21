@@ -293,3 +293,8 @@ $route['api/Register']  = 'api/Admin/register';
 
 
 
+//Route of Accountant 
+$route['api/GetAccountant'] = 'api/Admin/accountant_users';
+$route['api/CreateAccountant/create'] = 'api/Admin/create_accountant';
+$route['api/UpdateAccountant/update/(:num)'] = 'api/Admin/update_accountant/$1';
+$route['api/DeleteAccountant/delete/(:num)'] = 'api/Admin/delete_accountant/$1';

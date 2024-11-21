@@ -7741,6 +7741,7 @@ public function verify_code_api_post() {
 
     echo json_encode($response);
 }
+
 public function getUserIdByEmail_post() {
     // Get the posted email
     $postData = json_decode(file_get_contents("php://input"), true);
@@ -7770,6 +7771,7 @@ public function getUserIdByEmail_post() {
 
     echo json_encode($response);
 }
+
 public function update_Password_post() {
     $postData = json_decode(file_get_contents("php://input"), true);
     $user_id = isset($postData['user_id']) ? $postData['user_id'] : null;
@@ -7800,7 +7802,97 @@ public function update_Password_post() {
     echo json_encode($response);
 }
 
+//Accountant
+public function accountant_users_get() {
+    $school_id = $this->input->get('school_id');
+
+    if (!$school_id) {
+        $response = ['status' => false, 'message' => 'School ID is required'];
+        echo json_encode($response);
+        return;
+    }
+
+    $this->db->where('role', 'accountant');
+    $this->db->where('school_id', $school_id);
+    $accountants = $this->db->get('users')->result_array(); // Assuming 'users' is your table for user records
+
+    if ($accountants) {
+        $response = ['status' => true, 'data' => $accountants];
+    } else {
+        $response = ['status' => false, 'message' => 'No accountants found for this school ID'];
+    }
+
+    echo json_encode($response);
+}
+
+// 2. Create an accountant
+public function create_accountant_post() {
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate required fields
+    if (empty($data['name']) || empty($data['email']) || empty($data['password']) || empty($data['phone']) || empty($data['gender']) || empty($data['address'])) {
+        $response = ['status' => false, 'message' => 'Name, email, password, phone, gender, and address are required'];
+        echo json_encode($response);
+        return;
+    }
+
+    // Set the role and ensure school_id is present
+    $data['role'] = 'accountant';
+    if (empty($data['school_id'])) {
+        $response = ['status' => false, 'message' => 'School ID is required'];
+        echo json_encode($response);
+        return;
+    }
+
+    // Insert the new accountant into the users table
+    $this->db->insert('users', $data);
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Accountant created successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to create accountant'];
+    }
+
+    echo json_encode($response);
+}
+
+// 3. Update an accountant
+public function update_accountant_post($id) {
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate required fields
+    if (empty($data['name']) || empty($data['email']) || empty($data['phone']) || empty($data['gender']) || empty($data['address'])) {
+        $response = ['status' => false, 'message' => 'Name, email, phone, gender, and address are required'];
+        echo json_encode($response);
+        return;
+    }
+
+    // Update the accountant record in the database
+    $this->db->where('id', $id);
+    $this->db->update('users', $data);
+
+    // Check if the update was successful
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Accountant updated successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to update accountant or no changes made'];
+    }
+
+    echo json_encode($response);
+}
 
 
+// 4. Delete an accountant
+public function delete_accountant_post($id) {
+    $this->db->where('id', $id);
+    $this->db->delete('users');
+
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Accountant deleted successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to delete accountant or accountant not found'];
+    }
+
+    echo json_encode($response);
+}
 
 }
