@@ -347,7 +347,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
                     <img src="uploads/images/decloedt/placeholders/Image_01.png" class="d-block w-100" alt="Slide 1">
                 </div>
                 <div class="carousel-caption d-md-block">
-                    <h5 class="event-content-title">Work Smarter, Not Harder Online Conference</h5>
+                    <h5 class="event-content-title">Work Smarter, Not Harder Online Course</h5>
                 </div>
             </div>
 
