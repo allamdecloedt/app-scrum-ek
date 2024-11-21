@@ -98,14 +98,23 @@ function manageStudent() {
   var session_to     = $('#session_to').val();
   var class_id_from  = $('#class_id_from').val();
   var class_id_to    = $('#class_id_to').val();
+  // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+  var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+  var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+
   if(session_from > 0 && session_to > 0 && class_id_from > 0 && class_id_to > 0 ) {
     var url = '<?php echo route('promotion/list'); ?>';
     $.ajax({
       type : 'POST',
       url: url,
-      data : { session_from : session_from, session_to : session_to, class_id_from : class_id_from, class_id_to : class_id_to, _token : '{{ @csrf_token() }}' },
+      data : { session_from : session_from, session_to : session_to, class_id_from : class_id_from, class_id_to : class_id_to, _token : '{{ @csrf_token() }}' , [csrfName]: csrfHash},
+      dataType: 'json',
       success : function(response) {
-        $('.student_to_promote_content').html(response);
+        $('.student_to_promote_content').html(response.status);
+            // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+            var newCsrfName = response.csrf.csrfName;
+            var newCsrfHash = response.csrf.csrfHash;
+            $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
       }
     });
   }else {

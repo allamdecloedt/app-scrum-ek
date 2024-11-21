@@ -3,17 +3,7 @@
     
 
     <div class="user-dropdown hidden-section display-none">
-
-        <!-- item-->
-        <a href="<?php echo route('dashboard'); ?>" class="user-dropdown-item text-white">
-            <span><svg class="m-1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-layers-half" viewBox="0 0 16 16">
-                    <path
-                        d="M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882L3.188 8 .264 9.559a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882L12.813 8l2.922-1.559a.5.5 0 0 0 0-.882zM8 9.433 1.562 6 8 2.567 14.438 6z" />
-                </svg><?php echo get_phrase('dashboard'); ?></span>
-        </a>
-
-        <!-- item-->
+                <!-- item-->
         <a href="<?php echo site_url('login/logout'); ?>" class="user-dropdown-item text-white">
             <span><svg class="m-1 " xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-box-arrow-right" viewBox="0 0 16 16">

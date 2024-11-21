@@ -22,10 +22,13 @@ if($check_data->num_rows() > 0):?>
                 <td>
                     <?php
                         $school_details = $this->crud_model->get_school_details_by_id($admin['school_id']);
+                        if($school_details){
                         echo $school_details['name'];
                      ?>
+
                      <br><small> <strong><?php echo get_phrase('phone'); ?></strong>: <?php echo $school_details['phone']; ?></small>
                      <br><small> <strong><?php echo get_phrase('address'); ?></strong>: <?php echo $school_details['address']; ?></small>
+                     <?php } ?>
                 </td>
                 <td>
                     <div class="dropdown text-center">

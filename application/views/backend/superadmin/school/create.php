@@ -26,7 +26,7 @@
 
         <div class="form-group mb-1">
             <label for="access"><?php echo get_phrase('Access'); ?><span class="required"> * </span></label>
-            <select name="access" id="access" class="form-control select2" data-toggle = "select2">
+            <select name="access" id="access" class="form-control select2" data-toggle = "select2" required>
                 <option value=""><?php echo get_phrase('select_a_access'); ?></option>
                 <option value="1"><?php echo get_phrase('public'); ?></option>
                 <option value="0"><?php echo get_phrase('privé'); ?></option>
@@ -38,7 +38,7 @@
 
         <div class="form-group mb-1">
             <label for="access"><?php echo get_phrase('Category'); ?><span class="required"> * </span></label>
-            <select name="category" id="category" class="form-control select2" data-toggle = "select2">
+            <select name="category" id="category" class="form-control select2" data-toggle = "select2" required>
                 <option value=""><?php echo get_phrase('select_a_category'); ?></option>
                 <?php $categories = $this->db->get_where('categories', array())->result_array(); ?>
                 <?php foreach ($categories as $categorie): ?>
@@ -54,6 +54,18 @@
             <label for="phone"><?php echo get_phrase('address'); ?><span class="required"> * </span></label>
             <textarea class="form-control" id="address" name = "address" rows="5" required></textarea>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_admin_address'); ?></small>
+        </div>
+
+        <div class="form-group mb-1">
+          <!-- <label for="image_file"><?php //echo get_phrase('upload_image'); ?></label>
+          <input type="file" class="form-control" id="school_image" name = "school_image"> -->
+          <label for="image_file"><?php echo get_phrase('upload_image'); ?></label>
+          <div id="photo-preview" class="photo-preview">
+                <!-- L'image sélectionnée apparaîtra ici -->
+                <img class="rounded-circle" style="width: 30%;height: 50%;object-fit: cover;border-radius: 50%;"  id="default-avatar" src="<?php echo $this->user_model->get_school_image($param1); ?>">
+          </div>
+          <input id="school_image" type="file" class="form-control" name="school_image" accept=".jpg, .jpeg, .png" required>
+
         </div>
 
         <div class="form-group mt-2 col-md-12">
@@ -73,4 +85,16 @@
         var form = $(this);
         ajaxSubmit(e, form, showAllSchools);
     });
+
+    document.getElementById('school_image').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('photo-preview');
+      preview.innerHTML = '<img src="' + e.target.result + '" style="width: 30%;height: 50%;object-fit: cover;border-radius: 50%;" alt="Photo preview" />';
+    };
+    reader.readAsDataURL(file);
+  }
+});
 </script>

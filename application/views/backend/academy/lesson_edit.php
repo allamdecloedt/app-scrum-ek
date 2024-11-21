@@ -111,6 +111,9 @@ $sections = $this->lms_model->get_section('course', $param2)->result_array();
             <label><?php echo get_phrase('attachment'); ?></label>
             <div class="input-group">
                 <div class="custom-file">
+                <a href="<?php echo base_url().'uploads/lesson_files/'.$lesson_details['attachment']; ?>" class="btn btn-info text-white" download>
+                    <i class="fa fa-download font-size-10"></i> <?php echo get_phrase('download').' '.$lesson_details['title']; ?>
+                </a>
                     <input type="file" class="custom-file-input" id="attachment" name="attachment" onchange="changeTitleOfImageUploader(this)">
                     <label class="custom-file-label" for="attachment"><?php echo get_phrase('attachment'); ?></label>
                 </div>

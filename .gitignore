@@ -12,6 +12,16 @@ application/logs/*
 /uploads/*
 tmp/*
 
+# Exclure les sous-dossiers nécessaires pour garder /uploads/images/decloedt/logo/
+!/uploads/images/
+!/uploads/images/decloedt/
+!/uploads/images/decloedt/logo/
+!/uploads/images/decloedt/logo/*
+
+# Ignorer uniquement gallery_cover et slider dans /uploads/images
+/uploads/images/gallery_cover/
+/uploads/images/slider/
+
 
 # Ignorer les fichiers et dossiers générés par l'IDE
 .idea/

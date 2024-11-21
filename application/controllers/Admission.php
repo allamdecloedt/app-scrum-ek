@@ -63,6 +63,23 @@ class Admission extends CI_Controller
         $this->load->view('frontend/' . $this->theme . '/index', $page_data);
     }
 
+        /*Admissions*/
+        function online_admission_student($param1 = "", $param2 = "")
+        {
+    
+            if ($param1 == 'submit') {
+                if (!$this->crud_model->check_recaptcha() && get_common_settings('recaptcha_status') == true) {
+                    redirect(site_url('home/contact'), 'refresh');
+                }
+
+              
+            }
+    
+            $page_data['page_name'] = 'online_admission_student';
+            $page_data['page_title'] = get_phrase('online_admission_student');
+            $this->load->view('frontend/' . $this->theme . '/index', $page_data);
+        }
+
 
     
 }

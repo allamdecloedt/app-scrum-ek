@@ -147,12 +147,27 @@ if ($page_name == "home") {
 } elseif ($page_name == "contact") {
 
 
-  echo ' <script src="https://maps.googleapis.com/maps/api/js?key=' . $GoogleAPI .  '&callback=console.debug&libraries=maps,marker&v=beta"></script>';
+  // Charger Leaflet.js pour OpenStreetMap
+  echo '<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>';
+    
+  echo '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />';
+  echo '<script>
+         const base_url = " '. $base_url . '";
+        </script>';
+  // Charger le script JavaScript pour la carte de contact
   echo '<script src="' . $base_url . 'assets/frontend/ultimate/js/contact-map.js"></script>';
-  echo '<script defer >var rellax = new Rellax(".rellax");</script>';
+
+  // Initialiser l'effet Rellax
+  echo '<script defer>var rellax = new Rellax(".rellax");</script>';
 }
 
 else if ($page_name == "online_admission"){
+
+  echo '<script defer >var rellax = new Rellax(".rellax");</script>';
+  echo '<script src="' . $base_url . 'assets/frontend/ultimate/js/online-admission.js"></script>';
+
+}
+else if ($page_name == "online_admission_student"){
 
   echo '<script defer >var rellax = new Rellax(".rellax");</script>';
   echo '<script src="' . $base_url . 'assets/frontend/ultimate/js/online-admission.js"></script>';

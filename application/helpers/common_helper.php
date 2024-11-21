@@ -26,6 +26,19 @@ if (!function_exists('school_id')) {
   }
 }
 
+//user id
+if (!function_exists('user_id')) {
+  function user_id()
+  {
+    $CI = &get_instance();
+    $CI->load->database();
+
+    $user_id = $CI->session->userdata('user_id');
+    $user_details = $CI->db->where('id', $user_id)->get('users')->row_array();
+    return $user_details ? $user_details['id'] : 0;
+  }
+}
+
 if (!function_exists('get_settings')) {
   function get_settings($type = '')
   {

@@ -1,5 +1,5 @@
 <?php
-$logo_light = base_url('uploads/images/decloedt/logo/white-logo.svg');
+$logo_light = base_url('uploads/images/decloedt/logo/white-logo.png');
 $system_name = get_frontend_settings('website_title');
 ?>
 <!-- ========== HEADER ========== -->
@@ -10,8 +10,8 @@ $system_name = get_frontend_settings('website_title');
       <nav class="navbar position-relative navbar-expand-lg container-fluid sticky-nav nav-home">
         <div class="container-fluid">
           <!-- Logo -->
-          <a class="logo navbar-brand " href="<?php echo site_url('home'); ?>">
-            <img src="<?php echo $logo_light; ?>" />
+          <a class="logo navbar-brand "  href="<?php echo site_url('home'); ?>">
+            <img style="width: 20%;" src="<?php echo $logo_light; ?>" />
           </a>
           <!-- End Logo -->
           <!-- Responsive Toggle Button -->
@@ -36,20 +36,27 @@ $system_name = get_frontend_settings('website_title');
                 href="<?php echo site_url('home/noticeboard'); ?>"><?php echo get_phrase('Noticeboard'); ?>
               </a>-->
               <a class="nav-link  <?php if ($page_name == 'about')
-                echo 'active'; ?>" href="<?php echo site_url('home/about'); ?>"><?php echo get_phrase('About'); ?>
+                echo 'active'; ?>" href="<?php echo site_url('home/about'); ?>"><?php echo get_phrase('About_us'); ?>
               </a>
               <a class="nav-link <?php if ($page_name == 'courses')
                 echo 'active'; ?>" href="<?php echo site_url('home/courses'); ?>"><?php echo get_phrase('Courses'); ?>
               </a>
               <a class="nav-link  <?php if ($page_name == 'contact')
-                echo 'active'; ?>" href="<?php echo site_url('home/contact'); ?>"><?php echo get_phrase('Contact'); ?>
+                echo 'active'; ?>" href="<?php echo site_url('home/contact'); ?>"><?php echo get_phrase('contact_us'); ?>
               </a>
 
-              <div class=" v-divider-nav"></div>
+             
 
               <?php if ($this->session->userdata('user_id')) { ?>
+               
+                <a href="<?php echo route('dashboard'); ?>" target="" class=" btn btn-outline-light website-button ml-2 ml-lg-3 d-none d-md-inline-block">
+                  <?php echo get_phrase('visit_dashboard'); ?></a>
+                
 
-                <div class="user-section "><span
+                <div class=" v-divider-nav" style="margin-left: 20px;"></div>
+
+                <div class="user-section ">
+                  <span
                     class="text-capitalize ml-2 ml-lg-3  align-content-center text-white"><?php echo $this->session->user_name; ?></span>
 
                   <img src="<?php echo $this->user_model->get_user_image($this->session->userdata('user_id')); ?>"
@@ -58,7 +65,7 @@ $system_name = get_frontend_settings('website_title');
                 <?php include 'components/navigation-components/user_loggedin_component.php'; ?>
 
               <?php } else { ?>
-
+                <div class=" v-divider-nav" style="margin-left: 20px;"></div>
                 <a class="nav-link login-toggle"><?php echo get_phrase('Login'); ?> </a>
 
               <?php } ?>

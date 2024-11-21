@@ -29,7 +29,7 @@ foreach($schools as $school): ?>
 
     <div class="form-group mb-1">
             <label for="access"><?php echo get_phrase('Access'); ?><span class="required"> * </span></label>
-            <select name="access" id="access" class="form-control select2" data-toggle = "select2">
+            <select name="access" id="access" class="form-control select2" data-toggle = "select2" required>
                 <option value=""><?php echo get_phrase('select_a_access'); ?></option>
                 <option <?php if ($school['access'] == 1): ?> selected <?php endif; ?> value="1"><?php echo get_phrase('public'); ?></option>
                 <option <?php if ($school['access'] == 0): ?> selected <?php endif; ?> value="0"><?php echo get_phrase('privé'); ?></option>
@@ -41,7 +41,7 @@ foreach($schools as $school): ?>
 
         <div class="form-group mb-1">
             <label for="access"><?php echo get_phrase('Category'); ?><span class="required"> * </span></label>
-            <select name="category" id="category" class="form-control select2" data-toggle = "select2">
+            <select name="category" id="category" class="form-control select2" data-toggle = "select2" required>
                 <option value=""><?php echo get_phrase('select_a_category'); ?></option>
                 <?php $categories = $this->db->get_where('categories', array())->result_array(); ?>
                 <?php foreach ($categories as $categorie): ?>
@@ -65,9 +65,17 @@ foreach($schools as $school): ?>
     </div>
 
     <div class="form-group mb-1">
-          <label for="image_file"><?php echo get_phrase('upload_image'); ?></label>
-          <input type="file" class="form-control" id="school_image" name = "school_image">
-      </div>
+         <div id="photo-preview" class="photo-preview">
+                <!-- L'image sélectionnée apparaîtra ici -->
+                <img class="rounded-circle" style="width: 30%;height: 50%;object-fit: cover;border-radius: 50%;"  id="default-avatar" src="<?php echo $this->user_model->get_school_image($param1); ?>">
+          </div>
+          <?php 
+            // Vérifiez si l'image existe
+            $image = $this->user_model->get_school_image($param1);
+            $is_image_exists = !empty($image); 
+            ?>
+          <input id="school_image" type="file" class="form-control" name="school_image" accept=".jpg, .jpeg, .png" <?php echo $is_image_exists ? '' : 'required'; ?>>
+    </div>
 
     <div class="form-group mt-2 col-md-12">
       <button class="btn btn-block btn-primary" type="submit"><?php echo get_phrase('update_school'); ?></button>
@@ -86,4 +94,15 @@ foreach($schools as $school): ?>
     var form = $(this);
     ajaxSubmit(e, form, showAllSchools);
   });
+  document.getElementById('school_image').addEventListener('change', function(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('photo-preview');
+      preview.innerHTML = '<img src="' + e.target.result + '" style="width: 30%;height: 50%;object-fit: cover;border-radius: 50%;" alt="Photo preview" />';
+    };
+    reader.readAsDataURL(file);
+  }
+});
 </script>

@@ -6,7 +6,7 @@ if($check_data->num_rows() > 0):?>
     <thead>
         <tr style="background-color: #313a46; color: #ababab;">
         <th><?php echo get_phrase('name'); ?></th>
-        <th><?php echo get_phrase('email'); ?></th>
+   
         <th><?php echo get_phrase('address'); ?></th>
         <th><?php echo get_phrase('phone'); ?></th>
         <th><?php echo get_phrase('description'); ?></th>
@@ -16,17 +16,23 @@ if($check_data->num_rows() > 0):?>
     </thead>
     <tbody>
         <?php
-        $admins = $this->db->get_where('schools', array('Etat' => 1 , 'status'=> 1))->result_array();
+        $admins = $this->db->get_where('schools', array('Etat' => 1 , 'status'=> 1 , 'id !=' => 1))->result_array();
         foreach($admins as $admin){
-            $user = $this->db->get_where('users', array('school_id' => $admin['id']))->row_array();
             ?>
             <tr>
                 <td><?php echo $admin['name']; ?></td>
-                <td><?php echo $user['email']; ?></td>
-                <td><?php echo $admin['address']; ?></td>
-                <td><?php echo $admin['phone']; ?></td>
+              
 
-                <td><?php echo $admin['description']; ?></td>
+                <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;" title="<?php echo $admin['address']; ?>">
+                <?php echo strlen($admin['address']) > 50 ? substr($admin['address'], 0, 50) . '...' : $admin['address']; ?>
+                </td>
+                <td><?php echo $admin['phone']; ?></td>
+                <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;" title="<?php echo $admin['description']; ?>">
+                <?php echo strlen($admin['description']) > 50 ? substr($admin['description'], 0, 50) . '...' : $admin['description']; ?>
+                </td>
+
+
+
                 <td><?php echo $admin['category']; ?></td>
  
                 <td>
