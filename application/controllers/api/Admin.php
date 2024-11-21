@@ -14,6 +14,7 @@ class Admin extends REST_Controller {
     $this->load->library('form_validation');
     $this->load->database();
 		$this->load->library('session');
+        
 
     /*LOADING ALL THE MODELS HERE*/
     $this->load->model('Crud_model',     'crud_model');
@@ -2826,80 +2827,6 @@ public function quiz_questions_get($quiz_id) {
     }
 }
 
-/* public function add_quiz_post() {
-    // Ensure the request is a POST request
-    if ($this->input->server('REQUEST_METHOD') == 'POST') {
-        // Retrieve input data using $this->input->post
-        $title = $this->input->post('title');
-        $section_name = $this->input->post('section_name');
-        $summary = $this->input->post('instruction');  // Changed 'instruction' to 'summary'
-
-        // Log received data for debugging
-        log_message('debug', 'Received title: ' . $title);
-        log_message('debug', 'Received section_name: ' . $section_name);
-        log_message('debug', 'Received summary: ' . $summary);  // Log 'summary'
-
-        // Validate the input
-        if (empty($title) || empty($section_name)) {
-            log_message('error', 'Validation failed: Title and Section Name are required');
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Title and Section Name are required']));
-            return;
-        }
-
-        // Fetch section ID from section name
-        $this->db->select('id');
-        $this->db->from('course_section');
-        $this->db->where('title', $section_name);
-        $query = $this->db->get();
-
-        if ($query->num_rows() == 0) {
-            log_message('error', 'Invalid Section Name: ' . $section_name);
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid Section Name']));
-            return;
-        }
-
-        $section = $query->row();
-        $section_id = $section->id;
-
-        // Prepare data for insertion
-        $data = [
-            'title' => $title,
-            'section_id' => $section_id,
-            'summary' => $summary,  // Changed 'instruction' to 'summary'
-            'lesson_type' => 'quiz', // Assuming 'lesson_type' column marks a lesson as a quiz
-            // Removed 'created_at'
-        ];
-
-        // Log data to be inserted
-        log_message('debug', 'Data to be inserted: ' . json_encode($data));
-
-        // Insert the new quiz
-        if ($this->db->insert('lesson', $data)) {
-            $quiz_id = $this->db->insert_id();
-            log_message('debug', 'Quiz inserted with ID: ' . $quiz_id);
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'success', 'message' => 'Quiz added successfully', 'quiz_id' => $quiz_id]));
-        } else {
-            log_message('error', 'Failed to insert new quiz');
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to add quiz']));
-        }
-    } else {
-        // Return method not allowed error
-        log_message('error', 'Invalid request method');
-        $this->output
-            ->set_content_type('application/json')
-            ->set_status_header(405)
-            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
-    }
-} */
-
 public function add_quiz_post() {
     // Ensure the request is a POST request
     if ($this->input->server('REQUEST_METHOD') == 'POST') {
@@ -3172,59 +3099,6 @@ public function add_question_post() {
     }
 }
 
-/* public function get_quiz_questions_get($quiz_id) {
-    // Ensure the request is a GET request
-    if ($this->input->server('REQUEST_METHOD') == 'GET') {
-        // Fetch quiz questions based on the quiz ID
-        $this->db->order_by("order", "asc");
-        $this->db->where('quiz_id', $quiz_id);
-        $query = $this->db->get('question');
-        $questions = $query->result_array();
-
-        // Check if questions are found
-        if ($questions) {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'success', 'questions' => $questions]));
-        } else {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'No questions found']));
-        }
-    } else {
-        // Return method not allowed error
-        $this->output
-            ->set_content_type('application/json')
-            ->set_status_header(405)
-            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
-    }
-} */
-
-/* public function get_quiz_questions_get($quiz_id) {
-    if ($this->input->server('REQUEST_METHOD') == 'GET') {
-        $this->db->order_by("order", "asc");
-        $this->db->where('quiz_id', $quiz_id);
-        $query = $this->db->get('question');
-        $questions = $query->result_array();
-
-        if ($questions) {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'success', 'questions' => $questions]));
-        } else {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'No questions found']));
-        }
-    } else {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_status_header(405)
-            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
-    }
-}
- */
-
  public function get_quiz_questions_get($quiz_id) {
     if ($this->input->server('REQUEST_METHOD') == 'GET') {
         $this->db->order_by("order", "asc");
@@ -3256,71 +3130,44 @@ public function add_question_post() {
 
 
 public function edit_question_post() {
-    // Ensure the request is a POST request
     if ($this->input->server('REQUEST_METHOD') == 'POST') {
-        // Retrieve input data using $this->input->post
         $question_id = $this->input->post('question_id');
         $quiz_id = $this->input->post('quiz_id');
         $title = $this->input->post('title');
         $type = $this->input->post('type');
-        $number_of_options = $this->input->post('number_of_options');
-        $options = $this->input->post('options'); // Expecting JSON format
-        $correct_answers = $this->input->post('correct_answers'); // Expecting JSON format
-        $order = $this->input->post('order');
+        $number_of_options = (int)$this->input->post('number_of_options');
+        $options = json_decode($this->input->post('options'), true);
+        $correct_answers = json_decode($this->input->post('correct_answers'), true);
+        $order = (int)$this->input->post('order');
 
-        // Log received data for debugging
-        log_message('debug', 'Received question_id: ' . $question_id);
-        log_message('debug', 'Received quiz_id: ' . $quiz_id);
-        log_message('debug', 'Received title: ' . $title);
-        log_message('debug', 'Received type: ' . $type);
-        log_message('debug', 'Received number_of_options: ' . $number_of_options);
-        log_message('debug', 'Received options: ' . $options);
-        log_message('debug', 'Received correct_answers: ' . $correct_answers);
-        log_message('debug', 'Received order: ' . $order);
-
-        // Validate the input
-        if (empty($question_id) || empty($quiz_id) || empty($title) || empty($type) || empty($number_of_options) || empty($options) || empty($correct_answers)) {
-            log_message('error', 'Validation failed: Question ID, Quiz ID, Title, Type, Number of Options, Options, and Correct Answers are required');
+        if (empty($question_id) || empty($quiz_id) || empty($title) || empty($type) || $number_of_options <= 0 || empty($options) || empty($correct_answers)) {
             $this->output
                 ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Question ID, Quiz ID, Title, Type, Number of Options, Options, and Correct Answers are required']));
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Validation failed: required fields are missing.']));
             return;
         }
 
-        // Convert necessary fields to appropriate types
-        $number_of_options = (int)$number_of_options;
-        $order = (int)$order;
-
-        // Prepare data for update
         $data = [
             'quiz_id' => $quiz_id,
             'title' => $title,
             'type' => $type,
             'number_of_options' => $number_of_options,
-            'options' => $options,
-            'correct_answers' => $correct_answers,
+            'options' => json_encode($options),
+            'correct_answers' => json_encode($correct_answers),
             'order' => $order,
         ];
 
-        // Log data to be updated
-        log_message('debug', 'Data to be updated: ' . json_encode($data));
-
-        // Update the question
         $this->db->where('id', $question_id);
         if ($this->db->update('question', $data)) {
-            log_message('debug', 'Question updated with ID: ' . $question_id);
             $this->output
                 ->set_content_type('application/json')
                 ->set_output(json_encode(['status' => 'success', 'message' => 'Question updated successfully']));
         } else {
-            log_message('error', 'Failed to update question');
             $this->output
                 ->set_content_type('application/json')
                 ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to update question']));
         }
     } else {
-        // Return method not allowed error
-        log_message('error', 'Invalid request method');
         $this->output
             ->set_content_type('application/json')
             ->set_status_header(405)
@@ -3381,8 +3228,7 @@ public function delete_question_post() {
     }
 }
 
-
-public function add_lesson_post() {
+ public function add_lesson_post() {
     $this->load->library('form_validation');
 
     // Set validation rules
@@ -3394,91 +3240,77 @@ public function add_lesson_post() {
     if ($this->form_validation->run() == FALSE) {
         $response = [
             'status' => 'error',
-            'message' => validation_errors()
+            'message' => strip_tags(validation_errors()) // Cleaner JSON response
         ];
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($response));
-        return;
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
-    $data['course_id'] = $this->input->post('course_id');
-    $data['title'] = $this->input->post('title');
-    $data['section_id'] = $this->input->post('section_id');
-    $data['summary'] = $this->input->post('summary');
-    $data['date_added'] = strtotime(date('D, d-M-Y'));
+    // Prepare lesson data
+    $data = [
+        'course_id' => $this->input->post('course_id'),
+        'title' => $this->input->post('title'),
+        'section_id' => $this->input->post('section_id'),
+        'summary' => $this->input->post('summary'),
+        'date_added' => strtotime(date('D, d-M-Y')),
+        'lesson_type' => $this->input->post('lesson_type'),
+        'attachment_type' => null
+    ];
 
-    $lesson_type_array = explode('-', $this->input->post('lesson_type'));
-    $lesson_type = $lesson_type_array[0];
-    $data['lesson_type'] = $lesson_type;
-    $data['attachment_type'] = isset($lesson_type_array[1]) ? $lesson_type_array[1] : null;
-
-    if ($lesson_type == 'video') {
+    // Handle video types
+    if ($data['lesson_type'] == 'video') {
         $lesson_provider = $this->input->post('lesson_provider');
         if ($lesson_provider == 'youtube' || $lesson_provider == 'vimeo') {
             $data['video_url'] = $this->input->post('video_url');
-            $duration_formatter = explode(':', $this->input->post('duration'));
-            $data['duration'] = sprintf('%02d:%02d:%02d', $duration_formatter[0], $duration_formatter[1], $duration_formatter[2]);
+            $data['duration'] = $this->input->post('duration');
             $data['video_type'] = $lesson_provider;
-        } elseif ($lesson_provider == 'html5') {
-            $data['video_url'] = $this->input->post('html5_video_url');
-            $duration_formatter = explode(':', $this->input->post('html5_duration'));
-            $data['duration'] = sprintf('%02d:%02d:%02d', $duration_formatter[0], $duration_formatter[1], $duration_formatter[2]);
-            $data['video_type'] = 'html5';
-            $this->upload_file('thumbnail', 'uploads/thumbnails/lesson_thumbnails/', $inserted_id . '.jpg');
         } elseif ($lesson_provider == 'mydevice') {
             $data['video_type'] = 'mydevice';
-            $data['video_upload'] = $this->upload_file('userfileMe', 'uploads/videos/');
+            // Attempt to upload video file and store filename
+            $video_file_name = $this->upload_file('userfileMe', 'uploads/videos/');
+            if ($video_file_name) {
+                $data['video_upload'] = $video_file_name;
+            } else {
+                return $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'error', 'message' => 'Video upload failed']));
+            }
         } else {
-            $response = ['status' => 'error', 'message' => 'Invalid lesson provider'];
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($response));
-            return;
+            return $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'error', 'message' => 'Invalid lesson provider']));
         }
     } else {
-        $data['duration'] = 0;
+        // Handle other types with an attachment
         $data['attachment'] = $this->upload_file('attachment', 'uploads/lesson_files/');
     }
 
+    // Insert into the database
     $this->db->insert('lesson', $data);
     $response = ['status' => 'success', 'message' => 'Lesson added successfully'];
-    $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($response));
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
 }
 
-private function upload_file($field_name, $upload_path, $file_name = null) {
+// Utility function to handle file uploads
+private function upload_file($field_name, $upload_path) {
     if (!file_exists($upload_path)) {
         mkdir($upload_path, 0777, true);
     }
 
     if (isset($_FILES[$field_name]) && $_FILES[$field_name]['error'] == 0) {
         $file_type = pathinfo($_FILES[$field_name]['name'], PATHINFO_EXTENSION);
-        $file_name = $file_name ?? md5(uniqid(rand(), true)) . '.' . $file_type;
+        $file_name = md5(uniqid(rand(), true)) . '.' . $file_type;
         $destination = $upload_path . $file_name;
 
         if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $destination)) {
             return $file_name;
         } else {
-            $response = ['status' => 'error', 'message' => 'There was a problem moving the file.'];
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($response));
-            exit;
+            // Return null if file move failed
+            log_message('error', 'Failed to move uploaded file for ' . $field_name);
+            return null;
         }
     } else {
-        $response = ['status' => 'error', 'message' => 'No file uploaded or there was an upload error.'];
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($response));
-        exit;
+        log_message('error', 'File upload error or no file provided for ' . $field_name);
+        return null;
     }
 }
 
-
 public function all_lesson_types_get($section_id) {
-    // Ensure the request method is GET
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         $this->output
              ->set_status_header(405)
@@ -3486,7 +3318,6 @@ public function all_lesson_types_get($section_id) {
         return;
     }
 
-    // Validate the section_id
     if (!is_numeric($section_id)) {
         $this->output
              ->set_status_header(400)
@@ -3494,12 +3325,11 @@ public function all_lesson_types_get($section_id) {
         return;
     }
 
-    // Base URLs for attachments and video uploads
     $base_attachment_url = 'http://10.0.2.2/SchoolManagementWeb/uploads/lesson_files/';
     $base_video_url = 'http://10.0.2.2/SchoolManagementWeb/uploads/videos/';
 
-    // Fetch distinct lesson types, lesson titles, attachments, and video uploads from the 'lesson' table for the given section_id
-    $this->db->select("lesson.lesson_type, lesson.title as lesson_title, 
+    $this->db->select("lesson.id, lesson.lesson_type, lesson.title as lesson_title, 
+                       lesson.video_url,
                        CONCAT('$base_attachment_url', lesson.attachment) as attachment, 
                        CONCAT('$base_video_url', lesson.video_upload) as video_upload");
     $this->db->from('lesson');
@@ -3507,7 +3337,6 @@ public function all_lesson_types_get($section_id) {
     $query = $this->db->get();
     $lessons = $query->result_array();
 
-    // Check if lessons are found
     if (!empty($lessons)) {
         $this->output
              ->set_status_header(200)
@@ -3519,6 +3348,7 @@ public function all_lesson_types_get($section_id) {
              ->set_output(json_encode(['message' => 'No lessons found for the given section ID']));
     }
 }
+
 
 
 public function associate_user_with_school_post() {
@@ -5535,6 +5365,65 @@ public function invoice_by_date_range_post() {
 }
 
 
+public function invoices_by_filter_post()
+{
+    // Get the JSON input
+    $json_input = json_decode(file_get_contents('php://input'), true);
+
+    // Extract the parameters
+    $class_id = isset($json_input['class_id']) ? $json_input['class_id'] : null;
+    $start_date = isset($json_input['start_date']) ? $json_input['start_date'] : null;
+    $end_date = isset($json_input['end_date']) ? $json_input['end_date'] : null;
+
+    // Validate that all fields are provided
+    if (!$class_id || !$start_date || !$end_date) {
+        $response = array('status' => false, 'message' => 'Missing parameters');
+        echo json_encode($response);
+        return;
+    }
+
+    // Convert dates to a format that MySQL understands, if needed
+    $start_date = date('Y-m-d', strtotime($start_date));
+    $end_date = date('Y-m-d', strtotime($end_date));
+
+    // Build the query with the necessary filters and join with the users table
+    $this->db->select('invoices.*, CONCAT(users.name) as student_name'); // Join users table
+    $this->db->from('invoices');
+    $this->db->join('students', 'students.id = invoices.student_id', 'left'); // Join students table to get user_id
+    $this->db->join('users', 'users.id = students.user_id', 'left'); // Join users table to get student name
+    $this->db->where('invoices.class_id', $class_id);
+    $this->db->where('invoices.created_at >=', $start_date);
+    $this->db->where('invoices.created_at <=', $end_date);
+    $query = $this->db->get();
+
+    // Retrieve the result
+    $invoices = $query->result_array();
+
+    // Check if any invoices were found
+    if (count($invoices) > 0) {
+        $response = array('status' => true, 'data' => $invoices);
+    } else {
+        $response = array('status' => false, 'message' => 'No invoices found');
+    }
+
+    // Send the response back as JSON
+    echo json_encode($response);
+}
+
+
+public function classe_get() {
+    // Fetch all class ids and names from the 'classes' table
+    $this->db->select('id, name'); // Select both the id and the name
+    $query = $this->db->get('classes');
+    $classes = $query->result_array();
+
+    // Return the result as a JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($classes));
+}
+
+
 protected function get_class_name($class_id) {
     // Query the database to get the class name based on the class_id
     $this->load->database();
@@ -5650,50 +5539,55 @@ public function create_single_invoice_post() {
             ->set_status_header(500)
             ->set_output(json_encode(['status' => false, 'message' => 'Failed to insert invoice data']));
     }
-}
+} 
 
+public function create_mass_invoice_post() {
+    // Récupérer les données JSON du POST
+    $data = json_decode($this->input->raw_input_stream, true);
 
+    log_message('debug', 'Données POST reçues : ' . json_encode($data));
 
-
-public function create_mass_invoice() {
-    $data['total_amount'] = $this->input->post('total_amount');
-    $data['paid_amount'] = $this->input->post('paid_amount');
-    $data['status'] = $this->input->post('status');
-
-    if ($data['paid_amount'] > $data['total_amount']) {
-        $response = array('status' => false, 'notification' => 'Paid amount cannot be greater than total amount');
+    // Valider les champs requis
+    if (empty($data['school_id']) || empty($data['class_id']) || empty($data['section_id']) || empty($data['title']) || empty($data['total_amount']) || empty($data['paid_amount']) || empty($data['status'])) {
+        log_message('error', 'Échec de la validation : champs requis manquants');
+        $response = array('status' => false, 'notification' => 'Tous les champs sont requis', 'received_data' => $data);
         return $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
-    if ($data['status'] == 'paid' && $data['total_amount'] != $data['paid_amount']) {
-        $response = array('status' => false, 'notification' => 'Paid amount is not equal to total amount');
-        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
-    }
-
-    $data['title'] = $this->input->post('title');
-    $data['class_id'] = $this->input->post('class_id');
-    $data['school_id'] = $this->school_id;
+    // Ajouter des champs supplémentaires
     $data['session'] = $this->active_session;
-    $data['created_at'] = strtotime(date('d-M-Y'));
+    $data['created_at'] = date('Y-m-d H:i:s');
 
-    if ($this->input->post('paid_amount') > 0) {
-        $data['updated_at'] = strtotime(date('d-M-Y'));
+    // Requête pour sélectionner les étudiants à partir de la table `enrols`
+    $this->db->select('student_id');
+    $this->db->from('enrols');
+    $this->db->where('class_id', $data['class_id']);
+    $this->db->where('section_id', $data['section_id']);
+    $this->db->where('school_id', $data['school_id']);
+    $students = $this->db->get()->result_array();
+
+    // Vérifier si des étudiants existent
+    if (empty($students)) {
+        log_message('error', 'Aucun étudiant trouvé pour class_id: ' . $data['class_id'] . ', section_id: ' . $data['section_id'] . ', school_id: ' . $data['school_id']);
+        $response = array('status' => false, 'notification' => 'Aucun étudiant trouvé pour la classe et la section sélectionnées');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
-    $enrolments = $this->user_model->get_student_details_by_id('section', $this->input->post('section_id'));
-    foreach ($enrolments as $enrolment) {
-        $data['student_id'] = $enrolment['student_id'];
-        $this->db->insert('invoices', $data);
+    log_message('debug', 'Étudiants trouvés : ' . json_encode($students));
+
+    // Créer une facture pour chaque étudiant
+    foreach ($students as $student) {
+        $invoice_data = $data;
+        $invoice_data['student_id'] = $student['student_id'];
+        $this->db->insert('invoices', $invoice_data);
+        log_message('debug', 'Facture créée pour student_id : ' . $student['student_id']);
     }
 
-    if (sizeof($enrolments) > 0) {
-        $response = array('status' => true, 'notification' => 'Invoices added successfully');
-    } else {
-        $response = array('status' => false, 'notification' => 'No students found');
-    }
-
+    log_message('debug', 'Toutes les factures ont été créées avec succès');
+    $response = array('status' => true, 'notification' => 'Factures créées avec succès');
     return $this->output->set_content_type('application/json')->set_output(json_encode($response));
 }
+
 
 public function update_invoice($id = "") {
     $previous_invoice_data = $this->db->get_where('invoices', array('id' => $id))->row_array();
@@ -7007,22 +6901,6 @@ public function get_invoices_by_student($student_id) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Login API CALL
     public function login_post() {
         try {
@@ -7040,7 +6918,7 @@ public function get_invoices_by_student($student_id) {
                 'message' => 'An error occurred. Please try again later.'
             ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
+    } 
     
   // FORGOT PASSWORD API CALL
   public function forgot_password_post() {
@@ -7799,8 +7677,6 @@ public function update_Password_post() {
 
     echo json_encode($response);
 }
-
-
 
 
 }

@@ -260,10 +260,18 @@ $route['api/GetRoutineByClassAndSection/(:num)/(:num)'] = 'api/Admin/routines_by
 
 $route['api/GetInvoice'] = 'api/Admin/invoice_by_date_range';
 $route['api/invoices/parent'] = 'api/Admin/get_invoice_by_parent_id';
-$route['api/invoices/create'] = 'api/Admin/create_single_invoice';
-$route['api/invoices/create_mass'] = 'api/Admin/create_mass_invoice';
+$route['api/invoices/CreateSingleInvoice'] = 'api/Admin/create_single_invoice';
+$route['api/invoices/CreateMassInvoice'] = 'api/Admin/create_mass_invoice';
 $route['api/invoices/update/(:num)'] = 'api/Admin/update_invoice/$1';
 $route['api/invoices/delete/(:num)'] = 'api/Admin/delete_invoice/$1';
+$route['api/GetStudentFreeFilter'] = 'api/Admin/invoices_by_filter';
+$route['api/Getclasses']= 'api/Admin/classe';
+
+
+
+
+
+
 
 
 
@@ -290,6 +298,3 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 
 //register 
 $route['api/Register']  = 'api/Admin/register';
-
-
-
