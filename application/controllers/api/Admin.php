@@ -7801,6 +7801,710 @@ public function update_Password_post() {
 }
 
 
+//Lessons
+
+public function add_lesson_youtube_post() {
+    log_message('info', 'Starting add_lesson_youtube_post function.');
+
+    // Get the JSON input and decode it
+    $input_data = json_decode(file_get_contents("php://input"), true);
+    $youtube_url = isset($input_data['youtube_url']) ? $input_data['youtube_url'] : '';
+
+    log_message('info', 'Received YouTube URL: ' . $youtube_url);
+
+    if (empty($youtube_url)) {
+        $response = ['status' => 'error', 'message' => 'URL YouTube manquante'];
+        log_message('error', 'YouTube URL is missing.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Extract video ID from URL
+    preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $youtube_url, $match);
+    $video_id = isset($match[1]) ? $match[1] : null;
+    log_message('info', 'Extracted Video ID: ' . $video_id);
+
+    if (!$video_id) {
+        $response = ['status' => 'error', 'message' => 'URL YouTube invalide'];
+        log_message('error', 'Invalid YouTube URL provided.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Retrieve YouTube API key from the settings table
+    $api_key = $this->db->select('youtube_api_key')->get_where('settings', ['id' => 1])->row()->youtube_api_key;
+    log_message('info', 'Retrieved YouTube API key.');
+
+    $youtube_api_url = "https://www.googleapis.com/youtube/v3/videos?id={$video_id}&key={$api_key}&part=snippet,contentDetails";
+    log_message('info', 'YouTube API URL: ' . $youtube_api_url);
+
+    $video_data = file_get_contents($youtube_api_url);
+    if ($video_data === false) {
+        $response = ['status' => 'error', 'message' => 'Erreur de connexion à l\'API YouTube'];
+        log_message('error', 'Failed to connect to the YouTube API.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    $video_data = json_decode($video_data, true);
+    if ($video_data === null || empty($video_data['items'])) {
+        $response = ['status' => 'error', 'message' => 'Aucune donnée trouvée pour cet ID de vidéo'];
+        log_message('error', 'No items found in YouTube API response.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    $video_info = $video_data['items'][0]['snippet'];
+    $content_details = $video_data['items'][0]['contentDetails'];
+    $duration = $this->convert_iso8601_duration($content_details['duration']);
+    log_message('info', 'Converted video duration: ' . $duration);
+
+    $lesson_data = [
+        'title' => isset($input_data['title']) ? $input_data['title'] : $video_info['title'],
+        'summary' => isset($input_data['summary']) ? $input_data['summary'] : $video_info['description'],
+        'course_id' => isset($input_data['course_id']) ? $input_data['course_id'] : null,
+        'section_id' => isset($input_data['section_id']) ? $input_data['section_id'] : null,
+        'duration' => $duration,
+        'video_type' => 'youtube',
+        'video_url' => $youtube_url,
+        'lesson_type' => 'video',
+        'date_added' => date('Y-m-d H:i:s'),
+        'last_modified' => date('Y-m-d H:i:s')
+    ];
+    log_message('info', 'Prepared lesson data: ' . json_encode($lesson_data));
+
+    $insert_result = $this->db->insert('lesson', $lesson_data);
+    $lesson_id = $this->db->insert_id();
+
+    if ($insert_result && $lesson_id) {
+        log_message('info', 'Lesson added successfully with ID: ' . $lesson_id);
+        $response = [
+            'status' => 'success',
+            'message' => 'Leçon ajoutée avec succès',
+            'lesson_id' => $lesson_id,
+            'duration' => $duration  // Include the duration in the response
+        ];
+    } else {
+        log_message('error', 'Failed to insert lesson into the database.');
+        $response = ['status' => 'error', 'message' => 'Erreur lors de l\'ajout de la leçon'];
+    }
+
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    log_message('info', 'Response sent to client.');
+}
+
+private function convert_iso8601_duration($iso_duration) {
+    try {
+        $interval = new DateInterval($iso_duration);
+        return sprintf('%02d:%02d:%02d', $interval->h, $interval->i, $interval->s);
+    } catch (Exception $e) {
+        log_message('error', 'Error in convert_iso8601_duration: ' . $e->getMessage());
+        return '00:00:00';
+    }
+}
+
+public function get_youtube_video_duration_post() {
+    log_message('info', 'Starting get_youtube_video_duration_post function.');
+
+    // Get the JSON input and decode it
+    $input_data = json_decode(file_get_contents("php://input"), true);
+    $youtube_url = isset($input_data['youtube_url']) ? $input_data['youtube_url'] : '';
+
+    log_message('info', 'Received YouTube URL: ' . $youtube_url);
+
+    if (empty($youtube_url)) {
+        $response = ['status' => 'error', 'message' => 'YouTube URL is missing'];
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Extract video ID from URL
+    preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $youtube_url, $match);
+    $video_id = isset($match[1]) ? $match[1] : null;
+
+    if (!$video_id) {
+        $response = ['status' => 'error', 'message' => 'Invalid YouTube URL'];
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Retrieve YouTube API key from the settings table
+    $api_key = $this->db->select('youtube_api_key')->get_where('settings', ['id' => 1])->row()->youtube_api_key;
+
+    $youtube_api_url = "https://www.googleapis.com/youtube/v3/videos?id={$video_id}&key={$api_key}&part=contentDetails";
+
+    $video_data = file_get_contents($youtube_api_url);
+    if ($video_data === false) {
+        $response = ['status' => 'error', 'message' => 'Failed to connect to YouTube API'];
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    $video_data = json_decode($video_data, true);
+    if ($video_data === null || empty($video_data['items'])) {
+        $response = ['status' => 'error', 'message' => 'No data found for this video ID'];
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    $content_details = $video_data['items'][0]['contentDetails'];
+    $duration = $this->convert_iso8601_duration($content_details['duration']);
+
+    $response = [
+        'status' => 'success',
+        'duration' => $duration
+    ];
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function display_youtube_get() {
+    log_message('info', 'Starting display_youtube_get function.');
+
+    // Get YouTube URL from GET parameters
+    $youtube_url = $this->input->get('youtube_url');
+    log_message('info', 'Received YouTube URL: ' . $youtube_url);
+
+    if (empty($youtube_url)) {
+        $response = ['status' => 'error', 'message' => 'YouTube URL is missing'];
+        log_message('error', 'YouTube URL is missing.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Extract video ID from URL
+    preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $youtube_url, $match);
+    $video_id = isset($match[1]) ? $match[1] : null;
+
+    if (!$video_id) {
+        $response = ['status' => 'error', 'message' => 'Invalid YouTube URL'];
+        log_message('error', 'Invalid YouTube URL provided.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Retrieve YouTube API key from the settings table
+    $api_key = $this->db->select('youtube_api_key')->get_where('settings', ['id' => 1])->row()->youtube_api_key;
+    log_message('info', 'Retrieved YouTube API key.');
+
+    $youtube_api_url = "https://www.googleapis.com/youtube/v3/videos?id={$video_id}&key={$api_key}&part=snippet,contentDetails";
+    log_message('info', 'YouTube API URL: ' . $youtube_api_url);
+
+    // Fetch video data from YouTube API
+    $video_data = file_get_contents($youtube_api_url);
+    if ($video_data === false) {
+        $response = ['status' => 'error', 'message' => 'Failed to connect to YouTube API'];
+        log_message('error', 'Failed to connect to YouTube API.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    $video_data = json_decode($video_data, true);
+    if ($video_data === null || empty($video_data['items'])) {
+        $response = ['status' => 'error', 'message' => 'No data found for this video ID'];
+        log_message('error', 'No items found in YouTube API response.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    $video_info = $video_data['items'][0]['snippet'];
+    $content_details = $video_data['items'][0]['contentDetails'];
+    $duration = $this->convert_iso8601_duration($content_details['duration']);
+    log_message('info', 'Converted video duration: ' . $duration);
+
+    // Prepare the response data
+    $response = [
+        'status' => 'success',
+        'title' => $video_info['title'],
+        'description' => $video_info['description'],
+        'duration' => $duration,
+        'publishedAt' => $video_info['publishedAt'],
+        'thumbnail' => $video_info['thumbnails']['high']['url']
+    ];
+
+    log_message('info', 'Video information retrieved and ready for output.');
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function update_lesson_youtube_post() {
+    log_message('info', 'Starting update_lesson_youtube_post function.');
+
+    // Decode the JSON input
+    $input_data = json_decode(file_get_contents("php://input"), true);
+    $lesson_id = $input_data['lesson_id'] ?? null;
+    $youtube_url = $input_data['youtube_url'] ?? null;
+
+    if (!$lesson_id) {
+        $this->output->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Lesson ID is required']));
+        log_message('error', 'Lesson ID is missing.');
+        return;
+    }
+
+    // Check if the lesson exists
+    $lesson = $this->db->get_where('lesson', ['id' => $lesson_id])->row();
+    if (!$lesson) {
+        $this->output->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Lesson not found']));
+        log_message('error', 'Lesson not found with ID: ' . $lesson_id);
+        return;
+    }
+
+    // Prepare data for update
+    $update_data = [];
+    
+    // Process YouTube URL and fetch video details if provided
+    if ($youtube_url) {
+        preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i', $youtube_url, $match);
+        $video_id = $match[1] ?? null;
+
+        if (!$video_id) {
+            $this->output->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid YouTube URL']));
+            log_message('error', 'Invalid YouTube URL provided.');
+            return;
+        }
+
+        // Fetch API key and video details from YouTube
+        $api_key = $this->db->select('youtube_api_key')->get_where('settings', ['id' => 1])->row()->youtube_api_key;
+        $youtube_api_url = "https://www.googleapis.com/youtube/v3/videos?id={$video_id}&key={$api_key}&part=snippet,contentDetails";
+        
+        $video_data = @file_get_contents($youtube_api_url);
+        if ($video_data === false) {
+            $this->output->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to connect to YouTube API']));
+            log_message('error', 'Failed to connect to YouTube API.');
+            return;
+        }
+
+        $video_data = json_decode($video_data, true);
+        if ($video_data === null || empty($video_data['items'])) {
+            $this->output->set_content_type('application/json')
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'No data found for this video ID']));
+            log_message('error', 'No items found in YouTube API response.');
+            return;
+        }
+
+        $video_info = $video_data['items'][0]['snippet'];
+        $content_details = $video_data['items'][0]['contentDetails'];
+        $duration = $this->convert_iso8601_duration($content_details['duration']);
+        
+        // Populate update data with video information
+        $update_data['video_url'] = $youtube_url;
+        $update_data['title'] = $input_data['title'] ?? $video_info['title'];
+        $update_data['summary'] = $input_data['summary'] ?? $video_info['description'];
+        $update_data['duration'] = $duration;
+    }
+
+    // Populate update data with other fields if provided
+    if (isset($input_data['title'])) {
+        $update_data['title'] = $input_data['title'];
+    }
+    if (isset($input_data['summary'])) {
+        $update_data['summary'] = $input_data['summary'];
+    }
+    if (isset($input_data['course_id'])) {
+        $update_data['course_id'] = $input_data['course_id'];
+    }
+    if (isset($input_data['section_id'])) {
+        $update_data['section_id'] = $input_data['section_id'];
+    }
+    $update_data['last_modified'] = date('Y-m-d H:i:s');
+
+    // Perform update and handle response
+    $this->db->where('id', $lesson_id);
+    $update_result = $this->db->update('lesson', $update_data);
+
+    if ($update_result) {
+        $this->output->set_content_type('application/json')
+             ->set_output(json_encode([
+                 'status' => 'success',
+                 'message' => 'Lesson updated successfully',
+                 'lesson_id' => $lesson_id,
+                 'duration' => $update_data['duration'] ?? $lesson->duration
+             ]));
+        log_message('info', 'Lesson updated successfully with ID: ' . $lesson_id);
+    } else {
+        $this->output->set_content_type('application/json')
+             ->set_output(json_encode(['status' => 'error', 'message' => 'Error updating lesson']));
+        log_message('error', 'Failed to update lesson in the database.');
+    }
+    log_message('info', 'Response sent to client.');
+}
+
+public function get_lesson_details_post() {
+    // Retrieve lesson_id from POST data
+    $input_data = json_decode(file_get_contents("php://input"), true);
+    $lesson_id = $input_data['lesson_id'] ?? null;
+
+    if (empty($lesson_id)) {
+        $response = ['status' => 'error', 'message' => 'Lesson ID is required'];
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Query the database to retrieve lesson details
+    $lesson = $this->db->get_where('lesson', ['id' => $lesson_id])->row_array();
+
+    if ($lesson) {
+        $response = [
+            'status' => 'success',
+            'lesson' => $lesson,
+        ];
+    } else {
+        $response = [
+            'status' => 'error',
+            'message' => 'Lesson not found',
+        ];
+    }
+
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function delete_lesson_post() {
+    log_message('info', 'Starting delete_lesson_post function.');
+
+    // Decode JSON input to get the lesson ID
+    $input_data = json_decode(file_get_contents("php://input"), true);
+    $lesson_id = $input_data['lesson_id'] ?? null;
+
+    // Check for missing lesson ID
+    if (empty($lesson_id)) {
+        $response = ['status' => 'error', 'message' => 'Lesson ID is required'];
+        log_message('error', 'Lesson ID is missing.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Verify that the lesson exists
+    $lesson = $this->db->get_where('lesson', ['id' => $lesson_id])->row();
+    if (!$lesson) {
+        $response = ['status' => 'error', 'message' => 'Lesson not found'];
+        log_message('error', 'Lesson not found with ID: ' . $lesson_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Proceed to delete the lesson
+    $this->db->where('id', $lesson_id);
+    $delete_result = $this->db->delete('lesson');
+
+    // Response based on the deletion result
+    if ($delete_result) {
+        $response = [
+            'status' => 'success',
+            'message' => 'Lesson deleted successfully',
+            'lesson_id' => $lesson_id
+        ];
+        log_message('info', 'Lesson deleted successfully with ID: ' . $lesson_id);
+    } else {
+        $response = ['status' => 'error', 'message' => 'Error deleting lesson'];
+        log_message('error', 'Failed to delete lesson with ID: ' . $lesson_id);
+    }
+
+    // Send response to client
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    log_message('info', 'Response sent to client.');
+}
+
+public function lesson_video_type_post() {
+    // Decode JSON input
+    $input_data = json_decode(file_get_contents("php://input"), true);
+    $lesson_id = $input_data['lesson_id'] ?? null;
+
+    // Check if lesson ID is provided
+    if (empty($lesson_id)) {
+        $response = ['status' => 'error', 'message' => 'Lesson ID is required'];
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Retrieve lesson details including section_id and section title
+    $this->db->select('lesson.id, lesson.lesson_type, lesson.video_type, lesson.video_url, lesson.section_id, course_section.title AS section_title');
+    $this->db->from('lesson');
+    $this->db->join('course_section', 'course_section.id = lesson.section_id', 'left'); // Join with course_section table to get section title
+    $this->db->where('lesson.id', $lesson_id);
+    $lesson = $this->db->get()->row_array();
+
+    // Check if the lesson exists
+    if ($lesson) {
+        $response = [
+            'status' => 'success',
+            'lesson' => $lesson
+        ];
+    } else {
+        $response = [
+            'status' => 'error',
+            'message' => 'Lesson not found'
+        ];
+    }
+
+    // Send response
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function update_lesson_device_post() {
+    $this->load->library('form_validation');
+
+    // Set validation rules
+    $this->form_validation->set_rules('lesson_id', 'Lesson ID', 'required');
+    $this->form_validation->set_rules('course_id', 'Course ID', 'required');
+    $this->form_validation->set_rules('title', 'Title', 'required');
+    $this->form_validation->set_rules('section_id', 'Section ID', 'required');
+    $this->form_validation->set_rules('lesson_type', 'Lesson Type', 'required');
+
+    if ($this->form_validation->run() == FALSE) {
+        $response = [
+            'status' => 'error',
+            'message' => strip_tags(validation_errors())
+        ];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Retrieve lesson ID and check if it exists
+    $lesson_id = $this->input->post('lesson_id');
+    $lesson = $this->db->get_where('lesson', ['id' => $lesson_id])->row_array();
+
+    if (!$lesson) {
+        $response = ['status' => 'error', 'message' => 'Lesson not found'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Prepare lesson data for update
+    $data = [
+        'course_id' => $this->input->post('course_id'),
+        'title' => $this->input->post('title'),
+        'section_id' => $this->input->post('section_id'),
+        'summary' => $this->input->post('summary'),
+        'lesson_type' => $this->input->post('lesson_type'),
+        'last_modified' => time(),
+        'attachment_type' => null
+    ];
+
+    // Handle video types
+    if ($data['lesson_type'] == 'video') {
+        $lesson_provider = $this->input->post('lesson_provider');
+        if ($lesson_provider == 'youtube' || $lesson_provider == 'vimeo') {
+            $data['video_url'] = $this->input->post('video_url');
+            $data['duration'] = $this->input->post('duration');
+            $data['video_type'] = $lesson_provider;
+        } elseif ($lesson_provider == 'mydevice') {
+            $data['video_type'] = 'mydevice';
+            // Attempt to upload video file if a new file is provided
+            if (isset($_FILES['userfileMe'])) {
+                $video_file_name = $this->upload_file('userfileMe', 'uploads/videos/');
+                if ($video_file_name) {
+                    $data['video_upload'] = $video_file_name;
+                } else {
+                    return $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'error', 'message' => 'Video upload failed']));
+                }
+            } else {
+                // Retain the existing video upload if no new file is provided
+                $data['video_upload'] = $lesson['video_upload'];
+            }
+        } else {
+            return $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'error', 'message' => 'Invalid lesson provider']));
+        }
+    } else {
+        // Handle other types with an attachment
+        if (isset($_FILES['attachment'])) {
+            $attachment_file_name = $this->upload_file('attachment', 'uploads/lesson_files/');
+            if ($attachment_file_name) {
+                $data['attachment'] = $attachment_file_name;
+            }
+        } else {
+            // Retain the existing attachment if no new file is provided
+            $data['attachment'] = $lesson['attachment'];
+        }
+    }
+
+    // Update the database
+    $this->db->where('id', $lesson_id);
+    $this->db->update('lesson', $data);
+
+    $response = ['status' => 'success', 'message' => 'Lesson updated successfully'];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function add_lesson_with_attachment_post() {
+    log_message('info', 'Starting add_lesson_with_attachment_post function.');
+
+    // Retrieve POST data
+    $title = $this->input->post('title');
+    $course_id = $this->input->post('course_id');
+    $section_id = $this->input->post('section_id');
+    $lesson_type = $this->input->post('lesson_type');
+    $summary = $this->input->post('summary');
+    $attachment_type = $this->input->post('attachment_type'); // e.g., pdf, image, document, text
+
+    // Validate required fields
+    if (empty($title) || empty($course_id) || empty($section_id) || empty($lesson_type)) {
+        $response = ['status' => 'error', 'message' => 'Missing required fields'];
+        log_message('error', 'Missing required fields.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Handle file upload if applicable
+    $attachment_file_name = null;
+    if (isset($_FILES['attachment'])) {
+        $upload_path = 'uploads/lesson_files/';
+        $allowed_types = $this->get_allowed_file_types($attachment_type);
+
+        $config['upload_path'] = $upload_path;
+        $config['allowed_types'] = implode('|', $allowed_types);
+        $config['encrypt_name'] = true;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('attachment')) {
+            $upload_data = $this->upload->data();
+            $attachment_file_name = $upload_data['file_name'];
+            log_message('info', 'File uploaded successfully: ' . $attachment_file_name);
+        } else {
+            $response = ['status' => 'error', 'message' => $this->upload->display_errors()];
+            log_message('error', 'File upload error: ' . $this->upload->display_errors());
+            $this->output->set_content_type('application/json')->set_output(json_encode($response));
+            return;
+        }
+    }
+
+    // Prepare lesson data for insertion
+    $lesson_data = [
+        'title' => $title,
+        'course_id' => $course_id,
+        'section_id' => $section_id,
+        'lesson_type' => $lesson_type,
+        'attachment' => $attachment_file_name,
+        'attachment_type' => $attachment_type,
+        'summary' => $summary,
+        'date_added' => date('Y-m-d H:i:s'),
+        'last_modified' => date('Y-m-d H:i:s'),
+    ];
+
+    // Insert lesson data into the database
+    $insert_result = $this->db->insert('lesson', $lesson_data);
+    $lesson_id = $this->db->insert_id();
+
+    if ($insert_result && $lesson_id) {
+        $response = [
+            'status' => 'success',
+            'message' => 'Lesson added successfully',
+            'lesson_id' => $lesson_id,
+        ];
+        log_message('info', 'Lesson added successfully with ID: ' . $lesson_id);
+    } else {
+        $response = ['status' => 'error', 'message' => 'Failed to add lesson'];
+        log_message('error', 'Failed to insert lesson into the database.');
+    }
+
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+private function get_allowed_file_types($attachment_type) {
+    switch ($attachment_type) {
+        case 'pdf':
+            return ['pdf'];
+        case 'image':
+            return ['jpg', 'jpeg', 'png'];
+        case 'document':
+            return ['doc', 'docx', 'txt'];
+        case 'text':
+            return ['txt'];
+        default:
+            return [];
+    }
+}
+
+
+public function update_lesson_with_attachment_post() {
+    log_message('info', 'Starting update_lesson_with_attachment_post function.');
+
+    // Retrieve POST data
+    $lesson_id = $this->input->post('lesson_id');
+    $title = $this->input->post('title');
+    $course_id = $this->input->post('course_id');
+    $section_id = $this->input->post('section_id');
+    $lesson_type = $this->input->post('lesson_type');
+    $summary = $this->input->post('summary');
+    $attachment_type = $this->input->post('attachment_type'); // e.g., pdf, image, document, text
+
+    // Validate required fields
+    if (empty($lesson_id) || empty($title) || empty($course_id) || empty($section_id) || empty($lesson_type)) {
+        $response = ['status' => 'error', 'message' => 'Missing required fields'];
+        log_message('error', 'Missing required fields.');
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Check if lesson exists
+    $lesson = $this->db->get_where('lesson', ['id' => $lesson_id])->row();
+    if (!$lesson) {
+        $response = ['status' => 'error', 'message' => 'Lesson not found'];
+        log_message('error', 'Lesson not found with ID: ' . $lesson_id);
+        $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        return;
+    }
+
+    // Handle file upload if applicable
+    $attachment_file_name = $lesson->attachment; // Retain existing file if no new upload
+    if (isset($_FILES['attachment'])) {
+        $upload_path = 'uploads/lesson_files/';
+        $allowed_types = $this->get_allowed_file_types($attachment_type);
+
+        $config['upload_path'] = $upload_path;
+        $config['allowed_types'] = implode('|', $allowed_types);
+        $config['encrypt_name'] = true;
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('attachment')) {
+            // Delete the previous file if it exists
+            if (!empty($lesson->attachment) && file_exists($upload_path . $lesson->attachment)) {
+                unlink($upload_path . $lesson->attachment);
+            }
+
+            $upload_data = $this->upload->data();
+            $attachment_file_name = $upload_data['file_name'];
+            log_message('info', 'File uploaded successfully: ' . $attachment_file_name);
+        } else {
+            $response = ['status' => 'error', 'message' => $this->upload->display_errors()];
+            log_message('error', 'File upload error: ' . $this->upload->display_errors());
+            $this->output->set_content_type('application/json')->set_output(json_encode($response));
+            return;
+        }
+    }
+
+    // Prepare lesson data for update
+    $lesson_data = [
+        'title' => $title,
+        'course_id' => $course_id,
+        'section_id' => $section_id,
+        'lesson_type' => $lesson_type,
+        'attachment' => $attachment_file_name,
+        'attachment_type' => $attachment_type,
+        'summary' => $summary,
+        'last_modified' => date('Y-m-d H:i:s'),
+    ];
+
+    // Update lesson data in the database
+    $this->db->where('id', $lesson_id);
+    $update_result = $this->db->update('lesson', $lesson_data);
+
+    if ($update_result) {
+        $response = [
+            'status' => 'success',
+            'message' => 'Lesson updated successfully',
+            'lesson_id' => $lesson_id,
+        ];
+        log_message('info', 'Lesson updated successfully with ID: ' . $lesson_id);
+    } else {
+        $response = ['status' => 'error', 'message' => 'Failed to update lesson'];
+        log_message('error', 'Failed to update lesson in the database.');
+    }
+
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
 
 
 }
