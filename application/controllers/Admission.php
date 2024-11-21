@@ -54,7 +54,8 @@ class Admission extends CI_Controller
             }
             if ($param2 == 'school'){
                 echo $this->frontend_model->online_admission_school();
-                return;}
+                return;
+            }
           
         }
 
@@ -70,6 +71,10 @@ class Admission extends CI_Controller
             if ($param1 == 'submit') {
                 if (!$this->crud_model->check_recaptcha() && get_common_settings('recaptcha_status') == true) {
                     redirect(site_url('home/contact'), 'refresh');
+                }
+                if ($param2 == 'student'){
+                    echo $this->user_model->register_user_form();
+                    return;
                 }
 
               

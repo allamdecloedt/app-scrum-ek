@@ -24,18 +24,30 @@
       src="<?php echo base_url('assets/frontend/ultimate/img/online admission/oa-img-top.jpg') ?>" alt="">
     <div class="general-container-ol"></div>
   </div>
-  <!-- End Header Section -->
-
 
   <!-- Admission Form Section -->
   <div class="container-fluid form-section pt-10">
+    <!-- Display Error -->
+    <?php if ($this->session->flashdata('error')): ?>
+        <div class="alert alert-danger">
+            <?php echo $this->session->flashdata('error');$this->session->unset_userdata('error');  ?>
+            
+        </div>
+    <?php endif; ?>
+
+    <!-- Display Success -->
+    <?php if ($this->session->flashdata('success')): ?>
+        <div class="alert alert-success">
+            <?php echo $this->session->flashdata('success'); $this->session->unset_userdata('success'); ?>
+        </div>
+    <?php endif; ?>
 
 
 
     <!-- Student Admission Form -->
 
-    <form action="<?php echo site_url('register/register_user_form'); ?>" method="post" id="studentform"
-      class="js-validate studentform  container" enctype="multipart/form-data">
+    <form action="<?php echo site_url('admission/online_admission_student/submit/student'); ?>" method="post" id="studentform"
+      class="js-validate studentform realtime-form container" enctype="multipart/form-data">
           <!-- Champ caché pour le jeton CSRF -->
      <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
 
@@ -394,32 +406,6 @@
 
 
 
-  <script type="text/javascript">
-    $(function () {
-      $('.realtime-form').ajaxForm({
-        beforeSend: function () {
-        },
-        uploadProgress: function (event, position, total, percentComplete) {
-
-        },
-        complete: function (xhr) {
-          setTimeout(function () {
-            var jsonResponse = JSON.parse(xhr.responseText);
-            if (jsonResponse.status == 1) {
-              success_notify(jsonResponse.message);
-              $('#resetBtn').click();
-            } else {
-              error_notify(jsonResponse.message);
-            }
-          }, 500);
-        },
-        error: function () {
-          //You can write here your js error message
-
-        }
-      });
-    });
-  </script>
 
 
   <script>
@@ -435,6 +421,7 @@
        
        setTimeout(function () {
         studentform.reset(); 
+        location.reload();
       }, 500);
 
       } else {

@@ -1406,5 +1406,8 @@
     "online_admission_student": "Online admission student",
     "send": "Send",
     "your_message_has_been_sent_successfully.": "Your message has been sent successfully.",
-    "visit_dashboard": "Visit dashboard"
+    "visit_dashboard": "Visit dashboard",
+    "email_already_exists": "Email already exists",
+    "validation_error": "Validation error",
+    "access_mode": "Access mode"
 }

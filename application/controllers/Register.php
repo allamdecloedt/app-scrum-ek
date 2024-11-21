@@ -50,8 +50,9 @@ class Register extends CI_Controller
      public function register_user_form()
     {
 
-        $this->user_model->register_user_form();
-
+        
+        echo $this->user_model->register_user_form();
+        return;
         if (isset($_SERVER['HTTP_REFERER'])) {
             redirect($_SERVER['HTTP_REFERER'], 'refresh');
         }

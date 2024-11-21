@@ -29,6 +29,20 @@
 
   <!-- Admission Form Section -->
   <div class="container-fluid form-section pt-10">
+   <!-- Display Error -->
+   <?php if ($this->session->flashdata('error')): ?>
+        <div class="alert alert-danger">
+            <?php echo $this->session->flashdata('error');$this->session->unset_userdata('error');  ?>
+            
+        </div>
+    <?php endif; ?>
+
+    <!-- Display Success -->
+    <?php if ($this->session->flashdata('success')): ?>
+        <div class="alert alert-success">
+            <?php echo $this->session->flashdata('success'); $this->session->unset_userdata('success'); ?>
+        </div>
+    <?php endif; ?>>
 
     <!-- Start School Admission Form -->
 
@@ -198,7 +212,7 @@
                 </svg>
               </span>
               <span class="form-label text-white text-end">
-                <?php echo get_phrase('visibility'); ?>
+                <?php echo get_phrase('access_mode'); ?>
                 <span class="text-danger">*</span>
               </span>
               <div class="visibility-selector pt-3">
@@ -477,7 +491,7 @@
 
 
 
-  <script type="text/javascript">
+  <!-- <script type="text/javascript">
     $(function () {
       $('.realtime-form').ajaxForm({
         beforeSend: function () {
@@ -502,7 +516,7 @@
         }
       });
     });
-  </script>
+  </script> -->
 
 
 
@@ -518,6 +532,7 @@
 
        setTimeout(function () {
         schoolform.reset(); 
+        location.reload();
       }, 500);
       } else {
  

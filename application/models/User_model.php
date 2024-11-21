@@ -1450,7 +1450,7 @@ public function register_user_form()
             redirect($_SERVER['HTTP_REFERER'], 'refresh');
         }
 
-    } else if ($this->db->get_where('users', array('email' => $this->input->post('register_email')))->num_rows() > 0) {
+    } else if ($this->db->get_where('users', array('email' => $this->input->post('student_email')))->num_rows() > 0) {
 
         $this->session->set_flashdata('error', get_phrase('email_already_exists'));
         if (isset($_SERVER['HTTP_REFERER'])) {
@@ -1458,6 +1458,7 @@ public function register_user_form()
         }
 
     } else {
+
 
         $data['name'] = htmlspecialchars($this->input->post('first_name') . ' ' . $this->input->post('last_name'));
         $data['email'] = htmlspecialchars($this->input->post('student_email'));
@@ -1491,6 +1492,7 @@ public function register_user_form()
         $this->session->set_userdata('user_name', $data['name']);
         $this->session->set_userdata('user_type', 'student');
         $this->session->set_flashdata('success', get_phrase('registration_successful'));
+		
     }
 
     if (isset($_SERVER['HTTP_REFERER'])) {
