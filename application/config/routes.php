@@ -304,3 +304,10 @@ $route['api/UpdateLessonDevice'] = 'api/Admin/update_lesson_device';
 $route['api/AddOthersLessons'] = 'api/Admin/add_lesson_with_attachment';
 $route['api/UpdateOthersLessons'] = 'api/Admin/update_lesson_with_attachment';
 
+// Session Manager 
+$route['api/GetSessionManager/list'] = 'api/Admin/list';
+$route['api/CreateSessionManager/create'] = 'api/Admin/create';
+$route['api/UpdateSessionManager/(:num)'] = 'api/Admin/update/$1';
+$route['api/DeleteSessionManager/delete/(:num)'] = 'api/Admin/delete/$1';
+$route['api/ActivateSessionManager/activate/(:num)'] = 'api/Admin/activate/$1';
+$route['api/DesactivateSessionManager/deactivate/(:num)'] = 'api/Admin/deactivate/$1';
