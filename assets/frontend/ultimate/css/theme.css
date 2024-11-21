@@ -12254,6 +12254,9 @@ a.text-indigo:hover, a.text-indigo:focus {
   .w-sm-85 {
     width: 85% !important;
   }
+    .w-sm-100 {
+    width: 100% !important;
+  }
 }
 
 @media (min-width: 768px) {

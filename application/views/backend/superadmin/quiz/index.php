@@ -155,17 +155,27 @@ function openQuizResultModal(quiz_id, user_id) {
     $('#quizResultModal').modal('show');
     // alert(quiz_id);
     // Charger les données via AJAX
+    // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+    var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+    var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+
     $.ajax({
         url: '<?php echo site_url('addons/lessons/check_result_pop_up'); ?>',
         type: 'post',
         data: {
             quiz_id: quiz_id,
-            user_id: user_id
+            user_id: user_id,
+            [csrfName]: csrfHash
         },
-        success: function(response) {
-
+        dataType: 'json',
+        success: function(response) {        
             // Injecter le contenu dans la modale
-            $('#quiz-result-content').html(response);
+            $('#quiz-result-content').html(response.status);
+
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); 
         },
         error: function() {
             $('#quiz-result-content').html('<p>Error loading quiz results. Please try again.</p>');

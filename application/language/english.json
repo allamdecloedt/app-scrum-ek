@@ -1368,7 +1368,6 @@
     "refresh": "Refresh",
     "no_instruction_found": "No instruction found",
     "add_new_password": "Add new password",
-
     "admin_has_been_deleted_successfully": "Admin has been deleted successfully",
     "teacher_has_been_deleted_successfully": "Teacher has been deleted successfully",
     "accountant_has_been_deleted_successfully": "Accountant has been deleted successfully",
@@ -1390,10 +1389,25 @@
     "returned_successfully": "Returned successfully",
     "deleted_successfully": "Deleted successfully",
     "session_has_been_updated_successfully": "Session has been updated successfully",
-
     "invalid_email_address": "Invalid email address",
     "credentials_incorrect": "Credentials incorrect",
     "email_adress_not_in_use": "Email adress not in use",
-    "e-mail_address_not_in_use": "E-mail address not in use"
-
+    "e-mail_address_not_in_use": "E-mail address not in use",
+    "select_a_schools": "Select a schools",
+    "librarian_updated_successfully": "Librarian updated successfully",
+    "department_has_been_updated_successfully": "Department has been updated successfully",
+    "expense_updated_successfully": "Expense updated successfully",
+    "expense_deleted_successfully": "Expense deleted successfully",
+    "updated_successfully": "Updated successfully",
+    "the_file_size_exceeds_the_limit.": "The file size exceeds the limit.",
+    "old": "old",
+    "Total_Students": "Total Students",
+    "email_address": "Email address",
+    "online_admission_student": "Online admission student",
+    "send": "Send",
+    "your_message_has_been_sent_successfully.": "Your message has been sent successfully.",
+    "visit_dashboard": "Visit dashboard",
+    "email_already_exists": "Email already exists",
+    "validation_error": "Validation error",
+    "access_mode": "Access mode"
 }

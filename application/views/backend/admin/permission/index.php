@@ -17,7 +17,7 @@
             <div class="row mt-3">
                 <div class="col-md-1"></div>
                 <div class="col-md-4">
-                    <select name="class" id="class_id" class="form-control select2" data-toggle = "select2" onchange="classWiseSection(this.value)" required>
+                    <select name="class" id="class_id_permission" class="form-control select2" data-toggle = "select2" onchange="classWiseSection(this.value)" required>
                         <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                             <?php
                             $classes = $this->db->get_where('classes', array('school_id' => school_id()))->result_array();
@@ -70,7 +70,7 @@
     }
 
     function filter(){
-        var class_id = $('#class_id').val();
+        var class_id = $('#class_id_permission').val();
         var section_id = $('#section_id').val();
         if(class_id != "" && section_id!= ""){
             $.ajax({
@@ -95,16 +95,25 @@
         }else{
             value = 1;
         }
-        var class_id = $('#class_id').val();
+        var class_id = $('#class_id_permission').val();
         var section_id = $('#section_id').val();
+        // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+        var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+        var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
 
         $.ajax({
             type: 'POST',
             url: '<?php echo route('permission/modify_permission/') ?>',
-            data: {class_id : class_id, section_id : section_id, teacher_id : teacher_id, column_name : column_name,  value : value},
+            data: {class_id : class_id, section_id : section_id, teacher_id : teacher_id, column_name : column_name,  value : value , [csrfName]: csrfHash},
+            dataType: 'json',
             success: function(response){
-                $('.permission_content').html(response);
+                $('.permission_content').html(response.status);
                 success_notify('<?php echo get_phrase('permission_updated_successfully.'); ?>');
+
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrfName;
+                var newCsrfHash = response.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
             }
         });
 

@@ -112,14 +112,25 @@ var getDailtyAttendance = function () {
   var year = $('#year').val();
   var class_id = $('#class_id_attendance').val();
   var section_id = $('#section_id').val();
+  // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+  var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+  var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+
   if(class_id != "" && section_id != "" && month != "" && year != ""){
     $.ajax({
       type: 'POST',
       url: '<?php echo route('attendance/filter') ?>',
-      data: {month : month, year : year, class_id : class_id, section_id : section_id},
+      data: {month : month, year : year, class_id : class_id, section_id : section_id , [csrfName]: csrfHash},
+      dataType: 'json',
       success: function(response){
-        $('.attendance_content').html(response);
+        $('.attendance_content').html(response.status);
         initDataTable('basic-datatable');
+          
+            // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+            var newCsrfName = response.csrf.csrfName;
+            var newCsrfHash = response.csrf.csrfHash;
+            $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+
       }
     });
   }

@@ -291,11 +291,39 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 //register 
 $route['api/Register']  = 'api/Admin/register';
 
+//Book Issues 
+$route['api/GetBookIssue'] = 'api/Admin/book_issues';
+$route['api/CreateBookIssue'] = 'api/Admin/create_book_issue';
+$route['api/EditBookIssue/(:num)'] = 'api/Admin/update_book_issue/$1';
+$route['api/ReturnBookIssue/(:num)'] = 'api/Admin/return_book_issue/$1';
+$route['api/DeleteBookIssue/(:num)'] = 'api/Admin/delete_book_issue/$1';
+$route['api/GetBooksBySchool/(:num)'] = 'api/Admin/books_by_school/$1';
+$route['api/ClassesBySchool/(:num)'] = 'api/Admin/classes_by_school/$1';
+$route['api/StudentsBySchool/(:num)'] = 'api/Admin/students_by_school/$1';
+
 
 //Online School Admission
 $route['api/SchoolsNotApproved'] = 'api/Admin/not_approved_schools';
 $route['api/ApprovedSchool/(:num)'] = 'api/Admin/approve_school/$1';
 $route['api/DelSchool/(:num)'] = 'api/Admin/del_school/$1';
 $route['api/NumberSchoolsNotApproved'] = 'api/Admin/count_not_approved_schools';
-$route['api/FilterStudents/(:num)/(:num)'] = 'api/Admin/students_by_class_and_section/$1/$2';
 
+//Lessons 
+$route['api/AddLessonYoutubeVideo'] = 'api/Admin/add_lesson_youtube';
+$route['api/GetYoutubeVideoDuration'] = 'api/Admin/get_youtube_video_duration';
+$route['api/DisplayYoutubeVideo'] = 'api/Admin/display_youtube';
+$route['api/UpdateLessonYoutubeVideo'] = 'api/Admin/update_lesson_youtube';
+$route['api/GetLessonDetails'] = 'api/Admin/get_lesson_details';
+$route['api/DeleteLesson'] = 'api/Admin/delete_lesson';
+$route['api/GetLessonVideoType'] = 'api/Admin/lesson_video_type';
+$route['api/UpdateLessonDevice'] = 'api/Admin/update_lesson_device';
+$route['api/AddOthersLessons'] = 'api/Admin/add_lesson_with_attachment';
+$route['api/UpdateOthersLessons'] = 'api/Admin/update_lesson_with_attachment';
+
+// Session Manager 
+$route['api/GetSessionManager/list'] = 'api/Admin/list';
+$route['api/CreateSessionManager/create'] = 'api/Admin/create';
+$route['api/UpdateSessionManager/(:num)'] = 'api/Admin/update/$1';
+$route['api/DeleteSessionManager/delete/(:num)'] = 'api/Admin/delete/$1';
+$route['api/ActivateSessionManager/activate/(:num)'] = 'api/Admin/activate/$1';
+$route['api/DesactivateSessionManager/deactivate/(:num)'] = 'api/Admin/deactivate/$1';

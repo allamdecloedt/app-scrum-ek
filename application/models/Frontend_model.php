@@ -383,14 +383,22 @@ class Frontend_model extends CI_Model
     $address = html_escape($this->input->post('address'));
     $comment = html_escape($this->input->post('comment'));
 
-    $receiver_email = $this->db->get_where('users', array('role' => 'superadmin'))->row('email');
-
+    // $receiver_email = $this->db->get_where('users', array('role' => 'superadmin'))->row('email');
+    $receiver_email = get_settings('system_email'); 
     $msg = '<p>' . nl2br($comment) . "</p>";
     $msg .= '<p>' . $first_name . " " . $last_name . '</p>';
     $msg .= "<p>Phone : " . $phone . '</p>';
     $msg .= "<p>Address : " . $address . '</p>';
 
-    $this->email_model->contact_message_email($email, $receiver_email, $msg);
+    // $this->email_model->contact_message_email($email, $receiver_email, $msg);
+    // return json_encode(array('status' => 1, 'message' => get_phrase('successfully_has_been_recoded_your_request') ));
+    try {
+      $this->email_model->contact_message_email($email, $receiver_email, $msg);
+      $this->session->set_flashdata('toast_message', ['type' => 'success', 'message' => get_phrase('Your message has been sent successfully.')]);
+  } catch (Exception $e) {
+      $this->session->set_flashdata('toast_message', ['type' => 'error', 'message' => get_phrase('Failed to send your message. Please try again later.')]);
+  }
+
   }
 
   // update slider images
@@ -614,19 +622,27 @@ class Frontend_model extends CI_Model
       $this->db->insert('users', $admin_data);
       $user_id = $this->db->insert_id();
 
-      if ($_FILES['school_image']['error'] !== UPLOAD_ERR_OK) {
-        return json_encode(['status' => 0, 'message' => 'Error uploading file: ' . $_FILES['school_image']['error']]);
-      } else
-        move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $school_id . '.jpg');
+   
+
+        if (isset($_FILES['school_image']) && $_FILES['school_image']['error'] == UPLOAD_ERR_OK) {
+		
+          $upload_path = 'uploads/schools/' . $school_id . '.jpg';
+          move_uploaded_file($_FILES['school_image']['tmp_name'], $upload_path);
+      }
 
         $this->email_model->School_online_admission($admin_data['email'],$school_data['name'],$admin_data['name']);
-      return json_encode(array('status' => 1, 'message' => get_phrase('successfully_has_been_recoded_your_request') . '. ' . get_phrase('you_will_be_notified_by_email_address_about_this_request')));
+
+        $this->session->set_flashdata('success', get_phrase('successfully_has_been_recoded_your_request') . '. ' . get_phrase('you_will_be_notified_by_email_address_about_this_request'));
     } else {
 
       if (!$this->user_model->check_duplication_school('on_create', $this->input->post('school_name')))
-        return json_encode(array('status' => 0, 'message' => get_phrase('this_school_name_already_exist')));
+          $this->session->set_flashdata('error', get_phrase('this_school_name_already_exist'));
       else if (!$this->user_model->check_duplication('on_create', $this->input->post('email')))
-        return json_encode(array('status' => 0, 'message' => get_phrase('this_email_already_exist')));
+          $this->session->set_flashdata('error', get_phrase('this_email_already_exist'));
+    }
+
+    if (isset($_SERVER['HTTP_REFERER'])) {
+      redirect($_SERVER['HTTP_REFERER'], 'refresh');
     }
   }
 

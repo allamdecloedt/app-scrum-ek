@@ -132,6 +132,9 @@ class User_model extends CI_Model
 		if($duplication_status){
 		$this->db->insert('schools', $data);
 		$school_id = $this->db->insert_id();
+		if ($_FILES['school_image']['name'] != "") {
+			move_uploaded_file($_FILES['school_image']['tmp_name'], 'uploads/schools/' . $school_id . '.jpg');
+		}
 	    // Data to be inserted
 		$data = array(
 					array(
@@ -703,20 +706,38 @@ class User_model extends CI_Model
 		$school_id = $this->school_id;
 		$session_id = $this->active_session;
 		$role = 'student';
-
+		
 		$file_name = $_FILES['csv_file']['name'];
-		move_uploaded_file($_FILES['csv_file']['tmp_name'], 'uploads/csv_file/student.generate.csv');
+		// move_uploaded_file($_FILES['csv_file']['tmp_name'], 'uploads/csv_file/student.generate.csv');	
+		$upload_path = 'uploads/csv_file/student.generate.csv';
+		// Vérifier si le dossier de destination existe
+		if (!is_dir('uploads/csv_file/')) {
+			mkdir('uploads/csv_file/', 0755, true); // Créer le dossier avec les permissions nécessaires
+		}
+		
+		if (!move_uploaded_file($_FILES['csv_file']['tmp_name'], $upload_path)) {
+			error_log("Erreur : Impossible de déplacer le fichier uploadé.");
+			return json_encode(array('status' => false, 'notification' => 'Erreur lors du déplacement du fichier.'));
+		}
+		
+		// Vérifier si le fichier a bien été déplacé
+		if (!file_exists($upload_path)) {
+			error_log("Erreur : Fichier CSV non trouvé à l'emplacement : $upload_path");
+			return json_encode(array('status' => false, 'notification' => 'Fichier CSV introuvable.'));
+		}
 
 		if (($handle = fopen('uploads/csv_file/student.generate.csv', 'r')) !== FALSE) { // Check the resource is valid
 			$count = 0;
 			$duplication_counter = 0;
-			while (($all_data = fgetcsv($handle, 1000, ",")) !== FALSE) { // Check opening the file is OK!
+			while (($line = fgets($handle)) !== FALSE) { // Lire chaque ligne en tant que chaîne de caractères
+				$all_data = explode(',', $line); // Diviser la ligne en utilisant la virgule comme séparateur
+				   
 				if ($count > 0) {
-					$user_data['name'] = html_escape($all_data[0]);
+					$user_data['name'] = str_replace('"', '', trim($all_data[0]));
 					$user_data['email'] = html_escape($all_data[1]);
-					$user_data['password'] = sha1($all_data[2]);
-					$user_data['phone'] = html_escape($all_data[3]);
-					$user_data['gender'] = html_escape($all_data[5]);
+					$user_data['password'] = sha1(trim($all_data[2]));
+					$user_data['phone'] = trim(html_escape($all_data[3]));
+					$user_data['gender'] = str_replace('"', '', trim($all_data[4]));
 					$user_data['role'] = $role;
 					$user_data['school_id'] = $school_id;
 					$user_data['watch_history'] = '[]';
@@ -727,10 +748,9 @@ class User_model extends CI_Model
 					if ($duplication_status) {
 						$this->db->insert('users', $user_data);
 						$user_id = $this->db->insert_id();
-
 						$student_data['code'] = student_code();
 						$student_data['user_id'] = $user_id;
-						// $student_data['parent_id'] = html_escape($all_data[4]);
+						// $student_data['parent_id'] = html_escape($all_data[4]);				
 						$student_data['session'] = $session_id;
 						$student_data['school_id'] = $school_id;
 						$this->db->insert('students', $student_data);
@@ -824,19 +844,15 @@ class User_model extends CI_Model
 
 	public function delete_student($student_id, $user_id)
 	{
-		$this->db->where('id', $student_id);
-		$this->db->delete('students');
 
 		$this->db->where('student_id', $student_id);
 		$this->db->delete('enrols');
 
-		$this->db->where('id', $user_id);
-		$this->db->delete('users');
 
-		$path = 'uploads/users/' . $user_id . '.jpg';
-		if (file_exists($path)) {
-			unlink($path);
-		}
+		// $path = 'uploads/users/' . $user_id . '.jpg';
+		// if (file_exists($path)) {
+		// 	unlink($path);
+		// }
 
 		$response = array(
 			'status' => true,
@@ -914,7 +930,7 @@ class User_model extends CI_Model
 			$checker = array(
 				'student_id' => $id,
 				'session' => $this->active_session,
-				'school_id' => $this->school_id
+				
 			);
 			$enrol_data = $this->db->get_where('enrols', $checker)->row_array();
 			$student_details = $this->db->get_where('students', array('id' => $id))->row_array();
@@ -1015,7 +1031,7 @@ class User_model extends CI_Model
 
 	public function get_schools($limit, $start)
 	{
-		$result = $this->db->limit($limit, $start)->get_where('schools', array('status' => 1));
+		$result = $this->db->limit($limit, $start)->get_where('schools', array('status' => 1 , 'Etat' => 1));
 		return $result;
 	}
 
@@ -1148,10 +1164,15 @@ class User_model extends CI_Model
 	}
 
 	//GET LOGGED IN USERS CLASS ID AND SECTION ID (FOR STUDENT LOGGED IN VIEW)
-	public function get_logged_in_student_details()
+	public function get_logged_in_student_details($school_id = null)
 	{
 		$user_id = $this->session->userdata('user_id');
-		$student_data = $this->db->get_where('students', array('user_id' => $user_id))->row_array();
+		// $student_data = $this->db->get_where('students', array('user_id' => $user_id,"school_id" => $school_id))->row_array();
+		if ($school_id !== null) {
+			$student_data = $this->db->get_where('students', array('user_id' => $user_id, 'school_id' => $school_id))->row_array();
+		} else {
+			$student_data = $this->db->get_where('students', array('user_id' => $user_id))->row_array();
+		}
 		$student_details = $this->get_student_details_by_id('student', $student_data['id']);
 		return $student_details;
 	}
@@ -1239,7 +1260,8 @@ class User_model extends CI_Model
 	}
 
 	public function googleAPI()
-	{ {
+	{ 
+		{
 			$api = '';
 			return $api;
 		}
@@ -1428,7 +1450,7 @@ public function register_user_form()
             redirect($_SERVER['HTTP_REFERER'], 'refresh');
         }
 
-    } else if ($this->db->get_where('users', array('email' => $this->input->post('register_email')))->num_rows() > 0) {
+    } else if ($this->db->get_where('users', array('email' => $this->input->post('student_email')))->num_rows() > 0) {
 
         $this->session->set_flashdata('error', get_phrase('email_already_exists'));
         if (isset($_SERVER['HTTP_REFERER'])) {
@@ -1436,6 +1458,7 @@ public function register_user_form()
         }
 
     } else {
+
 
         $data['name'] = htmlspecialchars($this->input->post('first_name') . ' ' . $this->input->post('last_name'));
         $data['email'] = htmlspecialchars($this->input->post('student_email'));
@@ -1455,10 +1478,12 @@ public function register_user_form()
         $user_id = $this->db->insert_id();
 
 
-        if (isset($_FILES['student_image_upload']) && $_FILES['student_image_upload']['error'] == UPLOAD_ERR_OK) {
+        if (isset($_FILES['student_image']) && $_FILES['student_image']['error'] == UPLOAD_ERR_OK) {
+		
             $upload_path = 'uploads/users/' . $user_id . '.jpg';
-            move_uploaded_file($_FILES['student_image_upload']['tmp_name'], $upload_path);
+            move_uploaded_file($_FILES['student_image']['tmp_name'], $upload_path);
         }
+		
 		$this->email_model->Add_online_admission($data['email'], $user_id,$data['name']);
 		$this->session->set_userdata('user_login_type', true);
         $this->session->set_userdata('student_login', true);
@@ -1467,6 +1492,7 @@ public function register_user_form()
         $this->session->set_userdata('user_name', $data['name']);
         $this->session->set_userdata('user_type', 'student');
         $this->session->set_flashdata('success', get_phrase('registration_successful'));
+		
     }
 
     if (isset($_SERVER['HTTP_REFERER'])) {

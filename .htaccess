@@ -2,3 +2,34 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php/$1 [L]
+
+
+
+# Activer la réécriture d'URL
+# RewriteEngine On
+
+# Forcer HTTPS
+# RewriteCond %{HTTPS} !=on
+ # RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Gérer les fichiers et répertoires existants
+# RewriteCond %{REQUEST_FILENAME} !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+
+# Réécriture pour les routes (gardez votre règle actuelle)
+# RewriteRule ^(.*)$ index.php/$1 [L]
+
+# En-têtes de sécurité (ajoutez-les pour renforcer la sécurité)
+# <IfModule mod_headers.c>
+    # Empêcher le framing du site
+   # Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Empêcher l'inférence du type MIME
+    # Header always set X-Content-Type-Options "nosniff"
+
+    # Politique de sécurité du contenu (adapter selon votre site)
+   # Header always set Content-Security-Policy "default-src 'self';"
+
+    # Activer la protection XSS
+   # Header always set X-XSS-Protection "1; mode=block"
+# </IfModule>

@@ -5,7 +5,7 @@
     
     <div class="row justify-content-md-center">
         <div class="col-xl-4 col-lg-4 col-md-12 col-sm-12 mb-3 mb-lg-0">
-            <select name="class_id" id="class_id" class="form-control select2" data-toggle = "select2" onchange="classWiseSection(this.value)" required>
+            <select name="class_id" id="class_id_bulk" class="form-control select2" data-toggle = "select2" onchange="classWiseSection(this.value)" required>
                 <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                 <?php $classes = $this->db->get_where('classes', array('school_id' => $school_id))->result_array(); ?>
                 <?php foreach($classes as $class){ ?>

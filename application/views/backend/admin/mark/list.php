@@ -46,13 +46,22 @@ $marks = $this->crud_model->get_marks($class_id, $section_id, $exam_id, $school_
         var exam_id = '<?php echo $exam_id; ?>';
         var mark = $('#mark-' + student_id).val();
         var comment = $('#comment-' + student_id).val();
+        // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+        var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+        var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
         // if(subject_id != ""){
             $.ajax({
                 type : 'POST',
                 url : '<?php echo route('mark/mark_update'); ?>',
-                data : {student_id : student_id, class_id : class_id, section_id : section_id, exam_id : exam_id, mark : mark, comment : comment},
+                data : {student_id : student_id, class_id : class_id, section_id : section_id, exam_id : exam_id, mark : mark, comment : comment , [csrfName]: csrfHash},
+                dataType: 'json',
                 success : function(response){
                     success_notify('<?php echo get_phrase('mark_hass_been_updated_successfully'); ?>');
+                    
+                    // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                    var newCsrfName = response.csrf.csrfName;
+                    var newCsrfHash = response.csrf.csrfHash;
+                    $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
                 }
             });
         // }else{

@@ -1,4 +1,7 @@
 <?php
+
+use Mpdf\Mpdf;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
@@ -18,6 +21,7 @@ class Superadmin extends CI_Controller
 
     $this->load->database();
     $this->load->library('session');
+    require_once APPPATH . '../vendor/autoload.php';
 
     /*LOADING ALL THE MODELS HERE*/
     $this->load->model('Crud_model', 'crud_model');
@@ -887,12 +891,28 @@ class Superadmin extends CI_Controller
 
     if ($param1 == 'create_bulk_student') {
       $response = $this->user_model->bulk_student_create();
-      echo $response;
+      // echo $response;
+              // Préparer la réponse avec un nouveau jeton CSRF
+      $csrf = array(
+            'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+            );
+            
+      // Renvoyer la réponse avec un nouveau jeton CSRF
+      echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
 
     if ($param1 == 'create_excel') {
       $response = $this->user_model->excel_create();
-      echo $response;
+      // die($response) ;
+      // Préparer la réponse avec un nouveau jeton CSRF
+      $csrf = array(
+            'csrfName' => $this->security->get_csrf_token_name(),
+            'csrfHash' => $this->security->get_csrf_hash(),
+            );
+                
+      // Renvoyer la réponse avec un nouveau jeton CSRF
+      echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
 
     // form view
@@ -911,7 +931,15 @@ class Superadmin extends CI_Controller
         'status' => true,
         'notification' => get_phrase('status_has_been_updated')
       );
-      echo json_encode($response);
+      
+        // Préparer la réponse avec un nouveau jeton CSRF
+        $csrf = array(
+                  'csrfName' => $this->security->get_csrf_token_name(),
+                  'csrfHash' => $this->security->get_csrf_hash(),
+                );
+              
+      // Renvoyer la réponse avec un nouveau jeton CSRF
+      echo json_encode(array('status' => json_encode($response), 'csrf' => $csrf));
     }
 
     //updated to database
@@ -952,7 +980,17 @@ class Superadmin extends CI_Controller
     if ($param1 == 'filter') {
       $page_data['class_id'] = $param2;
       $page_data['section_id'] = $param3;
-      $this->load->view('backend/superadmin/student/list', $page_data);
+      // $this->load->view('backend/superadmin/student/list', $page_data);
+      $html_content = $this->load->view('backend/superadmin/student/list', $page_data, TRUE);
+
+      // Prepare a new CSRF token for the response
+      $csrf = array(
+          'csrfName' => $this->security->get_csrf_token_name(),
+          'csrfHash' => $this->security->get_csrf_hash(),
+      );
+  
+      // Return JSON response with the HTML content and new CSRF token
+      echo json_encode(array('html' => $html_content, 'csrf' => $csrf));
     }
 
     if (empty($param1)) {
@@ -978,7 +1016,15 @@ class Superadmin extends CI_Controller
       $sections = array_merge($sections, $result);
     }
 
-    echo json_encode($sections);
+         // Prepare a new CSRF token for the response
+         $csrf = array(
+          'csrfName' => $this->security->get_csrf_token_name(),
+          'csrfHash' => $this->security->get_csrf_hash(),
+      );
+  
+      // Return JSON response with the HTML content and new CSRF token
+      echo json_encode(array('sections' => $sections, 'csrf' => $csrf));
+    
   }
 
 
@@ -1354,37 +1400,40 @@ class Superadmin extends CI_Controller
     }
     // EXPORT AS PDF
     if ($param1 == 'pdf' || $param1 == 'print') {
+      // Préparer les données à exporter
       $page_data['action'] = $param1;
       $page_data['date_from'] = $date_from;
       $page_data['date_to'] = $date_to;
       $page_data['selected_class'] = $selected_class;
       $page_data['selected_status'] = $selected_status;
-      $html = $this->load->view('backend/superadmin/invoice/export', $page_data, true);
 
-      $this->pdf->loadHtml($html);
-      $this->pdf->set_paper("a4", "landscape");
-      $this->pdf->render();
+      // Charger la vue comme HTML
+      ob_start();
+      $this->load->view('backend/superadmin/invoice/export', $page_data);
+      $html = ob_get_clean();
 
-      // FILE DOWNLOADING CODES
-      if ($selected_status == 'all') {
-        $paymentStatusForTitle = 'paid-and-unpaid';
-      } else {
-        $paymentStatusForTitle = $selected_status;
-      }
-      if ($selected_class == 'all') {
-        $classNameForTitle = 'all_class';
-      } else {
-        $class_details = $this->crud_model->get_classes($selected_class)->row_array();
-        $classNameForTitle = $class_details['name'];
-      }
-      $fileName = 'Student_fees-' . date('d-M-Y', $date_from) . '-to-' . date('d-M-Y', $date_to) . '-' . $classNameForTitle . '-' . $paymentStatusForTitle . '.pdf';
+      try {
+          // Créer une instance de mPDF
+          $mpdf = new Mpdf();
 
-      if ($param1 == 'pdf') {
-        $this->pdf->stream($fileName, array("Attachment" => 1));
-      } else {
-        $this->pdf->stream($fileName, array("Attachment" => 0));
+          // Charger le contenu HTML dans mPDF
+          $mpdf->WriteHTML($html);
+
+          // Définir le nom du fichier
+          $fileName = 'Student_fees-' . date('d-M-Y', $date_from) . '-to-' . date('d-M-Y', $date_to) . '.pdf';
+
+          // Stream pour télécharger ou afficher le PDF
+          if ($param1 == 'pdf') {
+              $mpdf->Output($fileName, \Mpdf\Output\Destination::DOWNLOAD); // Télécharger le PDF
+          } else {
+              $mpdf->Output($fileName, \Mpdf\Output\Destination::INLINE); // Afficher le PDF dans le navigateur
+          }
+
+      } catch (\Mpdf\MpdfException $e) {
+          // Gérer les exceptions de mPDF
+          echo $e->getMessage();
       }
-    }
+  }
     // EXPORT AS CSV
     if ($param1 == 'csv') {
       $date_from = $date_from;
@@ -2403,7 +2452,15 @@ class Superadmin extends CI_Controller
   {
     if ($param1 == 'update_profile') {
       $response = $this->user_model->update_profile();
-      echo $response;
+      // echo $response;
+            // Préparer la réponse avec un nouveau jeton CSRF
+            $csrf = array(
+              'csrfName' => $this->security->get_csrf_token_name(),
+              'csrfHash' => $this->security->get_csrf_hash(),
+                    );
+                  
+            // Renvoyer la réponse avec un nouveau jeton CSRF
+            echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
     if ($param1 == 'update_password') {
       $response = $this->user_model->update_password();

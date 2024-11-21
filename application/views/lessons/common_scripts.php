@@ -16,6 +16,9 @@ function markThisLessonAsCompleted(lesson_id) {
   $('#lesson_list_area').hide();
   $('#lesson_list_loader').show();
   var progress;
+  // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+  var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+  var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
   if ($('input#'+lesson_id).is(':checked')) {
     progress = 1;
   }else{
@@ -24,9 +27,16 @@ function markThisLessonAsCompleted(lesson_id) {
   $.ajax({
     type : 'POST',
     url : '<?php echo site_url('addons/courses/save_course_progress'); ?>',
-    data : {lesson_id : lesson_id, progress : progress},
+    data : {lesson_id : lesson_id, progress : progress , [csrfName]: csrfHash},
+    dataType: 'json',
     success : function(response){
-      currentProgress = response;
+      currentProgress = response.status;
+
+      // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+      var newCsrfName = response.csrf.csrfName;
+      var newCsrfHash = response.csrf.csrfHash;
+      $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+
       $('#lesson_list_area').show();
       $('#lesson_list_loader').hide();
     }
