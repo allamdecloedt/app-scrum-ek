@@ -291,6 +291,15 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 //register 
 $route['api/Register']  = 'api/Admin/register';
 
+//Book Issues 
+$route['api/GetBookIssue'] = 'api/Admin/book_issues';
+$route['api/CreateBookIssue'] = 'api/Admin/create_book_issue';
+$route['api/EditBookIssue/(:num)'] = 'api/Admin/update_book_issue/$1';
+$route['api/ReturnBookIssue/(:num)'] = 'api/Admin/return_book_issue/$1';
+$route['api/DeleteBookIssue/(:num)'] = 'api/Admin/delete_book_issue/$1';
+$route['api/GetBooksBySchool/(:num)'] = 'api/Admin/books_by_school/$1';
+$route['api/ClassesBySchool/(:num)'] = 'api/Admin/classes_by_school/$1';
+$route['api/StudentsBySchool/(:num)'] = 'api/Admin/students_by_school/$1';
 
 //Lessons 
 $route['api/AddLessonYoutubeVideo'] = 'api/Admin/add_lesson_youtube';

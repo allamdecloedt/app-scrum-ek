@@ -8617,6 +8617,221 @@ public function update_lesson_with_attachment_post() {
     $this->output->set_content_type('application/json')->set_output(json_encode($response));
 }
 
+//Book Issues 
+
+public function book_issues_get() {
+    $date_from = $this->input->get('date_from');
+    $date_to = $this->input->get('date_to');
+
+    // Selecting book issues with book name and student name from `users` table
+    $this->db->select('book_issues.*, books.name AS book_name, users.name AS student_name');
+    $this->db->from('book_issues');
+    $this->db->join('books', 'book_issues.book_id = books.id', 'left'); // Join with `books` table to get book name
+    $this->db->join('students', 'book_issues.student_id = students.id', 'left'); // Join with `students` table using student_id
+    $this->db->join('users', 'students.user_id = users.id', 'left'); // Join with `users` table using user_id from `students`
+
+    $this->db->where('book_issues.session', $this->active_session);
+    $this->db->where('book_issues.school_id', $this->school_id);
+
+    if ($date_from && $date_to) {
+        // Convert date strings to Unix timestamps for filtering
+        $date_from_timestamp = strtotime($date_from);
+        $date_to_timestamp = strtotime($date_to);
+
+        if ($date_from_timestamp !== false && $date_to_timestamp !== false) {
+            $this->db->where('book_issues.issue_date >=', $date_from_timestamp);
+            $this->db->where('book_issues.issue_date <=', $date_to_timestamp);
+        }
+    }
+
+    $query = $this->db->get();
+    $result = $query->result_array();
+
+    $response = [
+        'status' => true,
+        'data' => $result
+    ];
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+// Create a new book issue
+public function create_book_issue_post() {
+    $input_data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate the required fields
+    if (empty($input_data['book_id']) || empty($input_data['class_id']) || empty($input_data['student_id']) || empty($input_data['issue_date'])) {
+        $response = ['status' => false, 'message' => 'Missing required fields'];
+        $this->output->set_status_header(400)->set_output(json_encode($response));
+        return;
+    }
+
+    // Assign data directly from input (timestamps expected)
+    $data['book_id'] = htmlspecialchars($input_data['book_id']);
+    $data['class_id'] = htmlspecialchars($input_data['class_id']);
+    $data['student_id'] = htmlspecialchars($input_data['student_id']);
+    $data['issue_date'] = intval($input_data['issue_date']); // Use as-is (assumed to be a Unix timestamp)
+    $data['school_id'] = isset($input_data['school_id']) ? htmlspecialchars($input_data['school_id']) : $this->school_id;
+    $data['session'] = isset($input_data['session']) ? htmlspecialchars($input_data['session']) : $this->active_session;
+    $data['created_at'] = isset($input_data['created_at']) ? intval($input_data['created_at']) : time();
+    $data['updated_at'] = isset($input_data['updated_at']) ? intval($input_data['updated_at']) : null;
+
+    // Insert the data into the database
+    $this->db->insert('book_issues', $data);
+
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Book issue created successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to create book issue'];
+    }
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+
+// Update an existing book issue
+public function update_book_issue_post($id) {
+    $input_data = json_decode($this->input->raw_input_stream, true);
+
+    $data['book_id'] = htmlspecialchars($input_data['book_id']);
+    $data['class_id'] = htmlspecialchars($input_data['class_id']);
+    $data['student_id'] = htmlspecialchars($input_data['student_id']);
+    $data['issue_date'] = strtotime($input_data['issue_date']);
+    $data['school_id'] = $this->school_id;
+    $data['session'] = $this->active_session;
+
+    $this->db->where('id', $id);
+    $this->db->update('book_issues', $data);
+
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Book issue updated successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to update book issue'];
+    }
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+// Return a book issue
+public function return_book_issue_post($id) {
+    $data['status'] = 1;
+
+    $this->db->where('id', $id);
+    $this->db->update('book_issues', $data);
+
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Book issue returned successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to return book issue'];
+    }
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+// Delete a book issue
+public function delete_book_issue_delete($id) {
+    $this->db->where('id', $id);
+    $this->db->delete('book_issues');
+
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Book issue deleted successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to delete book issue'];
+    }
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function books_by_school_get($school_id = null) {
+    if (!$school_id) {
+        $response = [
+            'status' => false,
+            'message' => 'School ID is required'
+        ];
+        $this->output->set_status_header(400)->set_output(json_encode($response));
+        return;
+    }
+
+    // Select only `id` and `name` columns from the books table
+    $this->db->select('id, name');
+    $this->db->where('school_id', $school_id);
+    $query = $this->db->get('books'); // Assuming `books` is your table name
+
+    if ($query->num_rows() > 0) {
+        $response = [
+            'status' => true,
+            'data' => $query->result_array()
+        ];
+    } else {
+        $response = [
+            'status' => false,
+            'message' => 'No books found for this school'
+        ];
+    }
+
+    // Output the JSON response
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+
+public function classes_by_school_get($school_id = null) {
+    if (!$school_id) {
+        $response = [
+            'status' => false,
+            'message' => 'School ID is required'
+        ];
+        $this->output->set_status_header(400)->set_output(json_encode($response));
+        return;
+    }
+
+    // Query to fetch classes based on school_id
+    $this->db->where('school_id', $school_id);
+    $query = $this->db->get('classes'); // Replace `classes` with the actual name of your classes table
+
+    if ($query->num_rows() > 0) {
+        $response = [
+            'status' => true,
+            'data' => $query->result_array()
+        ];
+    } else {
+        $response = [
+            'status' => false,
+            'message' => 'No classes found for this school'
+        ];
+    }
+
+    // Output the JSON response
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function students_by_school_get($school_id = null) {
+    if (!$school_id) {
+        $response = [
+            'status' => false,
+            'message' => 'School ID is required'
+        ];
+        $this->output->set_status_header(400)->set_output(json_encode($response));
+        return;
+    }
+
+    // Query to fetch students based on school_id
+    $this->db->select('students.*, users.name AS student_name'); // Assuming `users` table contains the student name
+    $this->db->from('students');
+    $this->db->join('users', 'students.user_id = users.id', 'left'); // Join with users to get student names
+    $this->db->where('students.school_id', $school_id);
+
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+        $response = [
+            'status' => true,
+            'data' => $query->result_array()
+        ];
+    } else {
+        $response = [
+            'status' => false,
+            'message' => 'No students found for this school'
+        ];
+    }
+
+    // Output the JSON response
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
 
 
 }
