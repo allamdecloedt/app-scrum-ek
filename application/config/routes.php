@@ -291,6 +291,13 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 //register 
 $route['api/Register']  = 'api/Admin/register';
 
+
+
+
+
+
+
+
 //Librarian
 $route['api/GetLibrarians'] = 'api/Admin/all_librarians';
 $route['api/CreateLibrarian/create'] = 'api/Admin/create_librarian';
