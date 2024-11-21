@@ -41,7 +41,7 @@
         dataType: 'json',
         success : function(response) {
             var url = '<?php echo site_url('addons/courses'); ?>';
-            var class_id = $('#class_id').val();
+            var class_id = $('#class_id_course').val();
             var user_id  = $('#user_id').val();
             var status   = $('#course_status').val();
 
@@ -88,14 +88,29 @@
 
     function ajax_get_video_details(video_url) {
         $('#perloader').show();
+        // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+        var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+        var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+
         if(checkURLValidity(video_url)){
             $.ajax({
-                url: '<?php echo site_url('addons/courses/ajax_get_video_details');?>',
-                type : 'POST',
-                data : {video_url : video_url},
+                 
+                type : "POST",
+                url: "<?php echo site_url('addons/courses/ajax_get_video_details'); ?>",    
+                data : {video_url : video_url , [csrfName]: csrfHash },
+                dataType: 'json',
+
                 success: function(response)
                 {
-                    jQuery('#duration').val(response);
+                 
+
+                    // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                    var newCsrfName = response.csrf.csrfName;
+                    var newCsrfHash = response.csrf.csrfHash;
+                    $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+
+
+                    jQuery('#duration').val(response.duration);
                     $('#perloader').hide();
                     $('#invalid_url').hide();
                 }
@@ -188,6 +203,11 @@
             data: {number_of_options : number_of_options , [csrfName]: csrfHash},
             dataType: 'json',
             success: function(response){
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+
                 jQuery('.options').remove();
                 jQuery('#multiple_choice_question').after(response.html);
 
@@ -199,10 +219,6 @@
                         }
                     });
               
-                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
-                var newCsrfName = response.csrf.csrfName;
-                var newCsrfHash = response.csrf.csrfHash;
-                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
             }
         });
     }

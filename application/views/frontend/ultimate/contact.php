@@ -38,8 +38,8 @@
                 </svg>
                 <div class="card-body">
                   <h5 class="card-title text-uppercase">Phone</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">Casablanca Office</h6>
-                  <p class="card-text py-3">+212 6 15 15 15 16</p>
+                  <h6 class="card-subtitle mb-2 text-muted">Office</h6>
+                  <p class="card-text py-3"><?php echo get_settings('phone'); ?></p>
                   <div class="card-bar"></div>
                 </div>
               </div>
@@ -53,8 +53,8 @@
                 </svg>
                 <div class="card-body">
                   <h5 class="card-title text-uppercase">Email</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">Casablanca Office</h6>
-                  <p class="card-text py-3">contact@decloedtacademy.com</p>
+                  <h6 class="card-subtitle mb-2 text-muted">Office</h6>
+                  <p class="card-text py-3"> <?php echo get_settings('system_email'); ?></p>
                   <div class="card-bar"></div>
                 </div>
               </div>
@@ -68,10 +68,9 @@
                 </svg>
                 <div class="card-body">
                   <h5 class="card-title text-uppercase">Address</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">Casablanca Office</h6>
+                  <h6 class="card-subtitle mb-2 text-muted">Office</h6>
 
-                  <p class="card-text py-3">4 Rue al Kassar <br>
-                    20520 Casablanca Morocco</p>
+                  <p class="card-text py-3"><?php echo get_settings('address'); ?></p>
                   <div class="card-bar"></div>
                 </div>
               </div>
@@ -83,21 +82,13 @@
   </div>
   <div class="container-fluid form-section">
     <div class="row">
-      <div class="col-12 col-lg-6 text-center">
-        <h1 class="text-light pt-11 text-break form-text-title display-6 text-uppercase">Message us </h1>
-        <p class="py-10 text-break form-text ">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sunt itaque
-          doloribus
-          expedita possimus enim, harum commodi distinctio architecto quaerat culpa, nesciunt reprehenderit, inventore
-          molestias libero fugiat in iusto eius deserunt beatae dolore! Aliquam velit distinctio maiores. Impedit,
-          nisi est? Repudiandae tenetur quae autem eaque!</p>
-      </div>
+
       <!-- Contacts Form -->
       <div class="form col-12 col-lg-6 form container g-0 my-3">
         <div class="container">
-          <form class="pt-8" action="<?php echo site_url('home/contact/send'); ?>"
-        method="post" class="js-validate">
-        <!-- Champ caché pour le jeton CSRF -->
-    <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
+          <form  action="<?php echo site_url('home/contact/send'); ?>" method="post" id="contact_send" class="pt-8 js-validate contact_send realtime-form container" enctype="multipart/form-data">
+                <!-- Champ caché pour le jeton CSRF -->
+                <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
     
             <div class="row">
               <!-- Input -->
@@ -159,7 +150,7 @@
                       </svg>
                     </span>
                     <input type="email" class="form-control shadow-none" name="email"
-                      placeholder="<?php echo get_phrase('Your email address'); ?>" required
+                      placeholder="<?php echo get_phrase('Email address'); ?>" required
                       data-msg="Please enter a valid email address." data-error-class="u-has-error"
                       data-success-class="u-has-success">
                     <span class="text-danger required">*</span>
@@ -180,7 +171,7 @@
                           d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
                       </svg>
                     </span>
-                    <input type="tel" class="form-control shadow-none" placeholder=" +212 622 22 22 22" name="phone"
+                    <input type="tel" class="form-control shadow-none" placeholder="+971 22 222 2222" name="phone"
                       required data-msg="Please enter a valid phone number." data-error-class="u-has-error"
                       data-success-class="u-has-success">
                     <span class="text-danger required">*</span>
@@ -243,7 +234,15 @@
                   </div>
                 </div>
               <?php endif; ?>
-              <button type="submit" class="btn btn-secondary btn-wide col-3 mb-3 ">Send</button>
+              <!-- <button type="submit" class="btn btn-secondary btn-wide col-3 mb-3 ">Send</button> -->
+
+              <div class="text-center">
+                <button  type="submit"  id="submitBtn"
+                  class="btn btn-secondary btn-wide col-3 mb-3  submit-button   text-uppercase "><?php echo get_phrase('Send'); ?></button>
+                  
+                  <button type="reset" id="resetBtn" style="display: none;"></button>
+                
+              </div>
             </div>
           </form>
         </div>
@@ -255,7 +254,7 @@
   </div>
   <div class="container-fluid location-container">
     <div class="row">
-      <h1 class="office-title text-center text-break py-10 text-uppercase">Decloedt Academy Location</h1>
+      <h1 class="office-title text-center text-break py-10 text-uppercase">WAYO ACADEMY LOCATION</h1>
     </div>
     <div class="row">
       <div id="map" class="g-0 col-12"></div>
@@ -263,3 +262,48 @@
   </div>
   <!-- End Contact Content Section -->
 </main>
+
+<?php if ($this->session->flashdata('toast_message')): ?>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toastData = <?php echo json_encode($this->session->flashdata('toast_message')); ?>;
+        const toastType = toastData.type === 'success' ? 'success' : 'error';
+        const toastMessage = toastData.message;
+
+        // Use your preferred toast library (example: Toastr)
+        if (toastType === 'success') {
+            toastr.success(toastMessage, 'Success', { timeOut: 5000 });
+        } else {
+            toastr.error(toastMessage, 'Error', { timeOut: 5000 });
+        }
+    });
+
+  
+</script>
+<?php endif; ?>
+
+
+<script>
+
+const contactform = document.getElementById("contact_send");
+
+
+if (contactform) {
+  document.getElementById('submitBtn').addEventListener('click', function (event) {
+ 
+   if (contactform.checkValidity()) {
+   
+     
+     setTimeout(function () {
+      contactform.reset(); 
+    }, 500);
+
+    } else {
+      
+      contactform.reportValidity(); 
+    }
+  });
+}
+</script>
+
+

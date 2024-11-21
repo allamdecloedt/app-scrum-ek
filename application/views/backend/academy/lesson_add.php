@@ -41,7 +41,7 @@
                 <option value=""><?php echo get_phrase('select_lesson_provider'); ?></option>
                 <option value="youtube"><?php echo get_phrase('youtube'); ?></option>
                 <option value="vimeo"><?php echo get_phrase('vimeo'); ?></option>
-                <option value="html5">HTML5</option>
+        
                 <option value="mydevice"> My Device </option>
             </select>
         </div>

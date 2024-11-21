@@ -54,7 +54,8 @@ class Admission extends CI_Controller
             }
             if ($param2 == 'school'){
                 echo $this->frontend_model->online_admission_school();
-                return;}
+                return;
+            }
           
         }
 
@@ -62,6 +63,27 @@ class Admission extends CI_Controller
         $page_data['page_title'] = get_phrase('online_admission');
         $this->load->view('frontend/' . $this->theme . '/index', $page_data);
     }
+
+        /*Admissions*/
+        function online_admission_student($param1 = "", $param2 = "")
+        {
+    
+            if ($param1 == 'submit') {
+                if (!$this->crud_model->check_recaptcha() && get_common_settings('recaptcha_status') == true) {
+                    redirect(site_url('home/contact'), 'refresh');
+                }
+                if ($param2 == 'student'){
+                    echo $this->user_model->register_user_form();
+                    return;
+                }
+
+              
+            }
+    
+            $page_data['page_name'] = 'online_admission_student';
+            $page_data['page_title'] = get_phrase('online_admission_student');
+            $this->load->view('frontend/' . $this->theme . '/index', $page_data);
+        }
 
 
     

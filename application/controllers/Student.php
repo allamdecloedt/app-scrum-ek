@@ -170,9 +170,20 @@ class Student extends CI_Controller {
 			$page_data['attendance_date'] = strtotime($date);
 			$page_data['class_id'] = htmlspecialchars($this->input->post('class_id'));
 			$page_data['section_id'] = htmlspecialchars($this->input->post('section_id'));
+			$page_data['school_id'] = htmlspecialchars($this->input->post('school_id'));
 			$page_data['month'] = htmlspecialchars($this->input->post('month'));
 			$page_data['year'] = htmlspecialchars($this->input->post('year'));
-			$this->load->view('backend/student/attendance/list', $page_data);
+			// $this->load->view('backend/student/attendance/list', $page_data);
+			// Charger la vue mise à jour
+			$response_html = $this->load->view('backend/student/attendance/list', $page_data, TRUE);
+		    // Préparer le nouveau jeton CSRF
+			$csrf = array(
+					 'csrfName' => $this->security->get_csrf_token_name(),
+					 'csrfHash' => $this->security->get_csrf_hash(),
+				 );
+			
+			// Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+			echo json_encode(array('status' => $response_html, 'csrf' => $csrf));
 		}
 
 		if(empty($param1)){
@@ -292,7 +303,17 @@ class Student extends CI_Controller {
 			// $page_data['subject_id'] = htmlspecialchars($this->input->post('subject'));
 			$page_data['exam_id'] = htmlspecialchars($this->input->post('exam'));
 			// $this->crud_model->mark_insert($page_data['class_id'], $page_data['section_id'], $page_data['subject_id'], $page_data['exam_id']);
-			$this->load->view('backend/student/mark/list', $page_data);
+			// $this->load->view('backend/student/mark/list', $page_data);
+			// Charger la vue mise à jour
+			$response_html = $this->load->view('backend/student/mark/list', $page_data, TRUE);
+		    // Préparer le nouveau jeton CSRF
+			$csrf = array(
+					 'csrfName' => $this->security->get_csrf_token_name(),
+					 'csrfHash' => $this->security->get_csrf_hash(),
+				 );
+			
+			// Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
+			echo json_encode(array('status' => $response_html, 'csrf' => $csrf));
 		}
 
 		if($param1 == 'mark_update'){

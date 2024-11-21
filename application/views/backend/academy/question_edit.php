@@ -97,15 +97,15 @@
                     data: $('form#mcq_form').serialize(),
                     dataType: 'json',
                     success: function(response) {
-                        
-
-                        if (response.html == 1) {
-                            success_notify('<?php echo get_phrase('question_has_been_updated'); ?>');
-                            
                             // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
                             var newCsrfName = response.csrf.csrfName;
                             var newCsrfHash = response.csrf.csrfHash;
                             $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+
+                        if (response.html == 1) {
+                            
+                            success_notify('<?php echo get_phrase('question_has_been_updated'); ?>');
+
                             $('#scrollable-modal').modal('hide');
         
                         }else {

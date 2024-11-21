@@ -112,13 +112,22 @@ function filter_attendance(){
     var class_id = $('#class_id_cours').val();
     var cours_id = $('#cours_id').val();
     var quiz_id = $('#quiz_id').val();
+    // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+    var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+    var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+
     if(class_id != "" && cours_id != "" && quiz_id != "" ){
         $.ajax({
             type: 'POST',
             url: '<?php echo route('quiz_result/list') ?>',
-            data: {class_id : class_id, cours_id : cours_id, quiz_id : quiz_id},
+            data: {class_id : class_id, cours_id : cours_id, quiz_id : quiz_id ,[csrfName]: csrfHash},
+            dataType: 'json',
             success: function(response){
-                $('.quiz_content').html(response);
+                $('.quiz_content').html(response.status);
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
             }
         });
     }else{
@@ -144,6 +153,9 @@ function filter_attendance(){
 function openQuizResultModal(quiz_id, user_id) {
     // Ouvrir la fenêtre modale
     $('#quizResultModal').modal('show');
+    // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+    var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+    var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
     // alert(quiz_id);
     // Charger les données via AJAX
     $.ajax({
@@ -151,12 +163,18 @@ function openQuizResultModal(quiz_id, user_id) {
         type: 'post',
         data: {
             quiz_id: quiz_id,
-            user_id: user_id
+            user_id: user_id,
+            [csrfName]: csrfHash
         },
+        dataType: 'json',
         success: function(response) {
            
             // Injecter le contenu dans la modale
-            $('#quiz-result-content').html(response);
+            $('#quiz-result-content').html(response.status);
+            // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+            var newCsrfName = response.csrf.csrfName;
+            var newCsrfHash = response.csrf.csrfHash;
+            $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
         },
         error: function() {
             $('#quiz-result-content').html('<p>Error loading quiz results. Please try again.</p>');

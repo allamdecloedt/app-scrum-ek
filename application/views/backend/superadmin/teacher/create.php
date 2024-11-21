@@ -60,27 +60,27 @@
 
 
 
-        <div class="form-group mb-1">
-            <label><?php echo get_phrase('facebook_profile_link'); ?></label>
+        <!-- <div class="form-group mb-1">
+            <label><?php // echo get_phrase('facebook_profile_link'); ?></label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="mdi mdi-facebook"></i></span>
                 </div>
                 <input type="text" class="form-control" name="facebook_link">
             </div>
-            <small id="" class="form-text text-muted"><?php echo get_phrase('facebook_profile_link'); ?></small>
+            <small id="" class="form-text text-muted"><?php // echo get_phrase('facebook_profile_link'); ?></small>
         </div>
 
         <div class="form-group mb-1">
-            <label><?php echo get_phrase('twitter_profile_link'); ?></label>
+            <label><?php // echo get_phrase('twitter_profile_link'); ?></label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="mdi mdi-twitter"></i></span>
                 </div>
                 <input type="text" class="form-control" name="twitter_link">
             </div>
-            <small id="" class="form-text text-muted"><?php echo get_phrase('twitter_profile_link'); ?></small>
-        </div>
+            <small id="" class="form-text text-muted"><?php // echo get_phrase('twitter_profile_link'); ?></small>
+        </div> -->
 
         <div class="form-group mb-1">
             <label><?php echo get_phrase('linkedin_profile_link'); ?></label>
@@ -94,13 +94,13 @@
         </div>
 
         <div class="form-group mb-1">
-            <label for="phone"><?php echo get_phrase('address'); ?></label>
+            <label for="phone"><?php echo get_phrase('address'); ?><span class="required"> * </span></label>
             <textarea class="form-control" id="address" name = "address" rows="5" required></textarea>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_teacher_address'); ?></small>
         </div>
 
         <div class="form-group mb-1">
-            <label for="about"><?php echo get_phrase('about'); ?></label>
+            <label for="about"><?php echo get_phrase('about'); ?><span class="required"> * </span></label>
             <textarea class="form-control" id="about" name = "about" rows="5" required></textarea>
             <small id="" class="form-text text-muted"><?php echo get_phrase('provide_a_small_about'); ?></small>
         </div>

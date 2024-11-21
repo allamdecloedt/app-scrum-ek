@@ -271,32 +271,37 @@
             var emailInput = document.getElementById("registerEmail");
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             var regex = emailRegex.test(email);
+            // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+            var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+            var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+            // console.log(csrfHash);
 
             if (!regex) {
                 error_notify('<?php echo get_phrase("please_enter_a_valid_email_address"); ?>');
                 resolve(false);
             } else {
-                fetch('<?php echo base_url("register/validate_email"); ?>', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email: email }),
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status == false) {
+
+                $.ajax({
+            type: "POST",
+            url: "<?php echo base_url("register/validate_email"); ?>",
+            data: {email: email , [csrfName]: csrfHash},
+            dataType: 'json',
+            success: function(response){
+
+                       if (response.status == false) {
                             emailInput.classList.add("invalid");
                             error_notify('<?php echo get_phrase("email_already_in_use") ?>');
                             resolve(false);
                         } else {
                             resolve(true);
                         }
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                        resolve(false);
-                    });
+              
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+            }
+        });
             }
         });
     }
@@ -347,27 +352,29 @@
     function emailExists(email) {
         return new Promise((resolve, reject) => {
             var emailInput = document.getElementById("loginEmail");
+            // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+            var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+            var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
 
-            fetch('<?php echo base_url("register/validate_email"); ?>', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: email }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status == true) {
+            $.ajax({
+            type: "POST",
+            url: "<?php echo base_url("register/validate_email"); ?>",
+            data: {email: email , [csrfName]: csrfHash},
+            dataType: 'json',
+            success: function(response){
+                console.log(response.csrf.csrfHash);
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+                    if (response.status == true) {
 
                         resolve(true);
                     } else {
                         resolve(false);
                     }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                    resolve(false);
-                });
+            }
+        });
 
         });
     }
@@ -378,26 +385,35 @@
         return new Promise((resolve, reject) => {
             var emailInput = document.getElementById("loginEmail");
             var passwordInput = document.getElementById("loginPassword");
+            // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+            var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+            var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
 
-            fetch('<?php echo base_url("login/validate_credentials"); ?>', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email: email, password: password }),
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status == false) {
-                        resolve(false);
-                    } else {
-                        resolve(true);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
+
+            $.ajax({
+            type: "POST",
+            url: "<?php echo site_url('login/validate_credentials'); ?>",
+            data: {email: email, password: password , [csrfName]: csrfHash},
+            dataType: 'json',
+            success: function(response){
+                if (response.status == true) {
+                    resolve(true);
+                } else {
                     resolve(false);
-                });
+                }
+
+
+              
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+            },
+            error: function(error) {
+                console.error("Error:", error);
+                resolve(false);
+            }
+        });
 
         });
     }

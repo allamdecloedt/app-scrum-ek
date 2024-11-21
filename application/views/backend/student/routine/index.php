@@ -15,22 +15,31 @@
 		<div class="card">
 			<div class="row mt-3">
 				<div class="col-md-1 mb-1"></div>
-				<div class="col-md-4 mb-1">
-					<select name="class" id="class_id_routine" class="form-control select2" data-bs-toggle="select2" required>
-						<?php 
-						$school_id = school_id();
-						$this->db->where('class_id', $student_data['class_id']);
-						$this->db->where('school_id', $school_id);
-						$total_student = $this->db->get('enrols');
-						?>
+				<div class="col-md-3 mb-1">
+                            <select class="form-control select2" data-toggle="select2" name="school_id" id="school_id" onchange="schoolWiseClasse(this.value)">
+                                    <option value=""><?php echo get_phrase('schools'); ?></option>                                      
+                                      <?php 
+                                        $user_id   = $this->session->userdata('user_id');                        
+                                        $schools =  $this->db->select('*,schools.id as id');
+                                        $this->db->from('schools');
+                                        $this->db->join('students', 'schools.id = students.school_id', 'left');
+                                        $this->db->where('students.user_id', $user_id);
+                                        $query = $this->db->get()->result_array();
+                                        ?>
+                                        <?php foreach ($query as $school): ?>
+                                            <option value="<?php echo $school['id']; ?>" <?php if($selected_school_id == $school['id']) echo 'selected'; ?>>   <?php echo  $school['name']; ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                
+                </div>
+				<div class="col-md-3 mb-1">
+					<select name="class" id="class_id_routine" class="form-control select2" data-bs-toggle="select2" onchange="classWiseSection(this.value)" required>
+
 						<option value=""><?php echo get_phrase('select_a_class'); ?></option>
-						<option value="<?php echo $student_data['class_id']; ?>">
-							<?php echo $student_data['class_name']; ?>
-							<?php echo "(".$total_student->num_rows().")"; ?>
-						</option>
+
 					</select>
 				</div>
-				<div class="col-md-4 mb-1">
+				<div class="col-md-3 mb-1">
 					<select name="section" id="section_id" class="form-control select2" data-bs-toggle="select2" required>
 						<option value=""><?php echo get_phrase('select_section'); ?></option>
 						<option value="<?php echo $student_data['section_id']; ?>"><?php echo $student_data['section_name']; ?></option>
@@ -79,5 +88,13 @@ var getFilteredClassRoutine = function() {
 			}
 		});
 	}
+}
+function schoolWiseClasse(school_id) {
+    $.ajax({
+        url: "<?php echo route('academy/list/'); ?>"+school_id,
+        success: function(response){
+            $('#class_id_routine').html(response);
+        }
+    });
 }
 </script>

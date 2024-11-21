@@ -143,10 +143,14 @@ class Home extends CI_Controller
 				redirect(site_url('home/contact'), 'refresh');
 			}
 			$this->frontend_model->send_contact_message();
-			redirect(site_url('home/contact'), 'refresh');
+
+		}else {
+
+		 $this->session->unset_userdata('toast_message');
 		}
 		$page_data['page_name'] = 'contact';
 		$page_data['page_title'] = get_phrase('contact_us');
+
 		$this->load->view('frontend/' . $this->theme . '/index', $page_data);
 	}
 
