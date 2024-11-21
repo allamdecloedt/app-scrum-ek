@@ -1,4 +1,7 @@
 <?php
+
+use Mpdf\Mpdf;
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
 /*
@@ -19,6 +22,7 @@ class Admin extends CI_Controller
 
 		$this->load->database();
 		$this->load->library('session');
+		require_once APPPATH . '../vendor/autoload.php';
 
 		/*LOADING ALL THE MODELS HERE model  */
 		$this->load->model('Crud_model', 'crud_model');
@@ -1401,91 +1405,106 @@ class Admin extends CI_Controller
 		}
 	}
 
-	//EXPORT STUDENT FEES
-	public function export($param1 = "", $date_from = "", $date_to = "", $selected_class = "", $selected_status = "")
-	{
-		//RETURN EXPORT URL
-		if ($param1 == 'url') {
-			$type = htmlspecialchars($this->input->post('type'));
-			$date = explode('-', $this->input->post('dateRange'));
-			$date_from = strtotime($date[0] . ' 00:00:00');
-			$date_to = strtotime($date[1] . ' 23:59:59');
-			$selected_class = htmlspecialchars($this->input->post('selectedClass'));
-			$selected_status = htmlspecialchars($this->input->post('selectedStatus'));
-			echo route('export/' . $type . '/' . $date_from . '/' . $date_to . '/' . $selected_class . '/' . $selected_status);
-		}
-		// EXPORT AS PDF
-		if ($param1 == 'pdf' || $param1 == 'print') {
-			$page_data['action'] = $param1;
-			$page_data['date_from'] = $date_from;
-			$page_data['date_to'] = $date_to;
-			$page_data['selected_class'] = $selected_class;
-			$page_data['selected_status'] = $selected_status;
-			$html = $this->load->view('backend/admin/invoice/export', $page_data, true);
+  //EXPORT STUDENT FEES
+  public function export($param1 = "", $date_from = "", $date_to = "", $selected_class = "", $selected_status = "")
+  {
+    //RETURN EXPORT URL
+    if ($param1 == 'url') {
+      $type = htmlspecialchars($this->input->post('type'));
+      $date = explode('-', $this->input->post('dateRange'));
+      $date_from = strtotime($date[0] . ' 00:00:00');
+      $date_to = strtotime($date[1] . ' 23:59:59');
+      $selected_class = htmlspecialchars($this->input->post('selectedClass'));
+      $selected_status = htmlspecialchars($this->input->post('selectedStatus'));
+      // echo route('export/' . $type . '/' . $date_from . '/' . $date_to . '/' . $selected_class . '/' . $selected_status);
+       // Générer l'URL de l'exportation
+       $export_url = route('export/' . $type . '/' . $date_from . '/' . $date_to . '/' . $selected_class . '/' . $selected_status);
+        
+        // Générer un nouveau jeton CSRF
+          $csrf = array(
+               'csrfName' => $this->security->get_csrf_token_name(),
+                'csrfHash' => $this->security->get_csrf_hash(),
+            );
+    
+            // Renvoyer la réponse avec l'URL et le nouveau jeton CSRF
+          echo json_encode(array('url' => $export_url, 'csrf' => $csrf));
+    }
+    // EXPORT AS PDF
+    if ($param1 == 'pdf' || $param1 == 'print') {
+      // Préparer les données à exporter
+      $page_data['action'] = $param1;
+      $page_data['date_from'] = $date_from;
+      $page_data['date_to'] = $date_to;
+      $page_data['selected_class'] = $selected_class;
+      $page_data['selected_status'] = $selected_status;
 
-			$this->pdf->loadHtml($html);
-			$this->pdf->set_paper("a4", "landscape");
-			$this->pdf->render();
+      // Charger la vue comme HTML
+      ob_start();
+      $this->load->view('backend/admin/invoice/export', $page_data);
+	  
+      $html = ob_get_clean();
 
-			// FILE DOWNLOADING CODES
-			if ($selected_status == 'all') {
-				$paymentStatusForTitle = 'paid-and-unpaid';
-			} else {
-				$paymentStatusForTitle = $selected_status;
-			}
-			if ($selected_class == 'all') {
-				$classNameForTitle = 'all_class';
-			} else {
-				$class_details = $this->crud_model->get_classes($selected_class)->row_array();
-				$classNameForTitle = $class_details['name'];
-			}
-			$fileName = 'Student_fees-' . date('d-M-Y', $date_from) . '-to-' . date('d-M-Y', $date_to) . '-' . $classNameForTitle . '-' . $paymentStatusForTitle . '.pdf';
+      try {
+          // Créer une instance de mPDF
+          $mpdf = new Mpdf();
 
-			if ($param1 == 'pdf') {
-				$this->pdf->stream($fileName, array("Attachment" => 1));
-			} else {
-				$this->pdf->stream($fileName, array("Attachment" => 0));
-			}
-		}
-		// EXPORT AS CSV
-		if ($param1 == 'csv') {
-			$date_from = $date_from;
-			$date_to = $date_to;
-			$selected_class = $selected_class;
-			$selected_status = $selected_status;
+          // Charger le contenu HTML dans mPDF
+          $mpdf->WriteHTML($html);
 
-			$invoices = $this->crud_model->get_invoice_by_date_range($date_from, $date_to, $selected_class, $selected_status)->result_array();
-			$csv_file = fopen("assets/csv_file/invoices.csv", "w");
-			$header = array('Invoice-no', 'Student', 'Class', 'Invoice-Title', 'Total-Amount', 'Paid-Amount', 'Creation-Date', 'Payment-Date', 'Status');
-			fputcsv($csv_file, $header);
-			foreach ($invoices as $invoice) {
-				$student_details = $this->user_model->get_student_details_by_id('student', $invoice['student_id']);
-				$class_details = $this->crud_model->get_class_details_by_id($invoice['class_id'])->row_array();
-				if ($invoice['updated_at'] > 0) {
-					$payment_date = date('d-M-Y', $invoice['updated_at']);
-				} else {
-					$payment_date = get_phrase('not_found');
-				}
-				$lines = array(sprintf('%08d', $invoice['id']), $student_details['name'], $class_details['name'], $invoice['title'], currency($invoice['total_amount']), currency($invoice['paid_amount']), date('d-M-Y', $invoice['created_at']), $payment_date, ucfirst($invoice['status']));
-				fputcsv($csv_file, $lines);
-			}
+          // Définir le nom du fichier
+          $fileName = 'Student_fees-' . date('d-M-Y', $date_from) . '-to-' . date('d-M-Y', $date_to) . '.pdf';
 
-			// FILE DOWNLOADING CODES
-			if ($selected_status == 'all') {
-				$paymentStatusForTitle = 'paid-and-unpaid';
-			} else {
-				$paymentStatusForTitle = $selected_status;
-			}
-			if ($selected_class == 'all') {
-				$classNameForTitle = 'all_class';
-			} else {
-				$class_details = $this->crud_model->get_classes($selected_class)->row_array();
-				$classNameForTitle = $class_details['name'];
-			}
-			$fileName = 'Student_fees-' . date('d-M-Y', $date_from) . '-to-' . date('d-M-Y', $date_to) . '-' . $classNameForTitle . '-' . $paymentStatusForTitle . '.csv';
-			$this->download_file('assets/csv_file/invoices.csv', $fileName);
-		}
-	}
+          // Stream pour télécharger ou afficher le PDF
+          if ($param1 == 'pdf') {
+              $mpdf->Output($fileName, \Mpdf\Output\Destination::DOWNLOAD); // Télécharger le PDF
+          } else {
+              $mpdf->Output($fileName, \Mpdf\Output\Destination::INLINE); // Afficher le PDF dans le navigateur
+          }
+
+      } catch (\Mpdf\MpdfException $e) {
+          // Gérer les exceptions de mPDF
+          echo $e->getMessage();
+      }
+    }
+    // EXPORT AS CSV
+    if ($param1 == 'csv') {
+      $date_from = $date_from;
+      $date_to = $date_to;
+      $selected_class = $selected_class;
+      $selected_status = $selected_status;
+
+      $invoices = $this->crud_model->get_invoice_by_date_range($date_from, $date_to, $selected_class, $selected_status)->result_array();
+      $csv_file = fopen("assets/csv_file/invoices.csv", "w");
+      $header = array('Invoice-no', 'Student', 'Class', 'Invoice-Title', 'Total-Amount', 'Paid-Amount', 'Creation-Date', 'Payment-Date', 'Status');
+      fputcsv($csv_file, $header);
+      foreach ($invoices as $invoice) {
+        $student_details = $this->user_model->get_student_details_by_id('student', $invoice['student_id']);
+        $class_details = $this->crud_model->get_class_details_by_id($invoice['class_id'])->row_array();
+        if ($invoice['updated_at'] > 0) {
+          $payment_date = date('d-M-Y', $invoice['updated_at']);
+        } else {
+          $payment_date = get_phrase('not_found');
+        }
+        $lines = array(sprintf('%08d', $invoice['id']), $student_details['name'], $class_details['name'], $invoice['title'], currency($invoice['total_amount']), currency($invoice['paid_amount']), date('d-M-Y', $invoice['created_at']), $payment_date, ucfirst($invoice['status']));
+        fputcsv($csv_file, $lines);
+      }
+
+      // FILE DOWNLOADING CODES
+      if ($selected_status == 'all') {
+        $paymentStatusForTitle = 'paid-and-unpaid';
+      } else {
+        $paymentStatusForTitle = $selected_status;
+      }
+      if ($selected_class == 'all') {
+        $classNameForTitle = 'all_class';
+      } else {
+        $class_details = $this->crud_model->get_classes($selected_class)->row_array();
+        $classNameForTitle = $class_details['name'];
+      }
+      $fileName = 'Student_fees-' . date('d-M-Y', $date_from) . '-to-' . date('d-M-Y', $date_to) . '-' . $classNameForTitle . '-' . $paymentStatusForTitle . '.csv';
+      $this->download_file('assets/csv_file/invoices.csv', $fileName);
+    }
+  }
 
 	/*FUNCTION FOR DOWNLOADING A FILE*/
 	function download_file($path, $name)
