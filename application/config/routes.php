@@ -293,3 +293,13 @@ $route['api/Register']  = 'api/Admin/register';
 
 
 
+// Noticeboard
+$route['api/notices/create'] = 'api/Admin/create_noticeboard';
+$route['api/noticeboard/get/(:num)'] = 'api/Admin/noticeboard/$1'; 
+$route['api/allnoticeboard'] = 'api/Admin/fetch_all_notices'; 
+$route['api/notices/update/(:num)'] = 'api/Admin/update_noticeboard/$1'; 
+$route['api/notices/delete/(:num)'] = 'api/Admin/noticeboard_delete/$1'; 
+$route['api/notices/filter/(:num)'] = 'api/Admin/filter_notices/$1';
+$route['api/notices/filter/(:num)/(:num)'] = 'api/Admin/filter_notices/$1/$2';
+$route['api/notices/filter/(:num)/(:num)/(:num)'] = 'api/Admin/filter_notices/$1/$2/$3';
+$route['api/GetDays'] = 'api/Admin/unique_notice_days';

@@ -7706,6 +7706,7 @@ public function resend_code_api_post() {
         echo json_encode($response);
     }
 }
+
 public function verify_code_api_post() {
     // Read the raw POST data as JSON
     $postData = json_decode(file_get_contents("php://input"), true);
@@ -7741,6 +7742,7 @@ public function verify_code_api_post() {
 
     echo json_encode($response);
 }
+
 public function getUserIdByEmail_post() {
     // Get the posted email
     $postData = json_decode(file_get_contents("php://input"), true);
@@ -7770,6 +7772,7 @@ public function getUserIdByEmail_post() {
 
     echo json_encode($response);
 }
+
 public function update_Password_post() {
     $postData = json_decode(file_get_contents("php://input"), true);
     $user_id = isset($postData['user_id']) ? $postData['user_id'] : null;
@@ -7800,6 +7803,245 @@ public function update_Password_post() {
     echo json_encode($response);
 }
 
+
+//NoticeBoard
+
+public function create_noticeboard_post() {
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate the required fields
+    if (empty($data['notice_title']) || empty($data['date']) || empty($data['notice']) || empty($data['school_id'])) {
+        $response = array('status' => false, 'message' => 'All fields (notice_title, date, notice, and school_id) are required');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // CSRF protection
+    $data[$this->security->get_csrf_token_name()] = $this->security->get_csrf_hash();
+
+    // Use the date provided by the user in the required format
+    $formattedDate = date('m/d/Y H:i:s', strtotime($data['date'])); // Adjust format if necessary
+
+    // Check if there's an existing session for the same day
+    $existingSessionQuery = $this->db->query("
+        SELECT session 
+        FROM noticeboard 
+        WHERE DATE_FORMAT(STR_TO_DATE(date, '%m/%d/%Y %H:%i:%s'), '%m/%d/%Y') = ?
+        AND school_id = ?
+        LIMIT 1
+    ", array(date('m/d/Y', strtotime($formattedDate)), $data['school_id']));
+
+    $existingSession = $existingSessionQuery->row_array();
+    $session = !empty($existingSession) ? $existingSession['session'] : (isset($data['session']) ? $data['session'] : 1);
+
+    // Prepare data for insertion
+    $noticeData = array(
+        'notice_title' => $data['notice_title'],
+        'date' => $formattedDate,  // Use the formatted date from user input
+        'notice' => $data['notice'],
+        'show_on_website' => isset($data['show_on_website']) ? $data['show_on_website'] : 0,
+        'school_id' => $data['school_id'],
+        'session' => $session
+    );
+
+    // Check if there is an image file
+    if (isset($_FILES['notice_photo']) && $_FILES['notice_photo']['error'] == 0) {
+        $config['upload_path'] = './uploads/notices/';
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['file_name'] = time() . '_' . $_FILES['notice_photo']['name'];
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('notice_photo')) {
+            $uploadData = $this->upload->data();
+            $noticeData['image'] = $uploadData['file_name'];
+        } else {
+            $response = array('status' => false, 'message' => $this->upload->display_errors());
+            return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        }
+    }
+
+    // Insert notice data into the database
+    $this->db->insert('noticeboard', $noticeData);
+
+    if ($this->db->affected_rows() > 0) {
+        $response = array('status' => true, 'message' => 'Notice created successfully');
+    } else {
+        $response = array('status' => false, 'message' => 'Failed to create notice');
+    }
+
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function noticeboard_get($id = null) {
+    if ($id) {
+        $notice = $this->db->get_where('noticeboard', array('id' => $id))->row_array();
+    } else {
+        $notice = $this->db->get('noticeboard')->result_array();
+    }
+
+    if ($notice) {
+        $response = array('status' => true, 'data' => $notice);
+    } else {
+        $response = array('status' => false, 'message' => 'No notice found');
+    }
+
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function fetch_all_notices_get() {
+    // Fetch all records from the noticeboard table
+    $notices = $this->db->get('noticeboard')->result_array();
+
+    // Check if any notices were found
+    if ($notices) {
+        $response = array('status' => true, 'data' => $notices);
+    } else {
+        $response = array('status' => false, 'message' => 'No notices found');
+    }
+
+    // Return the response in JSON format
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function update_noticeboard_post() {
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    // Validate required fields
+    if (empty($data['notice_id']) || empty($data['notice_title']) || empty($data['date']) || empty($data['notice']) || empty($data['school_id'])) {
+        $response = array('status' => false, 'message' => 'All fields (notice_id, notice_title, date, notice, and school_id) are required');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // CSRF protection
+    $data[$this->security->get_csrf_token_name()] = $this->security->get_csrf_hash();
+
+    // Format the provided date
+    $formattedDate = date('m/d/Y H:i:s', strtotime($data['date']));
+
+    // Check if notice exists
+    $existingNotice = $this->db->get_where('noticeboard', array('id' => $data['notice_id'], 'school_id' => $data['school_id']))->row_array();
+    if (!$existingNotice) {
+        $response = array('status' => false, 'message' => 'Notice not found');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Prepare data for update
+    $noticeData = array(
+        'notice_title' => $data['notice_title'],
+        'date' => $formattedDate,
+        'notice' => $data['notice'],
+        'show_on_website' => isset($data['show_on_website']) ? $data['show_on_website'] : $existingNotice['show_on_website'],
+        'school_id' => $data['school_id'],
+        'session' => isset($data['session']) ? $data['session'] : $existingNotice['session']
+    );
+
+    // Check if there is a new image file
+    if (isset($_FILES['notice_photo']) && $_FILES['notice_photo']['error'] == 0) {
+        $config['upload_path'] = './uploads/notices/';
+        $config['allowed_types'] = 'jpg|png|jpeg';
+        $config['file_name'] = time() . '_' . $_FILES['notice_photo']['name'];
+
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('notice_photo')) {
+            // Delete the old image if it exists
+            if (!empty($existingNotice['image']) && file_exists('./uploads/notices/' . $existingNotice['image'])) {
+                unlink('./uploads/notices/' . $existingNotice['image']);
+            }
+
+            $uploadData = $this->upload->data();
+            $noticeData['image'] = $uploadData['file_name'];
+        } else {
+            $response = array('status' => false, 'message' => $this->upload->display_errors());
+            return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+        }
+    }
+
+    // Update notice data in the database
+    $this->db->where('id', $data['notice_id']);
+    $this->db->update('noticeboard', $noticeData);
+
+    if ($this->db->affected_rows() > 0) {
+        $response = array('status' => true, 'message' => 'Notice updated successfully');
+    } else {
+        $response = array('status' => false, 'message' => 'Failed to update notice or no changes detected');
+    }
+
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function noticeboard_delete_post($id) {
+    $this->db->where('id', $id);
+    $this->db->delete('noticeboard');
+
+    if ($this->db->affected_rows() > 0) {
+        $response = array('status' => true, 'message' => 'Notice deleted successfully');
+    } else {
+        $response = array('status' => false, 'message' => 'Failed to delete notice');
+    }
+
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function filter_notices_get($year = null, $month = null, $day = null) {
+    // Check if all date components are provided for daily filtering
+    if ($year && $month && $day) {
+        $this->db->where('DATE_FORMAT(STR_TO_DATE(date, "%m/%d/%Y %H:%i:%s"), "%Y-%m-%d") =', "$year-$month-$day");
+    } 
+    // Check if only year and month are provided for monthly filtering
+    elseif ($year && $month) {
+        $this->db->where('YEAR(STR_TO_DATE(date, "%m/%d/%Y %H:%i:%s"))', $year);
+        $this->db->where('MONTH(STR_TO_DATE(date, "%m/%d/%Y %H:%i:%s"))', $month);
+    } 
+    // Check if only year is provided for yearly filtering
+    elseif ($year) {
+        $this->db->where('YEAR(STR_TO_DATE(date, "%m/%d/%Y %H:%i:%s"))', $year);
+    } 
+    // If no date components are provided, return an error
+    else {
+        $response = array('status' => false, 'message' => 'Please specify at least a year for filtering');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Execute the query
+    $notices = $this->db->get('noticeboard')->result_array();
+
+    // Prepare the response
+    if ($notices) {
+        $response = array('status' => true, 'data' => $notices);
+    } else {
+        $response = array('status' => false, 'message' => 'No notices found for the specified date range');
+    }
+
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function unique_notice_days_get() {
+    // Use a raw SQL query to retrieve dates in the specified format
+    $query = $this->db->query("
+        SELECT DISTINCT DATE_FORMAT(date, '%d/%m/%Y 00:00:1') AS day
+        FROM noticeboard
+        WHERE date IS NOT NULL AND date <> '0000-00-00 00:00:00'
+        ORDER BY day ASC
+    ");
+    
+    $days = $query->result_array();
+
+    // Prepare the response
+    if (!empty($days)) {
+        // Filter out any null or incorrectly parsed days
+        $filteredDays = array_filter($days, function ($day) {
+            return !is_null($day['day']) && $day['day'] !== '';
+        });
+        
+        $response = array('status' => true, 'data' => array_values($filteredDays));
+    } else {
+        $response = array('status' => false, 'message' => 'No unique days found in notices');
+    }
+
+    // Return the response in JSON format
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
 
 
 
