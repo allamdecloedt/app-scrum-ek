@@ -902,12 +902,28 @@ class Admin extends CI_Controller
 
 		if ($param1 == 'create_bulk_student') {
 			$response = $this->user_model->bulk_student_create();
-			echo $response;
+			// echo $response;
+			              // Préparer la réponse avec un nouveau jeton CSRF
+						  $csrf = array(
+							'csrfName' => $this->security->get_csrf_token_name(),
+							  'csrfHash' => $this->security->get_csrf_hash(),
+							);
+							
+					  // Renvoyer la réponse avec un nouveau jeton CSRF
+					  echo json_encode(array('status' => $response, 'csrf' => $csrf));
 		}
 
 		if ($param1 == 'create_excel') {
 			$response = $this->user_model->excel_create();
-			echo $response;
+			// echo $response;
+			      // Préparer la réponse avec un nouveau jeton CSRF
+				  $csrf = array(
+					'csrfName' => $this->security->get_csrf_token_name(),
+					'csrfHash' => $this->security->get_csrf_hash(),
+					);
+						
+			  // Renvoyer la réponse avec un nouveau jeton CSRF
+			  echo json_encode(array('status' => $response, 'csrf' => $csrf));
 		}
 
 		// form view
@@ -952,7 +968,15 @@ class Admin extends CI_Controller
 		//updated to database
 		if ($param1 == 'updated') {
 			$response = $this->user_model->student_update($param2, $param3);
-			echo $response;
+			// echo $response;
+			         // Préparer la réponse avec un nouveau jeton CSRF
+					 $csrf = array(
+						'csrfName' => $this->security->get_csrf_token_name(),
+						'csrfHash' => $this->security->get_csrf_hash(),
+					);
+				
+					// Renvoyer la réponse avec un nouveau jeton CSRF
+					 echo json_encode(array('status' => $response, 'csrf' => $csrf));
 		}
 		//updated to database
 		if ($param1 == 'id_card') {
@@ -965,7 +989,15 @@ class Admin extends CI_Controller
 
 		if ($param1 == 'delete') {
 			$response = $this->user_model->delete_student($param2, $param3);
-			echo $response;
+			// echo $response;
+			       // Préparer la réponse avec un nouveau jeton CSRF
+				   $csrf = array(
+					'csrfName' => $this->security->get_csrf_token_name(),
+					'csrfHash' => $this->security->get_csrf_hash(),
+				);
+			
+				// Renvoyer la réponse avec un nouveau jeton CSRF
+				 echo json_encode(array('status' => $response, 'csrf' => $csrf));
 		}
 
 		if ($param1 == 'filter') {
@@ -1053,7 +1085,15 @@ class Admin extends CI_Controller
   {
     if ($param1 == 'update') {
       $response = $this->settings_model->update_smtp_settings();
-      echo $response;
+    //   echo $response;
+	      // Préparer la réponse avec un nouveau jeton CSRF
+		  $csrf = array(
+			'csrfName' => $this->security->get_csrf_token_name(),
+			'csrfHash' => $this->security->get_csrf_hash(),
+				  );
+				
+		  // Renvoyer la réponse avec un nouveau jeton CSRF
+		  echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
 
     // showing the Smtp Settings file

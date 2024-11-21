@@ -61,17 +61,17 @@
 
 
         <!-- <div class="form-group mb-1">
-            <label><?php // echo get_phrase('facebook_profile_link'); ?></label>
+            <label><?php //echo get_phrase('facebook_profile_link'); ?></label>
             <div class="input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="mdi mdi-facebook"></i></span>
                 </div>
                 <input type="text" class="form-control" name="facebook_link">
             </div>
-            <small id="" class="form-text text-muted"><?php // echo get_phrase('facebook_profile_link'); ?></small>
-        </div>
+            <small id="" class="form-text text-muted"><?php //echo get_phrase('facebook_profile_link'); ?></small>
+        </div> -->
 
-        <div class="form-group mb-1">
+        <!-- <div class="form-group mb-1">
             <label><?php // echo get_phrase('twitter_profile_link'); ?></label>
             <div class="input-group">
                 <div class="input-group-prepend">
@@ -127,7 +127,7 @@
 
 <script>
 $(document).ready(function () {
-    $('select.select2:not(.normal)').each(function () { $(this).select2({ dropdownParent: '#right-modal' }); }); //initSelect2(['#department', '#gender', '#show_on_website']);
+    $('select.select2:not(.normal)').each(function () { $(this).select2({ dropdownParent: '#right-modal' }); }); //initSelect2(['#department', '#gender','#show_on_website']);
 });
 
 
