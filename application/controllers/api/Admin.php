@@ -7801,6 +7801,120 @@ public function update_Password_post() {
 }
 
 
+//Quiz Result
+
+public function all_quizzes_get() {
+    $this->db->select('id, title');
+    $this->db->where('lesson_type', 'quiz');
+    $quizzes = $this->db->get('lesson')->result_array();
+
+    if (empty($quizzes)) {
+        $response = ['status' => false, 'message' => 'No quizzes found'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    $quiz_data = array_map(function($quiz) {
+        return [
+            'id' => $quiz['id'],
+            'title' => $quiz['title']
+        ];
+    }, $quizzes);
+
+    $response = ['status' => true, 'data' => $quiz_data];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+ public function quiz_result_get() {
+    $class_id = $this->input->get('class_id', true);
+    $quiz_id = $this->input->get('quiz_id', true);
+
+    if (empty($class_id) || empty($quiz_id)) {
+        $response = ['status' => false, 'message' => 'Both class_id and quiz_id are required'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Fetch enrolled students for the specified class
+    $this->db->where('class_id', $class_id);
+    $enrolled_students = $this->db->get('enrols')->result_array();
+
+    if (empty($enrolled_students)) {
+        $response = ['status' => false, 'message' => 'No students found for the given class'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    $quiz_results = [];
+    foreach ($enrolled_students as $enrol) {
+        $this->db->where('id', $enrol['student_id']);
+        $student = $this->db->get('users')->row_array();
+
+        if (!$student) {
+            continue;
+        }
+
+        // Check if the student has a response for the given quiz
+        $this->db->where('user_id', $enrol['student_id']);
+        $this->db->where('quiz_id', $quiz_id);
+        $quiz = $this->db->get('quiz_responses')->row_array();
+
+        if ($quiz) {
+            // Add quiz result including pass/fail status
+            $is_passed = $quiz['submitted_answer_status'] == 1; // Adjust this condition based on your pass/fail logic
+
+            $quiz_results[] = [
+                'student_id' => $enrol['student_id'],
+                'student_name' => $student['name'] ?? 'Unknown',
+                'status' => $is_passed ? 'Passed' : 'Failed',
+                'quiz' => [
+                    'quiz_id' => $quiz['quiz_id'],
+                    'question_id' => $quiz['question_id'],
+                    'submitted_answers' => $quiz['submitted_answers'],
+                    'correct_answers' => $quiz['correct_answers'],
+                    'submitted_answer_status' => $quiz['submitted_answer_status'],
+                    'date_submitted' => $quiz['date_submitted'],
+                ],
+            ];
+        } else {
+            // Add students who did not attempt the quiz
+            $quiz_results[] = [
+                'student_id' => $enrol['student_id'],
+                'student_name' => $student['name'] ?? 'Unknown',
+                'status' => 'Not Attempted',
+                'quiz' => null, // No quiz data since it wasn't attempted
+            ];
+        }
+    }
+
+    if (empty($quiz_results)) {
+        $response = ['status' => false, 'message' => 'No quiz results found for the specified class and quiz'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    $response = ['status' => true, 'data' => $quiz_results];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function quizzes_by_class_post() {
+    // Collect and sanitize input
+    $class_id = $this->input->post('class_id');
+    
+    // Validate input
+    if (!$class_id) {
+        $response = ['status' => false, 'message' => 'class_id is required'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Adjusted column name based on database structure
+    $this->db->where('quiz_class_id', $class_id); // Replace 'quiz_class_id' with the actual column name if different
+    $quizzes = $this->db->get('quiz_responses')->result_array();
+
+    // Prepare response
+    $response = [
+        'status' => true,
+        'data' => $quizzes,
+    ];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
 
 
 }

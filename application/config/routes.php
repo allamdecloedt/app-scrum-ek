@@ -292,4 +292,7 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 $route['api/Register']  = 'api/Admin/register';
 
 
-
+//Quiz Result
+$route['api/GetQuizResult'] = 'api/Admin/quiz_result';
+$route['api/GetQuizByClass'] = 'api/Admin/quizzes_by_class';
+$route['api/GetQuizzesNames'] = 'api/Admin/all_quizzes';
