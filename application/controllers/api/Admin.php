@@ -7801,6 +7801,62 @@ public function update_Password_post() {
 }
 
 
+public function download_csv_get() {
+    // Set the filename for the CSV file
+    $filename = 'student_list.csv';
+
+    // Set CSV headers
+    $header = array("Student ID", "Name", "Class", "Section", "Email", "Phone");
+    
+    // Retrieve data from the database (modify this query as per your requirements)
+    $school_id = $this->session->userdata('school_id'); // Assuming school_id is stored in session
+    $students = $this->db->select('id, full_name, class_id, section_id, email, phone') // Use actual column names from your table
+                         ->where('school_id', $school_id)
+                         ->get('students')
+                         ->result_array();
+
+    // Open a memory stream for the CSV output
+    $fp = fopen('php://output', 'w');
+    
+    // Set the headers to download the file
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+    // Write the header to the CSV file
+    fputcsv($fp, $header);
+
+    // Write the student data to the CSV file
+    foreach ($students as $student) {
+        // Modify the row as per your data structure
+        $row = array(
+            $student['id'], // Replace 'id' with your actual ID column if different
+            $student['full_name'], // Replace with the actual name column if different
+            $this->getClassName($student['class_id']),
+            $this->getSectionName($student['section_id']),
+            $student['email'],
+            $student['phone']
+        );
+        fputcsv($fp, $row);
+    }
+
+    // Close the file pointer
+    fclose($fp);
+
+    // Exit to prevent any other output from corrupting the CSV file
+    exit;
+}
+
+private function getClassName($class_id) {
+    $class = $this->db->get_where('classes', array('id' => $class_id))->row_array();
+    return $class ? $class['name'] : 'N/A';
+}
+
+private function getSectionName($section_id) {
+    $section = $this->db->get_where('sections', array('id' => $section_id))->row_array();
+    return $section ? $section['name'] : 'N/A';
+}
+
+
 
 
 }

@@ -291,5 +291,5 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 //register 
 $route['api/Register']  = 'api/Admin/register';
 
-
+$route['api/student/DownloadCsv'] = 'api/Admin/download_csv';
 
