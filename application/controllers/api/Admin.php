@@ -7801,6 +7801,91 @@ public function update_Password_post() {
 }
 
 
+//Librarian
+
+
+public function all_librarians_get() {
+    $school_id = $this->input->get('school_id');
+
+    if (!$school_id) {
+        $response = ['status' => false, 'message' => 'School ID is required'];
+        echo json_encode($response);
+        return;
+    }
+
+    $this->db->where('role', 'librarian');
+    $this->db->where('school_id', $school_id);
+    $librarians = $this->db->get('users')->result_array();
+
+    if ($librarians) {
+        $response = ['status' => true, 'data' => $librarians];
+    } else {
+        $response = ['status' => false, 'message' => 'No librarians found for this school ID'];
+    }
+
+    echo json_encode($response);
+}
+
+public function create_librarian_post() {
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    if (empty($data['name']) || empty($data['email']) || empty($data['password']) || empty($data['phone']) || empty($data['gender']) || empty($data['address'])) {
+        $response = ['status' => false, 'message' => 'Name, email, password, phone, gender, and address are required'];
+        echo json_encode($response);
+        return;
+    }
+
+    $data['role'] = 'librarian';
+
+    if (empty($data['school_id'])) {
+        $response = ['status' => false, 'message' => 'School ID is required'];
+        echo json_encode($response);
+        return;
+    }
+
+    $this->db->insert('users', $data);
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Librarian created successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to create librarian'];
+    }
+
+    echo json_encode($response);
+}
+
+public function update_librarian_post($id) {
+    $data = json_decode($this->input->raw_input_stream, true);
+
+    if (empty($data['name']) || empty($data['email'])) {
+        $response = ['status' => false, 'message' => 'Name and email are required'];
+        echo json_encode($response);
+        return;
+    }
+
+    $this->db->where('id', $id);
+    $this->db->update('users', $data);
+
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Librarian updated successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to update librarian or no changes made'];
+    }
+
+    echo json_encode($response);
+}
+
+public function delete_librarian_post($id) {
+    $this->db->where('id', $id);
+    $this->db->delete('users');
+
+    if ($this->db->affected_rows() > 0) {
+        $response = ['status' => true, 'message' => 'Librarian deleted successfully'];
+    } else {
+        $response = ['status' => false, 'message' => 'Failed to delete librarian or librarian not found'];
+    }
+
+    echo json_encode($response);
+}
 
 
 }
