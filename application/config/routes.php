@@ -292,4 +292,8 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 $route['api/Register']  = 'api/Admin/register';
 
 
-
+//Student Promotion
+$route['api/sessions'] = 'api/Admin/session';
+$route['api/StudentsForPromotion'] = 'api/Admin/students_for_promotion';
+$route['api/GetPromotedClasses'] = 'api/Admin/classes_promote';
+$route['api/PromoteStudent'] = 'api/Admin/promote_student';

@@ -7801,6 +7801,93 @@ public function update_Password_post() {
 }
 
 
+//Student Promotion
+
+public function session_get() {
+    $sessions = $this->crud_model->get_session()->result_array();
+    $response = [
+        'status' => true,
+        'data' => $sessions
+    ];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+ public function students_for_promotion_post() {
+    $input = json_decode($this->input->raw_input_stream, true);
+    log_message('debug', 'Received input (raw): ' . json_encode($input));
+
+    // Retrieve the input parameters
+    $session_from = $input['session_from'] ?? $this->input->post('session_from');
+    $session_to = $input['session_to'] ?? $this->input->post('session_to');
+    $class_id_from = $input['class_id_from'] ?? $this->input->post('class_id_from');
+    $class_id_to = $input['class_id_to'] ?? $this->input->post('class_id_to');
+
+    // Validate that all required fields are provided
+    if (!$session_from || !$session_to || !$class_id_from || !$class_id_to) {
+        $response = ['status' => false, 'message' => 'All fields (session_from, session_to, class_id_from, class_id_to) are required'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Fetch students based on the input parameters
+    $this->db->where('session', $session_from);
+    $this->db->where('class_id', $class_id_from);
+    $students = $this->db->get('enrols')->result_array();
+
+    foreach ($students as &$student) {
+        $student_details = $this->user_model->get_student_details_by_id('student', $student['student_id']);
+        $student['details'] = $student_details;
+    }
+
+    // Prepare and send response
+    $response = ['status' => true, 'data' => $students];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function classes_promote_get() {
+    // Fetch classes from the database
+    $classes = $this->crud_model->get_classes()->result_array();
+
+    // Check if classes data is available
+    if (!empty($classes)) {
+        $response = [
+            'status' => true,
+            'data' => $classes
+        ];
+    } else {
+        $response = [
+            'status' => false,
+            'message' => 'No classes found'
+        ];
+    }
+
+    // Send JSON response
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function promote_student_post() {
+    $student_id = $this->input->post('student_id');
+    $session_to = $this->input->post('session_to');
+    $class_id_to = $this->input->post('class_id_to');
+
+    if (!$student_id || !$session_to || !$class_id_to) {
+        $response = ['status' => false, 'message' => 'All fields are required'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    $this->db->where('student_id', $student_id);
+    $update_data = [
+        'session' => $session_to,
+        'class_id' => $class_id_to
+    ];
+    $this->db->update('enrols', $update_data);
+
+    $response = [
+        'status' => $this->db->affected_rows() > 0,
+        'message' => $this->db->affected_rows() > 0 ? 'Student promoted successfully' : 'Failed to promote student'
+    ];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
 
 
 }
