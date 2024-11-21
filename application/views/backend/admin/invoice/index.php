@@ -28,13 +28,13 @@
           </div>
           <div class="col-xl-2 col-lg-2 col-md-12 col-sm-12 mb-3 mb-lg-0">
             <div class="form-group">
-              <select name="class" id="class_id" class="form-control select2" data-bs-toggle="select2">
+              <select name="class" id="class_id_invoice" class="form-control select2" data-bs-toggle="select2">
                 <option value="all"><?php echo get_phrase('all_class'); ?></option>
                 <?php
                 $classes = $this->db->get_where('classes', array('school_id' => school_id()))->result_array();
                 $school_id = school_id();
                 foreach($classes as $class){
-                  $this->db->where('class_id', $class['id']);
+                  $this->db->where('class_id', $class['id']); 
                   $this->db->where('school_id', $school_id);
                   $total_student = $this->db->get('enrols');
                   ?>
@@ -66,7 +66,6 @@
             <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 37px, 0px);">
               <a class="dropdown-item" id="export-csv" href="javascript:0" onclick="getExportUrl('csv')">CSV</a>
               <a class="dropdown-item" id="export-pdf" href="javascript:0" onclick="getExportUrl('pdf')">PDF</a>
-              <a class="dropdown-item" id="export-print" href="javascript:0" onclick="getExportUrl('print')">Print</a>
             </div>
           </div>
         </div>
@@ -84,7 +83,7 @@
 var showAllInvoices = function () {
   var url = '<?php echo route('invoice/list'); ?>';
   var dateRange = $('#selectedValue').text();
-  var selectedClass = $('#class_id').val();
+  var selectedClass = $('#class_id_invoice').val();
   var selectedStatus = $('#status').val();
   $.ajax({
     type : 'GET',
@@ -101,28 +100,28 @@ var showAllInvoices = function () {
 function getExportUrl(type) {
   var url = '<?php echo route('export/url'); ?>';
   var dateRange = $('#selectedValue').text();
-  var selectedClass = $('#class_id').val();
+  var selectedClass = $('#class_id_invoice').val();
   var selectedStatus = $('#status').val();
   // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
   var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
   var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
-
   $.ajax({
     type : 'post',
     url: url,
     data : {type : type, dateRange : dateRange, selectedClass : selectedClass, selectedStatus : selectedStatus , [csrfName]: csrfHash},
-    dataType: 'json',
+    dataType: 'json', // Important pour que la réponse soit interprétée comme un JSON
+
     success : function(response) {
-            // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
-            var newCsrfName = response.csrf.csrfName;
-            var newCsrfHash = response.csrf.csrfHash;
-            $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
-            
       if (type == 'csv') {
-        window.open(response, '_self');
+        window.open(response.url, '_self');
       }else{
-        window.open(response, '_blank');
+        window.open(response.url, '_blank');
       }
+
+          // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+          var newCsrfName = response.csrf.csrfName;
+        var newCsrfHash = response.csrf.csrfHash;
+        $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
     }
   });
 }
