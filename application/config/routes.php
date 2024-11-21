@@ -292,4 +292,15 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 $route['api/Register']  = 'api/Admin/register';
 
 
+//Lessons 
+$route['api/AddLessonYoutubeVideo'] = 'api/Admin/add_lesson_youtube';
+$route['api/GetYoutubeVideoDuration'] = 'api/Admin/get_youtube_video_duration';
+$route['api/DisplayYoutubeVideo'] = 'api/Admin/display_youtube';
+$route['api/UpdateLessonYoutubeVideo'] = 'api/Admin/update_lesson_youtube';
+$route['api/GetLessonDetails'] = 'api/Admin/get_lesson_details';
+$route['api/DeleteLesson'] = 'api/Admin/delete_lesson';
+$route['api/GetLessonVideoType'] = 'api/Admin/lesson_video_type';
+$route['api/UpdateLessonDevice'] = 'api/Admin/update_lesson_device';
+$route['api/AddOthersLessons'] = 'api/Admin/add_lesson_with_attachment';
+$route['api/UpdateOthersLessons'] = 'api/Admin/update_lesson_with_attachment';
 
