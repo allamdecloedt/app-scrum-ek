@@ -59,20 +59,19 @@ foreach($users as $user):
       </div>
 
 
-
-      <div class="form-group mb-1">
-        <label><?php echo get_phrase('facebook_profile_link'); ?></label>
+      <!-- <div class="form-group mb-1">
+        <label><?php // echo get_phrase('facebook_profile_link'); ?></label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="mdi mdi-facebook"></i></span>
           </div>
-          <input type="text" class="form-control" name="facebook_link" value="<?php echo $social_links['facebook']; ?>">
+          <input type="text" class="form-control" name="facebook_link" value="<?php //echo $social_links['facebook']; ?>">
         </div>
-        <small id="" class="form-text text-muted"><?php echo get_phrase('facebook_profile_link'); ?></small>
+        <small id="" class="form-text text-muted"><?php //echo get_phrase('facebook_profile_link'); ?></small>
       </div>
 
       <div class="form-group mb-1">
-        <label><?php echo get_phrase('twitter_profile_link'); ?></label>
+        <label><?php //echo get_phrase('twitter_profile_link'); ?></label>
         <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text"><i class="mdi mdi-twitter"></i></span>
@@ -80,7 +79,7 @@ foreach($users as $user):
           <input type="text" class="form-control" name="twitter_link" value="<?php echo $social_links['twitter']; ?>">
         </div>
         <small id="" class="form-text text-muted"><?php echo get_phrase('twitter_profile_link'); ?></small>
-      </div>
+      </div> -->
 
       <div class="form-group mb-1">
         <label><?php echo get_phrase('linkedin_profile_link'); ?></label>

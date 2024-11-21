@@ -1409,5 +1409,6 @@
     "visit_dashboard": "Visit dashboard",
     "email_already_exists": "Email already exists",
     "validation_error": "Validation error",
-    "access_mode": "Access mode"
+    "access_mode": "Access mode",
+    "an_error_occurred": "An error occurred"
 }
