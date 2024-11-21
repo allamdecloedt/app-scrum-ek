@@ -292,4 +292,11 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 $route['api/Register']  = 'api/Admin/register';
 
 
-
+// Attendance
+$route['api/attendance/filter'] = 'api/Admin/filter_attendance';
+$route['api/attendance/student_list'] = 'api/Admin/student_list';
+$route['api/attendance/CreateAttendance'] = 'api/Admin/create_attendance';
+$route['api/attendance/bulk_update'] = 'api/Admin/bulk_attendance_update';
+$route['api/attendance/monthly_summary'] = 'api/Admin/monthly_attendance_summary';
+$route['api/attendance/UpdateAttendanceStatus'] = 'api/Admin/update_attendance_status';
+$route['api/attendance/ToggleAttendanceStatus'] = 'api/Admin/toggle_attendance_status';

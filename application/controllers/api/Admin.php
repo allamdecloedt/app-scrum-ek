@@ -7801,6 +7801,348 @@ public function update_Password_post() {
 }
 
 
+// Attendance
+
+public function filter_attendance_post() {
+    // Decode the raw JSON input
+    $input_data = json_decode(file_get_contents('php://input'), true);
+    
+    $month = isset($input_data['month']) ? $input_data['month'] : null;
+    $year = isset($input_data['year']) ? $input_data['year'] : null;
+    $class_id = isset($input_data['class_id']) ? $input_data['class_id'] : null;
+    $section_id = isset($input_data['section_id']) ? $input_data['section_id'] : null;
+    
+    // Log received data for debugging
+    log_message('debug', 'Received Data - year: ' . var_export($year, true));
+    log_message('debug', 'Received Data - month: ' . var_export($month, true));
+    log_message('debug', 'Received Data - class_id: ' . var_export($class_id, true));
+    log_message('debug', 'Received Data - section_id: ' . var_export($section_id, true));
+
+    // Check for required fields
+    if (!$month || !$year || !$class_id || !$section_id) {
+        $response = [
+            'status' => false,
+            'message' => 'All fields are required. Please provide year, month, class_id, and section_id.',
+            'data' => [],
+            'received_data' => [
+                'year' => $year,
+                'month' => $month,
+                'class_id' => $class_id,
+                'section_id' => $section_id
+            ]
+        ];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Ensure month is converted to a full name if it's numeric
+    if (is_numeric($month)) {
+        $month = date("F", mktime(0, 0, 0, $month, 10)); // Convert month number to full month name
+    }
+
+    // Convert month and year to start and end timestamps
+    $start_date = strtotime("01-$month-$year");
+    if ($start_date === false) {
+        log_message('error', 'Failed to parse start date.');
+        return $this->output->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid date format for start date.']));
+    }
+
+    $end_date = strtotime("last day of $month $year");
+    if ($end_date === false) {
+        log_message('error', 'Failed to parse end date.');
+        return $this->output->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid date format for end date.']));
+    }
+
+    log_message('debug', 'Calculated Start Date: ' . date('Y-m-d', $start_date) . ' | End Date: ' . date('Y-m-d', $end_date));
+
+    // Fetch attendance records with student name from users table
+    $this->db->select('daily_attendances.*, users.name as student_name');
+    $this->db->from('daily_attendances');
+    $this->db->join('users', 'daily_attendances.student_id = users.id', 'left');
+    $this->db->where('daily_attendances.class_id', $class_id);
+    $this->db->where('daily_attendances.section_id', $section_id);
+    $this->db->where('daily_attendances.timestamp >=', $start_date);
+    $this->db->where('daily_attendances.timestamp <=', $end_date);
+    $attendance = $this->db->get()->result_array();
+
+    // Log attendance data for debugging
+    if (!empty($attendance)) {
+        log_message('debug', 'Attendance records found: ' . count($attendance));
+    } else {
+        log_message('debug', 'No attendance records found for the given criteria.');
+    }
+
+    // Prepare response with attendance data including student name
+    $response = [
+        'status' => true,
+        'data' => array_map(function ($record) {
+            return [
+                'Student Name' => $record['student_name'],
+                'Student ID' => $record['student_id'],
+                'Status' => $record['status'] == '1' ? 'Present' : 'Absent',
+                'Date' => date('Y-m-d', $record['timestamp']),
+                'Class ID' => $record['class_id'],
+                'Section ID' => $record['section_id']
+            ];
+        }, $attendance)
+    ];
+    
+    log_message('debug', 'Response: ' . json_encode($response));
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function update_attendance_status_post() {
+    // Decode the raw JSON input
+    $input_data = json_decode(file_get_contents('php://input'), true);
+
+    $attendance_id = isset($input_data['attendance_id']) ? $input_data['attendance_id'] : null;
+    $new_status = isset($input_data['new_status']) ? $input_data['new_status'] : null;
+
+    // Log received data for debugging
+    log_message('debug', 'Received Data - attendance_id: ' . var_export($attendance_id, true));
+    log_message('debug', 'Received Data - new_status: ' . var_export($new_status, true));
+
+    // Check for required fields
+    if (!$attendance_id || $new_status === null) {
+        $response = [
+            'status' => false,
+            'message' => 'Both attendance_id and new_status are required.',
+            'received_data' => [
+                'attendance_id' => $attendance_id,
+                'new_status' => $new_status
+            ]
+        ];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Ensure new_status is either '0' (Absent) or '1' (Present)
+    if (!in_array($new_status, ['0', '1'])) {
+        return $this->output->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'Invalid new_status. It should be 0 (Absent) or 1 (Present).']));
+    }
+
+    // Update the attendance status
+    $this->db->where('id', $attendance_id);
+    $this->db->update('daily_attendances', ['status' => $new_status]);
+
+    if ($this->db->affected_rows() > 0) {
+        $response = [
+            'status' => true,
+            'message' => 'Attendance status updated successfully.',
+            'updated_data' => [
+                'attendance_id' => $attendance_id,
+                'new_status' => $new_status == '1' ? 'Present' : 'Absent'
+            ]
+        ];
+    } else {
+        $response = [
+            'status' => false,
+            'message' => 'No record found or status unchanged. Please check the attendance_id.',
+            'received_data' => [
+                'attendance_id' => $attendance_id,
+                'new_status' => $new_status
+            ]
+        ];
+    }
+
+    log_message('debug', 'Response: ' . json_encode($response));
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function toggle_attendance_status_post() {
+    // Decode the raw JSON input
+    $input_data = json_decode(file_get_contents('php://input'), true);
+
+    $attendance_id = isset($input_data['attendance_id']) ? $input_data['attendance_id'] : null;
+
+    // Log received data for debugging
+    log_message('debug', 'Received Data - attendance_id: ' . var_export($attendance_id, true));
+
+    // Check for required fields
+    if (!$attendance_id) {
+        $response = [
+            'status' => false,
+            'message' => 'Attendance_id is required.',
+            'received_data' => [
+                'attendance_id' => $attendance_id
+            ]
+        ];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Retrieve current status if new_status is not provided
+    $this->db->select('status');
+    $this->db->where('id', $attendance_id);
+    $current_record = $this->db->get('daily_attendances')->row_array();
+
+    if ($current_record) {
+        $current_status = $current_record['status'];
+        // Toggle status: '1' (Present) to '0' (Absent) and vice versa
+        $new_status = $current_status == '1' ? '0' : '1';
+    } else {
+        return $this->output->set_content_type('application/json')
+            ->set_output(json_encode(['status' => false, 'message' => 'No record found with the given attendance_id.']));
+    }
+
+    // Update the attendance status
+    $this->db->where('id', $attendance_id);
+    $this->db->update('daily_attendances', ['status' => $new_status]);
+
+    if ($this->db->affected_rows() > 0) {
+        $response = [
+            'status' => true,
+            'message' => 'Attendance status toggled successfully.',
+            'updated_data' => [
+                'attendance_id' => $attendance_id,
+                'new_status' => $new_status == '1' ? 'Present' : 'Absent'
+            ]
+        ];
+    } else {
+        $response = [
+            'status' => false,
+            'message' => 'No record found or status unchanged. Please check the attendance_id.',
+            'received_data' => [
+                'attendance_id' => $attendance_id
+            ]
+        ];
+    }
+
+    log_message('debug', 'Response: ' . json_encode($response));
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function student_list_get() {
+    $class_id = $this->input->get('class_id');
+    $section_id = $this->input->get('section_id');
+
+    if (!$class_id || !$section_id) {
+        $response = ['status' => false, 'message' => 'class_id and section_id are required'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Fetch students enrolled in the selected class and section
+    $students = $this->db->get_where('enrols', [
+        'class_id' => $class_id,
+        'section_id' => $section_id,
+        'school_id' => school_id(),
+        'session' => active_session()
+    ])->result_array();
+
+    $response = ['status' => true, 'data' => $students];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function create_attendance_post() {
+    // Decode the JSON payload manually
+    $input = json_decode($this->input->raw_input_stream, true);
+
+    // Extract data from the decoded JSON
+    $class_id = $input['class_id'] ?? null;
+    $section_id = $input['section_id'] ?? null;
+    $attendance_date = $input['attendance_date'] ?? null;
+    $attendance_data = $input['attendance_data'] ?? null;
+
+    // Debug logs to confirm received data
+    log_message('debug', 'Received class_id: ' . var_export($class_id, true));
+    log_message('debug', 'Received section_id: ' . var_export($section_id, true));
+    log_message('debug', 'Received attendance_date: ' . var_export($attendance_date, true));
+    log_message('debug', 'Received attendance_data: ' . var_export($attendance_data, true));
+
+    // Check if any required field is missing
+    if (!$class_id || !$section_id || !$attendance_date || !$attendance_data) {
+        $response = [
+            'status' => false,
+            'message' => 'All fields are required',
+            'received_data' => [
+                'class_id' => $class_id,
+                'section_id' => $section_id,
+                'attendance_date' => $attendance_date,
+                'attendance_data' => $attendance_data,
+            ]
+        ];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    $timestamp = strtotime($attendance_date);
+
+    foreach ($attendance_data as $data) {
+        $this->db->replace('daily_attendances', [
+            'class_id' => $class_id,
+            'section_id' => $section_id,
+            'student_id' => $data['student_id'],
+            'status' => $data['status'],
+            'timestamp' => $timestamp,
+            'school_id' => school_id(),
+            'session_id' => active_session()
+        ]);
+    }
+
+    $response = ['status' => true, 'message' => 'Attendance marked successfully'];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function bulk_attendance_update_post() {
+    $class_id = $this->input->post('class_id');
+    $section_id = $this->input->post('section_id');
+    $attendance_date = $this->input->post('attendance_date');
+    $status = $this->input->post('status'); // 1 for present, 0 for absent
+
+    if (!$class_id || !$section_id || !$attendance_date || $status === null) {
+        $response = ['status' => false, 'message' => 'All fields are required'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    $timestamp = strtotime($attendance_date);
+
+    // Fetch all students in the selected class and section
+    $students = $this->db->get_where('enrols', [
+        'class_id' => $class_id,
+        'section_id' => $section_id,
+        'school_id' => school_id(),
+        'session' => active_session()
+    ])->result_array();
+
+    foreach ($students as $student) {
+        $this->db->replace('daily_attendances', [
+            'class_id' => $class_id,
+            'section_id' => $section_id,
+            'student_id' => $student['student_id'],
+            'status' => $status,
+            'timestamp' => $timestamp,
+            'school_id' => school_id(),
+            'session_id' => active_session()
+        ]);
+    }
+
+    $response = ['status' => true, 'message' => 'All students marked successfully'];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function monthly_attendance_summary_get() {
+    $class_id = $this->input->get('class_id');
+    $section_id = $this->input->get('section_id');
+    $month = $this->input->get('month');
+    $year = $this->input->get('year');
+
+    if (!$class_id || !$section_id || !$month || !$year) {
+        $response = ['status' => false, 'message' => 'All fields are required'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    $start_date = strtotime("01-$month-$year");
+    $end_date = strtotime("last day of $month $year");
+
+    $this->db->where('class_id', $class_id);
+    $this->db->where('section_id', $section_id);
+    $this->db->where('timestamp >=', $start_date);
+    $this->db->where('timestamp <=', $end_date);
+    $attendance_records = $this->db->get('daily_attendances')->result_array();
+
+    $response = ['status' => true, 'data' => $attendance_records];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
 
 
 }
