@@ -292,4 +292,10 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 $route['api/Register']  = 'api/Admin/register';
 
 
+//Online School Admission
+$route['api/SchoolsNotApproved'] = 'api/Admin/not_approved_schools';
+$route['api/ApprovedSchool/(:num)'] = 'api/Admin/approve_school/$1';
+$route['api/DelSchool/(:num)'] = 'api/Admin/del_school/$1';
+$route['api/NumberSchoolsNotApproved'] = 'api/Admin/count_not_approved_schools';
+$route['api/FilterStudents/(:num)/(:num)'] = 'api/Admin/students_by_class_and_section/$1/$2';
 

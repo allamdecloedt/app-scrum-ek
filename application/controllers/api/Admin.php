@@ -7801,6 +7801,207 @@ public function update_Password_post() {
 }
 
 
+//Online School Admission
+
+
+public function not_approved_schools_get() {
+    // Retrieve limit and offset from query parameters, with defaults
+    $limit = $this->input->get('limit') ? (int)$this->input->get('limit') : 3; // Default to 3 per page
+    $offset = $this->input->get('offset') ? (int)$this->input->get('offset') : 0; // Default to start at 0
+
+    // Query to get schools with status 0 and retrieve email from the users table
+    $this->db->select('schools.*, users.email');
+    $this->db->from('schools');
+    $this->db->join('users', 'users.school_id = schools.id', 'left');
+    $this->db->where('schools.status', 0);
+    $this->db->limit($limit, $offset); // Apply pagination
+
+    $query = $this->db->get();
+
+    // Get total number of unapproved schools for pagination metadata
+    $this->db->select('COUNT(*) as total');
+    $this->db->from('schools');
+    $this->db->where('status', 0);
+    $totalQuery = $this->db->get();
+    $total = (int) $totalQuery->row()->total;
+
+    if ($query->num_rows() > 0) {
+        // Cast numeric fields as integers
+        $data = array_map(function ($school) {
+            $school['id'] = (int)$school['id']; // Cast 'id' as integer
+            return $school;
+        }, $query->result_array());
+
+        $response = [
+            'status' => true,
+            'data' => $data,
+            'pagination' => [
+                'total' => $total,
+                'limit' => $limit,
+                'offset' => $offset,
+                'remaining' => max($total - ($offset + $limit), 0)
+            ]
+        ];
+    } else {
+        $response = [
+            'status' => false,
+            'message' => 'No unapproved schools found',
+            'pagination' => [
+                'total' => $total,
+                'limit' => $limit,
+                'offset' => $offset,
+                'remaining' => max($total - ($offset + $limit), 0)
+            ]
+        ];
+    }
+
+    // Output the JSON response
+    $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+
+
+public function approve_school_post($school_id) {
+    // Check if the school exists
+    $this->db->where('id', $school_id);
+    $school = $this->db->get('schools')->row_array();
+
+    if ($school) {
+        // Update status to 1 (approved)
+        $this->db->where('id', $school_id);
+        $this->db->update('schools', ['status' => 1]);
+
+        if ($this->db->affected_rows() > 0) {
+            $response = [
+                'status' => true,
+                'message' => 'School approved successfully'
+            ];
+        } else {
+            $response = [
+                'status' => false,
+                'message' => 'Failed to approve school'
+            ];
+        }
+    } else {
+        $response = [
+            'status' => false,
+            'message' => 'School not found'
+        ];
+    }
+
+    // Output the JSON response
+    $this->output->set_output(json_encode($response));
+}
+
+    // Function to delete a school
+    public function del_school_post($school_id) {
+        // Check if the school exists
+        $this->db->where('id', $school_id);
+        $school = $this->db->get('schools')->row_array();
+
+        if ($school) {
+            // Delete the school record
+            $this->db->where('id', $school_id);
+            $this->db->delete('schools');
+
+            if ($this->db->affected_rows() > 0) {
+                $response = [
+                    'status' => true,
+                    'message' => 'School deleted successfully'
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'message' => 'Failed to delete school'
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'message' => 'School not found'
+            ];
+        }
+
+        // Output the JSON response
+        $this->output->set_output(json_encode($response));
+    }
+
+
+    public function count_not_approved_schools_get() {
+        // Query to count schools with status 0
+        $this->db->where('status', 0);
+        $count = $this->db->count_all_results('schools'); // Replace 'schools' with your actual table name
+
+        if ($count > 0) {
+            $response = [
+                'status' => true,
+                'count' => $count,
+                'message' => "Number of unapproved schools: $count"
+            ];
+        } else {
+            $response = [
+                'status' => false,
+                'count' => 0,
+                'message' => 'No unapproved schools found'
+            ];
+        }
+
+        // Output the JSON response
+        $this->output->set_output(json_encode($response));
+    }
+
+
+    public function students_by_class_and_section_get($class_id, $section_id) {
+        // Ensure the request method is GET
+        if ($this->input->server('REQUEST_METHOD') !== 'GET') {
+            $this->output
+                 ->set_status_header(405)
+                 ->set_output(json_encode(['message' => 'Method not allowed']));
+            return;
+        }
+    
+        // Validate the input
+        if (empty($class_id) || empty($section_id)) {
+            $this->output
+                 ->set_status_header(400)
+                 ->set_output(json_encode(['message' => 'Class ID and Section ID are required']));
+            return;
+        }
+    
+        // Get page parameter for pagination (default to 1 if not provided)
+        $page = $this->input->get('page') ? (int) $this->input->get('page') : 1;
+        $limit = 10; // Number of students per page
+        $offset = ($page - 1) * $limit;
+    
+        // Fetch students from the users table using enrols and students tables with the given class_id and section_id
+        $this->db->select('users.*'); // Select fields from the users table
+        $this->db->from('enrols');
+        $this->db->join('students', 'students.id = enrols.student_id');
+        $this->db->join('users', 'users.id = students.user_id'); // Join with users on user_id
+        $this->db->where('enrols.class_id', $class_id);
+        $this->db->where('enrols.section_id', $section_id);
+        $this->db->limit($limit, $offset); // Apply pagination limit and offset
+    
+        $query = $this->db->get();
+        $students = $query->result_array();
+    
+        // Check if any students are found
+        if (!empty($students)) {
+            $this->output
+                 ->set_status_header(200)
+                 ->set_content_type('application/json')
+                 ->set_output(json_encode([
+                     'status' => 'success',
+                     'page' => $page,
+                     'students' => $students
+                 ]));
+        } else {
+            $this->output
+                 ->set_status_header(404)
+                 ->set_output(json_encode(['status' => 'error', 'message' => 'No students found for the given class and section IDs']));
+        }
+    }
+    
 
 
 }
