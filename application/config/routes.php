@@ -291,5 +291,11 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 //register 
 $route['api/Register']  = 'api/Admin/register';
 
+// Route for syllabus operations
+$route['syllabus/(:any)'] = 'api/Admin/syllabus_operations/$1'; // Handles create, delete operations
+$route['syllabus/(:any)/(:num)/(:num)'] = 'api/Admin/syllabus_operations/$1/$2/$3'; // Handles get operation
+$route['api/GetSyllabus/(:any)/(:num)'] = 'api/Admin/syllabus_by_class_section/$1/$2'; // Handles delete operation by ID
+$route['api/CreateSyllabus'] = 'api/Admin/create_syllabus';
+$route['api/DeleteSyllabus'] = 'api/Admin/delete_syllabus';
 
 

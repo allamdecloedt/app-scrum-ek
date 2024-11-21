@@ -7801,6 +7801,90 @@ public function update_Password_post() {
 }
 
 
+//syllabus
+public function syllabus_operations($operation, $class_id = null, $section_id = null, $syllabus_id = null) {
+    switch ($operation) {
+        case 'get':
+            $this->get_syllabus_by_class_section($class_id, $section_id);
+            break;
+
+        case 'create':
+            $this->create_syllabus();
+            break;
+
+        case 'delete':
+            $this->delete_syllabus($syllabus_id);
+            break;
+
+        default:
+            echo json_encode(['status' => 'error', 'message' => 'Invalid operation']);
+            break;
+    }
+}
+
+public function syllabus_by_class_section_get($class_id, $section_id) {
+    $school_id = school_id();
+    $session_id = active_session();
+    
+    $this->db->select('syllabuses.*, subjects.name as subject_name');
+    $this->db->from('syllabuses');
+    $this->db->join('subjects', 'syllabuses.subject_id = subjects.id', 'left');
+    $this->db->where('syllabuses.class_id', $class_id);
+    $this->db->where('syllabuses.section_id', $section_id);
+    $this->db->where('syllabuses.school_id', $school_id);
+    $this->db->where('syllabuses.session_id', $session_id);
+    $syllabuses = $this->db->get()->result_array();
+
+    if (!empty($syllabuses)) {
+        echo json_encode($syllabuses);
+    } else {
+        echo json_encode(['status' => 'empty', 'message' => 'No syllabuses found.']);
+    }
+}
+
+// Function to add a new syllabus
+public function create_syllabus_post() {
+    $data = array(
+        'title' => $this->input->post('title'),
+        'class_id' => $this->input->post('class_id'),
+        'section_id' => $this->input->post('section_id'),
+        'subject_id' => $this->input->post('subject_id'),
+        'file' => $this->upload_syllabus_file(), // Handle file upload
+        'school_id' => school_id(),
+        'session_id' => active_session()
+    );
+
+    $this->db->insert('syllabuses', $data);
+    echo json_encode(['status' => 'success', 'message' => 'Syllabus created successfully.']);
+}
+
+private function upload_syllabus_file() {
+    if (!empty($_FILES['syllabus_file']['name'])) {
+        $config['upload_path'] = './uploads/syllabus/';
+        $config['allowed_types'] = 'pdf|doc|docx';
+        $config['file_name'] = time() . '_' . $_FILES['syllabus_file']['name'];
+        
+        $this->load->library('upload', $config);
+
+        if ($this->upload->do_upload('syllabus_file')) {
+            return $this->upload->data('file_name');
+        } else {
+            // Log the error and provide more debugging information
+            log_message('error', 'File upload error: ' . $this->upload->display_errors());
+            echo json_encode(['status' => 'error', 'message' => $this->upload->display_errors()]);
+            exit; // Exit to prevent further processing
+        }
+    }
+    return null; // Return null if no file was uploaded  
+}
+
+
+// Function to delete a syllabus by ID
+private function delete_syllabus_post($syllabus_id) {
+    $this->db->where('id', $syllabus_id);
+    $this->db->delete('syllabuses');
+    echo json_encode(['status' => 'success', 'message' => 'Syllabus deleted successfully.']);
+}
 
 
 }
