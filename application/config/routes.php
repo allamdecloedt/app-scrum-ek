@@ -260,10 +260,18 @@ $route['api/GetRoutineByClassAndSection/(:num)/(:num)'] = 'api/Admin/routines_by
 
 $route['api/GetInvoice'] = 'api/Admin/invoice_by_date_range';
 $route['api/invoices/parent'] = 'api/Admin/get_invoice_by_parent_id';
-$route['api/invoices/create'] = 'api/Admin/create_single_invoice';
-$route['api/invoices/create_mass'] = 'api/Admin/create_mass_invoice';
+$route['api/invoices/CreateSingleInvoice'] = 'api/Admin/create_single_invoice';
+$route['api/invoices/CreateMassInvoice'] = 'api/Admin/create_mass_invoice';
 $route['api/invoices/update/(:num)'] = 'api/Admin/update_invoice/$1';
 $route['api/invoices/delete/(:num)'] = 'api/Admin/delete_invoice/$1';
+$route['api/GetStudentFreeFilter'] = 'api/Admin/invoices_by_filter';
+$route['api/Getclasses']= 'api/Admin/classe';
+
+
+
+
+
+
 
 
 
@@ -292,4 +300,40 @@ $route['api/UpdatePassword'] = 'api/Admin/update_Password';
 $route['api/Register']  = 'api/Admin/register';
 
 
+
+
+//Settings
+$route['api/SetSmtpSettings'] = 'api/Admin/set_smtp_settings';
+$route['api/GetSmtpSettings'] = 'api/Admin/get_smtp_settings';
+$route['api/GetAllSmtpSettings'] = 'api/Admin/get_alls_smtp_settings';
+$route['api/SetPaymentSettings'] = 'api/Admin/set_payment_settings';
+$route['api/UpdatePaypalSettings'] = 'api/Admin/update_paypal_settings';
+$route['api/UpdateSystemCurrency'] = 'api/Admin/update_system_currency';
+$route['api/UpdateStripeSettings'] = 'api/Admin/update_stripe_settings';
+$route['api/GetSchoolSettings/(:num)'] = 'api/Admin/school_settings/$1';
+$route['api/UpdateSchoolSettings/(:num)'] = 'api/Admin/school_settings_update/$1';
+$route['api/GetSystemSettings/(:num)'] = 'api/Admin/system_settings/$1';
+$route['api/UpdateSystemSettings/(:num)'] = 'api/Admin/update_system_settings/$1';
+$route['api/GetSystemLogo/(:num)'] = "api/Admin/system_logo/$1";
+$route['api/UpdateSystemLogo/(:num)'] = "api/Admin/update_system_logo/$1";
+$route['api/GetLanguage/(:num)'] = 'api/Admin/language/$1';
+$route['api/GetSelectedLanguage/(:num)'] = 'api/Admin/selected_language/$1';
+$route['api/AddLanguage/(:num)'] = 'api/Admin/add_language/$1';
+$route['api/UpdateLanguage/(:num)'] = 'api/Admin/update_language/$1';
+$route['api/GetPhrases/(:any)'] = 'api/Admin/phrases/$1';
+$route['api/GetWebsiteSettings/(:num)'] = 'api/Admin/website_settings/$1';
+$route['api/GetGeneralSettings'] = 'api/Admin/general_settings';
+$route['api/GetOthersSettings'] = 'api/Admin/other_settings';
+$route['api/UpdateOthersSettings'] = 'api/Admin/other_settings_update';
+$route['api/GetTermsAndConditionsSettings'] = 'api/Admin/terms_and_conditions_settings';
+$route['api/UpdateTermsAndConditionsSettings'] = 'api/Admin/upterms_and_conditions_settings';
+$route['api/GetPrivacyPolicySettings'] = 'api/Admin/privacy_policy_settings';
+$route['api/UpdatePrivacyPolicySettings'] = 'api/Admin/privacy_policy_settings_update';
+$route['api/CreateGallery'] = 'api/Admin/create_gallery';
+$route['api/GetGalleries'] = 'api/Admin/galleries';
+$route['api/GetGalleryImage'] = 'api/Admin/gallery_images_by_id';
+$route['api/DeleteGallery'] = 'api/Admin/gallery_by_id';
+$route['api/DeleteGalleryImage'] = 'api/Admin/gallery_image_by_id';
+$route['api/GetHomePageSlider'] = 'api/Admin/homepage_slider';
+$route['api/UpdateSliders'] = 'api/Admin/update_sliders';
 

@@ -14,6 +14,7 @@ class Admin extends REST_Controller {
     $this->load->library('form_validation');
     $this->load->database();
 		$this->load->library('session');
+        
 
     /*LOADING ALL THE MODELS HERE*/
     $this->load->model('Crud_model',     'crud_model');
@@ -2826,80 +2827,6 @@ public function quiz_questions_get($quiz_id) {
     }
 }
 
-/* public function add_quiz_post() {
-    // Ensure the request is a POST request
-    if ($this->input->server('REQUEST_METHOD') == 'POST') {
-        // Retrieve input data using $this->input->post
-        $title = $this->input->post('title');
-        $section_name = $this->input->post('section_name');
-        $summary = $this->input->post('instruction');  // Changed 'instruction' to 'summary'
-
-        // Log received data for debugging
-        log_message('debug', 'Received title: ' . $title);
-        log_message('debug', 'Received section_name: ' . $section_name);
-        log_message('debug', 'Received summary: ' . $summary);  // Log 'summary'
-
-        // Validate the input
-        if (empty($title) || empty($section_name)) {
-            log_message('error', 'Validation failed: Title and Section Name are required');
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Title and Section Name are required']));
-            return;
-        }
-
-        // Fetch section ID from section name
-        $this->db->select('id');
-        $this->db->from('course_section');
-        $this->db->where('title', $section_name);
-        $query = $this->db->get();
-
-        if ($query->num_rows() == 0) {
-            log_message('error', 'Invalid Section Name: ' . $section_name);
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid Section Name']));
-            return;
-        }
-
-        $section = $query->row();
-        $section_id = $section->id;
-
-        // Prepare data for insertion
-        $data = [
-            'title' => $title,
-            'section_id' => $section_id,
-            'summary' => $summary,  // Changed 'instruction' to 'summary'
-            'lesson_type' => 'quiz', // Assuming 'lesson_type' column marks a lesson as a quiz
-            // Removed 'created_at'
-        ];
-
-        // Log data to be inserted
-        log_message('debug', 'Data to be inserted: ' . json_encode($data));
-
-        // Insert the new quiz
-        if ($this->db->insert('lesson', $data)) {
-            $quiz_id = $this->db->insert_id();
-            log_message('debug', 'Quiz inserted with ID: ' . $quiz_id);
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'success', 'message' => 'Quiz added successfully', 'quiz_id' => $quiz_id]));
-        } else {
-            log_message('error', 'Failed to insert new quiz');
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to add quiz']));
-        }
-    } else {
-        // Return method not allowed error
-        log_message('error', 'Invalid request method');
-        $this->output
-            ->set_content_type('application/json')
-            ->set_status_header(405)
-            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
-    }
-} */
-
 public function add_quiz_post() {
     // Ensure the request is a POST request
     if ($this->input->server('REQUEST_METHOD') == 'POST') {
@@ -3172,59 +3099,6 @@ public function add_question_post() {
     }
 }
 
-/* public function get_quiz_questions_get($quiz_id) {
-    // Ensure the request is a GET request
-    if ($this->input->server('REQUEST_METHOD') == 'GET') {
-        // Fetch quiz questions based on the quiz ID
-        $this->db->order_by("order", "asc");
-        $this->db->where('quiz_id', $quiz_id);
-        $query = $this->db->get('question');
-        $questions = $query->result_array();
-
-        // Check if questions are found
-        if ($questions) {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'success', 'questions' => $questions]));
-        } else {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'No questions found']));
-        }
-    } else {
-        // Return method not allowed error
-        $this->output
-            ->set_content_type('application/json')
-            ->set_status_header(405)
-            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
-    }
-} */
-
-/* public function get_quiz_questions_get($quiz_id) {
-    if ($this->input->server('REQUEST_METHOD') == 'GET') {
-        $this->db->order_by("order", "asc");
-        $this->db->where('quiz_id', $quiz_id);
-        $query = $this->db->get('question');
-        $questions = $query->result_array();
-
-        if ($questions) {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'success', 'questions' => $questions]));
-        } else {
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'No questions found']));
-        }
-    } else {
-        $this->output
-            ->set_content_type('application/json')
-            ->set_status_header(405)
-            ->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request method']));
-    }
-}
- */
-
  public function get_quiz_questions_get($quiz_id) {
     if ($this->input->server('REQUEST_METHOD') == 'GET') {
         $this->db->order_by("order", "asc");
@@ -3256,71 +3130,44 @@ public function add_question_post() {
 
 
 public function edit_question_post() {
-    // Ensure the request is a POST request
     if ($this->input->server('REQUEST_METHOD') == 'POST') {
-        // Retrieve input data using $this->input->post
         $question_id = $this->input->post('question_id');
         $quiz_id = $this->input->post('quiz_id');
         $title = $this->input->post('title');
         $type = $this->input->post('type');
-        $number_of_options = $this->input->post('number_of_options');
-        $options = $this->input->post('options'); // Expecting JSON format
-        $correct_answers = $this->input->post('correct_answers'); // Expecting JSON format
-        $order = $this->input->post('order');
+        $number_of_options = (int)$this->input->post('number_of_options');
+        $options = json_decode($this->input->post('options'), true);
+        $correct_answers = json_decode($this->input->post('correct_answers'), true);
+        $order = (int)$this->input->post('order');
 
-        // Log received data for debugging
-        log_message('debug', 'Received question_id: ' . $question_id);
-        log_message('debug', 'Received quiz_id: ' . $quiz_id);
-        log_message('debug', 'Received title: ' . $title);
-        log_message('debug', 'Received type: ' . $type);
-        log_message('debug', 'Received number_of_options: ' . $number_of_options);
-        log_message('debug', 'Received options: ' . $options);
-        log_message('debug', 'Received correct_answers: ' . $correct_answers);
-        log_message('debug', 'Received order: ' . $order);
-
-        // Validate the input
-        if (empty($question_id) || empty($quiz_id) || empty($title) || empty($type) || empty($number_of_options) || empty($options) || empty($correct_answers)) {
-            log_message('error', 'Validation failed: Question ID, Quiz ID, Title, Type, Number of Options, Options, and Correct Answers are required');
+        if (empty($question_id) || empty($quiz_id) || empty($title) || empty($type) || $number_of_options <= 0 || empty($options) || empty($correct_answers)) {
             $this->output
                 ->set_content_type('application/json')
-                ->set_output(json_encode(['status' => 'error', 'message' => 'Question ID, Quiz ID, Title, Type, Number of Options, Options, and Correct Answers are required']));
+                ->set_output(json_encode(['status' => 'error', 'message' => 'Validation failed: required fields are missing.']));
             return;
         }
 
-        // Convert necessary fields to appropriate types
-        $number_of_options = (int)$number_of_options;
-        $order = (int)$order;
-
-        // Prepare data for update
         $data = [
             'quiz_id' => $quiz_id,
             'title' => $title,
             'type' => $type,
             'number_of_options' => $number_of_options,
-            'options' => $options,
-            'correct_answers' => $correct_answers,
+            'options' => json_encode($options),
+            'correct_answers' => json_encode($correct_answers),
             'order' => $order,
         ];
 
-        // Log data to be updated
-        log_message('debug', 'Data to be updated: ' . json_encode($data));
-
-        // Update the question
         $this->db->where('id', $question_id);
         if ($this->db->update('question', $data)) {
-            log_message('debug', 'Question updated with ID: ' . $question_id);
             $this->output
                 ->set_content_type('application/json')
                 ->set_output(json_encode(['status' => 'success', 'message' => 'Question updated successfully']));
         } else {
-            log_message('error', 'Failed to update question');
             $this->output
                 ->set_content_type('application/json')
                 ->set_output(json_encode(['status' => 'error', 'message' => 'Failed to update question']));
         }
     } else {
-        // Return method not allowed error
-        log_message('error', 'Invalid request method');
         $this->output
             ->set_content_type('application/json')
             ->set_status_header(405)
@@ -3381,8 +3228,7 @@ public function delete_question_post() {
     }
 }
 
-
-public function add_lesson_post() {
+ public function add_lesson_post() {
     $this->load->library('form_validation');
 
     // Set validation rules
@@ -3394,91 +3240,77 @@ public function add_lesson_post() {
     if ($this->form_validation->run() == FALSE) {
         $response = [
             'status' => 'error',
-            'message' => validation_errors()
+            'message' => strip_tags(validation_errors()) // Cleaner JSON response
         ];
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($response));
-        return;
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
-    $data['course_id'] = $this->input->post('course_id');
-    $data['title'] = $this->input->post('title');
-    $data['section_id'] = $this->input->post('section_id');
-    $data['summary'] = $this->input->post('summary');
-    $data['date_added'] = strtotime(date('D, d-M-Y'));
+    // Prepare lesson data
+    $data = [
+        'course_id' => $this->input->post('course_id'),
+        'title' => $this->input->post('title'),
+        'section_id' => $this->input->post('section_id'),
+        'summary' => $this->input->post('summary'),
+        'date_added' => strtotime(date('D, d-M-Y')),
+        'lesson_type' => $this->input->post('lesson_type'),
+        'attachment_type' => null
+    ];
 
-    $lesson_type_array = explode('-', $this->input->post('lesson_type'));
-    $lesson_type = $lesson_type_array[0];
-    $data['lesson_type'] = $lesson_type;
-    $data['attachment_type'] = isset($lesson_type_array[1]) ? $lesson_type_array[1] : null;
-
-    if ($lesson_type == 'video') {
+    // Handle video types
+    if ($data['lesson_type'] == 'video') {
         $lesson_provider = $this->input->post('lesson_provider');
         if ($lesson_provider == 'youtube' || $lesson_provider == 'vimeo') {
             $data['video_url'] = $this->input->post('video_url');
-            $duration_formatter = explode(':', $this->input->post('duration'));
-            $data['duration'] = sprintf('%02d:%02d:%02d', $duration_formatter[0], $duration_formatter[1], $duration_formatter[2]);
+            $data['duration'] = $this->input->post('duration');
             $data['video_type'] = $lesson_provider;
-        } elseif ($lesson_provider == 'html5') {
-            $data['video_url'] = $this->input->post('html5_video_url');
-            $duration_formatter = explode(':', $this->input->post('html5_duration'));
-            $data['duration'] = sprintf('%02d:%02d:%02d', $duration_formatter[0], $duration_formatter[1], $duration_formatter[2]);
-            $data['video_type'] = 'html5';
-            $this->upload_file('thumbnail', 'uploads/thumbnails/lesson_thumbnails/', $inserted_id . '.jpg');
         } elseif ($lesson_provider == 'mydevice') {
             $data['video_type'] = 'mydevice';
-            $data['video_upload'] = $this->upload_file('userfileMe', 'uploads/videos/');
+            // Attempt to upload video file and store filename
+            $video_file_name = $this->upload_file('userfileMe', 'uploads/videos/');
+            if ($video_file_name) {
+                $data['video_upload'] = $video_file_name;
+            } else {
+                return $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'error', 'message' => 'Video upload failed']));
+            }
         } else {
-            $response = ['status' => 'error', 'message' => 'Invalid lesson provider'];
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($response));
-            return;
+            return $this->output->set_content_type('application/json')->set_output(json_encode(['status' => 'error', 'message' => 'Invalid lesson provider']));
         }
     } else {
-        $data['duration'] = 0;
+        // Handle other types with an attachment
         $data['attachment'] = $this->upload_file('attachment', 'uploads/lesson_files/');
     }
 
+    // Insert into the database
     $this->db->insert('lesson', $data);
     $response = ['status' => 'success', 'message' => 'Lesson added successfully'];
-    $this->output
-        ->set_content_type('application/json')
-        ->set_output(json_encode($response));
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
 }
 
-private function upload_file($field_name, $upload_path, $file_name = null) {
+// Utility function to handle file uploads
+private function upload_file($field_name, $upload_path) {
     if (!file_exists($upload_path)) {
         mkdir($upload_path, 0777, true);
     }
 
     if (isset($_FILES[$field_name]) && $_FILES[$field_name]['error'] == 0) {
         $file_type = pathinfo($_FILES[$field_name]['name'], PATHINFO_EXTENSION);
-        $file_name = $file_name ?? md5(uniqid(rand(), true)) . '.' . $file_type;
+        $file_name = md5(uniqid(rand(), true)) . '.' . $file_type;
         $destination = $upload_path . $file_name;
 
         if (move_uploaded_file($_FILES[$field_name]['tmp_name'], $destination)) {
             return $file_name;
         } else {
-            $response = ['status' => 'error', 'message' => 'There was a problem moving the file.'];
-            $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($response));
-            exit;
+            // Return null if file move failed
+            log_message('error', 'Failed to move uploaded file for ' . $field_name);
+            return null;
         }
     } else {
-        $response = ['status' => 'error', 'message' => 'No file uploaded or there was an upload error.'];
-        $this->output
-            ->set_content_type('application/json')
-            ->set_output(json_encode($response));
-        exit;
+        log_message('error', 'File upload error or no file provided for ' . $field_name);
+        return null;
     }
 }
 
-
 public function all_lesson_types_get($section_id) {
-    // Ensure the request method is GET
     if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         $this->output
              ->set_status_header(405)
@@ -3486,7 +3318,6 @@ public function all_lesson_types_get($section_id) {
         return;
     }
 
-    // Validate the section_id
     if (!is_numeric($section_id)) {
         $this->output
              ->set_status_header(400)
@@ -3494,12 +3325,11 @@ public function all_lesson_types_get($section_id) {
         return;
     }
 
-    // Base URLs for attachments and video uploads
     $base_attachment_url = 'http://10.0.2.2/SchoolManagementWeb/uploads/lesson_files/';
     $base_video_url = 'http://10.0.2.2/SchoolManagementWeb/uploads/videos/';
 
-    // Fetch distinct lesson types, lesson titles, attachments, and video uploads from the 'lesson' table for the given section_id
-    $this->db->select("lesson.lesson_type, lesson.title as lesson_title, 
+    $this->db->select("lesson.id, lesson.lesson_type, lesson.title as lesson_title, 
+                       lesson.video_url,
                        CONCAT('$base_attachment_url', lesson.attachment) as attachment, 
                        CONCAT('$base_video_url', lesson.video_upload) as video_upload");
     $this->db->from('lesson');
@@ -3507,7 +3337,6 @@ public function all_lesson_types_get($section_id) {
     $query = $this->db->get();
     $lessons = $query->result_array();
 
-    // Check if lessons are found
     if (!empty($lessons)) {
         $this->output
              ->set_status_header(200)
@@ -3519,6 +3348,7 @@ public function all_lesson_types_get($section_id) {
              ->set_output(json_encode(['message' => 'No lessons found for the given section ID']));
     }
 }
+
 
 
 public function associate_user_with_school_post() {
@@ -5535,6 +5365,65 @@ public function invoice_by_date_range_post() {
 }
 
 
+public function invoices_by_filter_post()
+{
+    // Get the JSON input
+    $json_input = json_decode(file_get_contents('php://input'), true);
+
+    // Extract the parameters
+    $class_id = isset($json_input['class_id']) ? $json_input['class_id'] : null;
+    $start_date = isset($json_input['start_date']) ? $json_input['start_date'] : null;
+    $end_date = isset($json_input['end_date']) ? $json_input['end_date'] : null;
+
+    // Validate that all fields are provided
+    if (!$class_id || !$start_date || !$end_date) {
+        $response = array('status' => false, 'message' => 'Missing parameters');
+        echo json_encode($response);
+        return;
+    }
+
+    // Convert dates to a format that MySQL understands, if needed
+    $start_date = date('Y-m-d', strtotime($start_date));
+    $end_date = date('Y-m-d', strtotime($end_date));
+
+    // Build the query with the necessary filters and join with the users table
+    $this->db->select('invoices.*, CONCAT(users.name) as student_name'); // Join users table
+    $this->db->from('invoices');
+    $this->db->join('students', 'students.id = invoices.student_id', 'left'); // Join students table to get user_id
+    $this->db->join('users', 'users.id = students.user_id', 'left'); // Join users table to get student name
+    $this->db->where('invoices.class_id', $class_id);
+    $this->db->where('invoices.created_at >=', $start_date);
+    $this->db->where('invoices.created_at <=', $end_date);
+    $query = $this->db->get();
+
+    // Retrieve the result
+    $invoices = $query->result_array();
+
+    // Check if any invoices were found
+    if (count($invoices) > 0) {
+        $response = array('status' => true, 'data' => $invoices);
+    } else {
+        $response = array('status' => false, 'message' => 'No invoices found');
+    }
+
+    // Send the response back as JSON
+    echo json_encode($response);
+}
+
+
+public function classe_get() {
+    // Fetch all class ids and names from the 'classes' table
+    $this->db->select('id, name'); // Select both the id and the name
+    $query = $this->db->get('classes');
+    $classes = $query->result_array();
+
+    // Return the result as a JSON response
+    $this->output
+        ->set_content_type('application/json')
+        ->set_output(json_encode($classes));
+}
+
+
 protected function get_class_name($class_id) {
     // Query the database to get the class name based on the class_id
     $this->load->database();
@@ -5650,50 +5539,55 @@ public function create_single_invoice_post() {
             ->set_status_header(500)
             ->set_output(json_encode(['status' => false, 'message' => 'Failed to insert invoice data']));
     }
-}
+} 
 
+public function create_mass_invoice_post() {
+    // Récupérer les données JSON du POST
+    $data = json_decode($this->input->raw_input_stream, true);
 
+    log_message('debug', 'Données POST reçues : ' . json_encode($data));
 
-
-public function create_mass_invoice() {
-    $data['total_amount'] = $this->input->post('total_amount');
-    $data['paid_amount'] = $this->input->post('paid_amount');
-    $data['status'] = $this->input->post('status');
-
-    if ($data['paid_amount'] > $data['total_amount']) {
-        $response = array('status' => false, 'notification' => 'Paid amount cannot be greater than total amount');
+    // Valider les champs requis
+    if (empty($data['school_id']) || empty($data['class_id']) || empty($data['section_id']) || empty($data['title']) || empty($data['total_amount']) || empty($data['paid_amount']) || empty($data['status'])) {
+        log_message('error', 'Échec de la validation : champs requis manquants');
+        $response = array('status' => false, 'notification' => 'Tous les champs sont requis', 'received_data' => $data);
         return $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
-    if ($data['status'] == 'paid' && $data['total_amount'] != $data['paid_amount']) {
-        $response = array('status' => false, 'notification' => 'Paid amount is not equal to total amount');
-        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
-    }
-
-    $data['title'] = $this->input->post('title');
-    $data['class_id'] = $this->input->post('class_id');
-    $data['school_id'] = $this->school_id;
+    // Ajouter des champs supplémentaires
     $data['session'] = $this->active_session;
-    $data['created_at'] = strtotime(date('d-M-Y'));
+    $data['created_at'] = date('Y-m-d H:i:s');
 
-    if ($this->input->post('paid_amount') > 0) {
-        $data['updated_at'] = strtotime(date('d-M-Y'));
+    // Requête pour sélectionner les étudiants à partir de la table `enrols`
+    $this->db->select('student_id');
+    $this->db->from('enrols');
+    $this->db->where('class_id', $data['class_id']);
+    $this->db->where('section_id', $data['section_id']);
+    $this->db->where('school_id', $data['school_id']);
+    $students = $this->db->get()->result_array();
+
+    // Vérifier si des étudiants existent
+    if (empty($students)) {
+        log_message('error', 'Aucun étudiant trouvé pour class_id: ' . $data['class_id'] . ', section_id: ' . $data['section_id'] . ', school_id: ' . $data['school_id']);
+        $response = array('status' => false, 'notification' => 'Aucun étudiant trouvé pour la classe et la section sélectionnées');
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
     }
 
-    $enrolments = $this->user_model->get_student_details_by_id('section', $this->input->post('section_id'));
-    foreach ($enrolments as $enrolment) {
-        $data['student_id'] = $enrolment['student_id'];
-        $this->db->insert('invoices', $data);
+    log_message('debug', 'Étudiants trouvés : ' . json_encode($students));
+
+    // Créer une facture pour chaque étudiant
+    foreach ($students as $student) {
+        $invoice_data = $data;
+        $invoice_data['student_id'] = $student['student_id'];
+        $this->db->insert('invoices', $invoice_data);
+        log_message('debug', 'Facture créée pour student_id : ' . $student['student_id']);
     }
 
-    if (sizeof($enrolments) > 0) {
-        $response = array('status' => true, 'notification' => 'Invoices added successfully');
-    } else {
-        $response = array('status' => false, 'notification' => 'No students found');
-    }
-
+    log_message('debug', 'Toutes les factures ont été créées avec succès');
+    $response = array('status' => true, 'notification' => 'Factures créées avec succès');
     return $this->output->set_content_type('application/json')->set_output(json_encode($response));
 }
+
 
 public function update_invoice($id = "") {
     $previous_invoice_data = $this->db->get_where('invoices', array('id' => $id))->row_array();
@@ -7007,22 +6901,6 @@ public function get_invoices_by_student($student_id) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // Login API CALL
     public function login_post() {
         try {
@@ -7040,7 +6918,7 @@ public function get_invoices_by_student($student_id) {
                 'message' => 'An error occurred. Please try again later.'
             ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
         }
-    }
+    } 
     
   // FORGOT PASSWORD API CALL
   public function forgot_password_post() {
@@ -7799,6 +7677,1720 @@ public function update_Password_post() {
 
     echo json_encode($response);
 }
+
+
+//Partie Settings
+
+//SMTP API 
+
+public function set_smtp_settings_post()
+{
+    // Fetch the POST data
+    $smtp_host     = $this->input->post('smtp_host');
+    $smtp_port     = $this->input->post('smtp_port');
+    $smtp_user     = $this->input->post('smtp_username');
+    $smtp_pass     = $this->input->post('smtp_password');
+    $smtp_protocol = $this->input->post('smtp_protocol');
+    $smtp_secure   = $this->input->post('smtp_crypto'); // For SSL or TLS
+    $mail_sender   = $this->input->post('mail_sender'); // New mail_sender field
+
+    // Log the POST data for debugging
+    log_message('debug', 'SMTP Settings POST data: ' . print_r($this->input->post(), true));
+
+    // Validate input
+    $this->form_validation->set_rules('smtp_host', 'SMTP Host', 'required');
+    $this->form_validation->set_rules('smtp_port', 'SMTP Port', 'required|integer');
+    $this->form_validation->set_rules('smtp_username', 'SMTP User', 'required|valid_email');
+    $this->form_validation->set_rules('smtp_password', 'SMTP Password', 'required');
+    $this->form_validation->set_rules('smtp_protocol', 'SMTP Protocol', 'required');
+    $this->form_validation->set_rules('smtp_crypto', 'SMTP Secure', 'in_list[ssl,tls]');
+    $this->form_validation->set_rules('mail_sender', 'Mail Sender', 'required'); // New validation rule
+
+    // Check if validation passed
+    if ($this->form_validation->run() === FALSE) {
+        // Log validation errors
+        log_message('error', 'Validation errors: ' . validation_errors());
+        // Return validation errors
+        echo json_encode(array('status' => 'error', 'message' => validation_errors()));
+        return;
+    }
+
+    // Check if an SMTP setting already exists
+    $existing_setting = $this->db->get('smtp_settings')->row_array();
+
+    // Log existing setting check
+    log_message('debug', 'Existing SMTP settings: ' . print_r($existing_setting, true));
+
+    // Prepare the data array for insertion/updation
+    $data = array(
+        'smtp_host'     => $smtp_host,
+        'smtp_port'     => $smtp_port,
+        'smtp_username' => $smtp_user,
+        'smtp_password' => $smtp_pass,
+        'smtp_protocol' => $smtp_protocol,
+        'smtp_crypto'   => $smtp_secure,
+        'mail_sender'   => $mail_sender, // Add mail_sender to the data array
+    );
+
+    // If a setting exists, update it; otherwise, insert a new one
+    if ($existing_setting) {
+        $this->db->update('smtp_settings', $data);
+        $message = 'SMTP settings updated successfully';
+        log_message('info', $message);
+    } else {
+        $this->db->insert('smtp_settings', $data);
+        $message = 'SMTP settings saved successfully';
+        log_message('info', $message);
+    }
+
+    // Return success message
+    echo json_encode(array('status' => 'success', 'message' => $message));
+}
+
+public function get_smtp_settings_get() {
+    // Call the helper function to fetch SMTP settings
+    $smtp_settings = $this->get_smtp_settings();
+
+    if (!empty($smtp_settings)) {
+        // If settings are found, return them with a success status
+        $this->response([
+            'status' => true,
+            'data' => $smtp_settings
+        ], 200); // HTTP 200 OK
+    } else {
+        // If no settings are found, return an error
+        log_message('error', 'SMTP settings could not be retrieved or are empty');
+        $this->response([
+            'status' => false,
+            'message' => 'SMTP settings not found'
+        ], 404); // HTTP 404 Not Found
+    }
+}
+
+// Helper function to fetch SMTP settings
+private function get_smtp_settings() {
+    // Query the 'smtp_settings' table to get the first record (assuming id=1)
+    $this->db->where('id', 1);
+    $smtp_settings = $this->db->get('smtp_settings')->row_array();
+
+    // If no data is found, return an empty array
+    if (!$smtp_settings) {
+        return [];
+    }
+    return $smtp_settings;
+}
+
+public function get_alls_smtp_settings_get() {
+    // Call the helper function to fetch all SMTP settings
+    $smtp_settings = $this->get_all_smtp_settings();
+
+    if (!empty($smtp_settings)) {
+        // If settings are found, return them with a success status
+        $this->response([
+            'status' => true,
+            'data' => $smtp_settings
+        ], 200); // HTTP 200 OK
+    } else {
+        // If no settings are found, return an error
+        log_message('error', 'SMTP settings could not be retrieved or are empty');
+        $this->response([
+            'status' => false,
+            'message' => 'SMTP settings not found'
+        ], 404); // HTTP 404 Not Found
+    }
+}
+// Helper function to fetch all SMTP settings
+private function get_all_smtp_settings() {
+    // Query the 'smtp_settings' table to get all records
+    $smtp_settings = $this->db->get('smtp_settings')->result_array();
+
+    // If no data is found, return an empty array
+    if (empty($smtp_settings)) {
+        return [];
+    }
+    return $smtp_settings;
+}
+
+public function set_payment_settings_post()
+{
+    // Fetch the POST data
+    $school_id = $this->input->post('school_id');
+    $payment_method = $this->input->post('payment_method');
+    $payment_gateway = $this->input->post('payment_gateway');
+    $api_key = $this->input->post('api_key');
+    $enabled = $this->input->post('enabled');
+
+    // Log the POST data for debugging
+    log_message('debug', 'Payment Settings POST data: ' . print_r($this->input->post(), true));
+
+    // Validate input
+    $this->form_validation->set_rules('school_id', 'School ID', 'required|integer');
+    $this->form_validation->set_rules('payment_method', 'Payment Method', 'required');
+    $this->form_validation->set_rules('payment_gateway', 'Payment Gateway', 'required');
+    $this->form_validation->set_rules('api_key', 'API Key', 'required');
+    $this->form_validation->set_rules('enabled', 'Enabled', 'required|in_list[0,1]');
+
+    // Check if validation passed
+    if ($this->form_validation->run() === FALSE) {
+        // Log validation errors
+        log_message('error', 'Validation errors: ' . validation_errors());
+        // Return validation errors
+        echo json_encode(array('status' => 'error', 'message' => validation_errors()));
+        return;
+    }
+
+    // Prepare data for payment settings
+    $data = array(
+        'payment_method' => $payment_method,
+        'payment_gateway' => $payment_gateway,
+        'api_key' => $api_key,
+        'enabled' => $enabled,
+        'school_id' => $school_id // Ensure school_id is included
+    );
+
+    // Log the prepared data
+    log_message('debug', 'Prepared data for update: ' . print_r($data, true));
+
+    // Handle Stripe settings
+    if ($payment_gateway == 'Stripe') {
+        $stripe_data = json_encode(array(
+            'stripe_active' => $enabled ? 'yes' : 'no',
+            'stripe_mode' => $this->input->post('stripe_mode'),
+            'stripe_test_secret_key' => $this->input->post('stripe_test_secret_key'),
+            'stripe_test_public_key' => $this->input->post('stripe_test_public_key'),
+            'stripe_live_secret_key' => $this->input->post('stripe_live_secret_key'),
+            'stripe_live_public_key' => $this->input->post('stripe_live_public_key'),
+            'stripe_currency' => $this->input->post('stripe_currency')
+        ));
+
+        // Log Stripe data
+        log_message('debug', 'Stripe data: ' . $stripe_data);
+
+        // Update or insert Stripe settings
+        $this->db->where('school_id', $school_id);
+        $this->db->where('key', 'stripe_settings');
+        $existing_stripe_setting = $this->db->get('payment_settings')->row_array();
+
+        if ($existing_stripe_setting) {
+            // Update existing Stripe settings
+            $this->db->where('id', $existing_stripe_setting['id']);
+            $this->db->update('payment_settings', array('value' => $stripe_data));
+            log_message('debug', 'Updated Stripe settings for school_id: ' . $school_id);
+        } else {
+            // Insert new Stripe settings
+            $this->db->insert('payment_settings', array('school_id' => $school_id, 'key' => 'stripe_settings', 'value' => $stripe_data));
+            log_message('debug', 'Inserted new Stripe settings for school_id: ' . $school_id);
+        }
+    }
+
+    // Handle PayPal settings
+    if ($payment_gateway == 'PayPal') {
+        $paypal_data = json_encode(array(
+            'paypal_active' => $enabled ? 'yes' : 'no',
+            'paypal_mode' => $this->input->post('paypal_mode'),
+            'paypal_client_id_sandbox' => $this->input->post('paypal_client_id_sandbox'),
+            'paypal_client_id_production' => $this->input->post('paypal_client_id_production'),
+            'paypal_currency' => $this->input->post('paypal_currency')
+        ));
+
+        // Log PayPal data
+        log_message('debug', 'PayPal data: ' . $paypal_data);
+
+        // Update or insert PayPal settings
+        $this->db->where('school_id', $school_id);
+        $this->db->where('key', 'paypal_settings');
+        $existing_paypal_setting = $this->db->get('payment_settings')->row_array();
+
+        if ($existing_paypal_setting) {
+            // Update existing PayPal settings
+            $this->db->where('id', $existing_paypal_setting['id']);
+            $this->db->update('payment_settings', array('value' => $paypal_data));
+            log_message('debug', 'Updated PayPal settings for school_id: ' . $school_id);
+        } else {
+            // Insert new PayPal settings
+            $this->db->insert('payment_settings', array('school_id' => $school_id, 'key' => 'paypal_settings', 'value' => $paypal_data));
+            log_message('debug', 'Inserted new PayPal settings for school_id: ' . $school_id);
+        }
+    }
+
+    // Return success message
+    echo json_encode(array('status' => 'success', 'message' => 'Payment settings updated successfully'));
+}
+
+public function update_system_currency_post() {
+    // Fetch the POST data
+    $school_id = $this->input->post('school_id');
+    $system_currency = $this->input->post('system_currency');
+    $currency_position = $this->input->post('currency_position');
+
+    // Validate input
+    $this->form_validation->set_rules('school_id', 'School ID', 'required|integer');
+    $this->form_validation->set_rules('system_currency', 'System Currency', 'required');
+    $this->form_validation->set_rules('currency_position', 'Currency Position', 'required');
+
+    if ($this->form_validation->run() === FALSE) {
+        echo json_encode(array('status' => 'error', 'message' => validation_errors()));
+        return;
+    }
+
+    // Prepare data for system currency update
+    $currency_data = json_encode(array(
+        'system_currency' => $system_currency,
+        'currency_position' => $currency_position
+    ));
+
+    // Update or insert system currency settings
+    $this->db->where('school_id', $school_id);
+    $this->db->where('key', 'system_currency');
+    $existing_currency = $this->db->get('payment_settings')->row_array();
+
+    if ($existing_currency) {
+        // Update existing currency settings
+        $this->db->where('id', $existing_currency['id']);
+        $this->db->update('payment_settings', array('value' => $currency_data));
+    } else {
+        // Insert new currency settings
+        $this->db->insert('payment_settings', array('school_id' => $school_id, 'key' => 'system_currency', 'value' => $currency_data));
+    }
+
+    echo json_encode(array('status' => 'success', 'message' => 'System currency updated successfully'));
+}
+
+public function update_paypal_settings_post() {
+    // Fetch the POST data
+    $school_id = $this->input->post('school_id');
+    $paypal_active = $this->input->post('paypal_active');
+    $paypal_mode = $this->input->post('paypal_mode');
+    $paypal_client_id_sandbox = $this->input->post('paypal_client_id_sandbox');
+    $paypal_client_id_production = $this->input->post('paypal_client_id_production');
+    $paypal_currency = $this->input->post('paypal_currency');
+
+    // Validate input
+    $this->form_validation->set_rules('school_id', 'School ID', 'required|integer');
+    $this->form_validation->set_rules('paypal_active', 'PayPal Active', 'required|in_list[yes,no]');
+    $this->form_validation->set_rules('paypal_mode', 'PayPal Mode', 'required|in_list[production,sandbox]');
+    $this->form_validation->set_rules('paypal_client_id_sandbox', 'Sandbox Client ID', 'required');
+    $this->form_validation->set_rules('paypal_client_id_production', 'Production Client ID', 'required');
+    $this->form_validation->set_rules('paypal_currency', 'PayPal Currency', 'required');
+
+    if ($this->form_validation->run() === FALSE) {
+        echo json_encode(array('status' => 'error', 'message' => validation_errors()));
+        return;
+    }
+
+    // Prepare data for PayPal settings
+    $paypal_data = json_encode(array(
+        'paypal_active' => $paypal_active,
+        'paypal_mode' => $paypal_mode,
+        'paypal_client_id_sandbox' => $paypal_client_id_sandbox,
+        'paypal_client_id_production' => $paypal_client_id_production,
+        'paypal_currency' => $paypal_currency
+    ));
+
+    // Update or insert PayPal settings
+    $this->db->where('school_id', $school_id);
+    $this->db->where('key', 'paypal_settings');
+    $existing_paypal_setting = $this->db->get('payment_settings')->row_array();
+
+    if ($existing_paypal_setting) {
+        $this->db->where('id', $existing_paypal_setting['id']);
+        $this->db->update('payment_settings', array('value' => $paypal_data));
+    } else {
+        $this->db->insert('payment_settings', array('school_id' => $school_id, 'key' => 'paypal_settings', 'value' => $paypal_data));
+    }
+
+    echo json_encode(array('status' => 'success', 'message' => 'PayPal settings updated successfully'));
+}
+
+public function update_stripe_settings_post() {
+    // Fetch the POST data
+    $school_id = $this->input->post('school_id');
+    $stripe_active = $this->input->post('stripe_active');
+    $stripe_mode = $this->input->post('stripe_mode');
+    $stripe_test_secret_key = $this->input->post('stripe_test_secret_key');
+    $stripe_test_public_key = $this->input->post('stripe_test_public_key');
+    $stripe_live_secret_key = $this->input->post('stripe_live_secret_key');
+    $stripe_live_public_key = $this->input->post('stripe_live_public_key');
+    $stripe_currency = $this->input->post('stripe_currency');
+
+    // Validate input
+    $this->form_validation->set_rules('school_id', 'School ID', 'required|integer');
+    $this->form_validation->set_rules('stripe_active', 'Stripe Active', 'required|in_list[yes,no]');
+    $this->form_validation->set_rules('stripe_mode', 'Stripe Mode', 'required|in_list[on,off]');
+    $this->form_validation->set_rules('stripe_test_secret_key', 'Test Secret Key', 'required');
+    $this->form_validation->set_rules('stripe_test_public_key', 'Test Public Key', 'required');
+    $this->form_validation->set_rules('stripe_live_secret_key', 'Live Secret Key', 'required');
+    $this->form_validation->set_rules('stripe_live_public_key', 'Live Public Key', 'required');
+    $this->form_validation->set_rules('stripe_currency', 'Stripe Currency', 'required');
+
+    if ($this->form_validation->run() === FALSE) {
+        echo json_encode(array('status' => 'error', 'message' => validation_errors()));
+        return;
+    }
+
+    // Prepare data for Stripe settings
+    $stripe_data = json_encode(array(
+        'stripe_active' => $stripe_active,
+        'stripe_mode' => $stripe_mode,
+        'stripe_test_secret_key' => $stripe_test_secret_key,
+        'stripe_test_public_key' => $stripe_test_public_key,
+        'stripe_live_secret_key' => $stripe_live_secret_key,
+        'stripe_live_public_key' => $stripe_live_public_key,
+        'stripe_currency' => $stripe_currency
+    ));
+
+    // Update or insert Stripe settings
+    $this->db->where('school_id', $school_id);
+    $this->db->where('key', 'stripe_settings');
+    $existing_stripe_setting = $this->db->get('payment_settings')->row_array();
+
+    if ($existing_stripe_setting) {
+        $this->db->where('id', $existing_stripe_setting['id']);
+        $this->db->update('payment_settings', array('value' => $stripe_data));
+    } else {
+        $this->db->insert('payment_settings', array('school_id' => $school_id, 'key' => 'stripe_settings', 'value' => $stripe_data));
+    }
+
+    echo json_encode(array('status' => 'success', 'message' => 'Stripe settings updated successfully'));
+}
+
+public function school_settings_get($school_id = null)
+{
+    // Check if the school ID is provided in the request, if not, return an error response
+    if ($school_id === null) {
+        echo json_encode(array(
+            'status' => false,
+            'message' => 'School ID is required'
+        ));
+        return;
+    }
+
+    // Manually fetch the school settings from the database
+    $this->load->database(); // Ensure the database is loaded
+
+    // Query to fetch the school settings based on the provided school ID
+    $query = $this->db->get_where('schools', array('id' => $school_id));
+
+    // Check if a record was found
+    if ($query->num_rows() > 0) {
+        $school_settings = $query->row_array();
+
+        // Dynamically build the image path based on the school's ID
+        $image_path = 'uploads/schools/' . $school_settings['id'] . '.jpg';
+
+        // Check if the image exists
+        if (file_exists($image_path)) {
+            $school_settings['image_url'] = base_url($image_path); // Set the image URL if the image exists
+        } else {
+            $school_settings['image_url'] = null; // Or set a default image path if needed
+        }
+
+        // Send a success response with the school settings data
+        echo json_encode(array(
+            'status' => true,
+            'data' => $school_settings
+        ));
+    } else {
+        // Send an error response if no school is found
+        echo json_encode(array(
+            'status' => false,
+            'message' => 'No school found with the given ID'
+        ));
+    }
+}
+
+public function school_settings_update_post($school_id = null)
+{
+    // Check if the school ID is provided in the request, if not, return an error response
+    if ($school_id === null) {
+        echo json_encode(array(
+            'status' => false,
+            'message' => 'School ID is required'
+        ));
+        return;
+    }
+
+    // Load database if not already loaded
+    $this->load->database();
+
+    // Validate the input data
+    $this->form_validation->set_rules('school_name', 'School Name', 'required');
+    $this->form_validation->set_rules('description', 'Description', 'required');
+    $this->form_validation->set_rules('phone', 'Phone', 'required');
+    $this->form_validation->set_rules('access', 'Access', 'required|in_list[0,1]');
+    $this->form_validation->set_rules('address', 'Address', 'required');
+    $this->form_validation->set_rules('category', 'Category', 'required');
+
+    // Check if validation fails
+    if ($this->form_validation->run() === FALSE) {
+        echo json_encode(array(
+            'status' => false,
+            'message' => validation_errors()
+        ));
+        return;
+    }
+
+    // Prepare data for updating
+    $update_data = array(
+        'name' => htmlspecialchars($this->input->post('school_name')),
+        'description' => htmlspecialchars($this->input->post('description')),
+        'phone' => htmlspecialchars($this->input->post('phone')),
+        'access' => htmlspecialchars($this->input->post('access')),
+        'address' => htmlspecialchars($this->input->post('address')),
+        'category' => htmlspecialchars($this->input->post('category'))
+    );
+
+    // Check if the school ID exists in the database
+    $this->db->where('id', $school_id);
+    $query = $this->db->get('schools');
+
+    if ($query->num_rows() > 0) {
+        // Update the school settings
+        $this->db->where('id', $school_id);
+        $this->db->update('schools', $update_data);
+
+        // Send a success response
+        echo json_encode(array(
+            'status' => true,
+            'message' => 'School settings updated successfully'
+        ));
+    } else {
+        // Error response if no school is found
+        echo json_encode(array(
+            'status' => false,
+            'message' => 'No school found with the given ID'
+        ));
+    }
+}
+
+public function system_settings_get($school_id = null)
+{
+    // Check if the school_id is provided, if not, return an error response
+    if ($school_id === null) {
+        $response = array(
+            'status' => false,
+            'message' => 'School ID is required'
+        );
+        echo json_encode($response);
+        return;
+    }
+
+    // Fetch system settings directly using a query
+    $system_query = $this->db->get_where('settings', array('id' => 1));
+    $system_settings = $system_query->row_array();
+
+    // Fetch school settings based on the provided school_id
+    $school_query = $this->db->get_where('schools', array('id' => $school_id));
+    $school_settings = $school_query->row_array();
+
+    // Prepare the response
+    if (!empty($system_settings) && !empty($school_settings)) {
+        $response = array(
+            'status' => true,
+            'data' => array(
+                'system_settings' => $system_settings,
+       
+            ),
+            'message' => 'System  settings fetched successfully'
+        );
+    } else {
+        $response = array(
+            'status' => false,
+            'message' => 'Settings not found'
+        );
+    }
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+public function update_system_settings_post($school_id = null)
+{
+    // Check if the school_id is provided
+    if ($school_id === null) {
+        $response = array(
+            'status' => false,
+            'message' => 'School ID is required'
+        );
+        echo json_encode($response);
+        return;
+    }
+
+    // Validate input: ensure necessary fields are provided for system settings
+    $this->load->library('form_validation');
+    $this->form_validation->set_rules('system_email', 'System Email', 'required|valid_email');
+    $this->form_validation->set_rules('system_title', 'System Title', 'required');
+    $this->form_validation->set_rules('phone', 'Phone', 'required');
+
+    // Check if the form validation passed
+    if ($this->form_validation->run() == FALSE) {
+        // Validation failed, return error message
+        $response = array(
+            'status' => false,
+            'message' => validation_errors()
+        );
+        echo json_encode($response);
+        return;
+    }
+
+    // Collect data from POST request (specific to system settings)
+    $data = array(
+        'system_email' => htmlspecialchars($this->input->post('system_email')),  // Valid email
+        'system_title' => htmlspecialchars($this->input->post('system_title')),  // Title
+        'phone' => htmlspecialchars($this->input->post('phone')),                // Phone
+        'purchase_code' => htmlspecialchars($this->input->post('purchase_code')),
+        'address' => htmlspecialchars($this->input->post('address')),
+        'fax' => htmlspecialchars($this->input->post('fax')),
+        'footer_text' => htmlspecialchars($this->input->post('footer_text')),
+        'footer_link' => htmlspecialchars($this->input->post('footer_link')),
+        'timezone' => htmlspecialchars($this->input->post('timezone')),
+        'youtube_api_key' => htmlspecialchars($this->input->post('youtube_api_key')),
+        'vimeo_api_key' => htmlspecialchars($this->input->post('vimeo_api_key'))
+    );
+
+    // Update the system settings for the given school_id
+    $this->db->where('school_id', $school_id);
+    $update = $this->db->update('settings', $data);
+
+    // Check if the update was successful
+    if ($update) {
+        $response = array(
+            'status' => true,
+            'message' => 'System settings updated successfully'
+        );
+    } else {
+        $response = array(
+            'status' => false,
+            'message' => 'Failed to update system settings'
+        );
+    }
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+public function system_logo_get($school_id = null)
+{
+    // Check if school_id is provided, if not return error response
+    if ($school_id === null) {
+        $response = array(
+            'status' => false,
+            'message' => 'School ID is required'
+        );
+        echo json_encode($response);
+        return;
+    }
+
+    // Fetch the logos based on the school ID
+    $response = array(
+        'status' => true,
+        'dark_logo' => $this->settings_model->get_logo_dark($school_id),
+        'light_logo' => $this->settings_model->get_logo_light($school_id),
+        'small_logo' => $this->settings_model->get_logo_small($school_id),
+        'favicon' => $this->settings_model->get_favicon($school_id),
+        'notification' => get_phrase('logo_fetched_successfully')
+    );
+    
+    echo json_encode($response);
+}
+
+public function update_system_logo_post($school_id = null)
+{
+    // Check if school_id is provided, if not return error response
+    if ($school_id === null) {
+        $response = array(
+            'status' => false,
+            'message' => 'School ID is required'
+        );
+        echo json_encode($response);
+        return;
+    }
+
+    // Check if logos are provided via POST (using $_FILES)
+    if (!isset($_FILES['dark_logo']) && !isset($_FILES['light_logo']) && !isset($_FILES['favicon'])) {
+        $response = array(
+            'status' => false,
+            'message' => 'No logo files provided'
+        );
+        echo json_encode($response);
+        return;
+    }
+
+    // Update dark logo if provided
+    if ($_FILES['dark_logo']['name'] != "") {
+        $this->update_logo($school_id, 'dark_logo', 'logo-dark');
+    }
+
+    // Update light logo if provided
+    if ($_FILES['light_logo']['name'] != "") {
+        $this->update_logo($school_id, 'light_logo', 'logo-light');
+    }
+
+    // Update favicon if provided
+    if ($_FILES['favicon']['name'] != "") {
+        $this->update_logo($school_id, 'favicon', 'favicon');
+    }
+
+    // Return a success response
+    $response = array(
+        'status' => true,
+        'message' => 'Logos updated successfully'
+    );
+    echo json_encode($response);
+}
+
+private function update_logo($school_id, $file_key, $file_name)
+{
+    // Directory where the logo will be stored
+    $upload_path = 'uploads/schools/' . $school_id . '/';
+    
+    // Ensure directory exists
+    if (!is_dir($upload_path)) {
+        mkdir($upload_path, 0777, true);
+    }
+
+    // Get the file extension
+    $file_extension = pathinfo($_FILES[$file_key]['name'], PATHINFO_EXTENSION);
+    
+    // Set the full path with filename (e.g. logo-dark.png, favicon.png)
+    $file_path = $upload_path . $file_name . '.' . $file_extension;
+
+    // Check file type (e.g., PNG, SVG)
+    $file_type = mime_content_type($_FILES[$file_key]['tmp_name']);
+    $svg_type = 'image/svg+xml';
+
+    // Delete the old file if exists
+    if (file_exists($file_path)) {
+        unlink($file_path);
+    }
+
+    // Move the new uploaded file
+    move_uploaded_file($_FILES[$file_key]['tmp_name'], $file_path);
+}
+
+public function language_get()
+{
+    // Get all languages
+    $languages = $this->get_all_languages();
+
+    // Check if languages are found
+    if (!empty($languages)) {
+        $response = array(
+            'status' => true,
+            'languages' => $languages,
+            'message' => 'Languages fetched successfully'
+        );
+    } else {
+        $response = array(
+            'status' => false,
+            'message' => 'No languages found'
+        );
+    }
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+// Function to get all languages
+private function get_all_languages()
+{
+    // Assuming your language files are stored as JSON in the 'language' folder
+    $language_files = array();
+    $all_files = $this->get_list_of_language_files();
+
+    foreach ($all_files as $file) {
+        $info = pathinfo($file);
+        if (isset($info['extension']) && strtolower($info['extension']) == 'json') {
+            $file_name = explode('.json', $info['basename']);
+            array_push($language_files, $file_name[0]);
+        }
+    }
+    return $language_files;
+}
+
+// Helper function to retrieve all language files
+private function get_list_of_language_files($dir = APPPATH . '/language', &$results = array())
+{
+    $files = scandir($dir);
+    foreach ($files as $key => $value) {
+        $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
+        if (!is_dir($path)) {
+            $results[] = $path;
+        } else if ($value != "." && $value != "..") {
+            $this->get_list_of_language_files($path, $results);
+            $results[] = $path;
+        }
+    }
+    return $results;
+}
+
+public function selected_language_get($school_id = null)
+{
+    // Check if school_id is provided
+    if ($school_id === null) {
+        $response = array(
+            'status' => false,
+            'message' => 'School ID is required'
+        );
+        echo json_encode($response);
+        return;
+    }
+
+    // Get the language for the specific school from the database
+    $this->db->select('language');
+    $this->db->from('settings');
+    $this->db->where('school_id', $school_id);
+    $query = $this->db->get();
+
+    // Check if language is found
+    if ($query->num_rows() > 0) {
+        $language = $query->row()->language;
+        $response = array(
+            'status' => true,
+            'language' => $language,
+            'message' => 'Language fetched successfully'
+        );
+    } else {
+        $response = array(
+            'status' => false,
+            'message' => 'No language found for this school'
+        );
+    }
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+public function add_language_post($school_id = null)
+{
+    // Check if the language is provided
+    if (!$this->input->post('language')) {
+        log_message('error', 'Language not provided.');
+        $response = array(
+            'status' => false,
+            'message' => 'Language is required'
+        );
+        echo json_encode($response);
+        return;
+    }
+
+    // Fetch the posted language
+    $new_language = $this->input->post('language');
+
+    // Log received inputs for debugging
+    log_message('debug', 'Received language: ' . $new_language);
+
+    // Fetch the current available languages
+    $current_languages = $this->get_all_languages();
+
+    // Check if the language already exists
+    if (!in_array($new_language, $current_languages)) {
+        // Create a new JSON file for the language
+        $new_file_path = APPPATH . "language/{$new_language}.json";
+
+        // Create a default structure for the new language (you can modify the default structure as needed)
+        $default_phrases = array(
+            "welcome" => "Welcome",
+            "name" => "Name",
+            "option" => "Option"
+            // Add more default phrases as needed
+        );
+
+        // Save the default phrases to the new JSON file
+        if (file_put_contents($new_file_path, json_encode($default_phrases, JSON_PRETTY_PRINT))) {
+            $response = array(
+                'status' => true,
+                'message' => 'Language added successfully'
+            );
+            log_message('debug', 'Language added successfully.');
+        } else {
+            $response = array(
+                'status' => false,
+                'message' => 'Failed to create the language file'
+            );
+            log_message('error', 'Failed to create the language file.');
+        }
+    } else {
+        $response = array(
+            'status' => false,
+            'message' => 'Language already exists'
+        );
+        log_message('debug', 'Language already exists in the list.');
+    }
+
+    // Log the final response
+    log_message('debug', 'Final Response: ' . json_encode($response));
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+public function update_language_post($school_id = null)
+{
+    // Check if school_id and language are provided
+    if ($school_id === null || !$this->input->post('language')) {
+        $response = array(
+            'status' => false,
+            'message' => 'School ID and language are required'
+        );
+        echo json_encode($response);
+        return;
+    }
+
+    // Fetch the posted language
+    $language = $this->input->post('language');
+
+    // Update the language for the specific school in the settings table
+    $data = array(
+        'language' => $language
+    );
+
+    // Update the language where school_id matches
+    $this->db->where('school_id', $school_id);
+    $this->db->update('settings', $data);
+
+    // Check if update was successful
+    if ($this->db->affected_rows() > 0) {
+        $response = array(
+            'status' => true,
+            'message' => 'Language updated successfully'
+        );
+    } else {
+        $response = array(
+            'status' => false,
+            'message' => 'Failed to update language'
+        );
+    }
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+public function phrases_get($language = 'english')
+{
+    // Define the path to the language-specific JSON file
+    $file_path = APPPATH . "language/{$language}.json";
+
+    // Log the file path being used
+    log_message('debug', 'Attempting to load phrases from: ' . $file_path);
+
+    // Check if the file exists
+    if (file_exists($file_path)) {
+        // Get the file contents
+        $phrases = file_get_contents($file_path);
+
+        // Log the content of the file
+        log_message('debug', 'Phrases file content: ' . $phrases);
+
+        // Convert JSON content to an array
+        $phrases_array = json_decode($phrases, true);
+
+        // Check if the JSON data is valid
+        if ($phrases_array !== null) {
+            $response = array(
+                'status' => true,
+                'phrases' => $phrases_array,
+                'message' => 'Phrases fetched successfully'
+            );
+        } else {
+            $response = array(
+                'status' => false,
+                'message' => 'Error decoding the phrases JSON file'
+            );
+        }
+    } else {
+        // Log the missing file error
+        log_message('error', 'Language phrases file not found: ' . $file_path);
+        $response = array(
+            'status' => false,
+            'message' => 'Language phrases file not found'
+        );
+    }
+
+    // Log the response before returning it
+    log_message('debug', 'Response: ' . json_encode($response));
+
+    // Return the response as JSON
+    echo json_encode($response);
+}
+
+public function website_settings_get($school_id = null) {
+    // Check if a valid school_id is provided
+    if (empty($school_id)) {
+        $response = array('status' => false, 'message' => 'School ID is required');
+        echo json_encode($response); // Return the response as JSON
+        return;
+    }
+
+    // Query the settings table to retrieve settings for the provided school_id
+    $this->db->select('*');
+    $this->db->from('settings');
+    $this->db->where('school_id', $school_id); // Use school_id
+    $query = $this->db->get();
+
+    // Check if the query returns any data
+    if ($query->num_rows() > 0) {
+        // Return the row as a JSON response
+        $response = array('status' => true, 'settings' => $query->row_array());
+        echo json_encode($response); // Return the response as JSON
+    } else {
+        // Return an empty array if no data found
+        $response = array('status' => false, 'message' => 'No settings found for this school');
+        echo json_encode($response); // Return the response as JSON
+    }
+}
+
+
+public function general_settings_get() {
+    // Fetch general settings from the 'frontend_settings' table
+    $this->db->select('*');
+    $this->db->from('frontend_settings');
+    $query = $this->db->get();
+
+    // Check if any data is returned
+    if ($query->num_rows() > 0) {
+        $settings = $query->row_array(); // Fetch the row as an associative array
+
+        // Decode the social_links field (assuming it's stored as JSON)
+        $social_links = json_decode($settings['social_links'], true);
+
+        // Prepare the response
+        $response = array(
+            'status' => true,
+            'settings' => array(
+                'website_title' => $settings['website_title'],
+                'social_links' => $social_links, // Social links already in array format
+                'homepage_note' => array(
+                    'title' => $settings['homepage_note_title'],
+                    'description' => strip_tags($settings['homepage_note_description']) // Strip HTML tags
+                ),
+                'copyright_text' => $settings['copyright_text'],
+                'logos' => array(
+                    'header_logo' => base_url('uploads/logos/' . $settings['header_logo']),
+                    'footer_logo' => base_url('uploads/logos/' . $settings['footer_logo'])
+                )
+            )
+        );
+    } else {
+        // If no settings found, return an error message
+        $response = array(
+            'status' => false,
+            'message' => 'No general settings found'
+        );
+    }
+
+    // Output the response as JSON
+    echo json_encode($response);
+}
+
+public function other_settings_get()
+{
+    // Initialize an array to store the settings
+    $settings = array();
+
+    // Get recaptcha_status
+    $this->db->select('description');
+    $this->db->from('common_settings');
+    $this->db->where('type', 'recaptcha_status');
+    $query = $this->db->get();
+    if ($query->num_rows() > 0) {
+        $settings['recaptcha_status'] = $query->row()->description;
+    }
+
+    // Get recaptcha_sitekey
+    $this->db->select('description');
+    $this->db->from('common_settings');
+    $this->db->where('type', 'recaptcha_sitekey');
+    $query = $this->db->get();
+    if ($query->num_rows() > 0) {
+        $settings['recaptcha_sitekey'] = $query->row()->description;
+    }
+
+    // Get recaptcha_secretkey
+    $this->db->select('description');
+    $this->db->from('common_settings');
+    $this->db->where('type', 'recaptcha_secretkey');
+    $query = $this->db->get();
+    if ($query->num_rows() > 0) {
+        $settings['recaptcha_secretkey'] = $query->row()->description;
+    }
+
+    if (!empty($settings)) {
+        // Prepare the response
+        $response = array(
+            'status' => true,
+            'settings' => array(
+                'recaptcha_status' => $settings['recaptcha_status'],
+                'recaptcha_sitekey' => $settings['recaptcha_sitekey'],
+                'recaptcha_secretkey' => $settings['recaptcha_secretkey'],
+                'login_page_banner' => base_url('assets/backend/images/bg-auth.jpg') // Assuming the banner is fixed
+            )
+        );
+    } else {
+        // If no settings found, return an error message
+        $response = array(
+            'status' => false,
+            'message' => 'No settings found'
+        );
+    }
+
+    // Output the response as JSON
+    echo json_encode($response);
+}
+
+public function other_settings_update_post()
+{
+    try {
+        // Initialize an array to store the updated settings
+        $updated_settings = array();
+
+        // Fetch the values from the POST request
+        $recaptcha_status = $this->input->post('recaptcha_status', TRUE);
+        $recaptcha_sitekey = $this->input->post('recaptcha_sitekey', TRUE);
+        $recaptcha_secretkey = $this->input->post('recaptcha_secretkey', TRUE);
+        
+        // Check if the image is uploaded
+        if (isset($_FILES['login_page_banner']) && $_FILES['login_page_banner']['size'] > 0) {
+            // Load upload library
+            $config['upload_path'] = './assets/backend/images/';
+            $config['allowed_types'] = 'jpg|jpeg|png';
+            $config['file_name'] = 'bg-auth';
+            $config['overwrite'] = TRUE;
+            
+            $this->load->library('upload', $config);
+            
+            if (!$this->upload->do_upload('login_page_banner')) {
+                $this->response([
+                    'status' => FALSE,
+                    'message' => $this->upload->display_errors()
+                ], REST_Controller::HTTP_BAD_REQUEST);
+                return;
+            } else {
+                $uploaded_image = $this->upload->data();
+                $login_page_banner = base_url('assets/backend/images/' . $uploaded_image['file_name']);
+            }
+        }
+
+        // Update recaptcha_status if provided
+        if ($recaptcha_status) {
+            $this->db->where('type', 'recaptcha_status');
+            $this->db->update('common_settings', array('description' => $recaptcha_status));
+            $updated_settings['recaptcha_status'] = $recaptcha_status;
+        }
+
+        // Update recaptcha_sitekey if provided
+        if ($recaptcha_sitekey) {
+            $this->db->where('type', 'recaptcha_sitekey');
+            $this->db->update('common_settings', array('description' => $recaptcha_sitekey));
+            $updated_settings['recaptcha_sitekey'] = $recaptcha_sitekey;
+        }
+
+        // Update recaptcha_secretkey if provided
+        if ($recaptcha_secretkey) {
+            $this->db->where('type', 'recaptcha_secretkey');
+            $this->db->update('common_settings', array('description' => $recaptcha_secretkey));
+            $updated_settings['recaptcha_secretkey'] = $recaptcha_secretkey;
+        }
+
+        // Update the login_page_banner if the image was uploaded
+        if (isset($login_page_banner)) {
+            $updated_settings['login_page_banner'] = $login_page_banner;
+        }
+
+        if (!empty($updated_settings)) {
+            // If updates were made, return success
+            $this->response([
+                'status' => TRUE,
+                'message' => 'Settings updated successfully',
+                'updated_settings' => $updated_settings
+            ], REST_Controller::HTTP_OK);
+        } else {
+            // If no updates were made, return an error
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No updates made'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+        }
+    } catch (Exception $e) {
+        // Log the exception
+        log_message('error', $e->getMessage());
+
+        // Return error response
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while updating the settings'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function terms_and_conditions_settings_get() {
+    try {
+        // Load the settings from the frontend_settings table
+        $this->db->select('terms_conditions');
+        $query = $this->db->get('frontend_settings');
+
+        if ($query->num_rows() > 0) {
+            $data = $query->row();
+            $this->response([
+                'status' => TRUE,
+                'terms_conditions' => $data->terms_conditions
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No terms and conditions found'
+            ], REST_Controller::HTTP_NOT_FOUND);
+        }
+    } catch (Exception $e) {
+        // Log the exception
+        log_message('error', $e->getMessage());
+
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while fetching terms and conditions'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function upterms_and_conditions_settings_post()
+{
+    try {
+        // Fetch the new terms and conditions from the POST request
+        $terms_conditions = $this->input->post('terms_conditions', TRUE);
+
+        if (!$terms_conditions) {
+            // Return error if no terms are provided
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Terms and conditions cannot be empty'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+
+        // Update the terms_conditions in the frontend_settings table
+        $this->db->where('id', 1);  // Assuming the record ID is 1, adjust accordingly
+        $update_data = array('terms_conditions' => $terms_conditions);
+        $updated = $this->db->update('frontend_settings', $update_data);
+
+        if ($updated) {
+            // Return success response
+            $this->response([
+                'status' => TRUE,
+                'message' => 'Terms and conditions updated successfully'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            // Return error if update failed
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Failed to update terms and conditions'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    } catch (Exception $e) {
+        // Log the exception
+        log_message('error', $e->getMessage());
+
+        // Return error response
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while updating terms and conditions'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function privacy_policy_settings_get()
+{
+    try {
+        // Sélectionner la politique de confidentialité depuis la table frontend_settings
+        $this->db->select('privacy_policy');
+        $query = $this->db->get('frontend_settings');
+
+        if ($query->num_rows() > 0) {
+            $data = $query->row();
+            $this->response([
+                'status' => TRUE,
+                'privacy_policy' => $data->privacy_policy
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No privacy policy found'
+            ], REST_Controller::HTTP_NOT_FOUND);
+        }
+    } catch (Exception $e) {
+        // Logger l'exception
+        log_message('error', $e->getMessage());
+
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while fetching privacy policy'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function privacy_policy_settings_update_post()
+{
+    try {
+        // Récupérer la nouvelle politique de confidentialité depuis la requête POST
+        $privacy_policy = $this->input->post('privacy_policy', TRUE);
+
+        if (!$privacy_policy) {
+            // Retourner une erreur si la politique de confidentialité est vide
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Privacy policy cannot be empty'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+
+        // Mettre à jour la politique de confidentialité dans la table frontend_settings
+        $this->db->where('id', 1);  // Ajustez l'ID si nécessaire
+        $update_data = array('privacy_policy' => $privacy_policy);
+        $updated = $this->db->update('frontend_settings', $update_data);
+
+        if ($updated) {
+            // Retourner un succès
+            $this->response([
+                'status' => TRUE,
+                'message' => 'Privacy policy updated successfully'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            // Retourner une erreur si la mise à jour échoue
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Failed to update privacy policy'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    } catch (Exception $e) {
+        // Logger l'exception
+        log_message('error', $e->getMessage());
+
+        // Retourner une réponse d'erreur
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while updating privacy policy'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function create_gallery_post()
+{
+    try {
+        // Fetch data from the POST request
+        $title = $this->input->post('title', TRUE);
+        $description = $this->input->post('description', TRUE);
+        $date_added = $this->input->post('date_added', TRUE);
+        $show_on_website = $this->input->post('show_on_website', TRUE);
+
+        // Validate required fields
+        if (empty($title) || empty($description) || empty($date_added)) {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Title, Description, and Date are required.'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+
+        // Handle image upload
+        $config['upload_path'] = './uploads/images/gallery_cover/'; // Relative path to make it work on different environments
+        $config['allowed_types'] = 'jpg|jpeg|png';
+        $config['file_name'] = time(); // Create a unique file name using the timestamp
+        $config['overwrite'] = TRUE;
+
+        $this->load->library('upload', $config);
+
+        if (!$this->upload->do_upload('cover_image')) {
+            $error = $this->upload->display_errors();
+            log_message('error', 'Image upload error: ' . $error); // Log the error
+            $this->response([
+                'status' => FALSE,
+                'message' => $error
+            ], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        } else {
+            // Get the uploaded image data
+            $uploaded_image = $this->upload->data();
+            $cover_image_url = base_url('uploads/images/gallery_cover/' . $uploaded_image['file_name']);
+        }
+
+        // Insert gallery data into the database
+        $gallery_data = [
+            'title' => $title,
+            'description' => $description,
+            'date_added' => date('Y-m-d', strtotime($date_added)),
+            'show_on_website' => $show_on_website,
+            'image' => isset($cover_image_url) ? $cover_image_url : NULL // Make sure to use 'image' field as per your database schema
+        ];
+
+        log_message('info', 'Gallery data: ' . json_encode($gallery_data)); // Log gallery data for debugging
+
+        $this->db->insert('frontend_gallery', $gallery_data); // Insert into the correct table
+
+        // Check if the insert was successful
+        if ($this->db->affected_rows() > 0) {
+            $this->response([
+                'status' => TRUE,
+                'message' => 'Gallery created successfully.'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Failed to create gallery.'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    } catch (Exception $e) {
+        // Log error and return a response
+        log_message('error', 'Error while creating gallery: ' . $e->getMessage());
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while creating the gallery.'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function galleries_get()
+{
+    try {
+        // Get the school_id from the request
+        $school_id = $this->input->get('school_id', TRUE);
+
+        // Validate that the school_id is provided
+        if (empty($school_id)) {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'school_id is required.'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+
+        // Fetch all gallery entries from the 'frontend_gallery' table for the given school_id
+        $this->db->where('school_id', $school_id);
+        $query = $this->db->get('frontend_gallery');
+
+        if ($query->num_rows() > 0) {
+            $galleries = $query->result_array();
+
+            // Append full URLs for cover images
+            foreach ($galleries as &$gallery) {
+                if (!empty($gallery['image'])) {
+                    $gallery['image'] = base_url('uploads/images/gallery_cover/' . basename($gallery['image']));
+                } else {
+                    $gallery['image'] = base_url('uploads/images/default_cover.jpg'); // Fallback image
+                }
+            }
+
+            // Return galleries with status
+            $this->response([
+                'status' => TRUE,
+                'galleries' => $galleries
+            ], REST_Controller::HTTP_OK);
+        } else {
+            // Return if no galleries found for the given school_id
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No galleries found for this school.'
+            ], REST_Controller::HTTP_NOT_FOUND);
+        }
+    } catch (Exception $e) {
+        // Log error and return a response
+        log_message('error', 'An error occurred while fetching galleries: ' . $e->getMessage());
+
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while fetching the galleries.'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function gallery_images_by_id_get()
+{
+    try {
+        // Get the frontend_gallery_id from the request
+        $frontend_gallery_id = $this->input->get('frontend_gallery_id', TRUE);
+
+        // Validate that frontend_gallery_id is provided
+        if (empty($frontend_gallery_id)) {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'frontend_gallery_id is required.'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+
+        // Fetch the images associated with the provided frontend_gallery_id
+        $this->db->where('frontend_gallery_id', $frontend_gallery_id);
+        $query = $this->db->get('frontend_gallery_image');
+
+        if ($query->num_rows() > 0) {
+            $images = $query->result_array();
+
+            // Append full URLs for the images in the gallery_images directory
+            foreach ($images as &$image) {
+                if (!empty($image['image'])) {
+                    $image['image'] = base_url('uploads/images/gallery_images/' . basename($image['image']));
+                } else {
+                    $image['image'] = base_url('uploads/images/default_image.jpg'); // Fallback image
+                }
+            }
+
+            // Return the images
+            $this->response([
+                'status' => TRUE,
+                'images' => $images
+            ], REST_Controller::HTTP_OK);
+        } else {
+            // If no images found for the given frontend_gallery_id
+            $this->response([
+                'status' => FALSE,
+                'message' => 'No images found for this gallery.'
+            ], REST_Controller::HTTP_NOT_FOUND);
+        }
+    } catch (Exception $e) {
+        // Log the error and return a response
+        log_message('error', 'An error occurred while fetching gallery images: ' . $e->getMessage());
+
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while fetching the gallery images.'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function gallery_by_id_delete()
+{
+    try {
+        // Get the frontend_gallery_id from the DELETE request
+        $frontend_gallery_id = $this->input->get('frontend_gallery_id', TRUE);
+
+        // Validate that frontend_gallery_id is provided
+        if (empty($frontend_gallery_id)) {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'frontend_gallery_id is required.'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+
+        // Fetch the gallery to ensure it exists
+        $gallery = $this->db->get_where('frontend_gallery', ['frontend_gallery_id' => $frontend_gallery_id])->row_array();
+        if (empty($gallery)) {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Gallery not found.'
+            ], REST_Controller::HTTP_NOT_FOUND);
+            return;
+        }
+
+        // Fetch the associated images
+        $images = $this->db->get_where('frontend_gallery_image', ['frontend_gallery_id' => $frontend_gallery_id])->result_array();
+
+        // Delete each associated image from the file system and database
+        foreach ($images as $image) {
+            $image_path = './uploads/images/gallery_images/' . basename($image['image']);
+            if (file_exists($image_path)) {
+                unlink($image_path); // Delete the image file
+            }
+        }
+
+        // Delete images from the database
+        $this->db->where('frontend_gallery_id', $frontend_gallery_id);
+        $this->db->delete('frontend_gallery_image');
+
+        // Delete the gallery from the database
+        $this->db->where('frontend_gallery_id', $frontend_gallery_id);
+        $this->db->delete('frontend_gallery');
+
+        // Check if the delete was successful
+        if ($this->db->affected_rows() > 0) {
+            $this->response([
+                'status' => TRUE,
+                'message' => 'Gallery and associated images deleted successfully.'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Failed to delete gallery.'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    } catch (Exception $e) {
+        // Log the error and return a response
+        log_message('error', 'An error occurred while deleting the gallery: ' . $e->getMessage());
+
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while deleting the gallery.'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function gallery_image_by_id_delete()
+{
+    try {
+        // Get the frontend_gallery_image_id from the DELETE request
+        $frontend_gallery_image_id = $this->input->get('frontend_gallery_image_id', TRUE);
+
+        // Validate that frontend_gallery_image_id is provided
+        if (empty($frontend_gallery_image_id)) {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'frontend_gallery_image_id is required.'
+            ], REST_Controller::HTTP_BAD_REQUEST);
+            return;
+        }
+
+        // Fetch the image to ensure it exists
+        $image = $this->db->get_where('frontend_gallery_image', ['frontend_gallery_image_id' => $frontend_gallery_image_id])->row_array();
+        if (empty($image)) {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Gallery image not found.'
+            ], REST_Controller::HTTP_NOT_FOUND);
+            return;
+        }
+
+        // Delete the image file from the file system
+        $image_path = './uploads/images/gallery_images/' . basename($image['image']);
+        if (file_exists($image_path)) {
+            unlink($image_path); // Delete the image file
+        }
+
+        // Delete the image record from the database
+        $this->db->where('frontend_gallery_image_id', $frontend_gallery_image_id);
+        $this->db->delete('frontend_gallery_image');
+
+        // Check if the delete was successful
+        if ($this->db->affected_rows() > 0) {
+            $this->response([
+                'status' => TRUE,
+                'message' => 'Gallery image deleted successfully.'
+            ], REST_Controller::HTTP_OK);
+        } else {
+            $this->response([
+                'status' => FALSE,
+                'message' => 'Failed to delete gallery image.'
+            ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+    } catch (Exception $e) {
+        // Log the error and return a response
+        log_message('error', 'An error occurred while deleting the gallery image: ' . $e->getMessage());
+
+        $this->response([
+            'status' => FALSE,
+            'message' => 'An error occurred while deleting the gallery image.'
+        ], REST_Controller::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+public function homepage_slider_get()
+{
+    // Retrieve the slider images data from frontend settings
+    $slider_images_json = get_frontend_settings('slider_images');
+    
+    // Decode the JSON to an array
+    $slider_images = json_decode($slider_images_json);
+
+    // Check if there are slider images available
+    if (!empty($slider_images)) {
+        // Prepare the response with status and data
+        foreach ($slider_images as $key => $slider) {
+            $slider->image = base_url('uploads/images/slider/' . basename($slider->image));
+        }
+
+        $response = [
+            'status' => true,
+            'slider_images' => $slider_images
+        ];
+    } else {
+        // In case no slider images are found
+        $response = [
+            'status' => false,
+            'message' => 'No homepage slider information found'
+        ];
+    }
+
+    // Return the slider info in the response
+    $this->response($response, REST_Controller::HTTP_OK);
+}
+
+public function update_sliders_post()
+{
+    // Initialize an array to hold the slider images data
+    $slider_images_array = [];
+
+    // Assume we're receiving data for 3 sliders
+    $number_of_sliders = 3; // You can adjust this based on your requirement
+    for ($i = 0; $i < $number_of_sliders; $i++) {
+        // Get title, description, and existing image from POST request
+        $title = $this->input->post('title_' . $i);
+        $description = $this->input->post('description_' . $i);
+        $existing_image = $this->input->post('existing_image_' . $i);
+
+        // Initialize slider data
+        $slider_data = [
+            'title' => $title,
+            'description' => $description
+        ];
+
+        // Process uploaded image if available
+        $field_name = 'slider_image_' . $i;
+        if (isset($_FILES[$field_name]) && $_FILES[$field_name]['error'] == UPLOAD_ERR_OK) {
+            $uploaded_file = $_FILES[$field_name]['tmp_name'];
+            $file_name = uniqid() . basename($_FILES[$field_name]['name']);
+            $file_path = 'uploads/images/slider/' . $file_name;
+
+            // Ensure the directory exists
+            if (!file_exists('uploads/images/slider/')) {
+                mkdir('uploads/images/slider/', 0755, true);
+            }
+
+            // Move uploaded file to uploads directory
+            if (move_uploaded_file($uploaded_file, $file_path)) {
+                // Store the new image URL in the array
+                $slider_data['image'] = base_url('uploads/images/slider/' . $file_name);
+            } else {
+                // If file upload fails, return an error response
+                $response = [
+                    'status' => false,
+                    'message' => 'Failed to upload image for slider ' . ($i + 1)
+                ];
+                return $this->response($response, REST_Controller::HTTP_BAD_REQUEST);
+            }
+        } else {
+            // Use the existing image if no new image is uploaded
+            $slider_data['image'] = $existing_image;
+        }
+
+        // Add this slider's data to the array
+        $slider_images_array[] = $slider_data;
+    }
+
+    // Encode the updated slider images data back to JSON format
+    $updated_slider_images_json = json_encode($slider_images_array);
+
+    // Save the updated slider images to the frontend settings
+    $this->db->where('setting_key', 'slider_images');  // Make sure 'setting_key' is the correct column name
+    $this->db->update('frontend_settings', ['value' => $updated_slider_images_json]);
+
+    if ($this->db->affected_rows() > 0) {
+        // If the update was successful
+        $response = [
+            'status' => true,
+            'message' => 'Sliders updated successfully.'
+        ];
+    } else {
+        // If no changes were made or the update failed
+        $response = [
+            'status' => false,
+            'message' => 'Failed to update sliders or no changes were made.'
+        ];
+    }
+
+    // Return the response
+    $this->response($response, REST_Controller::HTTP_OK);
+}
+
 
 
 
