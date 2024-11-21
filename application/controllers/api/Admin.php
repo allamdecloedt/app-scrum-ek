@@ -7800,6 +7800,118 @@ public function update_Password_post() {
     echo json_encode($response);
 }
 
+// Session Manager 
+public function list_get() {
+    $sessions = $this->db->get('sessions')->result_array();
+    $response = ['status' => true, 'data' => $sessions];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+ public function create_post() {
+    // Decode JSON input if necessary
+    $postData = json_decode(file_get_contents('php://input'), true);
+    log_message('debug', 'Decoded POST data: ' . json_encode($postData));
+
+    $session_title = isset($postData['session_title']) ? $postData['session_title'] : null;
+
+    if (empty($session_title)) {
+        log_message('error', 'Missing required field: session_title');
+        $response = ['status' => false, 'message' => 'Session title is required'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    $data = [
+        'name' => $session_title,
+        'status' => 0 // Default inactive
+    ];
+
+    // Insert data into the sessions table
+    if ($this->db->insert('sessions', $data)) {
+        log_message('debug', 'Session created successfully with data: ' . json_encode($data));
+        $response = ['status' => true, 'message' => 'Session created successfully'];
+    } else {
+        log_message('error', 'Failed to insert session data into the database');
+        $response = ['status' => false, 'message' => 'Failed to create session'];
+    }
+
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+public function update_post($id) {
+    // Decode raw input if JSON payloads are expected
+    $postData = json_decode(file_get_contents('php://input'), true);
+    log_message('debug', 'Decoded POST data: ' . json_encode($postData));
+
+    // Extract session_title from decoded data
+    $session_title = isset($postData['session_title']) ? $postData['session_title'] : null;
+
+    // Validate session_title
+    if (empty($session_title)) {
+        log_message('error', 'Missing session_title for update');
+        $response = ['status' => false, 'message' => 'Session title is required'];
+        return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+    }
+
+    // Prepare update data
+    $data = ['name' => $session_title];
+
+    // Execute the update query
+    $this->db->where('id', $id);
+    if ($this->db->update('sessions', $data)) {
+        log_message('debug', 'Session updated successfully with data: ' . json_encode($data));
+        $response = ['status' => true, 'message' => 'Session updated successfully'];
+    } else {
+        log_message('error', 'Failed to update session data in the database');
+        $response = ['status' => false, 'message' => 'Failed to update session'];
+    }
+
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+
+// Delete session
+public function delete_post($id) {
+    $session = $this->db->get_where('sessions', ['id' => $id])->row_array();
+
+    if ($session && $session['status'] != 1) { // Ensure not active
+        $this->db->where('id', $id);
+        $this->db->delete('sessions');
+        $response = ['status' => true, 'message' => 'Session deleted successfully'];
+    } else {
+        log_message('error', 'Cannot delete active or non-existent session');
+        $response = ['status' => false, 'message' => 'Cannot delete active or non-existent session'];
+    }
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+// Activate session
+public function activate_get($id) {
+    // Deactivate all other sessions
+    $this->db->update('sessions', ['status' => 0]);
+
+    // Activate the selected session
+    $this->db->where('id', $id);
+    $this->db->update('sessions', ['status' => 1]);
+
+    $response = ['status' => true, 'message' => 'Session activated successfully'];
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
+// Deactivate session
+public function deactivate_post($id) {
+    $session = $this->db->get_where('sessions', ['id' => $id])->row_array();
+    if ($session && $session['status'] == 1) {
+        $this->db->where('id', $id);
+        $this->db->update('sessions', ['status' => 0]);
+
+        $response = ['status' => true, 'message' => 'Session deactivated successfully'];
+    } else {
+        log_message('error', 'Session is already inactive or does not exist');
+        $response = ['status' => false, 'message' => 'Session is already inactive or does not exist'];
+    }
+    return $this->output->set_content_type('application/json')->set_output(json_encode($response));
+}
+
 
 
 
