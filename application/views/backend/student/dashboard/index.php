@@ -1,5 +1,22 @@
 <!-- start page title -->
 <div class="row ">
+
+<?php
+        $user_id = $this->session->userdata('user_id');
+        $student_data = $this->db->get_where('students', array('user_id' => $user_id));
+       
+    if($student_data->num_rows() != 0){ 
+?>
+<div class="alert alert-warning" role="alert" style="font-size: 15px;">
+	<i class="dripicons-information me-2"></i> 
+    <?php echo get_phrase('no_course_or_school'); ?> 
+    <strong><a style="color: black; font-weight: bold;text-decoration: underline !important;" target="_blank"  href="<?php echo site_url('home/courses'); ?>"><?php echo get_phrase('click_here'); ?></a>
+    </strong>.
+</div>
+<?php
+    }
+?>
+
   <div class="col-xl-12">
     <div class="card">
       <div class="card-body py-2">
@@ -24,8 +41,7 @@
                               <h5 class="text-muted font-weight-normal mt-0" title="Number of Student"> <i class="mdi mdi-account-group title_icon"></i>  <?php echo get_phrase('schools'); ?> <a href="" style="color: #6c757d; display: none;" id = "student_list"><i class = "mdi mdi-export"></i></a></h5>
                               <h3 class="mt-3 mb-3">
                                   <?php
-                                    $user_id = $this->session->userdata('user_id');
-                                    $student_data = $this->db->get_where('students', array('user_id' => $user_id));
+                                   
                                     echo $student_data->num_rows();
                                   ?>
                               </h3>
