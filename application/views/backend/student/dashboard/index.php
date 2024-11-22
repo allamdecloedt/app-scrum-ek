@@ -5,7 +5,7 @@
         $user_id = $this->session->userdata('user_id');
         $student_data = $this->db->get_where('students', array('user_id' => $user_id));
        
-    if($student_data->num_rows() != 0){ 
+    if($student_data->num_rows() == 0){ 
 ?>
 <div class="alert alert-warning" role="alert" style="font-size: 15px;">
 	<i class="dripicons-information me-2"></i> 
