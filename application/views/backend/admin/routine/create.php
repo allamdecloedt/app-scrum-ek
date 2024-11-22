@@ -4,7 +4,7 @@
     
     <?php $school_id = school_id(); ?>
     <div class="form-group row mb-2">
-        <label for="class_id_on_routine_creation" class="col-md-3 col-form-label"><?php echo get_phrase('class'); ?></label>
+        <label for="class_id_on_routine_creation" class="col-md-3 col-form-label"><?php echo get_phrase('class'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
             <select name="class_id" id="class_id_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required onchange="classWiseSectionForRoutineCreate(this.value)">
                 <option value=""><?php echo get_phrase('select_a_class'); ?></option>
@@ -17,7 +17,7 @@
     </div>
 
     <div class="form-group row mb-2">
-        <label for="section_id_on_routine_creation" class="col-md-3 col-form-label"><?php echo get_phrase('section'); ?></label>
+        <label for="section_id_on_routine_creation" class="col-md-3 col-form-label"><?php echo get_phrase('section'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
             <select name="section_id" id = "section_id_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
                 <option value=""><?php echo get_phrase('select_section'); ?></option>
@@ -27,7 +27,7 @@
 
 
     <div class="form-group row mb-2">
-        <label for="teacher" class="col-md-3 col-form-label"><?php echo get_phrase('teacher'); ?></label>
+        <label for="teacher" class="col-md-3 col-form-label"><?php echo get_phrase('teacher'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
             <select name="teacher_id" id = "teacher_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
                 <option value=""><?php echo get_phrase('assign_a_teacher'); ?></option>
@@ -40,7 +40,7 @@
     </div>
 
     <div class="form-group row mb-2">
-        <label for="class_room_id" class="col-md-3 col-form-label"><?php echo get_phrase('class_room'); ?></label>
+        <label for="class_room_id" class="col-md-3 col-form-label"><?php echo get_phrase('class_room'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
             <select name="class_room_id" id = "class_room_id_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
                 <option value=""><?php echo get_phrase('select_a_class_room'); ?></option>
@@ -53,7 +53,7 @@
     </div>
 
     <div class="form-group row mb-2">
-        <label for="day" class="col-md-3 col-form-label"><?php echo get_phrase('day'); ?></label>
+        <label for="day" class="col-md-3 col-form-label"><?php echo get_phrase('day'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
             <select name="day" id = "day_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
                 <option value=""><?php echo get_phrase('select_a_day'); ?></option>
@@ -69,7 +69,7 @@
     </div>
 
     <div class="form-group row mb-2">
-        <label for="starting_hour" class="col-md-3 col-form-label"><?php echo get_phrase('starting_hour'); ?></label>
+        <label for="starting_hour" class="col-md-3 col-form-label"><?php echo get_phrase('starting_hour'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
             <select name="starting_hour" id = "starting_hour_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
                 <option value=""><?php echo get_phrase('starting_hour'); ?></option>
@@ -95,7 +95,7 @@
     </div>
 
     <div class="form-group row mb-2">
-        <label for="starting_minute" class="col-md-3 col-form-label"><?php echo get_phrase('starting_minute'); ?></label>
+        <label for="starting_minute" class="col-md-3 col-form-label"><?php echo get_phrase('starting_minute'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
             <select name="starting_minute" id = "starting_minute_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
                 <option value=""><?php echo get_phrase('starting_minute'); ?></option>
@@ -107,7 +107,7 @@
     </div>
 
     <div class="form-group row mb-2">
-        <label for="ending_hour" class="col-md-3 col-form-label"><?php echo get_phrase('ending_hour'); ?></label>
+        <label for="ending_hour" class="col-md-3 col-form-label"><?php echo get_phrase('ending_hour'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
             <select name="ending_hour" id = "ending_hour_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
                 <option value=""><?php echo get_phrase('ending_hour'); ?></option>
@@ -133,7 +133,7 @@
     </div>
 
     <div class="form-group row mb-2">
-        <label for="ending_minute" class="col-md-3 col-form-label"><?php echo get_phrase('ending_minute'); ?></label>
+        <label for="ending_minute" class="col-md-3 col-form-label"><?php echo get_phrase('ending_minute'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
             <select name="ending_minute" id = "ending_minute_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
                 <option value=""><?php echo get_phrase('ending_minute'); ?></option>

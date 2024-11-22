@@ -1433,7 +1433,7 @@ class Superadmin extends CI_Controller
           // Gérer les exceptions de mPDF
           echo $e->getMessage();
       }
-  }
+    }
     // EXPORT AS CSV
     if ($param1 == 'csv') {
       $date_from = $date_from;

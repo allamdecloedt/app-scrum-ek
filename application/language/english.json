@@ -1409,5 +1409,8 @@
     "visit_dashboard": "Visit dashboard",
     "email_already_exists": "Email already exists",
     "validation_error": "Validation error",
-    "access_mode": "Access mode"
+    "access_mode": "Access mode",
+    "an_error_occurred": "An error occurred",
+    "no_course_or_school": "No course or school found for your account. Join a course or register with a school to proceed.",
+    "click_here" : "Click here to join"
 }
