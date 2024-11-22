@@ -10,15 +10,20 @@
 		<div class="card">
 			<div class="card-body">
 				<?php
+
 					$user_id = $this->session->userdata('user_id');
 					$student_datas = $this->db->get_where('students', array('user_id' => $user_id))->result_array();
+					if($student_datas){
+						$school_ids = array();		
+						foreach ($student_datas as $student_data) {
+							$school_ids[] = $student_data['school_id'];
+						}
+						$this->db->where_in('school_id', $school_ids);
 
-					$school_ids = array();		
-					foreach ($student_datas as $student_data) {
-						$school_ids[] = $student_data['school_id'];
+						
 					}
-					$this->db->where_in('school_id', $school_ids);
 					$event_calendars = $this->db->get('event_calendars')->num_rows();
+
 				?>
 				<?php if($event_calendars > 0): ?>
 					<table id="basic-datatable" class="table table-striped dt-responsive nowrap" width="100%">
@@ -46,7 +51,8 @@
 								</tr>
 							<?php } ?>
 							<?php } ?>
-							<?php } ?>
+							<?php }  ?>
+							
 						</tbody>
 					</table>
 				<?php else: ?>
