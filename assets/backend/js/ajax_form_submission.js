@@ -18,7 +18,7 @@ function ajaxSubmit(e, form, callBackFunction) {
                 // var response = JSON.parse(response.status);
             // Décoder la partie status de la réponse
             var statusData = JSON.parse(response.status);
-
+            $('input[name="' + response.csrf.csrfName + '"]').val(response.csrf.csrfHash);
                 if (statusData.status) {
                     success_notify(statusData.notification);
                     if (form.attr('class') === 'ajaxDeleteForm') {
@@ -32,7 +32,7 @@ function ajaxSubmit(e, form, callBackFunction) {
                 }
                 console.log()
                 // Mettre à jour le jeton CSRF pour les futures soumissions
-                $('input[name="' + response.csrf.csrfName + '"]').val(response.csrf.csrfHash);
+                
 
                 setTimeout(() => {
                     if (response.refresh) {
