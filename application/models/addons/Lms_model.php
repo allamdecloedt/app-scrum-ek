@@ -104,15 +104,15 @@ class Lms_model extends CI_Model {
 
     public function get_status_wise_courses($status = ""){
         if ($status != "") {
-            $courses = $this->db->get_where('course', array('status' => $status));
+            $courses = $this->db->get_where('course', array('status' => $status,'school_id', school_id()));
         } else {
             if($this->session->userdata('teacher_login') == 1){
                 $teacher_id  = $this->session->userdata('user_id');
                 $courses['inactive'] = $this->db->get_where('course', array('status' => 'inactive', 'user_id' => $teacher_id));
                 $courses['active'] = $this->db->get_where('course', array('status' => 'active', 'user_id' => $teacher_id));
             }else{
-                $courses['inactive'] = $this->db->get_where('course', array('status' => 'inactive'));
-                $courses['active'] = $this->db->get_where('course', array('status' => 'active'));
+                $courses['inactive'] = $this->db->get_where('course', array('status' => 'inactive','school_id', school_id()));
+                $courses['active'] = $this->db->get_where('course', array('status' => 'active','school_id', school_id()));
             }
         }
         return $courses;
