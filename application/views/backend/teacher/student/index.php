@@ -73,7 +73,7 @@ function classWiseSection(classId) {
 }
 
 function filter_student(){
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_student').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id!= ""){
         showAllStudents();
@@ -83,7 +83,7 @@ function filter_student(){
 }
 
 var showAllStudents = function() {
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_student').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id!= ""){
         $.ajax({
