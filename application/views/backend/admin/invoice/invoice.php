@@ -41,9 +41,9 @@
               <p class="font-13"><strong><?php echo get_phrase('date'); ?>: </strong> &nbsp;&nbsp;&nbsp; <?php echo date('D, d-M-Y'); ?></p>
               <p class="font-13"><strong><?php echo get_phrase('status'); ?>: </strong>
                 <?php if (strtolower($invoice_details['status']) == 'paid'): ?>
-                  <span class="badge bg-success float-end"><?php echo get_phrase('paid'); ?></span></p>
+                  <span class="badge bg-success "><?php echo get_phrase('paid'); ?></span></p>
                 <?php else: ?>
-                  <span class="badge bg-danger float-end"><?php echo get_phrase('unpaid'); ?></span></p>
+                  <span class="badge bg-danger "><?php echo get_phrase('unpaid'); ?></span></p>
                 <?php endif; ?>
             </div>
           </div><!-- end col -->
