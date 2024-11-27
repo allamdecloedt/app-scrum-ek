@@ -151,7 +151,7 @@
         <div class="col-sm-4 col-11">
           <div class="js-form-message mb-5">
             <label class="form-label text-white">
-              <?php echo get_phrase('adress'); ?>
+              <?php echo get_phrase('address'); ?>
               <span class="text-danger">*</span>
 
             </label>
@@ -164,8 +164,8 @@
                 </svg>
               </span>
               <input type="text" class="form-control rounded-end shadow-none" name="school_adress" required
-                data-msg="Please enter your date of birth" data-error-class="u-has-error"
-                data-success-class="u-has-success" placeholder="<?php echo get_phrase('adress'); ?>">
+                data-msg="Please enter your address" data-error-class="u-has-error"
+                data-success-class="u-has-success" placeholder="<?php echo get_phrase('address'); ?>">
             </div>
           </div>
         </div>
