@@ -38,7 +38,7 @@
                     <!-- Champ caché pour le jeton CSRF -->
                     <input type="hidden" name="<?=$this->security->get_csrf_token_name();?>" value="<?=$this->security->get_csrf_hash();?>" />
 
-                    <div class="col-md-12">
+                    <div class="col-md-12" style="margin-left: 1%;">
                         <div class="form-group row mb-3">
                             <label class="col-md-3 col-form-label" for="name"><?php echo get_phrase('name'); ?><span class="required"> * </span></label>
                             <div class="col-md-9">

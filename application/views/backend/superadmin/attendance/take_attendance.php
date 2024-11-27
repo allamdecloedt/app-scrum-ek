@@ -103,10 +103,10 @@
                     $('#student_content').html(response.status);
                     $('#showStudentDiv').hide();
                     $('#updateAttendanceDiv').show();
-                    // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
-                var newCsrfName = response.csrfName;
-                var newCsrfHash = response.csrfHash;
-                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
+                        // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                    var newCsrfName = response.csrfName;
+                    var newCsrfHash = response.csrfHash;
+                    $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
                 }
             });
         }else{

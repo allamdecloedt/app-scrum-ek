@@ -1,4 +1,4 @@
-s<!--title-->
+<!--title-->
 <div class="row ">
     <div class="col-xl-12">
         <div class="card">
@@ -19,7 +19,7 @@ s<!--title-->
                 <div class="row mb-3">
                     <div class="col-md-1 mb-1"></div>
                     <div class="col-md-4 mb-1">
-                        <select name="class" id="class_id" class="form-control select2" data-toggle = "select2" onchange="classWiseSection(this.value)" required>
+                        <select name="class" id="class_id_teachaer" class="form-control select2" data-toggle = "select2" onchange="classWiseSection(this.value)" required>
                             <option value=""><?php echo get_phrase('select_a_class'); ?></option>
                             <?php
                             $classes = $this->db->get_where('classes', array('school_id' => school_id()))->result_array();
@@ -68,7 +68,7 @@ function classWiseSection(classId) {
 }
 
 function filter_syllabus(){
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_teachaer').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id!= ""){
         showAllSyllabuses();
@@ -78,7 +78,7 @@ function filter_syllabus(){
 }
 
 var showAllSyllabuses = function () {
-    var class_id = $('#class_id').val();
+    var class_id = $('#class_id_teachaer').val();
     var section_id = $('#section_id').val();
     if(class_id != "" && section_id!= ""){
         $.ajax({
