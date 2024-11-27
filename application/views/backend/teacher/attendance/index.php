@@ -47,7 +47,7 @@
           </select>
         </div>
         <div class="col-md-2 mb-1">
-          <select name="class" id="class_id" class="form-control select2" data-bs-toggle="select2" onchange="classWiseSection(this.value)" required>
+          <select name="class" id="class_id_teacher" class="form-control select2" data-bs-toggle="select2" onchange="classWiseSection(this.value)" required>
             <option value=""><?php echo get_phrase('select_a_class'); ?></option>
             <?php
             $classes = $this->db->get_where('classes', array('school_id' => school_id()))->result_array();
@@ -101,7 +101,7 @@ function classWiseSection(classId) {
 function filter_attendance(){
   var month = $('#month').val();
   var year = $('#year').val();
-  var class_id = $('#class_id').val();
+  var class_id = $('#class_id_teacher').val();
   var section_id = $('#section_id').val();
   if(class_id != "" && section_id != "" && month != "" && year != ""){
     getDailtyAttendance();
@@ -113,16 +113,27 @@ function filter_attendance(){
 var getDailtyAttendance = function () {
   var month = $('#month').val();
   var year = $('#year').val();
-  var class_id = $('#class_id').val();
+  var class_id = $('#class_id_teacher').val();
   var section_id = $('#section_id').val();
-  if(class_id != "" && section_id != "" && month != "" && year != ""){
+   // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+   var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+  var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
+
+  if(class_id != "" && section_id != "" && month != "" && year != "" ){
     $.ajax({
       type: 'POST',
       url: '<?php echo route('attendance/filter') ?>',
-      data: {month : month, year : year, class_id : class_id, section_id : section_id},
+      data: {month : month, year : year, class_id : class_id, section_id : section_id , [csrfName]: csrfHash},
+      dataType: 'json',
       success: function(response){
-        $('.attendance_content').html(response);
+        console.log(response),
+        $('.attendance_content').html(response.status);
         initDataTable('basic-datatable');
+
+            // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+            var newCsrfName = response.csrfName;
+            var newCsrfHash = response.csrfHash;
+            $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
       }
     });
   }

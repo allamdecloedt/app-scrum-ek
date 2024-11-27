@@ -28,7 +28,7 @@
                                 ?>
                                 <option value="<?php echo $class['id']; ?>">
                                     <?php echo $class['name']; ?>
-                                    <?php echo "(".$total_student->num_rows().")"; ?>
+                                   
                                 </option>
                             <?php } ?>
                         </select>
@@ -85,11 +85,21 @@ function filter_student(){
 var showAllStudents = function() {
     var class_id = $('#class_id_student').val();
     var section_id = $('#section_id').val();
+    // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+    var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+    var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
     if(class_id != "" && section_id!= ""){
         $.ajax({
             url: '<?php echo route('student/filter/') ?>'+class_id+'/'+section_id,
+            dataType: 'json',
             success: function(response){
-                $('.student_content').html(response);
+               
+                $('.student_content').html(response.html);
+
+                // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
+                var newCsrfName = response.csrf.csrfName;
+                var newCsrfHash = response.csrf.csrfHash;
+                $('input[name="' + newCsrfName + '"]').val(newCsrfHash); 
             }
         });
     }
