@@ -70,11 +70,7 @@
                 <?php include 'quiz_view.php'; ?>
             </div>
         <?php else: ?>
-            <div class="mt-5">
-                <a href="<?php echo base_url().'uploads/lesson_files/'.$lesson_details['attachment']; ?>" class="btn btn-info text-white" download>
-                    <i class="fa fa-download font-size-24"></i> <?php echo get_phrase('download').' '.$lesson_details['title']; ?>
-                </a>
-            </div>
+       
 
                 <!-- Section d'affichage du fichier -->
                 <div class="mt-4">
@@ -100,6 +96,11 @@
                     <?php else: ?>
                         <p>Ce type de fichier ne peut pas être affiché. Vous pouvez le <a href="<?php echo $file_path; ?>" download>télécharger ici</a>.</p>
                     <?php endif; ?>
+                </div>
+                <div class="mt-5">
+                    <a href="<?php echo base_url().'uploads/lesson_files/'.$lesson_details['attachment']; ?>" class="btn btn-info text-white" download>
+                        <i class="fa fa-download font-size-24"></i> <?php echo get_phrase('download').' '.$lesson_details['title']; ?>
+                    </a>
                 </div>
 
 
