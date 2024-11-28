@@ -13,6 +13,11 @@ class Modal extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
+		header("Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com https://unpkg.com; img-src 'self' data:; font-src 'self' https://fonts.gstatic.com; frame-src 'self';");
+        header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+        header("Cache-Control: post-check=0, pre-check=0", false);
+        header("Pragma: no-cache");
+		
 		$this->load->library('session');
 		$this->load->database();
 

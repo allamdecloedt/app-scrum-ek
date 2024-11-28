@@ -176,7 +176,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
         <div class="teacher-card ">
           <div class="teacher-card-img">
-            <img src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=800">
+            <img src="uploads/images/decloedt/placeholders/Image_03.png">
           </div>
           <div class="teacher-card-desc">
             <h6 class="teacher-card-primary-text">Fattah</h6>
@@ -200,7 +200,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
         <div class="teacher-card ">
           <div class="teacher-card-img">
             <img
-              src="https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg?auto=compress&cs=tinysrgb&w=800">
+              src="uploads/images/decloedt/placeholders/Image_03.png">
           </div>
           <div class="teacher-card-desc">
             <h6 class="teacher-card-primary-text">Mehdi</h6>
@@ -224,7 +224,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
         <div class="teacher-card">
           <div class="teacher-card-img">
             <img
-              src="https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg?auto=compress&cs=tinysrgb&w=800">
+              src="uploads/images/decloedt/placeholders/Image_03.png">
           </div>
           <div class="teacher-card-desc">
             <h6 class="teacher-card-primary-text">Mohamed</h6>
@@ -247,7 +247,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
 
         <div class="teacher-card ">
           <div class="teacher-card-img">
-            <img src="https://dl.dropbox.com/s/u3j25jx9tkaruap/Webp.net-resizeimage.jpg?raw=1">
+            <img src="uploads/images/decloedt/placeholders/Image_03.png">
           </div>
           <div class="teacher-card-desc">
             <h6 class="teacher-card-primary-text">Olivia</h6>
@@ -271,7 +271,7 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
         <div class="teacher-card ">
           <div class="teacher-card-img">
             <img
-              src="https://images.pexels.com/photos/1759530/pexels-photo-1759530.jpeg?auto=compress&cs=tinysrgb&w=800">
+              src="uploads/images/decloedt/placeholders/Image_03.png">
           </div>
           <div class="teacher-card-desc">
             <h6 class="teacher-card-primary-text">Arran</h6>
