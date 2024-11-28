@@ -251,6 +251,53 @@ class Lessons extends CI_Controller {
 		// Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
 		echo json_encode(array('status' => $response_html, 'csrf' => $csrf));
     }
+
+
+    public function afficher_fichier($nom_fichier)
+    {
+        $chemin = FCPATH . 'uploads/' . $nom_fichier;
+
+        if (file_exists($chemin)) {
+            $type = mime_content_type($chemin);
+
+            switch ($type) {
+                case 'application/pdf':
+                    header('Content-type: application/pdf');
+                    readfile($chemin);
+                    break;
+
+                case 'image/jpeg':
+                case 'image/png':
+                case 'image/gif':
+                    header('Content-type: ' . $type);
+                    readfile($chemin);
+                    break;
+
+                case 'video/mp4':
+                case 'video/webm':
+                case 'video/ogg':
+                    header('Content-type: ' . $type);
+                    readfile($chemin);
+                    break;
+
+                case 'application/msword':
+                case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                case 'application/vnd.ms-excel':
+                case 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+                    // Télécharger directement ces fichiers
+                    header('Content-Disposition: inline; filename="' . $nom_fichier . '"');
+                    header('Content-type: ' . $type);
+                    readfile($chemin);
+                    break;
+
+                default:
+                    show_error('Ce type de fichier ne peut pas être affiché directement.');
+            }
+        } else {
+            show_404();
+        }
+    }
+
     
 
 }

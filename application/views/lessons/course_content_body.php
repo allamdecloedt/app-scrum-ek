@@ -75,6 +75,34 @@
                     <i class="fa fa-download font-size-24"></i> <?php echo get_phrase('download').' '.$lesson_details['title']; ?>
                 </a>
             </div>
+
+                <!-- Section d'affichage du fichier -->
+                <div class="mt-4">
+                    <h3>Preview:</h3>
+                    <?php 
+                    $file_path = base_url().'uploads/lesson_files/'.$lesson_details['attachment']; 
+                    $file_extension = pathinfo($lesson_details['attachment'], PATHINFO_EXTENSION);
+
+                    // Affichage en fonction du type de fichier
+                    if (in_array($file_extension, ['pdf'])): ?>
+                        <iframe src="<?php echo $file_path; ?>" style="width: 100%; height: 500px; border: none;"></iframe>
+                    <?php elseif (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])): ?>
+                        <img src="<?php echo $file_path; ?>" alt="Preview" style="max-width: 100%; height: auto;">
+                    <?php elseif (in_array($file_extension, ['mp4', 'webm', 'ogg'])): ?>
+                        <video controls style="width: 100%; height: auto;">
+                            <source src="<?php echo $file_path; ?>" type="video/<?php echo $file_extension; ?>">
+                            Votre navigateur ne supporte pas la lecture vidéo.
+                        </video>
+                    <?php elseif (in_array($file_extension, ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'])): ?>
+                        <!-- Utiliser Google Drive Viewer pour ces formats -->
+                        <iframe src="https://docs.google.com/gview?url=<?php echo $file_path; ?>&embedded=true" 
+                                style="width: 100%; height: 500px;" frameborder="0"></iframe>
+                    <?php else: ?>
+                        <p>Ce type de fichier ne peut pas être affiché. Vous pouvez le <a href="<?php echo $file_path; ?>" download>télécharger ici</a>.</p>
+                    <?php endif; ?>
+                </div>
+
+
         <?php endif; ?>
     </div>
 
