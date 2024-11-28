@@ -1,5 +1,6 @@
 <?php $check_data = $this->db->get('sessions');
-if($check_data->num_rows() > 0): ?>
+// if($check_data->num_rows() > 0): 
+?>
 
     <div class="col-sm-12 col-md-6 text-center">
         <div class="card">
@@ -159,9 +160,9 @@ if($check_data->num_rows() > 0): ?>
         </div>
     </div>
 
-<?php else: ?>
-    <?php include APPPATH.'views/backend/empty.php'; ?>
-<?php endif; ?>
+<?php //else: ?>
+    <?php //include APPPATH.'views/backend/empty.php'; ?>
+<?php //endif; ?>
 
 <script type="text/javascript">
     $('select.select2:not(.normal)').each(function () { $(this).select2(); });
