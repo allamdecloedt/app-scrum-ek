@@ -130,53 +130,53 @@ class Lessons extends CI_Controller {
     }
     public function check_result() {
         $submitted_quiz_info = array();
-    $container = array();
-    $quiz_id = $this->input->post('lesson_id');
-    $user_id = $this->session->userdata('user_id'); // Assurez-vous d'obtenir l'ID de l'utilisateur connecté
+                $container = array();
+                $quiz_id = $this->input->post('lesson_id');
+                $user_id = $this->session->userdata('user_id'); // Assurez-vous d'obtenir l'ID de l'utilisateur connecté
 
-    // Récupérer les réponses soumises depuis la table 'quiz_responses'
-    $this->db->where('user_id', $user_id);
-    $this->db->where('quiz_id', $quiz_id);
-    $query = $this->db->get('quiz_responses');
-    $quiz_responses = $query->result_array();
+                // Récupérer les réponses soumises depuis la table 'quiz_responses'
+                $this->db->where('user_id', $user_id);
+                $this->db->where('quiz_id', $quiz_id);
+                $query = $this->db->get('quiz_responses');
+                $quiz_responses = $query->result_array();
 
-    // Récupérer les questions du quiz
-    $quiz_questions = $this->lms_model->get_quiz_questions($quiz_id)->result_array();
-    $total_correct_answers = 0;
+                // Récupérer les questions du quiz
+                $quiz_questions = $this->lms_model->get_quiz_questions($quiz_id)->result_array();
+                $total_correct_answers = 0;
 
-    foreach ($quiz_questions as $quiz_question) {
-        $submitted_answer_status = 0;
-        $correct_answers = json_decode($quiz_question['correct_answers']);
-        $submitted_answers = array();
+                foreach ($quiz_questions as $quiz_question) {
+                    $submitted_answer_status = 0;
+                    $correct_answers = json_decode($quiz_question['correct_answers']);
+                    $submitted_answers = array();
 
-        // Rechercher les réponses de l'utilisateur pour la question actuelle
-        foreach ($quiz_responses as $response) {
-            if ($response['question_id'] == $quiz_question['id']) {
-                $submitted_answers = json_decode($response['submitted_answers']);
-                $submitted_answer_status = $response['submitted_answer_status'];
-                break;
-            }
-        }
+                    // Rechercher les réponses de l'utilisateur pour la question actuelle
+                    foreach ($quiz_responses as $response) {
+                        if ($response['question_id'] == $quiz_question['id']) {
+                            $submitted_answers = json_decode($response['submitted_answers']);
+                            $submitted_answer_status = $response['submitted_answer_status'];
+                            break;
+                        }
+                    }
 
-        if ($correct_answers == $submitted_answers) {
-            $submitted_answer_status = 1;
-            $total_correct_answers++;
-        }
-        
-        $container = array(
-            "question_id" => $quiz_question['id'],
-            "question_title" => $quiz_question['title'], // Optionnel : afficher la question
-            'submitted_answer_status' => $submitted_answer_status,
-            "submitted_answers" => json_encode($submitted_answers),
-            "correct_answers"  => json_encode($correct_answers),
-        );
-        array_push($submitted_quiz_info, $container);
-    }
+                    if ($correct_answers == $submitted_answers) {
+                        $submitted_answer_status = 1;
+                        $total_correct_answers++;
+                    }
+                    
+                    $container = array(
+                        "question_id" => $quiz_question['id'],
+                        "question_title" => $quiz_question['title'], // Optionnel : afficher la question
+                        'submitted_answer_status' => $submitted_answer_status,
+                        "submitted_answers" => json_encode($submitted_answers),
+                        "correct_answers"  => json_encode($correct_answers),
+                    );
+                    array_push($submitted_quiz_info, $container);
+                }
 
-    $page_data['submitted_quiz_info']   = $submitted_quiz_info;
-    $page_data['total_correct_answers'] = $total_correct_answers;
-    $page_data['total_questions'] = count($quiz_questions);
-    $this->load->view('lessons/quiz_result', $page_data);
+                $page_data['submitted_quiz_info']   = $submitted_quiz_info;
+                $page_data['total_correct_answers'] = $total_correct_answers;
+                $page_data['total_questions'] = count($quiz_questions);
+                $this->load->view('lessons/quiz_result', $page_data);
     }
     public function check_result_pop_up() {
         $submitted_quiz_info = array();

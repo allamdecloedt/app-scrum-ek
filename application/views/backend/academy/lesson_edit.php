@@ -73,7 +73,9 @@ $sections = $this->lms_model->get_section('course', $param2)->result_array();
             <div class="form-group mb-2">
                 <label><?php echo get_phrase('video_url'); ?>( <?php echo get_phrase('for_web_application'); ?> )</label>
                 <video width="320" height="240" controls>
+                <?php if(strtolower($lesson_details['video_type']) == 'mydevice') { ?>
                     <source src="<?php echo base_url('uploads/videos/'.$lesson_details['video_uplaod']); ?>" type="video/mp4">
+                    <?php } ?>
                 </video>
                 <input type="file" id="userfileMe" name="userfileMe" size="20" />
                 <div id="error" style="color: red;"></div>
@@ -140,38 +142,39 @@ $(document).ready(function() {
     show_lesson_type_form($('#lesson_type').val());
 });
 
-
-document.getElementById('uploadForm').addEventListener('submit', function(event) {
-            event.preventDefault();
-            const fileInput = document.getElementById('userfileMe');
-            const file = fileInput.files[0];
-            const maxSize = 500 * 1024 * 1024; // 500 MB
-            const maxWidth = 1920;
-            const maxHeight = 1080;
- 
-            if (file) {
-                if (file.size > maxSize) {
-                    document.getElementById('error').innerText = 'La taille du fichier ne doit pas dépasser 100 Mo.';
-                    return;
-                }
- 
-                const video = document.createElement('video');
-                video.preload = 'metadata';
- 
-                video.onloadedmetadata = function() {
-                    window.URL.revokeObjectURL(video.src);
-                    if (video.videoWidth > maxWidth || video.videoHeight > maxHeight) {
-                        document.getElementById('error').innerText = 'Les dimensions de la vidéo ne doivent pas dépasser 1920x1080 pixels.';
-                    } else {
-                        // Si tout est correct, soumettre le formulaire
-                        document.getElementById('uploadForm').submit();
-                        document.getElementById('success').innerText = 'Good video';
-                        document.getElementById('error').innerText = ' ';
+    const lessonDetails = "<?php strtolower($lesson_details['video_type']) == 'mydevice'?>"
+if (lessonDetails) { 
+        document.getElementById('uploadForm').addEventListener('submit', function(event) {
+                    event.preventDefault();
+                    const fileInput = document.getElementById('userfileMe');
+                    const file = fileInput.files[0];
+                    const maxSize = 500 * 1024 * 1024; // 500 MB
+                    const maxWidth = 1920;
+                    const maxHeight = 1080;
+        
+                    if (file) {
+                        if (file.size > maxSize) {
+                            document.getElementById('error').innerText = 'La taille du fichier ne doit pas dépasser 100 Mo.';
+                            return;
+                        }
+        
+                        const video = document.createElement('video');
+                        video.preload = 'metadata';
+        
+                        video.onloadedmetadata = function() {
+                            window.URL.revokeObjectURL(video.src);
+                            if (video.videoWidth > maxWidth || video.videoHeight > maxHeight) {
+                                document.getElementById('error').innerText = 'Les dimensions de la vidéo ne doivent pas dépasser 1920x1080 pixels.';
+                            } else {
+                                // Si tout est correct, soumettre le formulaire
+                                document.getElementById('uploadForm').submit();
+                                document.getElementById('success').innerText = 'Good video';
+                                document.getElementById('error').innerText = ' ';
+                            }
+                        };
+        
+                        video.src = URL.createObjectURL(file);
                     }
-                };
- 
-                video.src = URL.createObjectURL(file);
-            }
-        });
-
+                });
+    }
 </script>

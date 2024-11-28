@@ -204,7 +204,15 @@ class Courses extends CI_Controller {
     elseif ($param1 == 'delete') {
       $this->student_access_denied();
       $response = $this->lms_model->delete_lesson($param2);
-      echo $response;
+      // echo $response;
+      			// Préparer la réponse avec un nouveau jeton CSRF
+        $csrf = array(
+          'csrfName' => $this->security->get_csrf_token_name(),
+          'csrfHash' => $this->security->get_csrf_hash(),
+          );
+        
+        // Renvoyer la réponse avec un nouveau jeton CSRF
+        echo json_encode(array('status' => $response, 'csrf' => $csrf));
     }
     if(empty($param1)){
       $page_data['page_name'] = 'lessons';
