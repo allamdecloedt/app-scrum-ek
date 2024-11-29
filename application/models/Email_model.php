@@ -473,7 +473,7 @@ class Email_model extends CI_Model {
 				  <p>Hello '.$name.',</p>
 				  <p><strong>Name school:</strong> '.$school_name.'</p>
 				  <p><strong>Email:</strong> '.$email.'</p>
-				  <p><a href="http://51.92.7.185/login" class="btn">Login to Your Account</a></p>
+				  <p><a href="https://wayo.academy/login" class="btn">Login to Your Account</a></p>
 				</div>
 			  </div>
 			</div>
@@ -486,6 +486,124 @@ class Email_model extends CI_Model {
 		';
 	
 		$email_sub = 'Registration';
+		$email_to = $email;
+		$school_name = "Wayo Academy";
+	
+		$this->send_mail_using_smtp($email_message, $email_sub, $email_to, null, $school_name);
+	}
+	function School_online_admission_superadmin($email = "", $school_name = "", $name = "") {
+		$image_url = base_url('uploads/images/decloedt/logo/logo_mail.png');
+	
+		$email_message = '
+		<html>
+		<head>
+		  <style>
+			body {
+			  font-family: Arial, sans-serif;
+			  background-color: #f6f6f6;
+			  margin: 0;
+			  padding: 0;
+			}
+			.email-container {
+			  max-width: 600px;
+			  margin: 20px auto;
+			  background-color: #ffffff;
+			  border-radius: 8px;
+			  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+			  overflow: hidden;
+			}
+			.email-header {
+			  background-color: #4CAF50;
+			  color: #ffffff;
+			  padding: 20px;
+			  text-align: center;
+			  font-size: 24px;
+			  font-weight: bold;
+			}
+			.email-body {
+			  padding: 30px 20px;
+			  color: #333333;
+			}
+			.email-body p {
+			  line-height: 1.6;
+			  margin: 10px 0;
+			}
+			.email-body .btn {
+			  display: inline-block;
+			  padding: 10px 20px;
+			  margin: 20px 0;
+			  background-color: #4CAF50;
+			  color: #ffffff;
+			  text-decoration: none;
+			  border-radius: 4px;
+			  text-align: center;
+			}
+			.email-footer {
+			  background-color: #f1f1f1;
+			  color: #777777;
+			  padding: 10px;
+			  text-align: center;
+			  font-size: 12px;
+			}
+			.info-image {
+			  width: 100%;
+			  max-width: 150px;
+			  margin-right: 20px;
+			}
+			.info-container {
+			  display: flex;
+			  align-items: center;
+			  flex-wrap: wrap;
+			  text-align: left;
+			}
+			@media only screen and (max-width: 600px) {
+			  .email-container {
+				width: 90%;
+				margin: auto;
+			  }
+			  .email-header {
+				font-size: 20px;
+				padding: 15px;
+			  }
+			  .email-body {
+				padding: 20px 10px;
+			  }
+			  .info-container {
+				flex-direction: column;
+				text-align: center;
+			  }
+			  .info-image {
+				margin: 0 auto 15px;
+			  }
+			}
+		  </style>
+		</head>
+		<body>
+		  <div class="email-container">
+			<div class="email-header">
+			 Application for admission School
+			</div>
+			<div class="email-body">
+			  <div class="info-container">
+				<img src="'.$image_url.'" alt="Image" class="info-image">
+				<div>
+				  <p>Application for admission</p>
+				  <p>Hello '.$name.',</p>
+				  <p><strong>Name school:</strong> '.$school_name.'</p>
+				  <p><strong>Email:</strong> '.$email.'</p>
+				  <p><a href="https://wayo.academy/login" class="btn">Login to Your Account</a></p>
+				</div>
+			  </div>
+			</div>
+			<div class="email-footer">
+			  <p>&copy; '.date("Y").' Wayo Academy. All rights reserved.</p>
+			</div>
+		  </div>
+		</body>
+		</html>
+		';
+	
+		$email_sub = 'application for admission';
 		$email_to = $email;
 		$school_name = "Wayo Academy";
 	
@@ -765,7 +883,7 @@ class Email_model extends CI_Model {
 					<p> <strong>Name : </strong>'.$user_name.'</p>
 					<p><strong>Student Code : </strong> '.$code_student.'</p>
 					<p><strong>Email : </strong> '.$email_student.'</p>
-					<p><a href="http://51.92.7.185/login" class="btn">Login to Your Account</a></p>
+					<p><a href="https://wayo.academy/login" class="btn">Login to Your Account</a></p>
 					</div>
 				</div>
 					</div>
@@ -821,7 +939,7 @@ class Email_model extends CI_Model {
 			'smtp_port' => get_smtp('smtp_port'),
 			'smtp_user' => $smtp_username,
 			'smtp_pass' => $smtp_password,
-			'smtp_crypto' => 'ssl',
+			'smtp_crypto' => get_smtp('smtp_crypto'),
 			'mailtype'  => 'html',
 			'charset'   => 'utf-8',
 			'newline'   => "\r\n",

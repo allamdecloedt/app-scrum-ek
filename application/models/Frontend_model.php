@@ -631,6 +631,7 @@ class Frontend_model extends CI_Model
       }
 
         $this->email_model->School_online_admission($admin_data['email'],$school_data['name'],$admin_data['name']);
+        $this->email_model->School_online_admission_superadmin($admin_data['email'],$school_data['name'],$admin_data['name']);
 
         $this->session->set_flashdata('success', get_phrase('successfully_has_been_recoded_your_request') . '. ' . get_phrase('you_will_be_notified_by_email_address_about_this_request'));
     } else {
