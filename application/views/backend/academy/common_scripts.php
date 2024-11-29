@@ -185,6 +185,10 @@
 
     function showOptions(number_of_options){
 
+
+                // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
+                var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
+                var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
             // Save current option values
             var existingOptions = [];
             jQuery('.options').each(function(index) {
@@ -192,9 +196,6 @@
                 var isChecked = jQuery(this).find('input[type="checkbox"]').is(':checked');
                 existingOptions.push({ value: optionValue, checked: isChecked });
             });
-                // Récupérer le nom et la valeur du jeton CSRF depuis l'input caché
-                var csrfName = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').attr('name');
-                var csrfHash = $('input[name="<?= $this->security->get_csrf_token_name(); ?>"]').val();
       
 
         $.ajax({
@@ -203,14 +204,14 @@
             data: {number_of_options : number_of_options , [csrfName]: csrfHash},
             dataType: 'json',
             success: function(response){
+
+
+                jQuery('.options').remove();
+                jQuery('#multiple_choice_question').after(response.html);
                 // Mettre à jour le jeton CSRF avec le nouveau jeton renvoyé dans la réponse
                 var newCsrfName = response.csrf.csrfName;
                 var newCsrfHash = response.csrf.csrfHash;
                 $('input[name="' + newCsrfName + '"]').val(newCsrfHash); // Mise à jour du token CSRF
-
-                jQuery('.options').remove();
-                jQuery('#multiple_choice_question').after(response.html);
-
                      // Repopulate saved options
                     jQuery('.options').each(function(index) {
                         if (existingOptions[index]) {
