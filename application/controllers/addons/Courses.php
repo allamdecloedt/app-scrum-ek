@@ -314,7 +314,6 @@ class Courses extends CI_Controller {
       // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
       echo json_encode(array('html' => $response, 'csrf' => $csrf));
     }
-
     elseif ($action == 'edit') {
       $response = $this->lms_model->update_quiz_questions($question_id);
       // echo $response;
@@ -334,7 +333,7 @@ class Courses extends CI_Controller {
             $csrf = array(
               'csrfName' => $this->security->get_csrf_token_name(),
               'csrfHash' => $this->security->get_csrf_hash(),
-          );
+           );
     
           // Renvoyer la réponse JSON avec le HTML mis à jour et le nouveau jeton CSRF
           echo json_encode(array('html' => $response, 'csrf' => $csrf));

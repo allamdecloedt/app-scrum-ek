@@ -253,7 +253,8 @@ class Login extends CI_Controller
 
 		if (isset($_SERVER['HTTP_REFERER'])) {
 			// Capture the referring URL
-			redirect($_SERVER['HTTP_REFERER'], 'refresh');
+			// redirect($_SERVER['HTTP_REFERER'], 'refresh');
+			redirect(site_url(''), 'refresh');
 		} else {
 			redirect(site_url('login'), 'refresh');
 		}
