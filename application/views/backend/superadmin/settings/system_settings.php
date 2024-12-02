@@ -34,12 +34,12 @@
               </div>
             </div>
 
-            <div class="form-group row mb-3">
-              <label class="col-md-3 col-form-label" for="fax"> <?php echo get_phrase('fax') ;?><span class="required"> * </span></label>
+            <!-- <div class="form-group row mb-3">
+              <label class="col-md-3 col-form-label" for="fax"> <?php //echo get_phrase('fax') ;?><span class="required"> * </span></label>
               <div class="col-md-9">
-                <input type="text" id="fax" name="fax" class="form-control"  value="<?php echo get_settings('fax') ;?>" required>
+                <input type="text" id="fax" name="fax" class="form-control"  value="<?php //echo get_settings('fax') ;?>" required>
               </div>
-            </div>
+            </div> -->
 
             <div class="form-group row mb-3">
               <label class="col-md-3 col-form-label" for="address"> <?php echo get_phrase('address') ;?><span class="required"> * </span></label>

@@ -25,7 +25,7 @@ class Settings_model extends CI_Model
     $data['phone'] = htmlspecialchars($this->input->post('phone'));
     $data['purchase_code'] = htmlspecialchars($this->input->post('purchase_code'));
     $data['address'] = htmlspecialchars($this->input->post('address'));
-    $data['fax'] = htmlspecialchars($this->input->post('fax'));
+    // $data['fax'] = htmlspecialchars($this->input->post('fax'));
     $data['footer_text'] = htmlspecialchars($this->input->post('footer_text'));
     $data['footer_link'] = htmlspecialchars($this->input->post('footer_link'));
     $data['timezone'] = htmlspecialchars($this->input->post('timezone'));
