@@ -20,19 +20,19 @@
     <!-- Content Section -->
     <div class="about-section">
       <div class="container about-section-content">
-        <h1 class="section-title">Welcome to WAYO Academy</h1>
+        <h1 class="section-title">Welcome to Wayo Academy</h1>
         <div class="split-text">
           <p class="h4 fade-in">
-            Where learning adapts to you at WAYO ACADEMY, we are dedicated to delivering a personalized,
+            Where learning adapts to you at Wayo Academy, we are dedicated to delivering a personalized,
             dynamic educational experience that integrates effortlessly into your life.
             Our platform offers a diverse selection of expert-led courses and practical resources 
             to help you develop the skills that matter most, for today and the future.
             </br>
             </br>
-            Whether you're beginning a new career, advancing in your field, or exploring a passion,
-            we’ll support you at every stage. Join us in a journey of growth, discovery, and achievement.
+            Whether you are beginning a new career, advancing in your field or exploring a passion,
+            we will support you at every stage. Join us in a journey of growth, discovery and achievement.
           </p>
-          <span class="dynamic-message fade-in">Because learning should evolve with you</span>
+          <span class="dynamic-message fade-in">Because learning should evolve with you !</span>
         </div>
       </div>
 
