@@ -93,6 +93,28 @@ $('document').ready(function(){
   $('select.select2:not(.normal)').each(function () { $(this).select2({ dropdownParent: '#right-modal' }); }); //initSelect2(['#session_from', '#session_to', '#class_id_from', '#class_id_to']);
 });
 
+document.addEventListener('DOMContentLoaded', function () {
+  // Initialiser Select2
+  $('#class_id_from').select2();
+  $('#class_id_to').select2();
+
+  // Écouter les changements sur "class_id_from"
+  $('#class_id_from').on('change', function () {
+    const selectedValue = $(this).val(); // Obtenez la valeur sélectionnée dans "class_id_from"
+
+    // Réinitialiser toutes les options dans "class_id_to"
+    $('#class_id_to option').prop('disabled', false); // Activer toutes les options
+
+    // Désactiver (griser) l'option correspondante dans "class_id_to"
+    if (selectedValue) {
+      $(`#class_id_to option[value="${selectedValue}"]`).prop('disabled', true);
+    }
+
+    // Rafraîchir Select2 pour refléter les changements
+    $('#class_id_to').select2();
+  });
+});
+
 function manageStudent() {
   var session_from   = $('#session_from').val();
   var session_to     = $('#session_to').val();
