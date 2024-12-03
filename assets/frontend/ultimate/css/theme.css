@@ -54,7 +54,21 @@ html {
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
   display: block;
 }
-
+.select_course {
+  background-color: #4e4e4e !important; 
+  color: #ffffff !important; 
+  appearance: none !important; 
+  -moz-appearance: none !important; 
+  -webkit-appearance: none !important;     
+  -webkit-appearance: button !important;
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1) !important;
+  -webkit-padding-end: 20px !important;
+  -webkit-padding-start: 2px !important;
+  -webkit-user-select: none !important; 
+   background-repeat: no-repeat !important;
+    background-position: right -53px center !important;
+     padding-right: 2rem !important;
+}
 .required {
   color: rgb(231, 86, 86);
  
