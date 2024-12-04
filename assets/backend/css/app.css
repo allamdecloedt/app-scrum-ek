@@ -74,6 +74,23 @@ File: Main Css File
   :root {
     scroll-behavior: smooth; } }
 
+  @media print {
+      body * {
+          visibility: hidden;
+      }
+  
+      #printable-section, #printable-section * {
+          visibility: visible;
+      }
+  
+      #printable-section {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+      }
+  }
+  
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
