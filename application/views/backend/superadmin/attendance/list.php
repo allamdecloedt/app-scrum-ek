@@ -1,5 +1,7 @@
 <?php $school_id = school_id(); ?>
-<div class="row">
+<div id="printable-section">
+
+<div class="row" >
     <div class="col-md-4"></div>
     <div class="col-md-4">
         <div class="card bg-secondary text-white">
@@ -24,15 +26,16 @@
     <div class="col-md-4"></div>
 </div>
 
-<div class="w-100 table-responsive">
-    <table  class="table table-bordered table-sm">
+<!-- Ajout de l'ID -->
+<div class="w-100 table-responsive" >
+    <table class="table table-bordered table-sm">
         <thead class="thead-dark">
             <tr style="font-size: 12px;">
-                <th width = "40px"><?php echo get_phrase('student'); ?> <i class="mdi mdi-arrow-down"></i> <?php echo get_phrase('date'); ?> <i class="mdi mdi-arrow-right"></i></th>
+                <th width="40px"><?php echo get_phrase('student'); ?> <i class="mdi mdi-arrow-down"></i> <?php echo get_phrase('date'); ?> <i class="mdi mdi-arrow-right"></i></th>
                 <?php
-                    $number_of_days = date('m', $attendance_date) == 2 ? (date('Y', $attendance_date) % 4 ? 28 : (date('m', $attendance_date) % 100 ? 29 : (date('m', $attendance_date) % 400 ? 28 : 29))) : ((date('m', $attendance_date) - 1) % 7 % 2 ? 30 : 31);
-                    for ($i = 1; $i <= $number_of_days; $i++): ?>
-                    <th><?php echo $i; ?></th>
+                $number_of_days = date('m', $attendance_date) == 2 ? (date('Y', $attendance_date) % 4 ? 28 : (date('m', $attendance_date) % 100 ? 29 : (date('m', $attendance_date) % 400 ? 28 : 29))) : ((date('m', $attendance_date) - 1) % 7 % 2 ? 30 : 31);
+                for ($i = 1; $i <= $number_of_days; $i++): ?>
+                <th><?php echo $i; ?></th>
                 <?php endfor; ?>
             </tr>
         </thead>
@@ -42,32 +45,59 @@
             $active_sesstion = active_session();
             $this->db->order_by('student_id', 'asc');
             $attendance_of_students = $this->db->get_where('daily_attendances', array('class_id' => $class_id, 'section_id' => $section_id, 'school_id' => $school_id, 'session_id' => $active_sesstion))->result_array();
-                foreach($attendance_of_students as $attendance_of_student){ ?>
-                    <?php if(date('m', $attendance_date) == date('m', $attendance_of_student['timestamp'])): ?>
-                        <?php if($student_id_count != $attendance_of_student['student_id']): ?>
-                            <tr>
-                                <td><?php echo $this->user_model->get_user_details($this->db->get_where('students', array('id' => $attendance_of_student['student_id']))->row('user_id'), 'name'); ?></td>
-                                <?php for ($i = 1; $i <= $number_of_days; $i++): ?>
-                                    <?php $date = $i.' '.$month.' '.$year; ?>
-                                    <?php $timestamp = strtotime($date); ?>
-                                    <td class="text-center">
-                                        <?php $status = $this->db->get_where('daily_attendances', array('class_id' => $class_id, 'section_id' => $section_id, 'school_id' => $school_id, 'session_id' => $active_sesstion, 'student_id' => $attendance_of_student['student_id'], 'timestamp' => $timestamp))->row('status'); ?>
-                                            <?php if($status == 1){ ?>
-                                                <i class="mdi mdi-circle text-success"></i>
-                                            <?php }elseif($status === "0"){ ?>
-                                                <i class="mdi mdi-circle text-danger"></i>
-                                            <?php } ?>
-                                    </td>
-                                <?php endfor; ?>
-                            </tr>
-                        <?php endif; ?>
-                        <?php $student_id_count = $attendance_of_student['student_id']; ?>
+            foreach ($attendance_of_students as $attendance_of_student): ?>
+                <?php if (date('m', $attendance_date) == date('m', $attendance_of_student['timestamp'])): ?>
+                    <?php if ($student_id_count != $attendance_of_student['student_id']): ?>
+                        <tr>
+                            <td><?php echo $this->user_model->get_user_details($this->db->get_where('students', array('id' => $attendance_of_student['student_id']))->row('user_id'), 'name'); ?></td>
+                            <?php for ($i = 1; $i <= $number_of_days; $i++): ?>
+                                <?php $date = $i . ' ' . $month . ' ' . $year; ?>
+                                <?php $timestamp = strtotime($date); ?>
+                                <td class="text-center">
+                                    <?php $status = $this->db->get_where('daily_attendances', array('class_id' => $class_id, 'section_id' => $section_id, 'school_id' => $school_id, 'session_id' => $active_sesstion, 'student_id' => $attendance_of_student['student_id'], 'timestamp' => $timestamp))->row('status'); ?>
+                                    <?php if ($status == 1): ?>
+                                        <i class="mdi mdi-circle text-success"></i>
+                                    <?php elseif ($status === "0"): ?>
+                                        <i class="mdi mdi-circle text-danger"></i>
+                                    <?php endif; ?>
+                                </td>
+                            <?php endfor; ?>
+                        </tr>
                     <?php endif; ?>
-            <?php } ?>
+                    <?php $student_id_count = $attendance_of_student['student_id']; ?>
+                <?php endif; ?>
+            <?php endforeach; ?>
         </tbody>
     </table>
 </div>
 
 <div class="row d-print-none mt-3">
-    <div class="col-12 text-end"><a href="javascript:window.print()" class="btn btn-primary"><i class="mdi mdi-printer"></i><?php echo get_phrase('print'); ?></a></div>
+    <div class="col-12 text-end">
+        <button onclick="printSection()" class="btn btn-primary">
+            <i class="mdi mdi-printer"></i> <?php echo get_phrase('print'); ?>
+        </button>
+    </div>
 </div>
+
+</div>
+
+
+<script>
+    function printSection() {
+     
+    const printContent = document.getElementById('printable-section').innerHTML;
+    const originalContent = document.body.innerHTML;
+
+    // Remplacer tout le contenu de la page par la section imprimable
+    document.body.innerHTML = printContent;
+
+    // Lancer l'impression
+    window.print();
+
+    // Restaurer le contenu d'origine
+    document.body.innerHTML = originalContent;
+
+
+}
+
+</script>
