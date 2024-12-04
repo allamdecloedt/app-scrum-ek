@@ -102,6 +102,10 @@
                     <h3>Preview:</h3>
                     <?php 
                     $file_path = base_url() . 'uploads/lesson_files/' . $lesson_details['attachment']. '?v=' . time(); 
+                    if (!file_exists(FCPATH . $file_path)) {
+                        echo "Le fichier n'existe pas : " . FCPATH . $file_path;
+                        exit;
+                    }
                     $file_extension = strtolower(pathinfo($lesson_details['attachment'], PATHINFO_EXTENSION));
 
                     // Détection du type de fichier
