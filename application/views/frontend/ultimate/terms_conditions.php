@@ -96,7 +96,7 @@
         <!-- 8. Personal Data -->
         <section class="mb-5">
           <h2 class="section-title">8. Personal Data</h2>
-          <p>The collection and processing of users’ personal data are conducted in accordance with our <a href="/privacy-policy" class="text-primary">Privacy Policy</a>. Users have the right to access, modify, and delete their personal data as per applicable laws.</p>
+          <p>The collection and processing of users’ personal data are conducted in accordance with our <a href="<?php echo site_url('home/privacy_policy'); ?>" class="text-primary">Privacy Policy</a>. Users have the right to access, modify, and delete their personal data as per applicable laws.</p>
         </section>
 
         <!-- 9. Limitation of Liability -->
