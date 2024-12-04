@@ -108,13 +108,16 @@
                     // }
                     // Définir le chemin du fichier sur le serveur
                     $file_name = $lesson_details['attachment'];
-                    $file_path = FCPATH . 'uploads/lesson_files/' . $file_name; // Chemin absolu local
+                    $file_path = FCPATH . 'uploads/lesson_files/' . $file_name; // Chemin absolu
+                    $file_url = base_url() . 'uploads/lesson_files/' . $file_name; // URL publique
 
-                    // Vérifier si le fichier existe sur le serveur
                     if (!file_exists($file_path)) {
                         echo "Le fichier n'existe pas : " . $file_path;
                         exit;
                     }
+
+                    // Affichage du fichier
+                    echo '<iframe src="' . $file_url . '" style="width: 100%; height: 500px;"></iframe>';
 
                     // Générer l'URL publique pour afficher le fichier
                     $file_url = base_url() . 'uploads/lesson_files/' . $file_name;
