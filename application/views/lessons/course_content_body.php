@@ -134,9 +134,7 @@
                         case 'doc': case 'docx': case 'xls': case 'xlsx': case 'ppt': case 'pptx':
                             // Affichage pour les documents bureautiques via Google Viewer
                     ?>
-                        <!-- <iframe src="https://docs.google.com/gview?url=<?php echo $file_path; ?>&embedded=true" style="width: 100%; height: 500px; border: none;"></iframe> -->
-                            <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=<?php echo urlencode($file_path); ?>" 
-        style="width: 100%; height: 500px; border: none;"></iframe>
+                    <iframe src="https://view.officeapps.live.com/op/embed.aspx?src=<?php echo urlencode($file_path); ?>" style="width: 100%; height: 500px; border: none;"></iframe>
 
 
 
