@@ -134,8 +134,10 @@
                         case 'doc': case 'docx': case 'xls': case 'xlsx': case 'ppt': case 'pptx':
                             // Affichage pour les documents bureautiques via Google Viewer
                     ?>
-                        <iframe src="https://docs.google.com/gview?url=<?php echo $file_path; ?>&embedded=true" style="width: 100%; height: 500px; border: none;"></iframe>
-                    <?php 
+                        <!-- <iframe src="https://docs.google.com/gview?url=<?php echo $file_path; ?>&embedded=true" style="width: 100%; height: 500px; border: none;"></iframe> -->
+                            <embed src="<?php echo $file_path; ?>" type="application/pdf" style="width: 100%; height: 500px; border: none;" />
+
+                 <?php 
                         break;
                         default:
                             // Affichage pour les types de fichiers non pris en charge
