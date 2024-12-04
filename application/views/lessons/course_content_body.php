@@ -101,7 +101,7 @@
                 <div class="mt-4">
                     <h3>Preview:</h3>
                     <?php 
-                    $file_path = base_url() . 'uploads/lesson_files/' . $lesson_details['attachment']; 
+                    $file_path = base_url() . 'uploads/lesson_files/' . $lesson_details['attachment']. '?v=' . time(); 
                     $file_extension = strtolower(pathinfo($lesson_details['attachment'], PATHINFO_EXTENSION));
 
                     // Détection du type de fichier
