@@ -151,7 +151,12 @@
                         </div>
 
                         <div class="text-center">
+                            <div>
                             <button type="submit" class="btn btn-secondary col-md-4 col-sm-12 mb-4"><?php echo get_phrase('update_student_information'); ?></button>
+                            </div>
+                            <div>
+                            <a href="<?php echo site_url("superadmin/student"); ?>" style="background-color: #6c757d;" target="" class="btn btn-outline-light website-button ms-2 d-none d-md-inline-block"><?php echo get_phrase('back_to_student_list'); ?></a>
+                            </div>
                         </div>
                     </div>
                 </form>
