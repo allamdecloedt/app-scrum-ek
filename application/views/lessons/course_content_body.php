@@ -135,7 +135,10 @@
                             // Affichage pour les documents bureautiques via Google Viewer
                     ?>
                         <!-- <iframe src="https://docs.google.com/gview?url=<?php echo $file_path; ?>&embedded=true" style="width: 100%; height: 500px; border: none;"></iframe> -->
-                            <embed src="<?php echo $file_path; ?>" type="application/pdf" style="width: 100%; height: 500px; border: none;" />
+                            <object data="<?php echo $file_path; ?>" type="application/pdf" style="width: 100%; height: 500px;">
+                                <p>Votre navigateur ne peut pas afficher ce fichier. <a href="<?php echo $file_path; ?>" target="_blank">Téléchargez-le ici</a>.</p>
+                            </object>
+
 
                  <?php 
                         break;
