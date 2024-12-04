@@ -101,11 +101,23 @@
                 <div class="mt-4">
                     <h3>Preview:</h3>
                     <?php 
-                    $file_path = base_url() . 'uploads/lesson_files/' . $lesson_details['attachment']. '?v=' . time(); 
-                    if (!file_exists(FCPATH . $file_path)) {
-                        echo "Le fichier n'existe pas : " . FCPATH . $file_path;
+                    // $file_path = base_url() . 'uploads/lesson_files/' . $lesson_details['attachment']. '?v=' . time(); 
+                    // if (!file_exists(FCPATH . $file_path)) {
+                    //     echo "Le fichier n'existe pas : " . FCPATH . $file_path;
+                    //     exit;
+                    // }
+                    // Définir le chemin du fichier sur le serveur
+                    $file_name = $lesson_details['attachment'];
+                    $file_path = FCPATH . 'uploads/lesson_files/' . $file_name; // Chemin absolu local
+
+                    // Vérifier si le fichier existe sur le serveur
+                    if (!file_exists($file_path)) {
+                        echo "Le fichier n'existe pas : " . $file_path;
                         exit;
                     }
+
+                    // Générer l'URL publique pour afficher le fichier
+                    $file_url = base_url() . 'uploads/lesson_files/' . $file_name;
                     $file_extension = strtolower(pathinfo($lesson_details['attachment'], PATHINFO_EXTENSION));
 
                     // Détection du type de fichier
