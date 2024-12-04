@@ -73,30 +73,77 @@
        
 
                 <!-- Section d'affichage du fichier -->
+                <!-- <div class="mt-4"> -->
+                    <!-- <h3>Preview:</h3> -->
+                    <?php 
+                    // $file_path = base_url().'uploads/lesson_files/'.$lesson_details['attachment']; 
+                    // $file_extension = pathinfo($lesson_details['attachment'], PATHINFO_EXTENSION);
+
+                    // Affichage en fonction du type de fichier
+                    //if (in_array($file_extension, ['pdf'])): ?>
+                        <!-- <iframe src="<?php // echo $file_path; ?>" style="width: 100%; height: 500px; border: none;"></iframe> -->
+                    <?php //elseif (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])): ?>
+                        <!-- <img src="<?php // echo $file_path; ?>" alt="Preview" style="max-width: 100%; height: auto;"> -->
+                    <?php // elseif (in_array($file_extension, ['mp4', 'webm', 'ogg'])): ?>
+                        <!-- <video controls style="width: 100%; height: auto;">
+                            <source src="<?php // echo $file_path; ?>" type="video/<?php // echo $file_extension; ?>">
+                            Votre navigateur ne supporte pas la lecture vidéo.
+                        </video> -->
+                    <?php // elseif (in_array($file_extension, ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'])): ?>
+                        <!-- Utiliser Google Drive Viewer pour ces formats -->
+                        <!-- <iframe src="https://docs.google.com/gview?url=<?php echo $file_path; ?>&embedded=true"  -->
+                                <!-- style="width: 100%; height: 500px;" frameborder="0"></iframe> -->
+                    <?php // else: ?>
+                        <!-- <p>Ce type de fichier ne peut pas être affiché. Vous pouvez le <a href="<?php // echo $file_path; ?>" download>télécharger ici</a>.</p> -->
+                    <?php // endif; ?>
+                <!-- </div> -->
+                 <!-- Section d'affichage du fichier -->
                 <div class="mt-4">
                     <h3>Preview:</h3>
                     <?php 
-                    $file_path = base_url().'uploads/lesson_files/'.$lesson_details['attachment']; 
-                    $file_extension = pathinfo($lesson_details['attachment'], PATHINFO_EXTENSION);
+                    $file_path = base_url() . 'uploads/lesson_files/' . $lesson_details['attachment']; 
+                    $file_extension = strtolower(pathinfo($lesson_details['attachment'], PATHINFO_EXTENSION));
 
-                    // Affichage en fonction du type de fichier
-                    if (in_array($file_extension, ['pdf'])): ?>
-                        <iframe src="<?php echo $file_path; ?>" style="width: 100%; height: 500px; border: none;"></iframe>
-                    <?php elseif (in_array($file_extension, ['jpg', 'jpeg', 'png', 'gif'])): ?>
-                        <img src="<?php echo $file_path; ?>" alt="Preview" style="max-width: 100%; height: auto;">
-                    <?php elseif (in_array($file_extension, ['mp4', 'webm', 'ogg'])): ?>
-                        <video controls style="width: 100%; height: auto;">
+                    // Détection du type de fichier
+                    switch ($file_extension):
+                        case 'pdf': 
+                            // Affichage pour les PDF
+                    ?>
+                        <object data="<?php echo $file_path; ?>" type="application/pdf" width="100%" height="500">
+                            <p>Votre navigateur ne supporte pas les PDF intégrés. <a href="<?php echo $file_path; ?>" target="_blank">Téléchargez le fichier PDF ici</a>.</p>
+                        </object>
+                    <?php 
+                        break;
+                        case 'jpg': case 'jpeg': case 'png': case 'gif':
+                            // Affichage pour les images
+                    ?>
+                        <div style="text-align: center;">
+                            <img src="<?php echo $file_path; ?>" alt="Preview" style="max-width: 100%; height: auto; border: 1px solid #ddd; border-radius: 8px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);">
+                        </div>
+                    <?php 
+                        break;
+                        case 'mp4': case 'webm': case 'ogg':
+                            // Affichage pour les vidéos
+                    ?>
+                        <video controls style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);">
                             <source src="<?php echo $file_path; ?>" type="video/<?php echo $file_extension; ?>">
-                            Votre navigateur ne supporte pas la lecture vidéo.
+                            Votre navigateur ne supporte pas la lecture vidéo. <a href="<?php echo $file_path; ?>" download>Téléchargez la vidéo ici</a>.
                         </video>
-                    <?php elseif (in_array($file_extension, ['doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'])): ?>
-                        <!-- Utiliser Google Drive Viewer pour ces formats -->
-                        <iframe src="https://docs.google.com/gview?url=<?php echo $file_path; ?>&embedded=true" 
-                                style="width: 100%; height: 500px;" frameborder="0"></iframe>
-                    <?php else: ?>
-                        <p>Ce type de fichier ne peut pas être affiché. Vous pouvez le <a href="<?php echo $file_path; ?>" download>télécharger ici</a>.</p>
-                    <?php endif; ?>
+                    <?php 
+                        break;
+                        case 'doc': case 'docx': case 'xls': case 'xlsx': case 'ppt': case 'pptx':
+                            // Affichage pour les documents bureautiques via Google Viewer
+                    ?>
+                        <iframe src="https://docs.google.com/gview?url=<?php echo $file_path; ?>&embedded=true" style="width: 100%; height: 500px; border: none;"></iframe>
+                    <?php 
+                        break;
+                        default:
+                            // Affichage pour les types de fichiers non pris en charge
+                    ?>
+                        <p>Prévisualisation indisponible pour ce type de fichier. <a href="<?php echo $file_path; ?>" download>Téléchargez le fichier ici</a>.</p>
+                    <?php endswitch; ?>
                 </div>
+
                 <div class="mt-5">
                     <a href="<?php echo base_url().'uploads/lesson_files/'.$lesson_details['attachment']; ?>" class="btn btn-info text-white" download>
                         <i class="fa fa-download font-size-24"></i> <?php echo get_phrase('download').' '.$lesson_details['title']; ?>
