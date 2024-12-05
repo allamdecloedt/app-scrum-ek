@@ -55,7 +55,7 @@
   right: 10px;
   height: 30px;
   width: auto;
-  background-color: #be02e8;
+  background-color: #5956e9;
   padding: 5px 10px;
   border-radius: 12px;
   color: #ffffff;
@@ -131,7 +131,7 @@
 }
 
 .category:hover {
-  background-color: #be02e8;
+  background-color: #5956e9;
   color: #ffffff;
   text-decoration: none;
 }
@@ -152,7 +152,7 @@
 }
 
 .active-cat {
-  background-color: #be02e8;
+  background-color: #5956e9;
 }
 
 .search-bar input {
@@ -218,7 +218,7 @@
 }
 
 .pagination-item.active {
-  background-color: #be02e8;
+  background-color: #5956e9;
   color: #ffffff;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 5px;
 }
