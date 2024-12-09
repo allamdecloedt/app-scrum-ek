@@ -608,6 +608,9 @@ Responsive Styling
   .nav-bar-items {
     background-color: #212121;
   }
+  .button_with{
+    width: 17%;
+  }
   .user-dropdown {
     
     height: auto;
@@ -681,6 +684,7 @@ Responsive Styling
   .navbar-nav .nav-link {
     position: relative;
   }
+
   .bottom_nav{
     bottom: 84% !important;
   }
@@ -744,21 +748,33 @@ Responsive Styling
   .bottom_nav{
     bottom: 50% !important;
   }
+  .button_with{
+    width: 34%;
+  }
 }
 @media (max-width: 480px ) and (min-width: 431px) {
   .bottom_nav{
     bottom: 50% !important;
+  }
+  .button_with{
+    width: 31%;
   }
 }
 @media (max-width: 912) {
   .bottom_nav{
     bottom: 50% !important;
   }
+  .button_with{
+    width: 31%;
+  }
 }
 
 @media (max-width: 414px ) and (min-width: 300px) {
   .bottom_nav{
     bottom: 53% !important;
+  }
+  .button_with{
+    width: 34%;
   }
 }
 

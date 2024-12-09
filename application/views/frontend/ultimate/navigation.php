@@ -43,7 +43,7 @@ $system_name = get_frontend_settings('website_title');
           </li>
           <?php if ($this->session->userdata('user_id')) { ?>
                
-               <a href="<?php echo route('dashboard'); ?>" target="" class=" btn btn-outline-light website-button ml-2 ml-lg-3  d-md-inline-block">
+               <a href="<?php echo route('dashboard'); ?>" target="" class=" btn btn-outline-light button_with website-button ml-2 ml-lg-3  d-md-inline-block">
                  <?php echo get_phrase('visit_dashboard'); ?></a>
                
 
