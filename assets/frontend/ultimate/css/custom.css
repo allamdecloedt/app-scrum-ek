@@ -949,8 +949,9 @@ Responsive Styling
     background: #838383 !important;
     color: #fff;
   }
+  
   .btn-change5:hover {
-    background-color: #27272d !important;
+    background-color: rgb(126, 17, 221) !important;
   }
 
   .btn-change6 {
@@ -961,7 +962,7 @@ Responsive Styling
     color: #fff;
   }
   .btn-change6:hover {
-    background-color: #27272d !important;
+    background-color: rgb(126, 17, 221) !important;
   }
   .intro-img img {
     display: none;

@@ -2,7 +2,7 @@
 
     
 
-    <div class="user-dropdown hidden-section display-none">
+    <div class="user-dropdown  hidden-section display-none bottom_nav" >
                 <!-- item-->
         <a href="<?php echo site_url('login/logout'); ?>" class="user-dropdown-item text-white">
             <span><svg class="m-1 " xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

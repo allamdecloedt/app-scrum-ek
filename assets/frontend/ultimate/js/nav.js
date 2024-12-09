@@ -5,13 +5,7 @@ $(document).ready(function () {
   const loginToggle = document.querySelector(".login-toggle");
   const loginDropdown = document.querySelector(".login-dropdown");
 
-  window.addEventListener("scroll", function () {
-    if (window.scrollY > 100) {
-      navbar.classList.add("small-nav");
-    } else {
-      navbar.classList.remove("small-nav");
-    }
-  });
+
 
   if (document.querySelector(".user-section")) {
     userButton.addEventListener("click", function () {
