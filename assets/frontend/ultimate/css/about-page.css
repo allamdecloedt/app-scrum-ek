@@ -48,15 +48,6 @@ About Us Page Styling
 
 
 
-.about-section-content {
-  padding: 3rem;
-  text-align: center;
-  background: #4d4d4dde;
-  border-radius: 15px;
-  margin-top: 15px;
-  position: relative;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-}
 
 .section-title {
   font-size: 2.5rem;
@@ -85,18 +76,6 @@ About Us Page Styling
 
 
 
-.dynamic-message {
-  display: block;
-  margin-top: 20px;
-  padding: 15px;
-  font-size: 1.9em;
-  font-weight: bold;
-  font-family: "Lucida Handwriting", "Brush Script MT", cursive;
-  color: #f7f2f2;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
 
 
 
@@ -160,15 +139,6 @@ About Us Page Styling
   padding-top: 20px;
   padding-bottom: 20px;
 }
-.about-section-content p {
-  color: #ffffff;
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-align: justify;
-  font-family: "Roboto", sans-serif;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
 
 .about-section-top-svg {
   position: absolute;
@@ -191,7 +161,18 @@ About Us Page Styling
   .about-section {
     min-height: 68px;
   }
-
+  .dynamic-message {
+    display: block;
+    margin-top: 20px;
+    padding: 30px;
+    font-size: 1em;
+    font-weight: bold;
+    font-family: "Lucida Handwriting", "Brush Script MT", cursive;
+    color: #f7f2f2;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
   .about-section-top-svg {
     top: -10px;
   }
@@ -211,18 +192,38 @@ About Us Page Styling
   }
 
   .about-section-content p {
-    font-size: 15px;
+    font-size: 18px;
     padding-bottom: 10px !important;
     overflow: hidden;
   }
 
   .about-image-container {
-    height: 150vh;
+    height: 115vh;
   }
 
   .about-image-container img {
     height: 244vh;
   }
+  .about-section-content {
+    padding: 3rem;
+    text-align: center;
+    background: #4d4d4dde;
+    border-radius: 15px;
+    margin-top: 102px;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  .about-section-content p {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: justify;
+    font-family: "Roboto", sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  
 }
 /*--------------------------------------------576px---------------------------------------------------*/
 /* Small devices (tablets) */
@@ -238,6 +239,40 @@ About Us Page Styling
   .about-section {
     min-height: 68px;
   }
+  .about-image-container img {
+    height: 150vh;
+  }
+  .dynamic-message {
+    display: block;
+    margin-top: 20px;
+    padding: 0px;
+    font-size: 1em;
+    font-weight: bold;
+    font-family: "Lucida Handwriting", "Brush Script MT", cursive;
+    color: #f7f2f2;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-section-content {
+    padding: 3rem;
+    text-align: center;
+    background: #4d4d4dde;
+    border-radius: 15px;
+    margin-top: 15px;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  .about-section-content p {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: justify;
+    font-family: "Roboto", sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
 }
 /*--------------------------------------------768px---------------------------------------------------*/
 /* Medium devices (desktops) */
@@ -249,6 +284,41 @@ About Us Page Styling
   .about-section-bottom-svg {
     bottom: -10px;
   }
+  .dynamic-message {
+    display: block;
+    margin-top: 20px;
+    padding: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+    font-family: "Lucida Handwriting", "Brush Script MT", cursive;
+    color: #f7f2f2;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-image-container img {
+    height: 132vh;
+  }
+  .about-section-content {
+    padding: 3rem;
+    text-align: center;
+    background: #4d4d4dde;
+    border-radius: 15px;
+    margin-top: 15px;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  .about-section-content p {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: justify;
+    font-family: "Roboto", sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  
 }
 /*--------------------------------------------992px---------------------------------------------------*/
 
@@ -261,6 +331,41 @@ About Us Page Styling
   .about-section-bottom-svg {
     bottom: -2.5vh;
   }
+  .dynamic-message {
+    display: block;
+    margin-top: 20px;
+    padding: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+    font-family: "Lucida Handwriting", "Brush Script MT", cursive;
+    color: #f7f2f2;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-image-container img {
+    height: 126vh;
+  }
+  .about-section-content {
+    padding: 3rem;
+    text-align: center;
+    background: #4d4d4dde;
+    border-radius: 15px;
+    margin-top: 15px;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  .about-section-content p {
+  color: #ffffff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: justify;
+  font-family: "Roboto", sans-serif;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+  
 }
 /*--------------------------------------------1200px--------------------------------------------------*/
 
@@ -273,4 +378,85 @@ About Us Page Styling
   .about-section-bottom-svg {
     bottom: -3vh;
   }
+  .dynamic-message {
+    display: block;
+    margin-top: 9px;
+    padding: 15px;
+    font-size: 1.5em;
+    font-weight: bold;
+    font-family: "Lucida Handwriting", "Brush Script MT", cursive;
+    color: #f7f2f2;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-image-container img {
+    height: 150vh;
+  }
+  .about-section-content {
+    padding: 2rem;
+    text-align: center;
+    background: #4d4d4dde;
+    border-radius: 15px;
+    margin-top: 15px;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .about-section-content p {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: justify;
+    font-family: "Roboto", sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+}
+
+/* Extra large devices (large desktops) */
+@media (min-width: 1200px)  and (max-height: 773px) {
+  .about-section-top-svg {
+    top: -4vh;
+  }
+
+  .about-section-bottom-svg {
+    bottom: -3vh;
+  }
+  .dynamic-message {
+    display: block;
+    margin-top: 9px;
+    padding: 15px;
+    font-size: 1.1em;
+    font-weight: bold;
+    font-family: "Lucida Handwriting", "Brush Script MT", cursive;
+    color: #f7f2f2;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-image-container img {
+    height: 150vh;
+  }
+  .about-section-content {
+    padding: 2rem;
+    text-align: center;
+    background: #4d4d4dde;
+    border-radius: 15px;
+    margin-top: 0px;
+    position: relative;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  }
+  .about-section-content p {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: justify;
+    font-family: "Roboto", sans-serif;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  
+  
 }

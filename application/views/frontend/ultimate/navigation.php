@@ -8,7 +8,7 @@ $system_name = get_frontend_settings('website_title');
     <div class="container-fluid">
       <!-- Logo -->
       <a class="navbar-brand" href="<?php echo site_url('home'); ?>">
-        <img src="<?php echo $logo_light; ?>" alt="Logo" style="width: 84px;">
+        <img src="<?php echo $logo_light; ?>" alt="Logo" style="width: 65px;">
       </a>
       <!-- End Logo -->
 
