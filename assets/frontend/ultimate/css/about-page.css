@@ -11,7 +11,7 @@ About Us Page Styling
 }
 
 .general-header h1 {
-  font-size: 4rem;
+  font-size: 2.5rem;
   font-weight: bold;
   z-index: 2;
   text-transform: uppercase;
@@ -255,7 +255,7 @@ About Us Page Styling
     overflow: hidden;
   }
   .about-section-content {
-    padding: 3rem;
+    padding: 2rem;
     text-align: center;
     background: #4d4d4dde;
     border-radius: 15px;
@@ -288,7 +288,7 @@ About Us Page Styling
     display: block;
     margin-top: 20px;
     padding: 15px;
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: bold;
     font-family: "Lucida Handwriting", "Brush Script MT", cursive;
     color: #f7f2f2;

@@ -29,7 +29,7 @@
 
             <div class="input-group pb-5 shadow-sm rounded">
                 <!-- Dropdown des catégories -->
-                <div class="input-group-prepend">
+           
                     <select name="categories" id="categories"  class="form-select border-0 select_course"  onchange="location = this.value;">
                         <!-- Option pour "All" -->
                         <option value="<?php echo base_url('home/courses/'); ?>" <?php echo empty($selected_category) ? 'selected' : ''; ?>>
@@ -48,7 +48,7 @@
                         <?php endforeach; ?>
                     </select>
 
-                </div>
+            <div style="margin-left: 10px;"></div>
 
                 <!-- Champ de recherche -->
                 <input name="search" type="search" class="form-control border-0" placeholder="<?php echo get_phrase('Search'); ?>"

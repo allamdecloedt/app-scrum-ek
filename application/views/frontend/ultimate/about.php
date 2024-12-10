@@ -2,8 +2,8 @@
 <main>
   <!-- Hero Section -->
   <div class="general-container container-fluid ">
-    <div class="g-0 general-header">
-      <h1 class='text_fade text-uppercase text-center'> About us </h1>
+  <div class="general-header align-items-center">
+      <h1  class='col-6 display-4 text_fade text-uppercase text-center  text-sm-break'> About us </h1>
       <!-- Divs for "About Us" Background fade in-out animation-->
       <div></div>
       <div></div>

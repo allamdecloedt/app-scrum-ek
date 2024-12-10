@@ -24,7 +24,7 @@ Spacer Styling
 .carousel-inner img {
   filter: brightness(70%);
   transition: transform 0.5s ease;
-  height: 100vh; /* Occupe toute la hauteur de l'écran */
+  height: 55vh; /* Occupe toute la hauteur de l'écran */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

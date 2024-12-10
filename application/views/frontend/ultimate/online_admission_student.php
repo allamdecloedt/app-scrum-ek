@@ -42,7 +42,7 @@
         </div>
     <?php endif; ?>
 
-
+    </div>
 
     <!-- Student Admission Form -->
 
@@ -116,7 +116,7 @@
         </div>
         <!-- End Input -->
 
-
+      </div>
 
         <div class="row justify-content-center">
 
@@ -176,7 +176,7 @@
 
 
 
-      </div>
+    
 
       <div class="row justify-content-center">
         <!-- Input -->
@@ -235,8 +235,8 @@
 
       <div class="row justify-content-center">
         <!-- Input -->
-        <div class="col-sm-8 mb-6">
-          <div class="js-form-message">
+        <div class="col-sm-8 col-11 ">
+          <div class="js-form-message mb-6">
             <label class="form-label text-white">
               <?php echo get_phrase('address'); ?>
               <span class="text-danger">*</span>
