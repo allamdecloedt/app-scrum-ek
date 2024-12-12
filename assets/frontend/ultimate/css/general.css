@@ -57,6 +57,7 @@ main {
   max-width: 100%;
   height: auto;
   object-fit: contain;
+  border-radius: 31%;
 }
 
 .promo-text-container {
@@ -68,7 +69,8 @@ main {
   font-weight: bold;
   color: #003366;
   margin-bottom: 15px;
-  font-family: fantasy;
+  font-family: "Papyrus", "Marker Felt", "Chalkboard", fantasy;
+
 }
 
 .coming-soon {
