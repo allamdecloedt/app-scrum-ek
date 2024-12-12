@@ -306,6 +306,38 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
   <!-- End Teacher Section -->
 
 </div>
+<?php
+ $App_Google_play = base_url('uploads/images/decloedt/logo/App_Google_play.png');
+ $App_store = base_url('uploads/images/decloedt/logo/App_store.png');
+ $telephone_wayo = base_url('uploads/images/decloedt/logo/telephone_wayo.png');
+
+?>
+     
+
+
+      <div class="promo-section">
+  <div class="container">
+    <div class="row align-items-center">
+      <!-- Image Section -->
+      <div class="col-lg-6 col-md-12 promo-image-container">
+        <img src="<?php echo $telephone_wayo; ?>" alt="Wayo Academy" class="promo-image">
+      </div>
+      <!-- Text Section -->
+      <div class="col-lg-6 col-md-12 text-center text-lg-start promo-text-container">
+        <h1 class="promo-title">Easier, faster, and more accessible mentoring at your fingertips</h1>
+        <p class="coming-soon">Coming Soon!</p>
+        <div class="promo-buttons">
+          <a href="#" class="store-button">
+            <img src="<?php echo $App_store; ?>" alt="Download on App Store">
+          </a>
+          <a href="#" class="store-button">
+            <img src="<?php echo $App_Google_play; ?>" alt="Get it on Google Play">
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 
