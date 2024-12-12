@@ -17,6 +17,111 @@ main {
   background: #212121 !important;
   font-family: var(--font-primary);
 }
+#mobile-version-announcement img {
+  filter: drop-shadow(0px 4px 10px rgba(0, 0, 0, 0.3));
+}
+.btn-light:hover {
+  background-color: #6c63ff;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+
+/* General Styles */
+.promo-section {
+  background-color: #eaf6fe; /* Light blue background */
+  padding: 50px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.promo-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.promo-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.promo-text-container {
+  text-align: center;
+}
+
+.promo-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #003366;
+  margin-bottom: 15px;
+  font-family: fantasy;
+}
+
+.coming-soon {
+  font-size: 1.5rem;
+  color: #a0522d;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.promo-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.store-button img {
+  width: 150px;
+  height: auto;
+  transition: transform 0.3s ease;
+}
+
+.store-button img:hover {
+  transform: scale(1.1);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .promo-title {
+    font-size: 2rem;
+  }
+
+  .promo-image-container {
+    margin-bottom: 20px;
+  }
+
+  .promo-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 576px) {
+  .promo-title {
+    font-size: 1.5rem;
+    text-align: center;
+  }
+
+  .store-button img {
+    width: 120px;
+  }
+}
+
 
 .general-container {
   position: relative;
@@ -254,10 +359,10 @@ main {
   }
 }
 
+
 /*--------------------------------------Responsive Design---------------------------------------------*/
 
-/*--------------------------------------------576px---------------------------------------------------*/
-/* Extra small devices (phones) */
+/*--------------------------------------------576px---------------------------------------------------*//*--------------------------------------------Extra small devices (phones)---------------------------------------------------*/
 @media (max-width: 576px) {
   .general-header h1 {
     font-size: 2rem;
@@ -265,29 +370,42 @@ main {
   }
 }
 
-/*--------------------------------------------576px---------------------------------------------------*/
-/* Small devices (tablets) */
-@media (min-width: 576px) {
+/*--------------------------------------------Small devices (tablets)---------------------------------------------------*/
+@media (min-width: 576px) and (max-width: 767px) {
   .about-header h1 {
     font-size: 2rem;
     letter-spacing: 0.5em;
     transition: all 0.3s ease-in;
   }
-}
-/*--------------------------------------------768px---------------------------------------------------*/
-/* Medium devices (desktops) */
-@media (min-width: 768px) {
-}
-/*--------------------------------------------992px---------------------------------------------------*/
 
-/* Large devices (desktops) */
-@media (min-width: 992px) {
 }
-/*--------------------------------------------1200px--------------------------------------------------*/
 
-/* Extra large devices (large desktops) */
+/*--------------------------------------------Medium devices (tablets/desktops)---------------------------------------------------*/
+@media (min-width: 768px) and (max-width: 991px) {
+  .app-promo-text {
+    text-align: center;
+  }
+
+  .promo-buttons {
+    justify-content: center;
+  }
+  .app-promo-image img {
+    max-width: 100%;
+    margin-top: 20px;
+  }
+}
+
+
+/*--------------------------------------------Extra large devices (large desktops)---------------------------------------------------*/
 @media (min-width: 1200px) {
+ 
 }
+
+/*--------------------------------------------Specific adjustments for smaller devices---------------------------------------------------*/
+@media (max-width: 430px) {
+
+}
+
 
 /*----------------------
 Scroll Bar Styling
