@@ -36,7 +36,14 @@ main {
   }
 }
 
+.section {
+  display: flex;
+  flex-direction: row;
+  /* align-items: center; */
+  justify-content: center;
+  width: 100%;
 
+}
 .image-container {
   flex: 1;
   display: flex;
@@ -128,6 +135,8 @@ main {
     font-size: 1.6rem;
   }
 }
+
+
 
 
 .general-container {
@@ -370,7 +379,9 @@ main {
 /*--------------------------------------Responsive Design---------------------------------------------*/
 
 @media (max-width: 768px) {
-
+  .section {
+    flex-direction: column; /* Passe en colonne sur les petits écrans */
+}
 
 .image-container, .text-container {
     flex: unset;
