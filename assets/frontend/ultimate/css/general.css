@@ -44,6 +44,10 @@ main {
   width: 100%;
 
 }
+.marg_wayo {
+    margin-left: 28px;
+    margin-top: 10px;
+}
 .image-container {
   flex: 1;
   display: flex;
@@ -57,7 +61,7 @@ main {
 }
 .text-container_wayo {
   flex: 1;
-  padding: 60px;
+  /* padding: 60px; */
   background-color: #cdc9e1; /* Couleur de fond blanche */
   display: flex;
   flex-direction: column;
@@ -107,7 +111,7 @@ main {
 }
 
 .store-button img {
-  width: 160px;
+  width: 185px;
   height: auto;
   border-radius: 10px;
   transition: all 0.3s ease-in-out;

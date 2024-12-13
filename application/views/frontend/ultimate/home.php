@@ -320,9 +320,9 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
             <img src="<?php echo $telephone_wayo; ?>" style="width: 100%;" alt="Image description">
         </div>
         <div class="text-container_wayo ">
-        <h1 class="promo-title">Easier, faster and more accessible mentoring at your fingertips</h1>
-        <p class="coming-soon">Coming Soon!</p>
-        <div class="promo-buttons">
+        <h1 class="promo-title marg_wayo">Easier, faster and more accessible mentoring at your fingertips</h1>
+        <p class="coming-soon marg_wayo">Coming Soon!</p>
+        <div class="promo-buttons ">
           <a href="#" class="store-button">
             <img src="<?php echo $App_store; ?>"  alt="Download on App Store">
           </a>
