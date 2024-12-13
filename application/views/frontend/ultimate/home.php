@@ -315,30 +315,23 @@ $upcoming_events = $this->frontend_model->get_frontend_upcoming_events();
      
 
 
-      <div class="promo-section">
-  <div class="container">
-    <div class="row align-items-center">
-      <!-- Image Section -->
-      <div class="col-lg-6 col-md-12 promo-image-container">
-        <img src="<?php echo $telephone_wayo; ?>" alt="Wayo Academy" class="promo-image">
-      </div>
-      <!-- Text Section -->
-      <div class="col-lg-6 col-md-12 text-center text-lg-start promo-text-container">
-        <h1 class="promo-title">Easier, faster, and more accessible mentoring at your fingertips</h1>
+<div class="section">
+        <div class="image-container">
+            <img src="<?php echo $telephone_wayo; ?>" style="width: 100%;" alt="Image description">
+        </div>
+        <div class="text-container_wayo ">
+        <h1 class="promo-title">Easier, faster and more accessible mentoring at your fingertips</h1>
         <p class="coming-soon">Coming Soon!</p>
         <div class="promo-buttons">
           <a href="#" class="store-button">
-            <img src="<?php echo $App_store; ?>" alt="Download on App Store">
+            <img src="<?php echo $App_store; ?>"  alt="Download on App Store">
           </a>
           <a href="#" class="store-button">
             <img src="<?php echo $App_Google_play; ?>" alt="Get it on Google Play">
           </a>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
-</div>
-
 
 
 
