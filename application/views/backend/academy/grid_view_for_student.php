@@ -1,5 +1,8 @@
-<?php $check_data = $this->db->get('sessions');
-if($check_data->num_rows() > 0): ?>
+<?php 
+// $check_data = $this->db->get('sessions');
+//             echo $check_data->num_rows();
+// if($check_data->num_rows() > 0): 
+?>
 
     <div class="col-md-12">
         <div class="card">
@@ -196,9 +199,9 @@ if($check_data->num_rows() > 0): ?>
         <?php endif; ?>
     </div>
 
-<?php else: ?>
-    <?php include APPPATH.'views/backend/empty.php'; ?>
-<?php endif; ?>
+<?php //else: ?>
+    <?php // include APPPATH.'views/backend/empty.php'; ?>
+<?php //endif; ?>
 
 <script>
     function schoolWiseClasse(school_id) {
