@@ -102,6 +102,9 @@ main {
   color: #402e8e;
   margin-bottom: 25px;
   font-weight: 600;
+  text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: fadeIn 2s ease-out;
 }
 
 .promo-buttons {
