@@ -46,7 +46,16 @@
                         <?php if (strtolower($this->db->get_where('users', array('id' => $user_id))->row('role')) == 'admin'): ?>
                             <span class="account-position"><?php echo get_phrase('school_admin'); ?></span>
                         <?php else: ?>
-                            <span class="account-position"><?php echo ucfirst($this->db->get_where('users', array('id' => $user_id))->row('role')); ?></span>
+                            <span class="account-position">
+                                
+                            <?php
+                            if($this->db->get_where('users', array('id' => $user_id))->row('role') == "teacher")
+                            echo get_phrase('teacher');
+                            else
+                            echo ucfirst($this->db->get_where('users', array('id' => $user_id))->row('role')); ?>
+                        
+                        
+                        </span>
                         <?php endif; ?>
 
                     </span>
@@ -73,7 +82,7 @@
 
                     <?php if ($this->session->userdata('user_type') == 'superadmin' || $this->session->userdata('user_type') == 'admin'): ?>
                         <!-- item-->
-                        <a href="mailto:support@creativeitem.com?Subject=Help%20On%20This" target="_blank" class="dropdown-item notify-item">
+                        <a href="mailto:info@wayo.cloud?Subject=Help%20On%20This" target="_blank" class="dropdown-item notify-item">
                             <i class="mdi mdi-lifebuoy me-1"></i>
                             <span><?php echo get_phrase('support'); ?></span>
                         </a>
