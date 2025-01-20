@@ -73,12 +73,14 @@ defined('BASEPATH') or exit('No direct script access allowed');
 $active_group = 'default';
 $query_builder = TRUE;
 
+
+
 $db['default'] = array(
     'dsn'   => '',
-    'hostname' => 'formation-db-public.cfaq06em20sk.eu-south-2.rds.amazonaws.com',
-    'username' => 'admin',
-    'password' => '5SmU[vd0oJfq4RwFU82N#}wa$Ntn',
-    'database' => 'formation_db',
+    'hostname' => 'localhost',
+    'username' => 'root',
+    'password' => '',
+    'database' => 'formation_db_1',
     'dbdriver' => 'mysqli',
     'dbprefix' => '',
     'pconnect' => FALSE,

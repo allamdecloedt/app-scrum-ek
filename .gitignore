@@ -32,3 +32,4 @@ tmp/*
 # Ignorer les fichiers système
 .DS_Store
 Thumbs.db
+.codegpt

@@ -13,7 +13,8 @@
 	"require": {
 		"php": ">=5.3.7",
 		"stripe/stripe-php": "^15.2",
-		"mpdf/mpdf": "^8.2"
+		"mpdf/mpdf": "^8.2",
+		"bigbluebutton/bigbluebutton-api-php": "^2.3"
 	},
 	"suggest": {
 		"paragonie/random_compat": "Provides better randomness in PHP 5.x"

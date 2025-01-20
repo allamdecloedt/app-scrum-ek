@@ -603,3 +603,11 @@ $route['api/GetLessonVideoType'] = 'api/Admin/lesson_video_type';
 $route['api/UpdateLessonDevice'] = 'api/Admin/update_lesson_device';
 $route['api/AddOthersLessons'] = 'api/Admin/add_lesson_with_attachment';
 $route['api/UpdateOthersLessons'] = 'api/Admin/update_lesson_with_attachment';
+
+
+$route['meeting/create'] = 'meeting/create';
+$route['meeting/join'] = 'meeting/join';
+
+
+$route['test-meeting/start'] = 'TestMeeting/start';
+$route['test-meeting/join'] = 'TestMeeting/joinAsAttendee';
