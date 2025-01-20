@@ -11,8 +11,8 @@ if($user_type == 'parent'){
 <div class="leftside-menu leftside-menu-detached" style="min-width: 280px; max-width: 280px;">
 
   <div class="leftbar-user">
-    <a href="javascript: void(0);">
-      <img src="<?php echo $this->user_model->get_user_image($this->session->userdata('user_id')); ?>" alt="user-image" height="42" class="rounded-circle shadow-sm">
+    <a href="<?php echo route('profile'); ?>" >
+      <img  src="<?php echo $this->user_model->get_user_image($this->session->userdata('user_id')); ?>" alt="user-image" height="42" class="rounded-circle shadow-sm">
       <?php
       $user_details = $this->user_model->get_user_details($this->session->userdata('user_id'));
       ?>
