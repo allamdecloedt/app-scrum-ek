@@ -69,81 +69,26 @@
         </div>
     </div>
 
-    <div class="form-group row mb-2">
-        <label for="starting_hour" class="col-md-3 col-form-label"><?php echo get_phrase('starting_hour'); ?><span class="required"> * </span></label>
-        <div class="col-md-9">
-            <select name="starting_hour" id = "starting_hour_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
-                <option value=""><?php echo get_phrase('starting_hour'); ?></option>
-                <?php for($i = 0; $i <= 23; $i++){
-                    if ($i < 12){
-                        if ($i == 0){ ?>
-                            <option value="<?php echo $i; ?>">12 AM</option>
-                        <?php }else{ ?>
-                            <option value="<?php echo $i; ?>"><?php echo $i; ?> AM</option>
-                        <?php } ?>
-                    <?php }else{ ?>
-                        <?php $j = $i - 12; ?>
 
-                        <?php if ($j == 0){ ?>
-                            <option value="<?php echo $i; ?>">12 PM</option>
-                        <?php }else{ ?>
-                            <option value="<?php echo $i; ?>"><?php echo $j; ?> PM</option>
-                        <?php } ?>
-                    <?php } ?>
-                <?php } ?>
-            </select>
+
+    <div class="form-group row mb-2">
+        <label for="starting_minute" class="col-md-3 col-form-label"><?php echo get_phrase('starting'); ?><span class="required"> * </span></label>
+        <div class="col-md-9">
+        <input type="time" name="starting_hour" id = "starting_minute_on_routine_creation"  class="form-control select2" data-bs-toggle="select2" required />
+
         </div>
     </div>
 
     <div class="form-group row mb-2">
-        <label for="starting_minute" class="col-md-3 col-form-label"><?php echo get_phrase('starting_minute'); ?><span class="required"> * </span></label>
+        <label for="ending_hour" class="col-md-3 col-form-label"><?php echo get_phrase('ending'); ?><span class="required"> * </span></label>
         <div class="col-md-9">
-            <select name="starting_minute" id = "starting_minute_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
-                <option value=""><?php echo get_phrase('starting_minute'); ?></option>
-                <?php for($i = 0; $i <= 55; $i = $i+5){ ?>
-                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                <?php } ?>
-            </select>
+        <input type="time" name="ending_hour" id = "ending_hour_on_routine_creation"  class="form-control select2" data-bs-toggle="select2" required />
+
+        
         </div>
     </div>
 
-    <div class="form-group row mb-2">
-        <label for="ending_hour" class="col-md-3 col-form-label"><?php echo get_phrase('ending_hour'); ?><span class="required"> * </span></label>
-        <div class="col-md-9">
-            <select name="ending_hour" id = "ending_hour_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
-                <option value=""><?php echo get_phrase('ending_hour'); ?></option>
-                <?php for($i = 0; $i <= 23; $i++){
-                    if ($i < 12){
-                        if ($i == 0){ ?>
-                            <option value="<?php echo $i; ?>">12 AM</option>
-                        <?php }else{ ?>
-                            <option value="<?php echo $i; ?>"><?php echo $i; ?> AM</option>
-                        <?php } ?>
-                    <?php }else{ ?>
-                        <?php $j = $i - 12; ?>
-
-                        <?php if ($j == 0){ ?>
-                            <option value="<?php echo $i; ?>">12 PM</option>
-                        <?php }else{ ?>
-                            <option value="<?php echo $i; ?>"><?php echo $j; ?> PM</option>
-                        <?php } ?>
-                    <?php } ?>
-                <?php } ?>
-            </select>
-        </div>
-    </div>
-
-    <div class="form-group row mb-2">
-        <label for="ending_minute" class="col-md-3 col-form-label"><?php echo get_phrase('ending_minute'); ?><span class="required"> * </span></label>
-        <div class="col-md-9">
-            <select name="ending_minute" id = "ending_minute_on_routine_creation" class="form-control select2" data-bs-toggle="select2"  required>
-                <option value=""><?php echo get_phrase('ending_minute'); ?></option>
-                <?php for($i = 0; $i <= 55; $i = $i+5){ ?>
-                    <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
-                <?php } ?>
-            </select>
-        </div>
-    </div>
+  
 
     <div class="form-group  col-md-12">
         <button class="btn btn-block btn-primary" type="submit"><?php echo get_phrase('add_class_routine'); ?></button>
