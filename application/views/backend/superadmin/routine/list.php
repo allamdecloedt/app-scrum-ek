@@ -15,7 +15,7 @@
                                 	<?php echo $this->db->get_where('subjects', array('id' => $satureday_routine['subject_id']))->row('name'); ?>
                                 </p>
                                 <p style="margin-bottom: 0px;"><i class="mdi mdi-clock"></i>
-                                	<?php echo $satureday_routine['starting_hour'].':'.$satureday_routine['starting_minute'].' - '.$satureday_routine['ending_hour'].':'.$satureday_routine['ending_minute']; ?>
+                                	<?php echo $satureday_routine['starting_hour'].' - '.$satureday_routine['ending_hour']; ?>
                                 </p>
                                 <p style="margin-bottom: 0px;"><i class="mdi mdi-account"></i>
                                 	<?php echo $this->user_model->get_user_details($this->db->get_where('teachers', array('id' => $satureday_routine['teacher_id']))->row('user_id'), 'name'); ?>

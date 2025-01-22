@@ -380,9 +380,9 @@ class Crud_model extends CI_Model {
 		$data['room_id'] = html_escape($this->input->post('class_room_id'));
 		$data['day'] = html_escape($this->input->post('day'));
 		$data['starting_hour'] = html_escape($this->input->post('starting_hour'));
-		$data['starting_minute'] = html_escape($this->input->post('starting_minute'));
+		// $data['starting_minute'] = html_escape($this->input->post('starting_minute'));
 		$data['ending_hour'] = html_escape($this->input->post('ending_hour'));
-		$data['ending_minute'] = html_escape($this->input->post('ending_minute'));
+		// $data['ending_minute'] = html_escape($this->input->post('ending_minute'));
 		$data['school_id'] = $this->school_id;
 		$data['session_id'] = $this->active_session;
 		$this->db->insert('routines', $data);
