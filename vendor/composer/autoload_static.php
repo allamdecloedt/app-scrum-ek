@@ -32,11 +32,16 @@ class ComposerStaticInitfe08f324fed20736928873ff05235018
             'Mpdf\\PsrLogAwareTrait\\' => 22,
             'Mpdf\\PsrHttpMessageShim\\' => 24,
             'Mpdf\\' => 5,
+            'MabeEnum\\' => 9,
         ),
         'D' => 
         array (
             'Doctrine\\Instantiator\\' => 22,
             'DeepCopy\\' => 9,
+        ),
+        'B' => 
+        array (
+            'BigBlueButton\\' => 14,
         ),
     );
 
@@ -73,6 +78,10 @@ class ComposerStaticInitfe08f324fed20736928873ff05235018
         array (
             0 => __DIR__ . '/..' . '/mpdf/mpdf/src',
         ),
+        'MabeEnum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/marc-mabe/php-enum/src',
+        ),
         'Doctrine\\Instantiator\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
@@ -80,6 +89,10 @@ class ComposerStaticInitfe08f324fed20736928873ff05235018
         'DeepCopy\\' => 
         array (
             0 => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy',
+        ),
+        'BigBlueButton\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bigbluebutton/bigbluebutton-api-php/src',
         ),
     );
 
@@ -406,7 +419,7 @@ class ComposerStaticInitfe08f324fed20736928873ff05235018
         'PHPUnit\\Util\\ErrorHandler' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/ErrorHandler.php',
         'PHPUnit\\Util\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Exception.php',
         'PHPUnit\\Util\\ExcludeList' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/ExcludeList.php',
-        'PHPUnit\\Util\\FileLoader' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/FileLoader.php',
+        'PHPUnit\\Util\\FileLoader' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Fileloader.php',
         'PHPUnit\\Util\\Filesystem' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Filesystem.php',
         'PHPUnit\\Util\\Filter' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Filter.php',
         'PHPUnit\\Util\\GlobalState' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/GlobalState.php',
@@ -432,7 +445,7 @@ class ComposerStaticInitfe08f324fed20736928873ff05235018
         'PHPUnit\\Util\\Type' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Type.php',
         'PHPUnit\\Util\\VersionComparisonOperator' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/VersionComparisonOperator.php',
         'PHPUnit\\Util\\XdebugFilterScriptGenerator' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/XdebugFilterScriptGenerator.php',
-        'PHPUnit\\Util\\Xml' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Xml.php',
+        'PHPUnit\\Util\\Xml' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/XML.php',
         'PHPUnit\\Util\\XmlTestListRenderer' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/XmlTestListRenderer.php',
         'PHPUnit\\Util\\Xml\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Xml/Exception.php',
         'PHPUnit\\Util\\Xml\\FailedSchemaDetectionResult' => __DIR__ . '/..' . '/phpunit/phpunit/src/Util/Xml/FailedSchemaDetectionResult.php',
@@ -716,6 +729,7 @@ class ComposerStaticInitfe08f324fed20736928873ff05235018
         'SebastianBergmann\\Type\\UnknownType' => __DIR__ . '/..' . '/sebastian/type/src/type/UnknownType.php',
         'SebastianBergmann\\Type\\VoidType' => __DIR__ . '/..' . '/sebastian/type/src/type/VoidType.php',
         'SebastianBergmann\\Version' => __DIR__ . '/..' . '/sebastian/version/src/Version.php',
+        'Stringable' => __DIR__ . '/..' . '/marc-mabe/php-enum/stubs/Stringable.php',
         'TheSeer\\Tokenizer\\Exception' => __DIR__ . '/..' . '/theseer/tokenizer/src/Exception.php',
         'TheSeer\\Tokenizer\\NamespaceUri' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUri.php',
         'TheSeer\\Tokenizer\\NamespaceUriException' => __DIR__ . '/..' . '/theseer/tokenizer/src/NamespaceUriException.php',
